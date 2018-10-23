@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Modal as AntdModal } from 'antd';
 import { ObjectUtil, UUID } from '../../utils';
+import VoidTag from '../VoidTag';
 export var props = {
     ...Tag.props,
     footer: GearType.Or<boolean, string>(GearType.Boolean, GearType.String),
@@ -173,11 +174,9 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
     //     if(this.state.dragable) this.dragEvent();
     // }
     dragEvent = ()=>{//拖拽效果
-        // if(this.state['dragable']){
             let dref = this.ref
-            let $ref = G.G$(this.ref);
-            console.log(G.G$(this.ref))
-            $ref.on('mousedown','.ant-modal',function(ev: any){
+            let $dom = G.G$(document);
+            $dom.on('mousedown','.ant-modal',function(ev: any){
                 dref.onselectstart=()=>{//禁止选中文字
                     return false
                 }
@@ -190,7 +189,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                 let e = ev || window.event;
                 let disX = e.pageX-G.$(this).offset().left;     //点击时鼠标X坐标与元素原点距离
                 let disY = e.pageY-G.$(this).offset().top;     //点击时鼠标Y坐标与元素原点距离
-                G.G$(document).on("mousemove" , (ev: any)=>{
+                $dom.on("mousemove" , (ev: any)=>{
                     var e = ev||window.event;
                     var l = e.pageX-disX;
                     var t = e.pageY-disY;
@@ -207,11 +206,9 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                     $modal.css({'left': l +'px',"top":t+"px"});
                 })
             })
-
             document.addEventListener('mouseup',()=>{
-                G.G$(document).off("mousemove")
-            })
-        // }     
+                $dom.off("mousemove")
+            })  
     }
     open() {
         this.setState({
@@ -281,13 +278,20 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                 cursor:"default"
             };
         }
+        let voidTagProps:any = {
+            onLoadSuccess: ()=> {
+                if(this.haveEvent("loadSuccess")) {
+                    this.doEvent("loadSuccess");
+                }
+            }
+        }
         return <AntdModal {...props} style={style} getContainer={()=>{
             this.ref = document.createElement("div");
             document.body.appendChild(this.ref);
             if(this.state.dragable) this.dragEvent();
             return this.ref;
         }}>
-            {children}
+            <VoidTag {...voidTagProps}>{children}</VoidTag>
         </AntdModal>;
     }
 
@@ -362,18 +366,16 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         }
     }
     //设置是否可以拖拽dragable值
-    setDragable(dragable:boolean){
+    setDragable (dragable:boolean){
+        if(dragable){
+            this.dragEvent()
+        }else{
+            let $dom = G.G$(document);
+            $dom.off('mousedown','.ant-modal');
+        }     
         this.setState({
             dragable: dragable
         });
-        if(dragable){
-            console.log(this.ref);
-            this.dragEvent()
-        }else{
-            let $ref = G.G$(this.ref);
-            $ref.off('mousedown','.ant-modal');
-            alert('off')
-        }     
     }
 
 }
