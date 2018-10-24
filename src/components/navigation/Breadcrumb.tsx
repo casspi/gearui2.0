@@ -41,7 +41,7 @@ export default class Breadcrumb<P extends typeof props, S extends state> extends
 
     private getItems() {
         let itemJsxs: any[] = [];
-        let children = this.props.children;
+        let children: any = this.props.children;
         if(!(children instanceof Array)) {
             children = [children];
         }

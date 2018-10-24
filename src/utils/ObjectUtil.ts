@@ -566,4 +566,14 @@ export default class ObjectUtil {
         }
         return propsNew;
     }
+     // 判断值是否在数组内
+     static arrayIndexOf(array:Array<string>,value:string):number{
+        if(array && value){
+            for(var i=0;i<array.length;i++){
+                if(array[i]==value)
+                    return i;
+            }
+        }
+        return -1;
+    }
 }

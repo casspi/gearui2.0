@@ -33,6 +33,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         this.ast = this.props.__ast__;
         //绑定所有的props里面注册的事件
         this.bindAllEvents();
+        this.addOnEventsMethod();
     }
 
     protected getConcatInitialState() {}
@@ -831,7 +832,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
 
     protected addGetterAndSetterInState(state: any) {
         let className = this.constructor.name;
-        let propsTemplete = G.tag[className].props;
+        let propsTemplete = G.tag[className] ? G.tag[className].props : null;
         if(propsTemplete) {
             for(let key in state) {
                 let vInState = state[key];

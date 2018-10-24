@@ -3,11 +3,13 @@ import * as FormTag from './FormTag';
 import * as React from 'react';
 import { RadioProps } from 'antd/lib/radio';
 import  DicUtil  from '../../utils/DicUtil';
+import { ObjectUtil, UUID } from "../../utils";
 // import { GearWeb as G } from '../gearwebs';
 // import { Dic } from '../core/cores';
-
+import RadioButton from './RadioButton';
+// const AntdRadioButton = AntdRadio.Button;
 const AntdRadioGroup = AntdRadio.Group;
-
+export declare type ButtonSize = 'solid' | 'outline';
 export var props = {
     ...FormTag.props,
     disabled: GearType.Boolean,   //禁止
@@ -16,7 +18,8 @@ export var props = {
     url: GearType.String,         //url获取选项
     dictype: GearType.Any,        //字典选项
     value: GearType.Any,          //选中的值
-    name: GearType.String        //RadioGroup下所有radio的name属性
+    name: GearType.String,        //RadioGroup下所有radio的name属性
+    buttonStyle:GearType.Enum<ButtonSize>()
 }
 export interface state extends FormTag.state {
     value: any,         //选中的值
@@ -24,7 +27,7 @@ export interface state extends FormTag.state {
     disabled: boolean,   //禁止
     size:any,
     url:any,
-    dictype:any
+    dictype:any,
 }
 export default class RadioGroup<P extends typeof props &  RadioProps,S extends state & RadioProps> extends FormTag.default<P,S> {
     //获取当前属性
@@ -38,7 +41,8 @@ export default class RadioGroup<P extends typeof props &  RadioProps,S extends s
             dictype: this.state.dictype,
             value: this.state.value,
             name: this.state.name,
-            onChange: this.onChange.bind(this)
+            onChange: this.onChange.bind(this),
+            
         });
     }
 
@@ -53,6 +57,7 @@ export default class RadioGroup<P extends typeof props &  RadioProps,S extends s
             dictype: this.props.dictype,
             value: this.props.value,
             name: this.props.name,
+            buttonStyle:this.props.buttonStyle,
             onChange: this.onChange.bind(this)
         });
     }
@@ -63,11 +68,30 @@ export default class RadioGroup<P extends typeof props &  RadioProps,S extends s
         if (this.props.dictype || this.props.url) {
             return <AntdRadioGroup {...props}></AntdRadioGroup>;
         } else {
-            let childrenMap = null;
+            let childrenMap:any[] = [];
             if (this.props.children instanceof Array) {
-                childrenMap = this.props.children.map(function (ele:any) {
-                    return (ele);
+                // childrenMap = this.props.children.map(function (ele) {
+                //     // if(ele.type){
+                //         console.log(ele.type)
+                //         return (ele);
+                //     // }
+                // });
+                
+                childrenMap = this.props.children.map((child: any, index)=> {
+                    let item = child;
+                    console.log(child)
+                    if(item && item.type && ObjectUtil.isExtends(item.type, "RadioButton")) {
+                        console.log(item.props)
+                        // let itemJsx = <RadioButton {...item.props}>{item.props.children}</RadioButton>;
+                        let itemJsx=<p>99999999</p>
+                        console.log(itemJsx)
+                        return (itemJsx)
+                    }else{
+                        return (item)
+                    }
                 });
+                childrenMap = childrenMap.filter(o=>o.key);//过滤空的
+                
             }
             return <AntdRadioGroup {...props}>{childrenMap}</AntdRadioGroup>;
         }

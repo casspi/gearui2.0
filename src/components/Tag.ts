@@ -13,6 +13,8 @@ export var props = {
     visible: GearType.Boolean,
     class: GearType.String,
     needUpdateToState: GearType.Array<string>(),
+    //gearui内部使用的children对象
+    children: GearType.Array<string>(),
     ...JqueryTagProps
 }
 
@@ -49,7 +51,7 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
     abstract getInitialState(): state;
 
     protected getConcatInitialState() {
-        let state = this.getInitialState();
+        let state = this.getInitialState ? this.getInitialState() : {};
         let __super = this.getSuper();
         while(__super && __super.getSuper && this.concatInitial) {
             let fn = __super.getInitialState;
@@ -87,7 +89,10 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
         if(this.realDom) {
             G.G$(this.realDom).data("vmdom", this);
         }
-        this.ast.vmdom = this;
+        if(this.ast) {
+            this.ast.vmdom = this;
+        }
+        
         this.afterRender();
         this.doEvent("afterRender");
     }
@@ -290,5 +295,59 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
     protected getKey() {
         return (this.state.name || this.state.id || UUID.get()) + "_key";
     }
+    // 将字符串转为整数
+    protected getPropIntValue(data:any):any{
+        data = this.invokePropValue(data);
+        if(data)
+            return parseInt(data+"");
+        else
+            return null;
+    }
+
+    // 将字符串类型转为数字类型
+    protected getPropNumberValue(data:any):any{
+        data = this.invokePropValue(data);
+        if(data)
+            return parseFloat(data+"");
+        else
+            return null;
+    }
+
+    // 将值转换为字符串
+    protected getPropStringValue(data:any):any{
+        data = this.invokePropValue(data);
+        if(data){
+            return data + "";
+        }else
+            return null;
+    }
+
+    // 获取属性的数组值
+    protected getPropStringArrayValue(data:any,split?:string):any{
+        if(data){
+            data = this.invokePropValue(data);
+            if(data instanceof Array){
+                return data;
+            }else {
+                data = data + "";
+                if(data.length>0)
+                    return data.split(split||",");
+                else
+                    return [];
+            } 
+        }
+        return null;
+    }
+
+    // 解析值
+    protected invokePropValue(data:any):any{
+        if(data){
+            if(typeof data =="function"){
+                return data.call(this);
+            }
+            return data;
+        }else
+            return null;
+    }    
 
 }

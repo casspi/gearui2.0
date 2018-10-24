@@ -225,7 +225,6 @@ export default class G {
                 if(index) {
                     let indexs: string[] = index.split(",");
                     let ast = this.cacheAst;
-                    console.log(ast)
                     for(let i = 1; i < indexs.length; i++) {
                         let idx = indexs[i] ? parseInt(indexs[i]) : -1;
                         if(ast) {

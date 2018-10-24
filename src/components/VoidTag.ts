@@ -13,6 +13,13 @@ export default abstract class VoidTag<P extends typeof props, S extends (state)>
             let ele: any = this.props.voidElement;
             G.G$(G.voidParent).find(ele).data("vmdom", this);
         }
+        if(this.haveEvent("loadSuccess")){
+            this.doEvent('loadSuccess');
+        }
+    }
+
+    render(){
+        return this.props.children;
     }
 
 }

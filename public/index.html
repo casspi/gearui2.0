@@ -64,7 +64,7 @@
       <g-combotree name="c31" id="aw" label="URL" url="getUrl()" width="300" multiple="true" prompt="请选择">
 
       </g-combotree>
-      <g-button>0000</g-button>
+      
       <g-button buttonStyle="danger">rest</g-button>
       
       <div>
@@ -74,14 +74,43 @@
         <g-button buttonStyle="danger">Danger</g-button>
       </div>
     -->
-    <g-button buttonStyle="danger" id="bbbttn">Danger</g-button>
-      <g-dialog id="dragDialog" title="0000"  dragable="true">
+    <!-- <g-button buttonStyle="danger" id="bbbttn">Danger</g-button> -->
+      <!-- <g-dialog id="dragDialog" title="0000"  dragable="true" footer="<g-button >关闭</g-button>">
         <g-button id='closeDrag'>关闭拖拽</g-button>
         <g-button id='openDrag' >打开拖拽</g-button>
-      </g-dialog>
-      <!-- <g-dialog children="<h1>wode</h1>" open></g-dialog> -->
+      </g-dialog> -->
+      
       <!-- <g-alert type='info' message="Info Text"></g-alert> -->
-    </div>
+      <g-pagination  id="pagination_id" current="5" total="888" showSizeChanger="true" pageSize="10" showQuickJumper="true" pageSizeOptions="['30','40','50','60']"></g-pagination>
+      <g-button>0000</g-button>
+  
+      <g-radio id="radiogroup" dictype="[
+      { label: 'Apple', value: 'Apple' },
+      { label: 'Pear', value: 'Pear' },
+      { label: 'Orange', value: 'Orange' },
+    ]"></g-radio>
+        <g-radio id="gRadio" name="r1" value="hehe" label="aaa">
+    
+        </g-radio>
+        <!-- <g-radiogroup value="2"  id="radiogroup2"><g-radiobutton value="1" label="橘子1"></g-radiobutton><g-radiobutton value="2" label="橘子2"></g-radiobutton><g-radiobutton value="3" label="橘子3"></g-radiobutton> -->
+        </g-radiogroup>
+        <gicon type='file'></gicon>
+        <g-repeat size="5" onrender="alert('render')">
+          <h1>title<g-int></g-int></h1>
+          <g-radiogroup value="2" buttonStyle="solid" id="radiogroup2">
+            <g-radiobutton value="1" label="橘子1"></g-radiobutton>
+            <g-radiobutton value="2" label="橘子2"></g-radiobutton>
+            <g-radiobutton value="3" label="橘子3"></g-radiobutton>
+          </g-radiogroup>
+          <!-- <g-radio id="radiogroup" dictype="[
+          { label: 'Apple', value: 'Apple' },
+          { label: 'Pear', value: 'Pear' },
+          { label: 'Orange', value: 'Orange' },
+          ]"> -->
+          </g-radio>  
+        </g-repeat>
+          
+      </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -124,12 +153,43 @@
     //   alert(111)
     //     G('#dragDialog').setDragable(true)
     // })
-      // G("#openDrag").click(function(){
-       
+    //对话框
+      // G("#dragDialog").onLoadSuccess(function() {
+      //   G("#openDrag").click(function(){
+      //     G("#dragDialog").setDragable(true)
+      //   })
+      //   G("#closeDrag").click(function(){
+      //     G("#dragDialog").setDragable(false)
+      //   })
       // })
-      G('#dragDialog').setDragable(false)
+      // document.onclick=function(){
+        // G('#dragDialog').setDragable(false);
+        // console.log(G('#dragDialog').find('.ant-modal'))
+        // console.log(G('#dragDialog').find('#openDrag'))
+      // }
       // G('#dragDialog').setDragable(true);
-
+      G('#pagination_id').onPageSizeChange(function(page,pageSize){
+        alert('page:'+page+',pageSize:'+pageSize);
+      })
+      G('#pagination_id').onChange(function(page,pageSize){
+        alert('page:'+page+',pageSize:'+pageSize);
+      })
+      // G('#gRadio').onChange(function(n,o){
+      //   alert('new:'+n,'old:'+o);
+        
+      // });
+      // G('#radiogroup').onChange(function(){
+        // G('#radiogroup').disable()
+        // G('#radiogroup').setValue('Pear')
+        // G('#radiogroup').enable()
+        // alert(G('#radiogroup').getValue())
+        // G(this).unChecked()
+      // })
+      // G('#radiogroup2').disabled()
+      console.log(G('#radiogroup2').findByValue('1'))
+      G('#radiogroup2').choseByValue('3')
+      G('#radiogroup2').enabled()
+      // G('#radiogroup2').disabled()
     })
   </script>
 </html>
