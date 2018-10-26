@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {Pagination as AntdPagination} from 'antd';
 import { PaginationProps } from '../../../node_modules/antd/lib/pagination/Pagination';
+const Locale = require('../../../node_modules/rc-pagination/es/locale/zh_CN').default;
 import * as Tag from '../Tag';
 export var props={
     ...Tag.props,
@@ -15,13 +16,11 @@ export var props={
     pageSizeOptions: GearType.Or(GearType.Array,GearType.String),//指定每页可以显示多少条
     // onpagesizechange: GearType.Function,//pageSize 变化的回调
     showquickjumper: GearType.Boolean,//是否可以快速跳转至某页
-    // showtotal:GearType.Any,
     // showtotal: (total: number, range: [number, number]) => React.ReactNode,//用于显示数据总量和当前数据顺序
     size: GearType.String,//当为「small」时，是小尺寸分页
     simple: GearType.Boolean,//当添加该属性时，显示为简单分页
     locale: GearType.Object,
     selectPrefixcls: GearType.String,
-    // itemrender:GearType.Any
     // itemrender: (page: number, type: 'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next') => React.ReactNode,//用于自定义页码的结构，可用于优化 SEO
 }
 export interface state extends Tag.state  {
@@ -44,12 +43,6 @@ export declare type PaginationLocale = any;
 export default class Pagination<P extends typeof props & PaginationProps, S extends state> extends Tag.default<P, S> {
     constructor(props:any) {
         super(props);
-        if(this.props.onBeforeChange)
-            this.bind("beforeChange",this.props.onBeforeChange);        
-        if(this.props.onChange)
-            this.bind("change",this.props.onChange);
-        if(this.props.onPageSizeChange)
-            this.bind("pageSizeChange",this.props.onPageSizeChange);
     }
     getInitialState():state {
         return {
@@ -80,17 +73,15 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
             // showTotal: (total: number, range: [number, number]) => {},//用于显示数据总量和当前数据顺序
             size: this.props.size,//当为「small」时，是小尺寸分页
             simple: this.props.simple,//当添加该属性时，显示为简单分页
-            locale: this.props.locale,
-            selectPrefixCls: this.props.selectPrefixcls,
+            locale: this.props.locale||Locale,
+            selectPrefixCls: this.props.selectPrefixcls || 'ant-select',
             showTotal: (total:any, range:any) => `共${total}条记录`,
             itemRender: this.state.itemrender 
         });
     }
-
     render() {
         let props: any = this.getProps();
         return <AntdPagination {...props}/>;
-
     }
 
     getPageSize() {
@@ -121,18 +112,6 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
         });
     }
 
-    onBeforeChange(fun:any) {
-        if(fun && G.G$.isFunction(fun)) {
-            this.bind("beforeChange",fun);
-        }
-    }
-
-    onChange(fun:any) {
-        if(fun && G.G$.isFunction(fun)) {
-            this.bind("change",fun);
-        }
-    }
-
     protected _onPageSizeChange(current: string, size: string){
         this.setState({
             current: current,
@@ -140,11 +119,6 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
         },()=>{
             this.doEvent("pageSizeChange",current,size);
         });
-    }
-    onPageSizeChange(fun:any) {
-        if(fun && G.G$.isFunction(fun)) {
-            this.bind("pageSizeChange",fun);
-        }
     }
 
     setParam(param:any) {

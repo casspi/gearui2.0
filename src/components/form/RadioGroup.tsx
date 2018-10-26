@@ -6,7 +6,7 @@ import  DicUtil  from '../../utils/DicUtil';
 import { ObjectUtil, UUID } from "../../utils";
 // import { GearWeb as G } from '../gearwebs';
 // import { Dic } from '../core/cores';
-import RadioButton from './RadioButton';
+// import RadioButton from './RadioButton';
 // const AntdRadioButton = AntdRadio.Button;
 const AntdRadioGroup = AntdRadio.Group;
 export declare type ButtonSize = 'solid' | 'outline';
@@ -70,28 +70,21 @@ export default class RadioGroup<P extends typeof props &  RadioProps,S extends s
         } else {
             let childrenMap:any[] = [];
             if (this.props.children instanceof Array) {
-                // childrenMap = this.props.children.map(function (ele) {
-                //     // if(ele.type){
-                //         console.log(ele.type)
-                //         return (ele);
-                //     // }
-                // });
-                
-                childrenMap = this.props.children.map((child: any, index)=> {
-                    let item = child;
-                    console.log(child)
-                    if(item && item.type && ObjectUtil.isExtends(item.type, "RadioButton")) {
-                        console.log(item.props)
-                        // let itemJsx = <RadioButton {...item.props}>{item.props.children}</RadioButton>;
-                        let itemJsx=<p>99999999</p>
-                        console.log(itemJsx)
-                        return (itemJsx)
-                    }else{
-                        return (item)
-                    }
-                });
+                childrenMap = this.props.children;
                 childrenMap = childrenMap.filter(o=>o.key);//过滤空的
-                
+                childrenMap = childrenMap.map((child: any, index)=> {
+                    let item = child;
+                    return (item)
+                    // console.log(child)
+                    // if(item && item.type && ObjectUtil.isExtends(item.type, "RadioButton")) {
+                    //     console.log(item.props)
+                    //     let itemJsx = <AntdRadioButton {...item.props} key={this.props.id ? this.props.id + "_item_" + index :UUID.get()}>{item.props.label}</AntdRadioButton>;
+                    //     // let itemJsx = <RadioButton {...item.props} key={this.props.id ? this.props.id + "_item_" + index :UUID.get()}>{item.props.children}</RadioButton>;
+                    //     return (itemJsx)
+                    // }else{
+                        // return (item)
+                    // }
+                });            
             }
             return <AntdRadioGroup {...props}>{childrenMap}</AntdRadioGroup>;
         }
@@ -109,18 +102,21 @@ export default class RadioGroup<P extends typeof props &  RadioProps,S extends s
     afterRender() {
         let url = this.props.url;
         let dictype = this.props.dictype;
-        let fn = async () => {
-            let result = await DicUtil.getDic({url, dictype});
-            if(result.success) {
-                let dic = result.data;
-                if(dic) {
-                    this.setState({
-                        options: dic
-                    });
+        if(url || dictype) {
+            let fn = async () => {
+                let result = await DicUtil.getDic({url, dictype});
+                if(result.success) {
+                    let dic = result.data;
+                    if(dic) {
+                        this.setState({
+                            options: dic
+                        });
+                    }
                 }
             }
+            fn();
         }
-        fn();
+        
     }
 
     //Easy-UI接口方法集合
@@ -135,13 +131,11 @@ export default class RadioGroup<P extends typeof props &  RadioProps,S extends s
 
     //禁止选择
     disabled() {
-        let disabled = true;
         this.setState({ disabled: true});
     }
 
     //开放选择
     enabled() {
-        let disabled = false;
         this.setState({ disabled: false });
     }
 

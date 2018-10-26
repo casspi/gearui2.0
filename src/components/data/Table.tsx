@@ -653,7 +653,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             }, this.getColumnProtype()));
         }
         
-        let children = this.props.children;
+        let children:any[] = this.props.children;
         if(!(children instanceof Array)) {
             children = [children];
         }

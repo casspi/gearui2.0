@@ -111,7 +111,7 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
 
     private getChildren() {
         let childrenJsxs: any[] = [];
-        let children = this.props.children;
+        let children:any[] = this.props.children;
         if(!(children instanceof Array)) {
             children = [children];
         }

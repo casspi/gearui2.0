@@ -3,7 +3,7 @@ import { Radio as AntdRadio } from 'antd';
 import * as FormTag from './FormTag';
 import { RadioProps } from 'antd/lib/radio';
 import  DicUtil  from '../../utils/DicUtil';
-import { ObjectUtil, Http } from '../../utils';
+import { ObjectUtil } from '../../utils';
 const AntdRadioGroup = AntdRadio.Group;
 export var props = {
     ...FormTag.props,

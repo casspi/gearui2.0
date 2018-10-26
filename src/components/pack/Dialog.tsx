@@ -210,6 +210,11 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                 $dom.off("mousemove")
             })  
     }
+    onOpen(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("open",fun);
+        }
+    }
     open() {
         this.setState({
             visible: true
@@ -307,7 +312,17 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         console.log(this.props.children)
         return this.props.children;
     }
+    onConfirm(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("confirm",fun);
+        }
+    }
     
+    onCancel(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("close",fun);
+        }
+    }
     // 设置标题
     setTitle(title: string){
         this.setState({
