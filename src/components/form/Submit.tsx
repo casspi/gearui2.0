@@ -1,5 +1,7 @@
 // import { button as GButton, Tag, TagProps, GButtonProps,form as gform,GFormProps } from './tags';
 import * as  Button from '../basic/Button';
+import {Button as AntdButton} from 'antd'
+import {props as buttonProps} from '../basic/Button';
 import {default as From,props as FromProps} from './Form'
 import * as React from 'react';
 import  G from '../../Gear';
@@ -7,8 +9,9 @@ import {Message} from '../pack';
 
 // import { Ajax } from '../core/cores';
 // import {Util} from '../util/utils';
+
 export var props=  {
-    ...Button.props,
+    ...buttonProps,
     url: GearType.String,//表单提交的地址，不设置的话则使用form action属性上的路径
     method:  GearType.String,//可选：post(默认)、get、put、delete，如果form上的method属性为空，就使用控件上的method来提交form
     ajax:  GearType.Boolean,//控件不是在form中的情况下，是否通过ajax提交到后台，可选值：true、false
@@ -18,17 +21,16 @@ export var props=  {
 export interface state extends Button.state {
 
 }
-export default class Submit<P extends props,S extends state> extends Button.default<P,S> {
+export default class Submit<P extends typeof props,S extends state> extends Button.default<P,S> {
     // 定义一个click事件
     protected clickEvent = function(){
         // 先查找当前控件的上级form定义
-        let form:From<FromProps> = G.$("#"+this.props.form);
+        let form = G.$("#"+this.props.form);
         if(form == null || !(form instanceof From)){
             // 先查找当前控件的上级form对象
             form = this.getForm(G.G$(this.realDom).parents("form:first"));
-
         }
-        if(form == null || !(form instanceof gform)){
+        if(form == null || !(form instanceof From)){
             // 还没有就找页面上第一个form
             form = this.getForm(G.G$("form:first"));
         }
@@ -39,7 +41,7 @@ export default class Submit<P extends props,S extends state> extends Button.defa
         }
         if(form){
             // 表单存在
-            if(form instanceof gform) {
+            if(form instanceof From) {
                 // 是一个gear-form表单
                 if(this.props.url || this.props.method) {
                     form.setForm({
@@ -51,7 +53,8 @@ export default class Submit<P extends props,S extends state> extends Button.defa
                 if(form.props != null && form.props.showprogress != false) {
                     this.setLoading(true);
                 }
-                form.submit((data)=>{
+                form.submit((data:any)=>{
+                    console.log(data)
                     this.setLoading(false);
                 });
             }else{
@@ -99,19 +102,17 @@ export default class Submit<P extends props,S extends state> extends Button.defa
 
     getProps() {
         let state = this.state;
-        // let superProps = super.getProps();
-        // let __this = this;
         return G.G$.extend({},state,{
-            type: this.props.buttonstyle || "primary",
+            type: this.props.buttonStyle || "primary",
             onClick: this.clickEvent.bind(this)
         });
     }     
 
-    _onBeforeSubmit:Function = any;
+    _onBeforeSubmit:Function;
     onBeforeSubmit(fun:any) {
         if(fun && G.G$.isFunction(fun)) {
             this._onBeforeSubmit = fun.bind(this);
         }
     }
-
+    
 }

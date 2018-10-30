@@ -3,8 +3,8 @@ import  Dialog from './Dialog';
 import  {props as DialogProps,state as DialogState} from './Dialog';
 import * as React from 'react';
 import {Message} from '../pack';
-import Pagination from '../data/Pagination';
 import  G from '../../Gear';
+
 export var props = {
     ...Tag.props,
     ueTitle: GearType.String,
@@ -21,7 +21,8 @@ export interface state extends Tag.state {
     // htmlId: string
 }
 export default class Ueditor<P extends typeof props,S extends state> extends Tag.default<P,S> {
-    dialog: Dialog<DialogProps,DialogState>;
+    
+    dialog: Dialog<DialogProps1,DialogState>;
     ue: any;
     getProps() {
         let state = this.state;

@@ -2,11 +2,11 @@ import * as Text from '../form/Text';
 import * as React from 'react';
 import G  from '../../Gear';
 import { Input } from 'antd';
-import { InputProps } from "antd/lib/input";
+import { SearchProps } from "antd/lib/input";
 const AntdSearch = Input.Search;
 export var props = {
     ...Text.props,
-    // onSearch: GearType.Function,//点击搜索或按下回车键时的回调
+    onSearch: GearType.Function,//点击搜索或按下回车键时的回调
     prompt:GearType.Any,
     size:GearType.Any,
     disabled:GearType.Boolean,
@@ -16,9 +16,11 @@ export var props = {
 export interface state extends Text.state {
     
 }
-export default class Search<P extends typeof props & InputProps,S extends (state & InputProps)> extends Text.default<P ,S>{
+export default class Search<P extends typeof props & SearchProps,S extends (state & SearchProps)> extends Text.default<P ,S>{
     getProps() {
         let state = this.state;
+        // let state: state = G.G$.extend({}, this.state);
+        // delete state.invalidType;
         return G.G$.extend({}, state, {
             placeholder: this.state.placeholder,
             size: this.state.size,

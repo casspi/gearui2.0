@@ -81,7 +81,7 @@
       </g-dialog> -->
       
       <!-- <g-alert type='info' message="Info Text"></g-alert> -->
-      <g-pagination  id="pagination_id"  current="5" total="888" showSizeChanger="true" beforeChange="alert('before')" pageSize="10" showQuickJumper="true" pageSizeOptions="['30','40','50','60']"></g-pagination>
+      <!-- <g-pagination  id="pagination_id"  current="5" total="888" showSizeChanger="true" beforeChange="alert('before')" pageSize="10" showQuickJumper="true" pageSizeOptions="['30','40','50','60']"></g-pagination>
       <g-button>btn</g-button>
   
       <g-radio id="radiogroup" dictype="[
@@ -91,12 +91,12 @@
     ]"></g-radio>
         <g-radio id="gRadio" name="r1" value="hehe" label="aaa">
     
-        </g-radio>
-        <g-radiogroup value="2"  id="radiogroup2" buttonStyle="solid">
+        </g-radio> -->
+        <!-- <g-radiogroup value="2"  id="radiogroup2" buttonStyle="solid">
           <g-radiobutton value="1" label="橘子1"></g-radiobutton>
           <g-radiobutton value="2" label="橘子2"></g-radiobutton>
           <g-radiobutton value="3" label="橘子3"></g-radiobutton>
-        </g-radiogroup>
+        </g-radiogroup> -->
         <!-- <g-icon type='file'></g-icon> -->
         <!-- <g-repeat size="5" onrender="alert('render')">
           <h1>title<g-int></g-int></h1>
@@ -108,6 +108,24 @@
           </g-radio>  
         </g-repeat> -->
         <g-search id="search-bar"  size="default" enterButton="search"></g-search>
+        <!-- <g-mac></g-mac> -->
+        <g-from>
+        </g-from>
+        <g-sumbit label="submit" ajax="true" url="/example/Submit/example1" icon="icon-save"></g-sumbit>
+        <g-int>9999</g-int>
+        <g-url></g-url>
+        <!-- <g-spin label="000"></g-spin> -->
+        <!-- <g-switch code="2,3" id="idswitch" defaultChecked="true" checked="true" showLabel="true"></g-switch>
+        <gtextarea></gtextarea>
+        <g-time></g-time>
+        <g-timepicker></g-timepicker> -->
+        <!-- <g-Tree>
+          <g-treeNode></g-treeNode>
+          <g-treeNode></g-treeNode>
+          <g-treeNode></g-treeNode>
+        </g-Tree> -->
+        <!-- <g-Transfer></g-Transfer> -->
+        <g-wrapper></g-wrapper>
       </div>
     <!--
       This HTML file is a template.
@@ -166,15 +184,20 @@
         // console.log(G('#dragDialog').find('#openDrag'))
       // }
       // G('#dragDialog').setDragable(true);
-      G('#pagination_id').onPageSizeChange(function(page,pageSize){
-        alert('page:'+page+',pageSize:'+pageSize);
-      })
-      G('#pagination_id').onBeforeChange(function(page,pageSize){
-        alert('beforeChange');
-      })
-      G('#pagination_id').onChange(function(page,pageSize){
-        alert('page:'+page+',pageSize:'+pageSize);
-      })
+      // G('#pagination_id').onPageSizeChange(function(page,pageSize){
+      //   alert('page:'+page+',pageSize:'+pageSize);
+      // })
+      // G('#pagination_id').onBeforeChange(function(page,pageSize){
+      //   alert('beforeChange');
+      // })
+      // G('#pagination_id').onChange(function(page,pageSize){
+      //   alert('page:'+page+',pageSize:'+pageSize);
+      // })
+      // G('#idswitch').onChange(function(v){
+      // //  G(this).unChecked()
+      // G(this).readonly()
+      // })
+      // G.messager.error("错误","检查不通过，不能提交");
       // G('#gRadio').onChange(function(n,o){
       //   alert('new:'+n,'old:'+o);
         
@@ -191,9 +214,12 @@
       // G('#radiogroup2').choseByValue('3')
       // G('#radiogroup2').enabled()
       // G('#radiogroup2').disabled()
-      G('#search-bar').onSearch(function(){
-         console.log('search-bar')
-      })
+      
+      G('#search-bar').onClick(function(value){
+        console.log(G('#search-bar').getValue());
+        G('#search-bar').setValue("9999")
+        })
+      
     })
   </script>
 </html>
