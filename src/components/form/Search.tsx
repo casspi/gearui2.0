@@ -18,9 +18,8 @@ export interface state extends Text.state {
 }
 export default class Search<P extends typeof props & SearchProps,S extends (state & SearchProps)> extends Text.default<P ,S>{
     getProps() {
+        super.getProps();
         let state = this.state;
-        // let state: state = G.G$.extend({}, this.state);
-        // delete state.invalidType;
         return G.G$.extend({}, state, {
             placeholder: this.state.placeholder,
             size: this.state.size,

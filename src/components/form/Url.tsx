@@ -12,6 +12,7 @@ export interface state extends Text.state {
 }
 export default class Url<P extends (typeof props) & InputProps ,S extends state> extends Text.default<P,S>{
     getProps() {
+        super.getProps()
         let state = this.state;
         return G.G$.extend({}, state, {
         });
@@ -24,8 +25,9 @@ export default class Url<P extends (typeof props) & InputProps ,S extends state>
         });
     }
     
-    makeJsx() {
+    render() {
         let props = this.getProps();
+        console.log(props)
         return <Input {...props}></Input>;
     }
 

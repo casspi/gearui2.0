@@ -3,17 +3,16 @@ import * as Tag from "../Tag";
 import * as React from 'react';
 import  G  from '../../Gear';
 import * as FormTag from './FormTag';
-import { SwitchProps } from 'antd/lib/switch';
+
 export var props = {
     ...FormTag.props,
     code:GearType.String,
     label:GearType.String,
     icon:GearType.String,
     showLabel:GearType.Boolean,
-    size:GearType.String,
-    readOnly:GearType.String,
+    size: GearType.Enum< 'small' | 'default'>(),
     checked:GearType.Boolean,
-    // defaultChecked:GearType.Any
+    defaultChecked:GearType.Any
 }
 export interface state extends FormTag.state {
     readOnly:boolean;
@@ -22,13 +21,13 @@ export interface state extends FormTag.state {
     code?: any;      //开关的取值，默认为“1,0” 1表示选中 0表示未选中
     label?: string;  //开关上的文字，可以设置两个，以逗号好隔
     icon?: string;    //图标，可以设置两个，以逗号分隔
-    size: string;               //	开关大小default/small
+    size?: 'small' | 'default';   //	开关大小default/small,
     disabled: boolean;          //禁止
     showLabel: boolean; //显示label，默认为false
     defaultChecked:any
 }
 
-export default class Switch<P extends (typeof props) & SwitchProps,S extends state> extends FormTag.default<P,S> {
+export default class Switch<P extends typeof props,S extends state> extends FormTag.default<P,S> {
     // 选中时的代码
     private _checkedCode:string;
     // 未选中时的代码
@@ -50,8 +49,8 @@ export default class Switch<P extends (typeof props) & SwitchProps,S extends sta
 
     //获取当前属性
     getProps() {
-        let state: state = G.G$.extend({}, this.state);
-        delete state.invalidType;
+        super.getProps()
+        let state = this.state;
         return G.G$.extend({},state,{
             checked: this.state.checked,
             defaultChecked: this.state.defaultChecked,
@@ -109,13 +108,14 @@ export default class Switch<P extends (typeof props) & SwitchProps,S extends sta
             readOnly: this.props.readOnly,
             size: this.props.size,
             disabled: this.props.disabled,
-            showLabel: this.props.showLabel
+            showLabel: this.props.showLabel||false
         });
     }
 
     //渲染
     render() {
-        let props = this.getProps();
+        let props:any = this.getProps();
+        delete props.showLabel;
         let checkedChildren:string|React.ReactNode;
         let unCheckedChildren:string|React.ReactNode;
         // 选中状态时显示的文本
@@ -222,7 +222,7 @@ export default class Switch<P extends (typeof props) & SwitchProps,S extends sta
 
     //是否选中
     isChecked(){
-        return this.state["checked"] || false;
+        return this.state.checked || false;
     }
 
     // 选中

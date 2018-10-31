@@ -66,7 +66,10 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             this.props.form.setFieldValue(this.props.name, changedValue, callback);
         }
     }
-
+    protected getProps(){
+        let state:any = this.state;
+        delete state.invalidType
+    }
     getInitialState(): state {
         return {
             rules: this.props.rules,
@@ -160,7 +163,6 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             }
         }
     }
-
     reset(){
         if(this.props.form) {
             this.props.form.reset(this.props.name);

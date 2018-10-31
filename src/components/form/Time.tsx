@@ -4,6 +4,7 @@ import * as FormTag from './FormTag';
 import * as React from 'react';
 import G from '../../Gear';
 import Tag from '../Tag';
+import { TimePickerProps } from 'antd/lib/time-picker';
 export var props = {
     ...FormTag.props,
     value:GearType.Any,          //时间
@@ -11,7 +12,7 @@ export var props = {
     format:  GearType.String,		            //展示的时间格式"HH:mm:ss"
     disabled: GearType.Boolean,              //禁止
     readonly: GearType.Boolean,
-    size: GearType.String,                   //尺寸
+    size: GearType.Enum<"large"|"defaule"|"small">(),                   //尺寸
     disabledHours: GearType.Any,
     disabledminutes: GearType.Any,
     disabledseconds: GearType.Any,
@@ -21,7 +22,8 @@ export var props = {
     secondstep: GearType.Number, // 秒钟时间间隔
     // 弹出列表所在容器
     popupcontainer: GearType.String,
-    getCalendarContainer: GearType.Function,       
+    getCalendarContainer: GearType.Function,
+    use12Hours:GearType.Boolean       
 }
 export interface state extends FormTag.state{
     size?: "large"|"defaule"|"small",
@@ -29,9 +31,10 @@ export interface state extends FormTag.state{
     format:string,
     readOnly:boolean,
     hideDisabledOptions:boolean,
+    use12Hours:boolean
 
 }
-export default class Time<P extends typeof props,S extends state> extends FormTag.default<P,S> {
+export default class Time<P extends typeof props & TimePickerProps,S extends state  & TimePickerProps> extends FormTag.default<P,S> {
 
     // constructor(props:any) {
     //     super(props);
@@ -48,8 +51,9 @@ export default class Time<P extends typeof props,S extends state> extends FormTa
             placeholder: this.state.placeholder,
             format: this.state.format,
             disabled: this.state.disabled || this.state.readOnly,
-            size: this.state.size,
+            size: this.state.size||'default',
             hideDisabledOptions:this.state.hideDisabledOptions,
+            use12Hours:this.state.use12Hours || false,
             disabledHours: ()=>{
                 return this.disabledHours();
             },
@@ -168,6 +172,7 @@ export default class Time<P extends typeof props,S extends state> extends FormTa
             disabledMinutes: disabledMinutes,
             disabledSeconds: disabledSeconds,
             hideDisabledOptions:hidedisabled,
+            use12Hours:this.props.use12Hours
             // 目前2.x版本不支持下面的属性，所以得自己实现
             //hourStep:this.props.hourstep,
             //minuteStep:this.props.minutestep,

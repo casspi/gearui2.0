@@ -107,18 +107,22 @@
           </g-radiogroup>
           </g-radio>  
         </g-repeat> -->
-        <g-search id="search-bar"  size="default" enterButton="search"></g-search>
+        <g-search id="search-bar"  size="default" enterButton="查询"></g-search>
         <!-- <g-mac></g-mac> -->
         <g-from>
         </g-from>
         <g-sumbit label="submit" ajax="true" url="/example/Submit/example1" icon="icon-save"></g-sumbit>
         <g-int>9999</g-int>
-        <g-url></g-url>
+        <g-url value="g-url"></g-url>
+        <g-text value="g-text"></g-text>
         <!-- <g-spin label="000"></g-spin> -->
-        <!-- <g-switch code="2,3" id="idswitch" defaultChecked="true" checked="true" showLabel="true"></g-switch>
-        <gtextarea></gtextarea>
-        <g-time></g-time>
-        <g-timepicker></g-timepicker> -->
+        <g-switch id="gswitch" code="0,1" size="large" icon="check,file" id="idswitch" defaultChecked="true" checked="true" showLabel="true"></g-switch>
+        <!-- <g-from> -->
+          <gtextarea></gtextarea>
+          <g-button type="submit">提交</g-button>
+        <!-- </g-from> -->
+        <g-time id="gtime" allowEmpty="false" width="300" size="1" placeholder="开始时间" disabledHours="[1,2]" min="09:00" max="17:30" disabled="false" format="HH:mm"></g-time>
+        <!-- <g-timepicker fo></g-timepicker> -->
         <!-- <g-Tree>
           <g-treeNode></g-treeNode>
           <g-treeNode></g-treeNode>
@@ -126,6 +130,7 @@
         </g-Tree> -->
         <!-- <g-Transfer></g-Transfer> -->
         <g-wrapper></g-wrapper>
+        <g-cancel>取消</g-cancel>
       </div>
     <!--
       This HTML file is a template.
@@ -214,12 +219,23 @@
       // G('#radiogroup2').choseByValue('3')
       // G('#radiogroup2').enabled()
       // G('#radiogroup2').disabled()
-      
-      G('#search-bar').onClick(function(value){
-        console.log(G('#search-bar').getValue());
-        G('#search-bar').setValue("9999")
+      // G("#gtime").
+      // G('#search-bar').onClick(function(value){
+      //   console.log(G('#search-bar').getValue());
+      //   G('#search-bar').setValue("9999")
+      //   })
+        G.tag.cancel.process = function(data) {
+            alert("点了取消按钮");
+        }
+        console.log(G('#gswitch').isChecked());
+        setTimeout(()=>G('#gswitch').setValue('1'),2000);
+        setTimeout(()=>G('#gswitch').unChecked(),2000);
+        setTimeout(()=>G('#gswitch').disable(),2000);
+        setTimeout(()=>G('#gswitch').enable(),3000);
+        G('#gswitch').onChange((v)=>{
+            alert(v)
         })
-      
+
     })
   </script>
 </html>

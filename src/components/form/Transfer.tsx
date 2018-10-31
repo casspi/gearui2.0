@@ -9,7 +9,7 @@ import { TreeProps as AntdTreeProps, AntTreeNode } from 'antd/lib/tree';
 import * as Tree from './Tree';
 import VoidTag from '../VoidTag';
 import Wrapper from '../Wrapper';
-export var  props =  {
+export var props =  {
     ...Tag.props,
     //左侧标题
     lefttitle:GearType.String,
@@ -61,9 +61,9 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     private _options:Array<any>;
 
     // 左侧树对象
-    private _leftTree:Tree.default<Tree.props & AntdTreeProps,Tree.state & AntdTreeProps>;
+    private _leftTree:Tree.default<typeof Tree.props & AntdTreeProps,Tree.state & AntdTreeProps>;
     // 右侧树对象
-    private _rightTree:Tree.default<Tree.props & AntdTreeProps,Tree.state & AntdTreeProps>;
+    private _rightTree:Tree.default<typeof Tree.props & AntdTreeProps,Tree.state & AntdTreeProps>;
 
     constructor(props: P) {
         super(props);

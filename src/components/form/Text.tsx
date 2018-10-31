@@ -191,7 +191,9 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
     }
 
     protected getProps() {
-        return this.state;
+        let state: state = this.state;
+        super.getProps()
+        return state;
     }
 
     afterRender() {
@@ -209,7 +211,8 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
     }
 
     render() {
-        return <AntdInput {...this.getProps()}></AntdInput>;
+        let props = this.getProps();
+        return <AntdInput {...props}></AntdInput>;
     }
     
     blur(fun: Function){
