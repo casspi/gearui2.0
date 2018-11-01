@@ -19,6 +19,7 @@ export var props = {
     iframe: GearType.Boolean,//是否以iframe的方式提交
     ajax: GearType.Boolean,//提交表单时是否使用ajax提交，默认为true
     redirect: GearType.String,//提交完成之后转向的路径，仅ajax或iframe方式可用
+    // validate:GearType.Boolean
 };
 export interface state extends Tag.state {
     //控件是否开启验证，每一个控件都存储
@@ -33,7 +34,7 @@ export interface state extends Tag.state {
     ajax?: boolean;
     method?: methods;
     redirect?: string;
-    validate?: boolean;
+    // validate?: boolean;
 };
 
 export class Form<P extends (typeof props & FormComponentProps), S extends state> extends Tag.default<P, S> {
@@ -69,22 +70,34 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     private getProps() {
         if(this.state.ajax == false){
-            return {
-                encType: "multipart/form-data"
-            };
+            return G.G$.extend(
+                {
+                    encType: "multipart/form-data"
+                },
+                this.state
+            ) 
         }
-        return {};
+        return G.G$.extend({},this.state);
     }
-
+        
     render() {
         let items = this.getFormItems();
-        return (<AntdForm {...this.getProps()}>
+        let props:any = this.getProps();
+        delete props.otherParams;
+        delete props.formTagStates;
+        delete props.invalidType;
+        delete props.validateHidden;
+        delete props.showProgress;
+        delete props.validate;
+        delete props.validation;
+        console.log(props);
+        return (<AntdForm {...props}>
             {items}
         </AntdForm>);
     }
 
     private getInitFormTagStates(): {[idx: string]:FormTag.state} {
-        let children = this.props.children;
+        let children:any[] = this.props.children;
         if(!(children instanceof Array)) {
             children = [children];
         }
@@ -143,12 +156,13 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 let tagName = childReactNode.props.name;
                 let rules: any = this.getRules(tagName);
                 let props: any = this.getFormTagProps(index, tagName);
-                let validation = this.getValidation(tagName);
+                let validation = this.getValidation(tagName)?true:false;
                 //合并新的信息，将当前存储的tagname对应state信息合并到props，并传递给formTag
                 props = G.G$.extend({}, childReactNode.props, props, this.state.formTagStates[tagName], {
                     needUpdateToState: ["validation", "invalidType", "rules","data-__field", "data-__meta"]
                 });
                 delete props.value;
+                console.log(validation)
                 let formTag: any = React.createElement(childReactNode.type, props, props.children);
                 let initialValue = this.values[tagName] || childReactNode.props.value;
                 formTag = this.props.form.getFieldDecorator(tagName,{
@@ -293,7 +307,8 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             return this.state.invalidType;
         }else {
             let props = validateReactNode.props;
-            return props.invalidType || this.state.invalidType;
+            // console.log(this.props)
+            return props.invalidType || this.props.invalidType;
         }
     } 
 

@@ -25,7 +25,7 @@ export default class Search<P extends typeof props & SearchProps,S extends (stat
             size: this.state.size,
             disabled: this.state.disabled,
             defaultValue: this.state.defaultValue,
-            // onSearch:this.props.onSearch,
+            onSearch:this.props.onSearch,
             // addonBefore: this.state["addonBefore"],
             // addonAfter: this.state["addonAfter"],
             // onKeydown: this.state["onKeydown"],
@@ -44,13 +44,14 @@ export default class Search<P extends typeof props & SearchProps,S extends (stat
     //插件初始化，状态发生变化重新进行渲染
     getInitialState() {
         let state = this.state;
+        console.log(this.props.onSearch)
         return G.G$.extend({}, state, {
             placeholder: this.props.prompt,
             size: this.props.size,
             disabled: this.props.disabled,
             defaultValue: this.props.value,
-            enterButton:this.props.enterButton || false
-            // onSearch:this.props.onSearch,
+            enterButton:this.props.enterButton || false,
+            onSearch:this.props.onSearch,
             // addonBefore: this.props.addonbefore,
             // addonAfter: this.props.addonafter,
             // onPressenter: this.props.onpressenter,
@@ -68,6 +69,7 @@ export default class Search<P extends typeof props & SearchProps,S extends (stat
     }
     render() {
         let props = this.getProps();
+        console.log(props)
         return <AntdSearch {...props} ></AntdSearch>;
     }
 }

@@ -1,36 +1,34 @@
-// import { button as GButton, Tag, TagProps, GButtonProps,form as gform,GFormProps } from './tags';
-import * as  Button from '../basic/Button';
-import {Button as AntdButton} from 'antd'
-import {props as buttonProps} from '../basic/Button';
-import {default as From,props as FromProps} from './Form'
+import {Button as AntdButton } from 'antd';
+import * as gform from '../form/Form';
 import * as React from 'react';
 import  G from '../../Gear';
 import {Message} from '../pack';
 
 // import { Ajax } from '../core/cores';
 // import {Util} from '../util/utils';
-
-export var props=  {
-    ...buttonProps,
+import * as Button from './Button';
+// import { Form } from '../form/Form';
+export var props = {
+    ...Button.props,
     url: GearType.String,//表单提交的地址，不设置的话则使用form action属性上的路径
     method:  GearType.String,//可选：post(默认)、get、put、delete，如果form上的method属性为空，就使用控件上的method来提交form
     ajax:  GearType.Boolean,//控件不是在form中的情况下，是否通过ajax提交到后台，可选值：true、false
     callback: GearType.Function,
-    // form: Element,//指定使用的是那一个form，如果不指定则默认是控件所在范围内的form，如果控件不在form中，则取页面第一个form
-}
+    form: GearType.String,//指定使用的是那一个form，如果不指定则默认是控件所在范围内的form，如果控件不在form中，则取页面第一个form
+};
 export interface state extends Button.state {
 
 }
 export default class Submit<P extends typeof props,S extends state> extends Button.default<P,S> {
     // 定义一个click事件
-    protected clickEvent = function(){
+    protected clickEvent(){
         // 先查找当前控件的上级form定义
         let form = G.$("#"+this.props.form);
-        if(form == null || !(form instanceof From)){
+        if(form == null || !(form instanceof gform.Form)){
             // 先查找当前控件的上级form对象
             form = this.getForm(G.G$(this.realDom).parents("form:first"));
         }
-        if(form == null || !(form instanceof From)){
+        if(form == null || !(form instanceof gform.Form)){
             // 还没有就找页面上第一个form
             form = this.getForm(G.G$("form:first"));
         }
@@ -41,13 +39,13 @@ export default class Submit<P extends typeof props,S extends state> extends Butt
         }
         if(form){
             // 表单存在
-            if(form instanceof From) {
+            if(form instanceof gform.Form) {
                 // 是一个gear-form表单
                 if(this.props.url || this.props.method) {
                     form.setForm({
                         action: this.props.url,
                         method: this.props.method,
-                        ajax: this.props.ajax
+                        ajax: this.props.ajax,
                     });
                 }
                 if(form.props != null && form.props.showprogress != false) {
@@ -100,7 +98,7 @@ export default class Submit<P extends typeof props,S extends state> extends Butt
         return null;       
     }
 
-    getProps() {
+    getInitialState() {
         let state = this.state;
         return G.G$.extend({},state,{
             type: this.props.buttonStyle || "primary",
@@ -114,5 +112,4 @@ export default class Submit<P extends typeof props,S extends state> extends Butt
             this._onBeforeSubmit = fun.bind(this);
         }
     }
-    
 }

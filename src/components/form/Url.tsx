@@ -27,7 +27,6 @@ export default class Url<P extends (typeof props) & InputProps ,S extends state>
     
     render() {
         let props = this.getProps();
-        console.log(props)
         return <Input {...props}></Input>;
     }
 

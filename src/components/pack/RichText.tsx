@@ -22,7 +22,7 @@ export interface state extends Tag.state {
 }
 export default class Ueditor<P extends typeof props,S extends state> extends Tag.default<P,S> {
     
-    dialog: Dialog<DialogProps1,DialogState>;
+    dialog: Dialog<typeof DialogProps,DialogState>;
     ue: any;
     getProps() {
         let state = this.state;
@@ -137,7 +137,7 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
         this.ue.setContent(val);
     }
 
-    static save(ueditor:Ueditor<Ueditor['props'],Ueditor['state']>) {
+    static save(ueditor:Ueditor<typeof Ueditor.props,Ueditor.state>) {
 		var ue = ueditor.ue;
 		var contentHtml = ue.getContent();
 		var contentText = ue.getContentTxt();

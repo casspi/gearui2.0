@@ -57,6 +57,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     private _triggerButton: any;
 
     getProps() {
+        super.getProps();
         let state = this.state;
         let className = state.className ? "inputtag-control-wrapper " + state.className : "inputtag-control-wrapper";
         if((this.state.disabled)){
@@ -201,6 +202,14 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         // 输入框是否可见
         let inputControl;
         let props: any;
+        let _props:any = this.getProps();
+        delete _props.inputVisible;
+        // delete _props.loading;
+        console.log(_props.loading)
+        delete _props.repeatAble;
+        delete _props.mustMatch;
+        delete _props.controlType;
+        delete _props.dropdownWidth;
         if(this.state.dictype || this.state.url){
             props = this.getAutoCompleteProps();
             inputControl = <AutoComplete.default key={"input"} {...props}></AutoComplete.default>;
@@ -208,7 +217,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             props = this.getInputProps();
             inputControl = <Text.default key={"input"} {...props}></Text.default>;
         }
-        return <div {...this.getProps()}>
+        return <div {..._props}>
                 <AntdSpin size={"default"} spinning={this.state.loading} delay={100}>
                     <div key={"taglist"} className={"tag-list"}>
                         {this.getTags()}
