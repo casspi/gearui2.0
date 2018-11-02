@@ -169,7 +169,8 @@ export default class GUpload<P extends typeof props,S extends state> extends For
 
     render () {
         let props = this.getUploadProps();
-        return <Wrapper {...this.getProps()}>
+        let wProps:any = this.getProps();
+        return <Wrapper {...wProps}>
             <Upload {...props}>
                 <Button disabled={props.disabled==true||props.readonly==true} style={props.style}>
                     <Icon type={"upload"}></Icon>

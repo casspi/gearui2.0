@@ -107,7 +107,7 @@
           </g-radiogroup>
           </g-radio>  
         </g-repeat> -->
-        <g-search id="search-bar" onSearch="alert('search')" size="default" enterButton="查询"></g-search>
+        <g-search id="search-bar"  onSearch="" size="default" enterButton="查询"></g-search>
         <!-- <g-mac></g-mac> -->
        <!-- <gform action="" id='form1' invalidType="1"  method="post">
          <input type="text" name="user" value="zhangsan">
@@ -116,25 +116,27 @@
         <g-submit id="gsubmit" id="form1"  label="submit" icon="save">submit</g-submit> -->
         <g-int>9999</g-int>
         <g-url value="g-url"></g-url>
-        <g-text value="g-text"></g-text>
+        <form>
+          <g-text id="gtext" validation='true' value="g-text"  max="5"  icon="search"></g-text>
+          <button>BTN</button>
+        </form>
         <!-- <g-spin label="000"></g-spin> -->
         <g-switch id="gswitch" code="0,1" size="large" icon="check,file" id="idswitch" defaultChecked="true" checked="true" showLabel="true"></g-switch>
         <!-- <g-from> -->
           <gtextarea id='gtextarea'></gtextarea>
           <!-- <g-button type="submit">提交</g-button> -->
         <!-- </g-from> -->
-        <g-time id="gtime" allowEmpty="false" width="300" size="1" placeholder="开始时间" disabledHours="[1,2]" min="09:00" max="17:30" disabled="false" format="HH:mm"></g-time>
+        <g-time id="gtime" inputReadOnly="true"  use12Hours="false" hideDisabled="false" width="300" size="1" placeholder="开始时间" disabledHours="5-9" disabledMinutes="20-60" disabled="false" format="HH:mm:ss"></g-time>
         <!-- <g-timepicker fo></g-timepicker> -->
-        <!-- <g-Tree>
-          <g-treeNode></g-treeNode>
-          <g-treeNode></g-treeNode>
-          <g-treeNode></g-treeNode>
-        </g-Tree> -->
-        <!-- <g-Transfer></g-Transfer> -->
+        <g-Tree dictype="DIC_UNIT_DEPARTMENT_TEST">
+        
+        </g-Tree>
+        <g-transfer showIcon="true" lines="true" dictype="DIC_UNIT_DEPARTMENT_TEST" rightTitle="right"></g-transfer>
+        <!-- <g-richtext></g-richtext>
         <g-wrapper></g-wrapper>
-        <g-cancel>取消</g-cancel>
-        <g-upload id="gupload" icon="file" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload>
-        <g-inputtag></g-inputtag>
+        <g-cancel>取消</g-cancel> -->
+        <g-upload id="gupload" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload>
+        <!-- <g-inputtag></g-inputtag> -->
       </div>
     <!--
       This HTML file is a template.
@@ -223,40 +225,43 @@
       // G('#radiogroup2').choseByValue('3')
       // G('#radiogroup2').enabled()
       // G('#radiogroup2').disabled()
-      // G("#gtime").
-      // G('#search-bar').onClick(function(value){
-      //   console.log(G('#search-bar').getValue());
-      //   G('#search-bar').setValue("9999")
-      //   })
-      G('#search-bar').onSearch(function(){
-        console.log('this is search')
-      })
+      // G("#gtime").onChange(function(){
+      //   console.log('change time')
+      // })
+      function disabledHours(){
+        // 不充许选择晚上22点到早上7点
+        return [0,1,2,3,4,5,6,7,22,23];
+      }
+     function goSearch(){
+       alert(11111)
+     };
+     G('#gtext').enableValidation()
       // G("#gsubmit").onBeforeSubmit(()=>{
       //   alert(11111)
       // })
       // G("#gsubmit").select()
-        G.tag.cancel.process = function(data) {
-            alert("点了取消按钮");
-        }
-        console.log(G('#gswitch').isChecked());
+        // G.tag.cancel.process = function(data) {
+        //     alert("点了取消按钮");
+        // }
+        // console.log(G('#gswitch').isChecked());
         // G('#gsubmit').onBeforeSubmit(function(){
         //   alert('提交之前')
         // });
-        setTimeout(()=>G('#gswitch').setValue('1'),2000);
-        setTimeout(()=>G('#gswitch').unChecked(),2000);
-        setTimeout(()=>G('#gswitch').disable(),2000);
-        setTimeout(()=>G('#gswitch').enable(),3000);
-        G('#gswitch').onChange((v)=>{
-            alert(v)
-        })
-        G('#gtextarea').readonly(true)
-        G('#gtextarea').readonly(false)
-        G('#gupload').onBeforeUpload(function(){
-          alert('上传前。。。')
-        })
-        G('#gupload').onChange(function(){
-          alert('change')
-        })
+        // setTimeout(()=>G('#gswitch').setValue('1'),2000);
+        // setTimeout(()=>G('#gswitch').unChecked(),2000);
+        // setTimeout(()=>G('#gswitch').disable(),2000);
+        // setTimeout(()=>G('#gswitch').enable(),3000);
+        // G('#gswitch').onChange((v)=>{
+        //     alert(v)
+        // })
+        // G('#gtextarea').readonly(true)
+        // G('#gtextarea').readonly(false)
+        // G('#gupload').onBeforeUpload(function(){
+        //   alert('上传前。。。')
+        // })
+        // G('#gupload').onChange(function(){
+        //   alert('change')
+        // })
     })
   </script>
 </html>

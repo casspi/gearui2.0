@@ -11,19 +11,20 @@ export var props = {
     placeholder: GearType.String,        //"请选择时间"
     format:  GearType.String,		            //展示的时间格式"HH:mm:ss"
     disabled: GearType.Boolean,              //禁止
-    readonly: GearType.Boolean,
+    readOnly: GearType.Boolean,
     size: GearType.Enum<"large"|"defaule"|"small">(),                   //尺寸
     disabledHours: GearType.Any,
-    disabledminutes: GearType.Any,
-    disabledseconds: GearType.Any,
-    hidedisabled: GearType.Boolean,
-    hourstep: GearType.Number,   // 小时时间间隔
-    minutestep: GearType.Number, // 分针时间间隔
-    secondstep: GearType.Number, // 秒钟时间间隔
+    disabledMinutes: GearType.Any,
+    disabledSeconds: GearType.Any,
+    hideDisabled: GearType.Boolean,
+    hourStep: GearType.Number,   // 小时时间间隔
+    minuteStep: GearType.Number, // 分针时间间隔
+    secondStep: GearType.Number, // 秒钟时间间隔
     // 弹出列表所在容器
     popupcontainer: GearType.String,
     getCalendarContainer: GearType.Function,
-    use12Hours:GearType.Boolean       
+    use12Hours:GearType.Boolean,
+    inputReadOnly:GearType.Boolean       
 }
 export interface state extends FormTag.state{
     size?: "large"|"defaule"|"small",
@@ -45,7 +46,7 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
     //获取当前属性
     getProps() {
         let state = this.state;
-        return G.G$.extend(state, {
+        return G.G$.extend({},state, {
             defaultValue: this.state.value,
             value: this.state.value,
             placeholder: this.state.placeholder,
@@ -54,6 +55,7 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
             size: this.state.size||'default',
             hideDisabledOptions:this.state.hideDisabledOptions,
             use12Hours:this.state.use12Hours || false,
+            inputReadOnly:this.state.inputReadOnly===true?true:false ,
             disabledHours: ()=>{
                 return this.disabledHours();
             },
@@ -125,34 +127,33 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
 
     //插件初始化，状态发生变化重新进行渲染
     getInitialState() {
-        let hidedisabled = this.props.hidedisabled;
+        let hidedisabled = this.props.hideDisabled;
         let disabledHours:Array<any> = this.props.disabledHours;
-        console.log(disabledHours)
-        let disabledMinutes:Array<any> = this.props.disabledminutes;
-        let disabledSeconds:Array<any> = this.props.disabledseconds;
-        if((this.props.hourstep!=null && this.props.hourstep>0)
-            || (this.props.minutestep!=null && this.props.minutestep>0)
-            || (this.props.secondstep!=null && this.props.secondstep>0)){
+        let disabledMinutes:Array<any> = this.props.disabledMinutes;
+        let disabledSeconds:Array<any> = this.props.disabledSeconds;
+        if((this.props.hourStep!=null && this.props.hourStep>0)
+            || (this.props.minuteStep!=null && this.props.minuteStep>0)
+            || (this.props.secondStep!=null && this.props.secondStep>0)){
             hidedisabled = true;
-            if(this.props.hourstep>0){
-                disabledHours = [];
-                var step:number = this.props.hourstep;
+            if(this.props.hourStep>0){
+                // disabledHours = [];
+                var step:number = this.props.hourStep;
                 for(var i=0;i<24;i++){
                     if(i % step!=0)
                         disabledHours.push(i);
                 }
             }
-            if(this.props.minutestep>0){
-                disabledMinutes = [];
-                var step:number = this.props.minutestep;
+            if(this.props.minuteStep>0){
+                // disabledMinutes = [];
+                var step:number = this.props.minuteStep;
                 for(var i=0;i<60;i++){
                     if(i % step!=0)
                         disabledMinutes.push(i);
                 }
             }
-            if(this.props.secondstep>0){
-                disabledSeconds = [];
-                var step:number = this.props.secondstep;
+            if(this.props.secondStep>0){
+                // disabledSeconds = [];
+                var step:number = this.props.secondStep;
                 for(var i=0;i<60;i++){
                     if(i % step!=0)
                         disabledSeconds.push(i);
@@ -160,30 +161,31 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
             }   
         }
         let format = this.getFormat();
-        let state = super.getInitialState();
+        let state = this.state;
         return G.G$.extend({}, state, {
             value: this.isValid(this.props.value)?moment(this.props.value, format):null,
             placeholder: this.props.placeholder,
             format: format,
             disabled: this.props.disabled,
-            readonly: this.props.readonly,
+            readonly: this.props.readOnly,
             size: this.props.size,
             disabledHours: disabledHours,
             disabledMinutes: disabledMinutes,
             disabledSeconds: disabledSeconds,
             hideDisabledOptions:hidedisabled,
-            use12Hours:this.props.use12Hours
+            use12Hours:this.props.use12Hours,
+            inputReadOnly:this.props.inputReadOnly
             // 目前2.x版本不支持下面的属性，所以得自己实现
-            //hourStep:this.props.hourstep,
-            //minuteStep:this.props.minutestep,
-            //secondStep:this.props.secondstep,            
+            // hourStep:this.props.hourStep,
+            // minuteStep:this.props.minuteStep,
+            // secondStep:this.props.secondStep,            
         });
     }
 
     // 检查当前设置的时间是否有效
     protected isValid(value:any):boolean{
         if(value){
-            let m = moment(value, this.state?this.state["format"]:this.getFormat());
+            let m = moment(value, this.state?this.state.format:this.getFormat());
             let hour = m.hour();
             let disabledHours = this.disabledHours();
             if(disabledHours && disabledHours.length>0){
@@ -257,7 +259,7 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
 
     private disabledHours() {
         let dishr : any;
-        let dish = this.state?this.state["disabledHours"]:this.props.disabledHours;
+        let dish = this.state?this.state.disabledHours:this.props.disabledHours;
         if(dish) {
             // if(typeof dish=="function")
             //     dish = dish.call(this);
@@ -267,7 +269,7 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
     }
     private disabledMinutes(selectedHour:any) {
         let dishr :any;
-        let dish = this.state?this.state["disabledMinutes"]:this.props.disabledminutes;
+        let dish = this.state?this.state.disabledMinutes:this.props.disabledMinutes;
         if(dish) {
             // if(typeof dish=="function")
             //     dish = dish.call(this,selectedHour);
@@ -277,7 +279,7 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
     }
     private disabledSeconds(selectedHour:any, selectedMinute:any) {
         let dishr :any;
-        let dish = this.state?this.state["disabledSeconds"]:this.props.disabledseconds;
+        let dish = this.state?this.state.disabledSeconds:this.props.disabledSeconds;
         if(dish) {
             // if(typeof dish=="function")
             //     dish = dish.call(this,selectedHour, selectedMinute);
@@ -325,11 +327,11 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
         if (value instanceof Array) {
             valueRe = [];
             value.forEach((valueInner: moment.Moment) => {
-                let val = valueInner.format(this.state["format"]);
+                let val = valueInner.format(this.state.format);
                 valueRe.push(val);
             });
         } else if (moment.isMoment(value)) {
-            valueRe = value.format(this.state["format"]);
+            valueRe = value.format(this.state.format);
         }
         return valueRe;
     }

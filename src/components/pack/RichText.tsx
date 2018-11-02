@@ -11,7 +11,8 @@ export var props = {
     ueWidth: GearType.Number,
     viewId: GearType.String,
     textId: GearType.String,
-    htmlId: GearType.String
+    htmlId: GearType.String,
+    length:GearType.Any
 }
 export interface state extends Tag.state {
     // ueTitle: string,
@@ -137,7 +138,7 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
         this.ue.setContent(val);
     }
 
-    static save(ueditor:Ueditor<typeof Ueditor.props,Ueditor.state>) {
+    static save(ueditor:Ueditor<typeof props,state>) {
 		var ue = ueditor.ue;
 		var contentHtml = ue.getContent();
 		var contentText = ue.getContentTxt();

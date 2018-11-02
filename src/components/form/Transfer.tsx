@@ -1,16 +1,13 @@
 import { Button,Checkbox} from 'antd';
-import { TransferProps as AntdTransferProps, AntTransferNode } from 'antd/lib/transfer';
-import * as Tag from '../Tag';
+import { TransferProps as AntdTransferProps } from 'antd/lib/transfer';
+import  {FormTag} from '../form';
 import * as React from 'react';
 import G from '../../Gear';
-// import { GearArray } from '../core/cores';
-// import { ObjectUtil, Http } from '../../utils';
-import { TreeProps as AntdTreeProps, AntTreeNode } from 'antd/lib/tree';
+import { TreeProps as AntdTreeProps } from 'antd/lib/tree';
 import * as Tree from './Tree';
-import VoidTag from '../VoidTag';
 import Wrapper from '../Wrapper';
 export var props =  {
-    ...Tag.props,
+    ...FormTag.props,
     //左侧标题
     lefttitle:GearType.String,
     //右侧标题
@@ -47,13 +44,13 @@ export var props =  {
     // onlefttreemoved(ele):,
     // onrighttreemoved(ele):void
 }
-export interface state extends Tag.state{
+export interface state extends FormTag.state{
     readOnly:boolean,
     leftChecked:boolean,
     rightChecked:boolean,
 }
 // 穿梭框
-export default class Transfer<P extends (typeof props) & AntdTransferProps,S extends state & AntdTransferProps> extends Tag.default<P,S>{
+export default class Transfer<P extends (typeof props) & AntdTransferProps,S extends state & AntdTransferProps> extends FormTag.default<P,S>{
 
     // 是否首次初始化
     private _initiated:boolean = false;
@@ -248,7 +245,10 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     }
     
     render() {
-        let props = this.getProps();
+        let props:any = this.getProps();
+        let leftTreeProps:any = this.getLeftTreeProps();
+        let rightTreeProps:any = this.getRightTreeProps()
+        console.log(leftTreeProps.dictype)
         return <Wrapper {...props}>
             <div key={"left"} {...this.getLeftContainerProps()}>
                 <div key={"header"} className={"list-header"}>
@@ -258,7 +258,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                     <div key={"title"} className={"header-title"}>{this.state["leftTitle"]}</div>
                 </div>
                 <div key={"body"} className={"list-body"}>
-                    <Tree key={"leftTree"} {...this.getLeftTreeProps()}/>
+                    <Tree.default key={"leftTree"} {...leftTreeProps}/>
                 </div>
             </div>
             <div key={"operation"} className={"transfer-operation"}>
@@ -268,12 +268,12 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             <div key={"right"} {...this.getRightContainerProps()}>
                 <div key={"header"} className={"list-header"}>
                     <div key={"checkall"} className={"checkall"}>
-                        <Checkbox {...this.getRightCheckProps()}>{"全选"}</Checkbox>
+                        <Checkbox {...this.getRightCheckProps}>{"全选"}</Checkbox>
                     </div>
                     <div key={"title"} className={"header-title"}>{this.state["rightTitle"]}</div>
                 </div>
                 <div key={"body"} className={"list-body"}>
-                    <Tree key={"rightTree"} {...this.getRightTreeProps()}/>
+                    <Tree.default key={"rightTree"} {...rightTreeProps}/>
                 </div>
             </div>
         </Wrapper>;
@@ -566,7 +566,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         let texts:any[] = [];
         if(this._rightTree){
             let options = this._rightTree.getRoots();
-            var seek = function(array){
+            var seek = function(array:any[]){
                 if(array){
                     for(var i=0;i<array.length;i++){
                         if(array[i]["children"]){
@@ -634,11 +634,11 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         this._setRightChecked(false);
     }   
 
-    focus(...args) { 
+    focus(...args:any[]) { 
         this.find(".gearui-control-wrapper").focus(...args);      
     }
 
-    blur(...args){
+    blur(...args:any[]){
         this.find(".gearui-control-wrapper").blur(...args);
     }  
     

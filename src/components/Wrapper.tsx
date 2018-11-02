@@ -25,11 +25,9 @@ export default  class Wrapper<P extends typeof props,S extends state> extends Ta
     constructor(props:P) {
         super(props);
     } 
-    getInitialState(): state {
-        return {
-            
-        };
-    }
+    getInitialState(): state{
+        return G.G$.extend({},this.state)
+    };
     getProps() {  
         let state = this.state;
         let className = "gearui-control-wrapper";

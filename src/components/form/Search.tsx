@@ -12,9 +12,10 @@ export var props = {
     disabled:GearType.Boolean,
     defaultValue:GearType.Any,
     enterButton: GearType.Or(GearType.Boolean,GearType.Any),
+    click1:GearType.Any
 };
 export interface state extends Text.state {
-    
+    onSearch?:Function
 }
 export default class Search<P extends typeof props & SearchProps,S extends (state & SearchProps)> extends Text.default<P ,S>{
     getProps() {
@@ -25,7 +26,8 @@ export default class Search<P extends typeof props & SearchProps,S extends (stat
             size: this.state.size,
             disabled: this.state.disabled,
             defaultValue: this.state.defaultValue,
-            onSearch:this.props.onSearch,
+            onSearch:this.state.onSearch,
+            // onSearch:function(){alert()},
             // addonBefore: this.state["addonBefore"],
             // addonAfter: this.state["addonAfter"],
             // onKeydown: this.state["onKeydown"],
@@ -42,10 +44,8 @@ export default class Search<P extends typeof props & SearchProps,S extends (stat
     }
 
     //插件初始化，状态发生变化重新进行渲染
-    getInitialState() {
-        let state = this.state;
-        console.log(this.props.onSearch)
-        return G.G$.extend({}, state, {
+    getInitialState():state {
+        return G.G$.extend({}, {
             placeholder: this.props.prompt,
             size: this.props.size,
             disabled: this.props.disabled,
