@@ -19,7 +19,7 @@ export default class ClickAction<P extends typeof props, S extends state> extend
 
     getInitialState(): state {
         return {
-            type: this.props.type,
+            type: this.props.type || 'link',
             actionType: this.props.actionType
         };
     }
@@ -34,12 +34,17 @@ export default class ClickAction<P extends typeof props, S extends state> extend
         });
         return state;
     }
-
+    getProps(){
+        let state:any = G.G$.extend({}, this.state);
+        return state
+    }
     render() {
-        let type = this.props.type;
+        let type = this.state.type ;
+        let state = this.getProps()
+        console.log(state)
         if(type) {
             if(type == "link") {
-                return <a {...this.state}>{this.state.text}</a>; 
+                return <a {...state}>{this.state.text}</a>; 
             }else if(type == "icon") {
                 let state = this.getIconState();
                 return <AntdIcon {...state}/>;

@@ -166,6 +166,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         return {
             placeholder: this.props.placeholder,
             size: this.props.size,
+            style:this.props.style,
             addonBefore: this.getAddonBefore(),
             addonAfter: this.getAddonAfter(),
             prefix: this.getPrefix(),
@@ -212,7 +213,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
 
     render() {
         let props = this.getProps();
-        return <AntdInput {...props}></AntdInput>;
+        return <AntdInput {...props} ></AntdInput>;
     }
     
     blur(fun: Function){

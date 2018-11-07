@@ -1,6 +1,5 @@
 import * as Tag from '../Tag';
-import  Dialog from './Dialog';
-import  {props as DialogProps,state as DialogState} from './Dialog';
+import * as Dialog from './Dialog';
 import * as React from 'react';
 import {Message} from '../pack';
 import  G from '../../Gear';
@@ -23,7 +22,7 @@ export interface state extends Tag.state {
 }
 export default class Ueditor<P extends typeof props,S extends state> extends Tag.default<P,S> {
     
-    dialog: Dialog<typeof DialogProps,DialogState>;
+    dialog: Dialog.default<typeof Dialog.props,Dialog.state>;
     ue: any;
     getProps() {
         let state = this.state;
@@ -32,13 +31,16 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
                 if(this.dialog) {
                     this.dialog.open();
                 }else {
-                    let but = G.$("<input ctype='button' value='test'/>").prependTo(document.body);
-                    but.doRender();
+                    let btn = G.$("<input ctype='button' value='test'/>");
+                    btn.prependTo(document.body);
+                    btn.doRender();
                     let __this = this;
-                    let windowCon = G.$("<div ctype='window' title='"+this.props.ueTitle+"' ontext='保存' canceltext='取消' width='"+this.props.ueWidth+"'></div>").prependTo(document.body);
+                    let windowCon = G.$("<div ctype='window' title='"+this.props.ueTitle+"' ontext='保存' canceltext='取消' width='"+this.props.ueWidth+"'></div>");
+                    windowCon.prependTo(document.body);
                     (function(__this) {
                         windowCon.doRender(function() {
-                            __this.dialog = G.$(this);
+                            __this.dialog = windowCon;
+                            console.log(__this.dialog);
                             __this.dialog.find(".ant-modal-body").html("<script id='"+__this.props.id+"_editor' type='text/plain'></script>");
                             __this.dialog.onOpen(() => {
                                 __this.doEvent("open");

@@ -8,7 +8,7 @@ import '../../../node_modules/moment/locale/zh-cn';
 moment.locale('zh-cn');
 export var props =  {
     ...Tag.props,
-    value: moment.Moment,         //时间
+    value: GearType.Any,         //时间
     placeholder: GearType.String,	        //"请选择时间"
     format: GearType.String,	            //展示的时间格式"HH:mm:ss"
     disabled: GearType.Boolean,              //禁止

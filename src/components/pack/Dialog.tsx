@@ -4,10 +4,10 @@ import * as ReactDOM from 'react-dom';
 import { Modal as AntdModal } from 'antd';
 import { ObjectUtil, UUID } from '../../utils';
 import VoidTag from '../VoidTag';
+import Footer from '../layout/Footer';
 export var props = {
     ...Tag.props,
     footer: GearType.Or<boolean, string>(GearType.Boolean, GearType.String),
-    // footer: GearType.Boolean,
     maximized: GearType.Boolean,
     confirmLoading: GearType.Boolean,
     closable: GearType.Boolean,
@@ -268,8 +268,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
 
     render() {
         let props = this.getProps();
-        let children = this.getChildren();
-        
+        let children = this.getChildren() || "";//避免子节点为空时，VoidTag 报错
         if(this.state.destory) {
             return null;
         }
@@ -309,7 +308,6 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         if(content) {
             return G.$(content, true);
         }
-        console.log(this.props.children)
         return this.props.children;
     }
     onConfirm(fun:Function) {
@@ -359,14 +357,11 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         props.style = {
             padding: '0px'
         }
-
         props.showIcon = true;
         props.visible = true;
-
         let dialog = <Dialog {...props}></Dialog>;
         let span = document.createElement("span");
         span = document.body.appendChild(span);
-
         ReactDOM.render(dialog, span);
 
         // 返回对对话框的操作句柄

@@ -111,7 +111,8 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     childTree: Tree<P, S>;
 
     getInitialState():state & AntdTreeProps {
-        return {
+        var state = this.state;
+        return G.G$.extend({},state,{
             options: [],
             expandedKeys: this.props.expandedKeys,
             defaultExpandedKeys: this.props.expandedKeys,
@@ -120,7 +121,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             defaultSelectedKeys: [],
             onlyLeafCheck: this.props.onlyLeafCheck,
             showLine: this.props.lines == true,
-            showIcon: this.props.showIcon,
+            showIcon: this.props.showIcon==true,
             multiple: this.props.multiple,
             autoExpandParent: this.props.autoExpandParent != false,
             /** checkable状态下节点选择完全受控（父子节点选中状态不再关联）*/
@@ -136,7 +137,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             defaultExpandAll: this.props.defaultExpandAll,
             dictype: this.props.dictype,
             url: this.props.url
-        };
+        })
     }
 
     //获取jsx格式的node节点
@@ -805,7 +806,10 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             let optionsNew: Array<TreeNode> = [];
             if((options instanceof Array)==false){
                 optionsNew = [options];
+            }else{
+                optionsNew = options;
             }
+            console.log(optionsNew)
             let gAddValues:GearArray<string>;
             if(addValues) {
                 gAddValues = new GearArray(addValues);
@@ -817,7 +821,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                         if(array[i] && array[i].children){
                             seek(array[i].children);
                         }
-                        //array[i].checked = true;
+                        // array[i].checked = true;
                         if(gArray.contains(array[i].id)==false){
                             keyValue.push(array[i].id);
                         }
@@ -831,6 +835,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 }
             }
             seek(optionsNew);
+            console.log(gArray)
         }
     }
 
@@ -1275,18 +1280,21 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     
     // 全选和反选
     checkAll(callback?: Function){
+        alert('quanxuan')
         let value: any[] = [];
-        var options = this.state.options;
+        var options:any = this.state.options;
         if(options){
             this._checkAll(value,options);
             this.setState({
-                value:value
+                value:value,
+                options:options
             },function(){
                 if(callback){
                     callback();
                 }
             });
         }
+        
     }
     unCheckAll(callback?:Function){
         var options = this.state.options;

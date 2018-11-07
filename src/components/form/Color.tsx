@@ -11,49 +11,47 @@ export var props = {
 export interface state extends FormTag.state {
     showPicker?: boolean;
     color?: string;
+
 }
 export default class Color<P extends typeof props & InputProps, S extends state & InputProps> extends Text.default<P, S> {
 
     protected _change(color: any,callback?: Function) {
         this.setValue(color.hex.replace("#",""),callback);
-    }
 
+    }
     getInitialState(): state & InputProps {
-        let style = G.G$.extend(props.style || {},{background: "#" + this.state.color, color: this.state.color > "aaaaaa"?"#000000":"#FFFFFF",display:"block",disabled:false});
-        
-        return {
-            onClick: (e: any)=>{
-                this.showPicker();
-                this.doEvent("click", e);
-            },
-            style,
-            onKeyDown:(e: any) => {
-                let keyCode = e.keyCode;
-                //放置输入非数字字符
-                var e = e||window.event;
-                var target = e.srcElement||e.target;
-                if((keyCode < 48 || (keyCode > 57 && keyCode < 65) || keyCode > 70) || target.value.length > 5) {
-                    if (e.stopPropagation){  
-                        e.stopPropagation();  
-                    }else{  
-                        e.cancelBubble=true;  
-                    } 
-                    if (e.preventDefault){  
-                        e.preventDefault();  
-                    }else{  
-                        e.returnValue=false;  
+        return G.G$.extend({},this.state,
+            {
+                onClick: (e: any)=>{
+                    this.showPicker();
+                    this.doEvent("click", e);
+                },
+                onKeyDown:(e: any) => {
+                    let keyCode = e.keyCode;
+                    //放置输入非数字字符
+                    var e = e||window.event;
+                    var target = e.srcElement||e.target;
+                    if((keyCode < 48 || (keyCode > 57 && keyCode < 65) || keyCode > 70) || target.value.length > 5) {
+                        if (e.stopPropagation){  
+                            e.stopPropagation();  
+                        }else{  
+                            e.cancelBubble=true;  
+                        } 
+                        if (e.preventDefault){  
+                            e.preventDefault();  
+                        }else{  
+                            e.returnValue=false;  
+                        }
                     }
-                }
-            },
-            value: this.getValue(),
-            showPicker: this.props.showPicker
-        };
+                },
+                color: this.props.value || '',
+                showPicker: this.props.showPicker,
+                
+            }
+        )
     }
-
-    
 
     getPickerProps() {
-        
         return {
             onChange: (color: any, event: any)=>{
                 let oldValue = this.getValue();
@@ -67,11 +65,50 @@ export default class Color<P extends typeof props & InputProps, S extends state 
     }
 
     getProps() {
-        let props: any = G.G$.extend({},this.state);
-        delete props.showPicker;
-        return props;
+        super.getProps()
+        let style = G.G$.extend(props.style || {},{border:'none',background: "#" + this.state.color, color: this.state.color > "aaaaaa"?"#000000":"#FFFFFF",display:"block",disabled:false});
+        let propsl: any = G.G$.extend({},this.state,{
+            style:style,
+            value: this.getValue(),
+
+        });
+        delete propsl.showPicker;
+        return propsl;
+    }
+    afterRender() {
+        this.setInputBackground();
     }
 
+    afterUpdate() {
+        this.setInputBackground();
+    }
+
+    getValidColor() {
+        let value:any = this.getValue();
+        if(value.length > 6) {
+            value = value.substring(0,6);
+        }else if(value.length != 3){
+            let zeroLength = 6 - value.length;
+            let zero = "000000".substr(0,zeroLength);
+            value = value + zero;
+        }
+        return value;
+    }
+
+    setInputBackground() {
+        let value = this.getValidColor();
+        let background = "#" + value;
+        let color = value > "aaaaaa"?"#000000":"#FFFFFF";
+        let ele = this.realDom;
+        if(ele) {
+            let input = G.G$(ele).find("input");
+            if(input) {
+                G.G$(input).css("color",color);
+                G.G$(input).css("background",background);
+            }
+            
+        }
+    }
     render() {
         let position1:any = "absolute";
         let position2:any = "fixed";
@@ -121,7 +158,15 @@ export default class Color<P extends typeof props & InputProps, S extends state 
             }
         });
     }
-
+    setValue(val:any,callback?:Function) {
+        this.setState({
+            color:val
+        },()=>{
+            if(callback && G.G$.isFunction(callback)) {
+                callback();
+            }
+        });
+    }
     getValue() {
         return this.state.color;
     }

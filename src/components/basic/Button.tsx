@@ -50,9 +50,19 @@ export default class Button<P extends typeof props, S extends state> extends Tag
             url: this.props.url,
         };
     }
-
+    getProps(){
+        return  
+    }
     render() {
-        let state: state = G.G$.extend({}, this.state);
+        let state:any = G.G$.extend({}, this.state);
+        delete state.actionType;// 当自己为clickAction时，删除不能被Button接受的属性
+        //删除DialogAction中的属性
+        delete state.dialogWidth;
+        delete state.dialogHeight;
+        delete state.confirmText;
+        delete state.cancelText;
+        delete state.maskClosable;
+        delete state.loadType;
         if(state.iconAlign == "right" && this.state.icon && this.state.text) {
             delete state.icon;
             let icon:any = this.state.icon;

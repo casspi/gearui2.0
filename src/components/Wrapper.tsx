@@ -7,6 +7,7 @@ import G  from '../Gear';
 
 export var props = {
     ...Tag.props,
+    className:GearType.String
 }
 export interface state extends Tag.state {
 
@@ -26,14 +27,15 @@ export default  class Wrapper<P extends typeof props,S extends state> extends Ta
         super(props);
     } 
     getInitialState(): state{
-        return G.G$.extend({},this.state)
+        return G.G$.extend({},{
+            className:this.props.className
+        },this.state)
     };
     getProps() {  
         let state = this.state;
         let className = "gearui-control-wrapper";
         if(state.className)
             className =  className + " " + state.className;
-
         return G.G$.extend({}, state, {
             className:className,
             value:null,

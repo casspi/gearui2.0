@@ -10,6 +10,69 @@
     -->
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
+    <style>
+      .transfer-control-wrapper{
+        position:relative;
+        display:block;
+      }
+
+      .transfer-control-wrapper .transfer-list{
+        position:relative;
+        display:inline-block;
+        width:200px;
+        height:300px;
+        overflow:hidden;
+        border:1px solid #e9e9e9;
+        border-radius:4px 4px 0 0;
+        padding-top:30px;
+        vertical-align:middle;
+      }
+
+      .transfer-control-wrapper .transfer-list .list-header{
+        border-bottom:1px solid #e9e9e9;
+        border-radius:4px 4px 0 0;
+        position:absolute;
+        left:0px;
+        top:0px;
+        width:100%;
+        overflow:hidden;
+        height:30px;
+        padding:5px 5px;
+        line-height:20px;
+      }
+
+      .transfer-control-wrapper .transfer-list .list-header .checkall{
+        float:left;
+      }
+
+      .transfer-control-wrapper .transfer-list .list-header .header-title{
+        float:right;
+        font-size:12px;
+        font-weight:normal;
+      }
+
+      .transfer-control-wrapper .transfer-list .list-body{
+        position:relative;
+        height:100%;
+        overflow:auto;
+        padding:5px 1px;
+      }
+
+      .transfer-control-wrapper .transfer-operation{
+        display:inline-block;
+        vertical-align:middle;
+        overflow:hidden;
+        margin:0 8px;
+      }
+
+      .transfer-control-wrapper .transfer-operation .ant-btn:first-child{
+        margin-bottom:4px
+      }
+
+      .transfer-control-wrapper .transfer-operation .ant-btn{
+        display:block;
+      }
+    </style>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -42,8 +105,8 @@
           <a href="www.baidu.com">百度</a>
         </g-breadcrumb-item>
       </g-breadcrumb> -->
-      <!-- <g-ajaxaction buttonstyle="primary" url="getUrl()" method="delete"></g-ajaxaction>
-      <g-group name="aaa"></g-group> 
+      <!-- <g-ajaxaction value="ajax" buttonstyle="primary" url="getUrl()" method="delete"></g-ajaxaction> -->
+      <!-- <g-group name="aaa"></g-group> 
       <g-row id="aaa">
         <g-col span="12" id="bbb">
           <g-buttongroup>
@@ -57,23 +120,22 @@
             <g-button buttonstyle="primary">bb</g-button>
           </g-buttongroup>
         </g-col>
-      </g-row>
-       <g-tree url="getUrl()" checkbox="true" cascadeCheck="false" lines="true" onlyLeafCheck="true">
-
-      </g-tree>
-      <g-combotree name="c31" id="aw" label="URL" url="getUrl()" width="300" multiple="true" prompt="请选择">
+      </g-row> -->
+       
+      <!-- <g-combotree name="c31" id="aw" label="URL" url="getUrl()" width="300" multiple="true" prompt="请选择">
 
       </g-combotree>
       
-      <g-button buttonStyle="danger">rest</g-button>
+      <g-button buttonStyle="danger">rest</g-button> -->
       
-      <div>
+      <!-- <div>
         <g-button buttonStyle="primary">Primary</g-button>
         <g-button>Default</g-button>
         <g-button buttonStyle="dashed">Dashed</g-button>
         <g-button buttonStyle="danger">Danger</g-button>
-      </div>
-    -->
+      </div> -->
+   
+    
     <!-- <g-button buttonStyle="danger" id="bbbttn">Danger</g-button> -->
       <!-- <g-dialog id="dragDialog" title="0000"  dragable="true" footer="<g-button >关闭</g-button>">
         <g-button id='closeDrag'>关闭拖拽</g-button>
@@ -114,30 +176,85 @@
          <button type="submit">提交</button>
        </gform>
         <g-submit id="gsubmit" id="form1"  label="submit" icon="save">submit</g-submit> -->
-        <g-int>9999</g-int>
+        <!-- <g-int>9999</g-int>
         <g-url value="g-url"></g-url>
-        <form>
-          <g-text id="gtext" validation='true' value="g-text"  max="5"  icon="search"></g-text>
+        <form ctype="form">
+          <g-validate id="vvv" required="true">
+              <g-text id="gtext" validation='true' value="g-text"  max="5"  icon="search"></g-text>
+          </g-validate>
           <button>BTN</button>
-        </form>
+        </form> -->
         <!-- <g-spin label="000"></g-spin> -->
         <g-switch id="gswitch" code="0,1" size="large" icon="check,file" id="idswitch" defaultChecked="true" checked="true" showLabel="true"></g-switch>
         <!-- <g-from> -->
-          <gtextarea id='gtextarea'></gtextarea>
+          <!-- <gtextarea id='gtextarea'></gtextarea> -->
           <!-- <g-button type="submit">提交</g-button> -->
         <!-- </g-from> -->
         <g-time id="gtime" inputReadOnly="true"  use12Hours="false" hideDisabled="false" width="300" size="1" placeholder="开始时间" disabledHours="5-9" disabledMinutes="20-60" disabled="false" format="HH:mm:ss"></g-time>
         <!-- <g-timepicker fo></g-timepicker> -->
-        <g-Tree dictype="DIC_UNIT_DEPARTMENT_TEST">
-        
-        </g-Tree>
-        <g-transfer showIcon="true" lines="true" dictype="DIC_UNIT_DEPARTMENT_TEST" rightTitle="right"></g-transfer>
-        <!-- <g-richtext></g-richtext>
-        <g-wrapper></g-wrapper>
+      
+        <!-- <g-tree url="http://10.10.10.6:81/example/Tree/data" id="gtree" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false">
+
+          </g-tree> -->
+        <!-- <g-transfer id="gtransfer0"  url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
+        <!-- <g-transfer id="gtransfer" width='996' url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
+         <!-- <g-richtext></g-richtext> -->
+        <!--<g-wrapper></g-wrapper>
         <g-cancel>取消</g-cancel> -->
         <g-upload id="gupload" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload>
         <!-- <g-inputtag></g-inputtag> -->
-      </div>
+        <!-- <g-autocomplete id="gauto"  icon="file" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" buttonIcon="file" buttonText="btn" limit="20"></g-autocomplete> -->
+          <!-- <script>
+            G(function(){
+               console.log(G('[name="gauto"]'))
+               console.log(G("#gauto"))
+            })
+          </script> -->
+          <!-- <div>
+            <g-ajaxaction id="gajaxaction" value="删除" url="http://10.10.10.6:81/example/source?name=Ajaxaction&type=element&id=example1" method="delete" parameter="id" type="button" onSuccess="alert('成功')" onComplete="alert('完成')" onFailed="alert('失败')" icon="icon-cancel"  size="small" buttonStyle="danger" confirm="你确定要删除这条记录吗？"></g-ajaxaction>
+            <g-ajaxaction id="gajaxaction" value="删除" url="http://10.10.10.6:81/example/source?name=Ajaxaction&type=element&id=example1" method="delete"  type="button" ></g-ajaxaction>
+            <g-ajaxaction id="gajaxaction" value="删除" url="http://10.10.10.6:81/example/source?name=Ajaxaction&type=element&id=example1" method="delete" type="button"></g-ajaxaction>
+            <g-ajaxaction id="gajaxaction" value="删除" url="http://10.10.10.6:81/example/source?name=Ajaxaction&type=element&id=example1" method="delete" type="button" buttonStyle="dashed" size="large"></g-ajaxaction>
+          </div> -->
+          <!-- <div><g-radio id="er1" dictype="radioJson" value="0"/></div>
+          <div><g-cancel id="ec1" value="取消"/></div>
+          <script>
+            G(function(){			
+                G("#ec1").onBeforeCancel(function(){
+                  if(G("#er1").getValue()=="0")
+                    return true;
+                  else
+                    return false;
+                });
+                G("#ec1").onProcess(function(){
+                    alert("取消了");
+                  });				
+                })
+                var radioJson = [
+                  {
+                    label:"充许取消",
+                    value: "0",
+                  },{
+                    label:"不充许取消",
+                    value: "1"
+                  }
+                ];	
+          </script>
+          <g-row>
+          <g-col span="24">5555</g-col>
+          <g-col span="6">66666</g-col>
+          <g-col span="6">66666</g-col>
+          <g-col span="6">66666</g-col>
+          <g-col span="6">66666</g-col>
+          </g-row> -->
+          <!-- <g-color id="gcolor" value="AA2018" label="选择颜色" showpicker="true" width="300"></g-color> -->
+          <!-- <g-dialog title="我是标题">
+              <g-button id='closeDrag'>关闭拖拽</g-button>
+              <g-button id='openDrag' >打开拖拽</g-button> 
+          </g-dialog> -->
+          <!-- <g-dialogaction id="ela12" dragable="true" confirmText="就这么干"  maskclosable="true" value="打开一个小窗口对话框" url="http://10.10.10.6:81/example/Dialogaction/example" title="修改密码" loadType="async" onConfirm="onSavePassword(this)" onCancel="onCancel(this)" onClose="onDialogClose(this)" controlBar="true" dialogWidth="400"></g-dialogaction> -->
+          <gicon id="gicon"  type="file" spin="true" style="color:blue;font-size:24px"></gicon>
+        </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -166,7 +283,13 @@
       console.log(this);
     }
     
-    G(function() {
+  G(function() {
+    function iconClicked(){
+      G.messager.info("通过属性绑定的事件");
+    }
+    // G('#gicon').click(function(){
+    //   G(this).hide()
+    // })
       //let text = G("[name='c31']");
       //console.log(G.utils.ObjectUtil.isExtends(text, "Tag"));
       //G.messager.progress("open");
@@ -188,7 +311,9 @@
       //   G("#closeDrag").click(function(){
       //     G("#dragDialog").setDragable(false)
       //   })
-      // })
+      // });
+      // G("#dragDialog").close()
+      // G("#dragDialog").open()
       // document.onclick=function(){
         // G('#dragDialog').setDragable(false);
         // console.log(G('#dragDialog').find('.ant-modal'))
@@ -235,7 +360,7 @@
      function goSearch(){
        alert(11111)
      };
-     G('#gtext').enableValidation()
+    //  G('#gtext').enableValidation()
       // G("#gsubmit").onBeforeSubmit(()=>{
       //   alert(11111)
       // })
@@ -262,6 +387,51 @@
         // G('#gupload').onChange(function(){
         //   alert('change')
         // })
+        //穿梭框
+        // G('#gtransfer').onRightTreeMoved(function(){
+        //   alert('右边移出')
+        // });
+        // G('#gtransfer').onLeftTreeMoved(function(){
+        //   alert('左边移出')
+        // });
+        // G('#gtransfer').onLeftTreeCheck(function(node){
+        //   console.log(node.previous());
+        //   console.log(node);
+        //   console.log(node.next());
+        // })
+        // G('#gtransfer').onRightTreeCheck(function(node){
+        //   console.log(node.previous());
+        //   console.log(node);
+        //   console.log(node.next());
+        // })
+        // G('#gtree').clear()
+       
+        // G('#gauto').onChange(function(){
+            // G(this).onSearch(function(){
+            //   return  [
+            //             {value:"001",label:"北京"},
+            //             {value:"002",label:"上海"},
+            //             {value:"003",label:"广州"},
+            //             {value:"004",label:"深圳"},
+            //           ]
+            // })
+        // });
+        // G('#gajaxaction').onProcess(function(){
+        //   console.log('点击了ajaxaction')
+        // })    
+        // G.tag.ajaxaction.success=function(data){
+        //   console.log(data);
+        //   G.messager.alert('消息',data.message,"info",function(){
+        //     // do something
+        //   });
+        // };
+        // G.tag.ajaxaction.failed=function(data){
+        //   console.log(data);
+        //   G.messager.alert('错误',data.message,"error",function(){
+        //     // do something
+        //   });					
+        // };	  
     })
+   
   </script>
 </html>

@@ -9,13 +9,13 @@ import Wrapper from '../Wrapper';
 export var props =  {
     ...FormTag.props,
     //左侧标题
-    lefttitle:GearType.String,
+    leftTitle:GearType.String,
     //右侧标题
-    righttitle:GearType.String,
+    rightTitle:GearType.String,
     //左侧按钮标题
-    leftbuttontitle:GearType.String,
+    leftButtonTitle:GearType.String,
     //右侧按钮标题
-    rightbuttontitle:GearType.String,
+    rightButtonTitle:GearType.String,
     //加载数据的URL地址
     url:GearType.String,
     //代码集
@@ -23,7 +23,7 @@ export var props =  {
     //获取数据的方法
     method:GearType.String,
     //是否显示图标，默认为true
-    showicon:GearType.String,
+    showIcon:GearType.String,
     //图标样式，默认为default
     iconstyle:GearType.String,
     //是否展示连接线
@@ -48,6 +48,10 @@ export interface state extends FormTag.state{
     readOnly:boolean,
     leftChecked:boolean,
     rightChecked:boolean,
+    rightButtonTitle:string,
+    leftButtonTitle:string,
+    rightTitle:string,
+    leftTitle:string,
 }
 // 穿梭框
 export default class Transfer<P extends (typeof props) & AntdTransferProps,S extends state & AntdTransferProps> extends FormTag.default<P,S>{
@@ -73,7 +77,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     }
 
     getProps() {
-        let state: state = G.G$.extend({}, this.state);
+        let state: state = this.state;
         let className = this.props.className?"transfer-control-wrapper "+this.props.className:"transfer-control-wrapper";
         if((this.state.disabled==true || this.state.readOnly==true)){
             if(className)
@@ -118,7 +122,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             url:this.props.url,
             dictype:this.props.dictype,
             method:this.props.method,
-            showicon:this.props.showicon,
+            showIcon:this.props.showIcon,
             iconstyle:this.props.iconstyle,
             lines:this.props.lines,
             value:this.props.value,
@@ -166,7 +170,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         return {
             checkbox:true,
             cascadecheck:true,   
-            showicon:this.props.showicon,
+            showIcon:this.props.showIcon,
             iconstyle:this.props.iconstyle,
             lines:this.props.lines,
             style:this.state.style,         
@@ -192,7 +196,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     } 
     
     getLeftCheckProps() {
-
+console.log(this.state.leftChecked)
         return {
             onChange:this._onLeftCheckChange.bind(this),
             checked:this.state.leftChecked,
@@ -235,10 +239,10 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     getInitialState() {
         let state = this.state;
         return G.G$.extend({}, state, {
-            leftTitle:this.props.lefttitle,
-            rightTitle:this.props.righttitle,
-            leftButtonTitle:this.props.leftbuttontitle || "<",
-            rightButtonTitle:this.props.rightbuttontitle || ">",
+            leftTitle:this.props.leftTitle,
+            rightTitle:this.props.rightTitle,
+            leftButtonTitle:this.props.leftButtonTitle || "<",
+            rightButtonTitle:this.props.rightButtonTitle || ">",
             disabled:this.props.disabled,
             readonly:this.props.readOnly,
         });
@@ -247,35 +251,36 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     render() {
         let props:any = this.getProps();
         let leftTreeProps:any = this.getLeftTreeProps();
-        let rightTreeProps:any = this.getRightTreeProps()
-        console.log(leftTreeProps.dictype)
+        let rightTreeProps:any = this.getRightTreeProps();
+        // console.log(this.getLeftTreeProps());
+        // console.log(this.getLeftCheckProps())
         return <Wrapper {...props}>
-            <div key={"left"} {...this.getLeftContainerProps()}>
-                <div key={"header"} className={"list-header"}>
-                    <div key={"checkall"} className={"checkall"}>
-                        <Checkbox {...this.getLeftCheckProps()}>{"全选"}</Checkbox>
+                <div key={"left"} {...this.getLeftContainerProps()}>
+                    <div key={"header"} className={"list-header"}>
+                        <div key={"checkall"} className={"checkall"}>
+                            <Checkbox {...this.getLeftCheckProps()}>{"全选"}</Checkbox>
+                        </div>
+                        <div key={"title"} className={"header-title"}>{this.state.leftTitle}</div>
                     </div>
-                    <div key={"title"} className={"header-title"}>{this.state["leftTitle"]}</div>
-                </div>
-                <div key={"body"} className={"list-body"}>
-                    <Tree.default key={"leftTree"} {...leftTreeProps}/>
-                </div>
-            </div>
-            <div key={"operation"} className={"transfer-operation"}>
-                <Button {...this.getRightButtonProps()}>{this.state["rightButtonTitle"]}</Button>
-                <Button {...this.getLeftButtonProps()}>{this.state["leftButtonTitle"]}</Button>
-            </div>
-            <div key={"right"} {...this.getRightContainerProps()}>
-                <div key={"header"} className={"list-header"}>
-                    <div key={"checkall"} className={"checkall"}>
-                        <Checkbox {...this.getRightCheckProps}>{"全选"}</Checkbox>
+                    <div key={"body"} className={"list-body"}>
+                        <Tree.default key={"leftTree"} {...leftTreeProps}/>
                     </div>
-                    <div key={"title"} className={"header-title"}>{this.state["rightTitle"]}</div>
                 </div>
-                <div key={"body"} className={"list-body"}>
-                    <Tree.default key={"rightTree"} {...rightTreeProps}/>
+                <div key={"operation"} className={"transfer-operation"}>
+                    <Button {...this.getRightButtonProps()}>{this.state.rightButtonTitle}</Button>
+                    <Button {...this.getLeftButtonProps()}>{this.state.leftButtonTitle}</Button>
                 </div>
-            </div>
+                <div key={"right"} {...this.getRightContainerProps()}>
+                    <div key={"header"} className={"list-header"}>
+                        <div key={"checkall"} className={"checkall"}>
+                            <Checkbox {...this.getRightCheckProps}>{"全选"}</Checkbox>
+                        </div>
+                        <div key={"title"} className={"header-title"}>{this.state["rightTitle"]}</div>
+                    </div>
+                    <div key={"body"} className={"list-body"}>
+                        <Tree.default key={"rightTree"} {...rightTreeProps}/>
+                    </div>
+                </div>      
         </Wrapper>;
     }
 
@@ -530,8 +535,8 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             var seek = function(array:any){
                 if(array){
                     for(var i=0;i<array.length;i++){
-                        if(array[i]["children"]){
-                            seek(array[i]["children"]);
+                        if(array[i].children){
+                            seek(array[i].children);
                         }
                         if(array[i].value && values.contains(array[i].value)==false)
                             values.add(array[i].value);
@@ -596,29 +601,29 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         });
     }
     
-    // onLeftTreeCheck(fun){
-    //     if(fun && G.G$.isFunction(fun)) {
-    //         this.bind("leftTreeCheck",fun);
-    //     }
-    // }
+    onLeftTreeCheck(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("leftTreeCheck",fun);
+        }
+    }
 
-    // onLeftTreeMoved(fun){
-    //     if(fun && G.G$.isFunction(fun)) {
-    //         this.bind("lefttreemoved",fun);
-    //     }
-    // }
+    onLeftTreeMoved(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("lefttreemoved",fun);
+        }
+    }
 
-    // onRightTreeMoved(fun){
-    //     if(fun && G.G$.isFunction(fun)) {
-    //         this.bind("righttreemoved",fun);
-    //     }
-    // }
+    onRightTreeMoved(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("righttreemoved",fun);
+        }
+    }
 
-    // onRightTreeCheck(fun){
-    //     if(fun && G.G$.isFunction(fun)) {
-    //         this.bind("rightTreeCheck",fun);
-    //     }
-    // }
+    onRightTreeCheck(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("rightTreeCheck",fun);
+        }
+    }
 
     reset(){
         if(this._leftTree){

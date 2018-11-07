@@ -819,6 +819,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
 
     doRender(callback?:Function) {
         if(this.realDom) {
+            console.log(this.realDom)
             G.render({
                 el: this.realDom,
                 mounted: (...tags: any[])=>{

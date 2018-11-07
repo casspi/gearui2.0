@@ -431,13 +431,14 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         }else {
             input= <AntdInput {...this.getInputProps()}></AntdInput>;
         }
-        let acprops = this.getAutoCompleteProps();    
+        let acprops = this.getAutoCompleteProps();  
+        console.log(acprops)  
         if(this.state.mustMatch == true){
             let hiddenProps = {
                 key: this.getKey(),
                 type: "hidden",
                 value: this.state.value || "",
-                name: this.state.name
+                name: this.state.name || this.props.id
             };
             return <span><AntdAutoComplete {...acprops}>{input}</AntdAutoComplete><input {...hiddenProps}/></span>;
         }else {

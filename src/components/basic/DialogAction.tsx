@@ -12,6 +12,7 @@ export var props = {
     confirmText: GearType.String,
     cancelText: GearType.String,
     maskClosable: GearType.Boolean,
+    dragable:GearType.Boolean
 }
 
 export interface state extends ClickAction.state {
@@ -24,12 +25,15 @@ export interface state extends ClickAction.state {
     confirmText?: string;
     cancelText?: string;
     maskClosable?: boolean;
+    dragable?:boolean
 }
 
 export default class DialogAction<P extends typeof props, S extends state> extends ClickAction.default<P, S> {
 
     getInitialState(): state {
-        return {
+        let state = this.state;
+        return G.G$.extend({},state,{
+            type: this.props.type || 'button',
             maximized: this.props.maximized,
             dialogWidth: this.props.dialogWidth,
             dialogHeight: this.props.dialogHeight,
@@ -38,7 +42,8 @@ export default class DialogAction<P extends typeof props, S extends state> exten
             maskClosable: this.props.maskClosable,
             loadType: this.props.loadType,
             url: this.props.url,
-        };
+            dragable:this.props.dragable
+        })
     }
 
     clickEvent(e?: any) {
@@ -65,7 +70,6 @@ export default class DialogAction<P extends typeof props, S extends state> exten
             }
         }
     }
-
     // 默认的处理过程，可以被覆盖
     static process(obj: DialogAction<typeof props, state>){
         let url = obj.state.url;
@@ -81,9 +85,10 @@ export default class DialogAction<P extends typeof props, S extends state> exten
                 "controlBar":obj.state.controlBar==true?true:false,
                 "onConfirm":obj.props.onConfirm,
                 "onCancel":obj.props.onCancel,
-                "confirmText":obj.state.confirmText,
-                "cancelText":obj.state.cancelText,
-                "maskClosable": obj.state.maskClosable
+                "confirmText":obj.state.confirmText || '确定',
+                "cancelText":obj.state.cancelText || '取消',
+                "maskClosable": obj.state.maskClosable,
+                "dragable":obj.state.dragable
             }); 
         } 
     };

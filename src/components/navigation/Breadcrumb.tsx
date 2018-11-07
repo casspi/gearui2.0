@@ -36,6 +36,7 @@ export default class Breadcrumb<P extends typeof props, S extends state> extends
 
     render() {
         let items = this.getItems();
+        console.log(items);
         return <AntdBreadcrumb {...this.state} itemRender={this.itemRender.bind(this)}>{items}</AntdBreadcrumb>;
     }
 
