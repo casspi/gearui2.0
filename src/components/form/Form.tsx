@@ -90,7 +90,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         delete props.showProgress;
         delete props.validate;
         delete props.validation;
-        console.log(props);
         return (<AntdForm {...props}>
             {items}
         </AntdForm>);
@@ -162,7 +161,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                     needUpdateToState: ["validation", "invalidType", "rules","data-__field", "data-__meta"]
                 });
                 delete props.value;
-                console.log(validation)
                 let formTag: any = React.createElement(childReactNode.type, props, props.children);
                 let initialValue = this.values[tagName] || childReactNode.props.value;
                 formTag = this.props.form.getFieldDecorator(tagName,{

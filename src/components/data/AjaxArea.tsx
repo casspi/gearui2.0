@@ -102,13 +102,14 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
                 if(obj.haveEvent("complete")) {
                     obj.doEvent("complete", data);
                 }else {
+                    console.log(AjaxArea.complete)
                     AjaxArea.complete.bind(obj)(obj, data);
                 }
             }else {
                 if(obj.haveEvent("error")) {
                     obj.doEvent("error");
                 }else {
-                    AjaxArea.error.bind(obj)(result.message);
+                    AjaxArea.error.bind(obj)(obj,result.message);
                 }
             }
             if(obj.haveEvent("afterProcess")) {
@@ -143,11 +144,12 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
     static success(obj: AjaxArea<typeof props, state>, data: any) {
         if(data.status !=null && data.data){
             obj.setState({
-                children: G.$(data.data, true)
+                children: data.data
             });
         }else{
             obj.setState({
-                children: G.$(data, true)
+                // children: G.G$(data, true)
+                children:data.data
             });
         }
     }
@@ -165,7 +167,7 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
     }
 
     render() {
-        return <AntdSpin spinning={this.state["loading"]}>{this.state.children}</AntdSpin>;
+        return <AntdSpin spinning={this.state.loading} style={{"minHeight":"21px"}}>{this.state.children}</AntdSpin>;
     }
 
     setLoading(loading?: boolean) {

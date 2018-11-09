@@ -169,11 +169,11 @@
           </g-radiogroup>
           </g-radio>  
         </g-repeat> -->
-        <g-search id="search-bar"  onSearch="" size="default" enterButton="查询"></g-search>
+        <!-- <g-search id="search-bar"  onSearch="" size="default" enterButton="查询"></g-search> -->
         <!-- <g-mac></g-mac> -->
        <!-- <gform action="" id='form1' invalidType="1"  method="post">
          <input type="text" name="user" value="zhangsan">
-         <button type="submit">提交</button>
+         <g-submit id="gsubmit"   label="submit" icon="save">提交</g-submit>
        </gform>
         <g-submit id="gsubmit" id="form1"  label="submit" icon="save">submit</g-submit> -->
         <!-- <g-int>9999</g-int>
@@ -185,12 +185,12 @@
           <button>BTN</button>
         </form> -->
         <!-- <g-spin label="000"></g-spin> -->
-        <g-switch id="gswitch" code="0,1" size="large" icon="check,file" id="idswitch" defaultChecked="true" checked="true" showLabel="true"></g-switch>
+        <!-- <g-switch id="gswitch" code="0,1" size="large" icon="check,file" id="idswitch" defaultChecked="true" checked="true" showLabel="true"></g-switch> -->
         <!-- <g-from> -->
           <!-- <gtextarea id='gtextarea'></gtextarea> -->
           <!-- <g-button type="submit">提交</g-button> -->
         <!-- </g-from> -->
-        <g-time id="gtime" inputReadOnly="true"  use12Hours="false" hideDisabled="false" width="300" size="1" placeholder="开始时间" disabledHours="5-9" disabledMinutes="20-60" disabled="false" format="HH:mm:ss"></g-time>
+        <!-- <g-time id="gtime" inputReadOnly="true"  use12Hours="false" hideDisabled="false" width="300" size="1" placeholder="开始时间" disabledHours="5-9" disabledMinutes="20-60" disabled="false" format="HH:mm:ss"></g-time> -->
         <!-- <g-timepicker fo></g-timepicker> -->
       
         <!-- <g-tree url="http://10.10.10.6:81/example/Tree/data" id="gtree" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false">
@@ -201,7 +201,7 @@
          <!-- <g-richtext></g-richtext> -->
         <!--<g-wrapper></g-wrapper>
         <g-cancel>取消</g-cancel> -->
-        <g-upload id="gupload" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload>
+        <!-- <g-upload id="gupload" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload> -->
         <!-- <g-inputtag></g-inputtag> -->
         <!-- <g-autocomplete id="gauto"  icon="file" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" buttonIcon="file" buttonText="btn" limit="20"></g-autocomplete> -->
           <!-- <script>
@@ -253,8 +253,46 @@
               <g-button id='openDrag' >打开拖拽</g-button> 
           </g-dialog> -->
           <!-- <g-dialogaction id="ela12" dragable="true" confirmText="就这么干"  maskclosable="true" value="打开一个小窗口对话框" url="http://10.10.10.6:81/example/Dialogaction/example" title="修改密码" loadType="async" onConfirm="onSavePassword(this)" onCancel="onCancel(this)" onClose="onDialogClose(this)" controlBar="true" dialogWidth="400"></g-dialogaction> -->
-          <gicon id="gicon"  type="file" spin="true" style="color:blue;font-size:24px"></gicon>
-        </div>
+          <!-- <g-icon id="gicon" onClick="clickEvent" type="qq" spin="true" style="color:blue;font-size:24px"></g-icon>
+          <g-button id="gbtn" onClick="clickEvent">btn</g-button>
+          <div><g-link value="弹出消息框" url="javascript:alert(1)"/></div>
+          <div><g-link url="javascript:alert(1)">弹出消息框</g-link></div>
+          <div><g-link url="http://www.baidu.com" target="_blank">在新页面打开一个链接</g-link></div>
+          <div><g-link url="javascript:void(0)" onClick="targetFun(this)">触发一个脚本</g-link></div> -->
+          <!-- <g-ajaxarea url="http://10.10.10.6:81/example/Ajaxarea/example1"  method="post"></g-ajaxarea> -->
+          <!-- <g-ajaxarea url="http://10.10.10.6:81/example/Ajaxarea/example1555555555555555"  method="post"></g-ajaxarea> -->
+          <!-- <g-ajaxarea url="http://10.10.10.6:81/example/Ajaxarea/inside" dataType="html" delay="1000" interval="2000"></g-ajaxarea> -->
+          
+          <!-- <g-ajaxload id="gajaxload" name="sex" url="http://10.10.10.6:81/example/Ajaxload/example1">
+            <g-text name="email"></g-text>
+            <g-radio name="sex" dictype="radioJson1"></g-radio>
+          </g-ajaxload> -->
+
+
+
+          <!-- <div style="margin:5px;">
+            <g-ajaxlist id="result1" url="http://10.10.10.6:81/example/Listaction/example1?pageSize=10&currentPage=1" checkType="checkbox">
+              <g-column label="用户名" width="100" name="id" />
+              <g-column label="姓名" width="100" name="name" />
+              <g-column label="电子邮箱" width="300" name="email" />
+              <g-column label="部门" name="department" />
+              <g-column label="状态" width="60" name="statusName" />
+            </g-ajaxlist>	
+          </div> -->
+          <!-- <div style="margin:5px;">		
+            <g-listaction url="http://10.10.10.6:81/example/Listaction/batchEnable" type="button" actionType="batchAction" icon="check-circle-o" listId="result1">启用</g-listaction>
+            <g-listaction url="http://10.10.10.6:81/example/Listaction/batchDisable" actionType="batchAction" icon="cross-circle-o" listId="result1">停用</g-listaction>
+            <g-listaction url="http://10.10.10.6:81/example/Listaction/export" actionType="exportAction" parameters="getExportParameters()" listId="result1" icon="file-excel" method="post">下载</g-listaction>
+          </div>		 -->
+          <!-- <g-Calendar fullScreen="false"></g-Calendar> -->
+          <g-card style="width:300px" actions="[13,2,3]" cover="0" hoverable="true" title="Card title" >
+            <g-CardMeta>
+              <p>Card content</p>
+              <img width="100%" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" alt="">
+              <p>Card content</p>
+            </g-CardMeta>
+          </g-card>
+    </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -267,29 +305,68 @@
     -->
   </body>
   <script>
-
-    function getUrl() {
-      // return "http://localhost:8080/web/example/Ajaxaction/example1";
-      // return "http://localhost:8080/web/example/Autocomplete/data";
-      let root = "http://localhost:8080/web";
-      // return root + "/example/Tree/data";
-      return root + "/example/Combotree/data";
-    }
-    function testOnAfterUpdate() {
+// function ajaxareaTest(ctl) {
+// 	console.log(ctl);
+// 	console.log(arguments);
+// 	console.log(this);
+//    	console.log("触发了回调");
+// }
+    // function getUrl() {
+    //   // return "http://localhost:8080/web/example/Ajaxaction/example1";
+    //   // return "http://localhost:8080/web/example/Autocomplete/data";
+    //   let root = "http://localhost:8080/web";
+    //   // return root + "/example/Tree/data";
+    //   return root + "/example/Combotree/data";
+    // }
+    // function testOnAfterUpdate() {
       
-    }
+    // }
 
-    function testAfterRender() {
-      console.log(this);
+    // function testAfterRender() {
+    //   console.log(this);
+    // }
+
+    function clickEvent(){
+      alert('属性点击事件')
     }
-    
+  //   function targetFun(gobj){
+  //     console.log(gobj);
+  //   }
+  var radioJson1 = [
+{
+  label:"未知",
+  value: "1",
+},{
+  label:"男",
+  value: "0"
+},{
+  label:"女",
+  value: "2"
+}
+];
+// 利用该方法在导出时追加传入至后台的参数
+function getExportParameters(){
+      return {
+        name:"呵呵",
+        info:["这是一个测试","这是一个数组"]
+      };
+    }
   G(function() {
-    function iconClicked(){
-      G.messager.info("通过属性绑定的事件");
-    }
-    // G('#gicon').click(function(){
-    //   G(this).hide()
-    // })
+    // console.log(G("#gajaxload"))
+  // //   console.log(G('#gbtn'));
+  // //   console.log(G('#gicon'));
+  //   G('#gicon').click(function(){
+  //     alert('js click')
+  //     console.log('倒计时消失')
+  //     setTimeout(()=>{
+  //       G('#gicon').hide();
+  //     },2000)
+  //   })
+  //   G('#gbtn').onClick(function(){
+  //     alert(' js btn click')
+  //   })
+    
+   
       //let text = G("[name='c31']");
       //console.log(G.utils.ObjectUtil.isExtends(text, "Tag"));
       //G.messager.progress("open");
@@ -357,9 +434,9 @@
         // 不充许选择晚上22点到早上7点
         return [0,1,2,3,4,5,6,7,22,23];
       }
-     function goSearch(){
-       alert(11111)
-     };
+      function goSearch(){
+        alert(11111)
+      };
     //  G('#gtext').enableValidation()
       // G("#gsubmit").onBeforeSubmit(()=>{
       //   alert(11111)

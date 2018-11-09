@@ -218,6 +218,7 @@ export default class G {
     private static findVmDomFromCacheAst(selector: string|Element) {
         let vmdoms: any[] = [];
         let jEleFromCache = G.G$(this.cacheHtml).find(selector);
+        // console.log(this.cacheHtml)
         // console.log(jEleFromCache)
         if(jEleFromCache.length > 0 && this.cacheAst) {
             jEleFromCache.each((i, ele)=>{

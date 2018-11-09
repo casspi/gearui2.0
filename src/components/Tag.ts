@@ -90,6 +90,19 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
         this.realDom = <Element>this.findRealDom();
         if(this.realDom) {
             G.G$(this.realDom).data("vmdom", this);
+            //为所有按属性值能找到子节点绑定当前对象
+            for(let key in this.props) {
+                if(this.props[key] && this.props[key] instanceof String) {
+                    try {
+                        let childJDom = G.G$(this.realDom).find("["+key+"="+this.props[key]+"]");
+                        if(childJDom[0] && (childJDom.data("vmdom") == null || childJDom.data("vmdom") == undefined)) {
+                            childJDom.data("vmdom", this);
+                        }
+                    } catch (error) {
+                    }
+                }
+            }
+            
         }
         if(this.ast) {
             this.ast.vmdom = this;

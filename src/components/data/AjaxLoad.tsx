@@ -31,9 +31,8 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
 
     render() {
         let name = {name: this.state.name};
-        return <div className={this.state.className} {...name} style={this.state.style} id={this.state.id}>{this.props.children}</div>;
+        return <div ref={this.state.ref} className={this.state.className} {...name} style={this.state.style} id={this.state.id}>{this.props.children}</div>;
     }
-
     afterRender() {
         this.request();
     }
@@ -59,7 +58,7 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
 
         let fn = async () => {
             let result = await Http.ajax(method, url);
-
+            console.log(result)
             if(result.success) {
                 let data = result.data;
                 if(data) {
@@ -97,11 +96,11 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
             }catch(e){}
             let jdom = container.find("[name='"+key+"']");
             if(jdom.length>0){
-                jdom.each((index,dom)=>{
+                jdom.each((index:any,dom:any)=>{
                     //排除group类型的子节点，group类型的子节点需要在group的setValue中设置值
                     let parent = G.G$(dom).parents(".ajaxload-group:first");
                     if(parent.length==0 || G.$(parent) instanceof Group == false){
-                        let gele = G.$(dom);
+                        let gele= G.$("[name='"+key+"']");
                         if(gele && gele.setValue) {
                             gele.setValue(value);
                         }

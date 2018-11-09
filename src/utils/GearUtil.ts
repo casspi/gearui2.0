@@ -331,7 +331,7 @@ export default class GearUtil {
             }
         });
 
-        if(G.events.contains(name)){
+        if(G.events.contains(name.toLowerCase())){
             let values = value.split(";");
             let funs = [];
             for(let i = 0; i < values.length; i++) {

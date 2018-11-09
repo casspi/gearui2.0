@@ -28,6 +28,7 @@ export var props = {
     type: GearType.String,
     //页签切换的回调
     onTabChange: GearType.Function,
+    title:GearType.String,
 }
 
 export interface state extends Tag.state {
@@ -44,6 +45,7 @@ export interface state extends Tag.state {
     loading?: boolean;
     tabList?: Array<{key: string,tab: string}>;
     type?: string;
+    title?:string
 }
 
 export default class Card<P extends typeof props, S extends state> extends Tag.default<P, S> {
@@ -54,8 +56,8 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
             defaultActiveTabKey: this.props.activeTabKey,
             actions: this.props.actions,
             headStyle: this.props.headStyle,
-            bodyStyle: this.props.bodyStyle,
-            bordered: this.props.bordered,
+            bodyStyle: this.props.bodyStyle || {},
+            bordered: this.props.bordered != false,
             cover: this.props.cover,
             extra: this.props.extra,
             hoverable: this.props.hoverable,
@@ -67,6 +69,7 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
     }
 
     private getProps() {
+        console.log(this.state.cover)
         return G.G$.extend({},this.state,{
             actions: this.getActions(),
             cover: G.$(this.state.cover),
@@ -82,6 +85,8 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
     render() {
         let props = this.getProps();
         let children = this.getChildren();
+        console.log(props.title)
+        console.log(children)
         return <AntdCard {...props}>{children}</AntdCard>;
     }
 
@@ -111,6 +116,7 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
 
     private getChildren() {
         let childrenJsxs: any[] = [];
+        console.log(this.props.children)
         let children:any[] = this.props.children;
         if(!(children instanceof Array)) {
             children = [children];
