@@ -69,7 +69,6 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
     }
 
     private getProps() {
-        console.log(this.state.cover)
         return G.G$.extend({},this.state,{
             actions: this.getActions(),
             cover: G.$(this.state.cover),
@@ -85,7 +84,6 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
     render() {
         let props = this.getProps();
         let children = this.getChildren();
-        console.log(props.title)
         console.log(children)
         return <AntdCard {...props}>{children}</AntdCard>;
     }
@@ -118,18 +116,21 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
         let childrenJsxs: any[] = [];
         console.log(this.props.children)
         let children:any[] = this.props.children;
+        console.log(children)
         if(!(children instanceof Array)) {
             children = [children];
         }
         if(children instanceof Array) {
             children.map((child: any, index)=>{
                 let childJsx = child;
+                console.log(childJsx)
                 if(child && child.type) {
                     let props = {
                         key: this.props.id ? this.props.id + "_grid_meta_" + index : UUID.get(),
                         className: child.props.class,
                         style: child.props.style,
                     }
+                    console.log(child.type)
                     if(ObjectUtil.isExtends(child.type, "CardGrid")) {
                         childJsx = <AntdCard.Grid {...props}>{child.props.children}</AntdCard.Grid>;
                     }else if(ObjectUtil.isExtends(child.type, "CardMeta")) {
@@ -139,12 +140,15 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
                             description: child.props.description,
                             title: child.props.title
                         };
+                        console.log(child.props.children)
                         childJsx = <AntdCard.Meta {...metaProps}>{child.props.children}</AntdCard.Meta>;
+                        console.log(childJsx)
                     }
                 }
-                childrenJsxs.push(childJsx);
+                childrenJsxs.push(childJsx);;
             });
         }
+        console.log(childrenJsxs)
         return childrenJsxs;
     }
 }

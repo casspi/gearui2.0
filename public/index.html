@@ -285,13 +285,44 @@
             <g-listaction url="http://10.10.10.6:81/example/Listaction/export" actionType="exportAction" parameters="getExportParameters()" listId="result1" icon="file-excel" method="post">下载</g-listaction>
           </div>		 -->
           <!-- <g-Calendar fullScreen="false"></g-Calendar> -->
-          <g-card style="width:300px" actions="[13,2,3]" cover="0" hoverable="true" title="Card title" >
-            <g-CardMeta>
+          <!-- <a id="prop">&</a> -->
+          <!-- <g-card style="width:300px" extra="#prop" tabList="tabList" cover="0" hoverable="true" title="Card title" >
+            <g-cardmeta>
               <p>Card content</p>
-              <img width="100%" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" alt="">
+              <img width="100%" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" alt="" />
               <p>Card content</p>
-            </g-CardMeta>
-          </g-card>
+            </g-cardmeta>
+          </g-card> -->
+          <g-table cols="1">
+            <g-control label="用户名">
+              <g-text name="id" required="true" min="3" max="32" />
+            </g-control>
+            <g-control label="姓名">
+              <g-text name="name" required="true" max="64" />
+            </g-control>
+            <g-control label="性别">
+              <g-radio name="sex" dictype="DIC_SEX"></g-radio>
+            </g-control>
+            <g-control label="身份证">
+              <g-idnumber name="idnumber" min="15" max="18"/>
+            </g-control>				
+            <g-control label="出生日期">
+              <g-date name="birthday"/>
+            </g-control>
+            <g-control label="手机号码">
+              <g-text name="mobile"  max="11"/>
+            </g-control>
+            <g-control label="座机号码">
+              <g-text name="phone" max="16"/>
+            </g-control>								
+            <g-control label="电子邮箱">
+              <g-email name="email" max="64"/>
+            </g-control>	
+            <g-control label="联系地址" colspan="2">
+              <g-text name="address" max="128" style="width:600px"/>
+            </g-control>
+          </g-table>
+        
     </div>
     <!--
       This HTML file is a template.
@@ -305,6 +336,44 @@
     -->
   </body>
   <script>
+    const tabList = [{
+  key: 'tab1',
+  tab: 'tab1',
+}, {
+  key: 'tab2',
+  tab: 'tab2',
+}];
+
+const contentList = {
+  tab1: '<p>content1</p>',
+  tab2: '<p>content2</p>',
+};
+
+    const dataSource = [{
+  key: '1',
+  name: '胡彦斌',
+  age: 32,
+  address: '西湖区湖底公园1号'
+}, {
+  key: '2',
+  name: '胡彦祖',
+  age: 42,
+  address: '西湖区湖底公园1号'
+}];
+
+const columns = [{
+  title: '姓名',
+  dataIndex: 'name',
+  key: 'name',
+}, {
+  title: '年龄',
+  dataIndex: 'age',
+  key: 'age',
+}, {
+  title: '住址',
+  dataIndex: 'address',
+  key: 'address',
+}];
 // function ajaxareaTest(ctl) {
 // 	console.log(ctl);
 // 	console.log(arguments);

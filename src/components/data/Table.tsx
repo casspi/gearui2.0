@@ -385,6 +385,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     getInitialState(): state {
+        // let state = this.state;
         let columns: any = this._parseColumns();        
         return {
             dataSource: this.props.dataSource,
@@ -439,8 +440,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 this.doEvent("afterExpand",robj,this._expandRecord);
             }
         };
-
-        return G.G$.extend({},props,{
+        let state = this.state;
+        return G.G$.extend({},state,{
             locale: {
                 emptyText: this.state.emptyText,
             },
@@ -512,21 +513,26 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 });
                 this.doEvent("change",filter,sorter);
             },
-            onRowClick: (record: any,index: any,event: any) => {
-                this._onRowClick(record,index,event);
+            onRow:()=>{
+                return {
+                    onClick: (record: any,index: any,event: any) => {
+                        this._onRowClick(record,index,event);
+                        alert('click')
+                    },
+                    onMouseEnter:(record: any,index: any,event: any) => {
+                        this._onMouseEnter(record,index,event);
+                    },
+                    onMouseLeave:(record: any,index: any,event: any) =>{
+                        this._onMouseLeave(record,index,event);
+                    },
+                }
             },
             rowClassName:(record: any,index: any)=>{
                 if(record.__className__) {
                     return "list-row-index" + record.key + " " + record.__className__;
                 }
                 return "list-row-index" + record.key;
-            },
-            onRowMouseEnter:(record: any,index: any,event: any) => {
-                this._onMouseEnter(record,index,event);
-            },
-            onRowMouseLeave:(record: any,index: any,event: any) =>{
-                this._onMouseLeave(record,index,event);
-            },
+            },           
             onExpand:(expanded: any,record: any)=>{
                 this.doEvent("expand",expanded,record);
             },
@@ -642,13 +648,13 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             return data.columns;
         }
         let columns: Array<TableColumns> = [];
-        if(this.state.sequence != false) {
+        if(this.props.sequence != false) {
             columns.push(G.G$.extend({
                 key: UUID.get(),
                 name: "sequence",
                 width: 40,
                 dataIndex: "sequence",
-                title: this.state.sequenceLabel || "序号",
+                title: this.props.sequenceLabel || "序号",
                 className: "ant-table-sequence-column",
             }, this.getColumnProtype()));
         }
@@ -658,10 +664,11 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             children = [children];
         }
         if(children instanceof Array) {
+            children = children.filter(o=>o.$$typeof=='Symbol(react.element)')//过滤子集中空项
             children.map((child:any, index)=>{
                 let props = child.props;
                 let column = this._parseColumn(index,props);
-                if(this.state.sequence != false && (column.fixed == "left" || column.fixed == "right")) {
+                if(this.props.sequence != false && (column.fixed == "left" || column.fixed == "right")) {
                     columns[0].fixed = "left";
                     this.isFixed = true;
                 }
@@ -719,7 +726,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     //转换列
     protected _parseColumn(index: any,props: typeof ColumnPropsPlus): TableColumns {
-        
+        console.log(props)
         let name = props.name || "";
         let dataIndex = props.dataIndex || "";
         let title = props.label || props.title || "";
@@ -735,10 +742,10 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             classNameArr.add("ant-table-ellipsis-column");
             ellipsisSpanWidth = width;
         }        
-        if(this.state.sequence != false) {
+        if(this.props.sequence != false) {
             index = index+1;
         }
-        if(this.state.checkType != null) {
+        if(this.props.checkType != null) {
             index = index+1;
         }
         if(this.haveEvent("expandedRow")) {
@@ -808,6 +815,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 let childrenJsx: any[] = [];
                 childrenInProps.map((child:any, index: any)=>{
                     if(ObjectUtil.isExtends(child.type, "Column")) {
+                        console.log(index,child.props)
                         let columnInnder = this._parseColumn(index,child.props);
                         childrenJsx.push(columnInnder);
                     }

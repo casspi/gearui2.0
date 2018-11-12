@@ -58,7 +58,6 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
 
         let fn = async () => {
             let result = await Http.ajax(method, url);
-            console.log(result)
             if(result.success) {
                 let data = result.data;
                 if(data) {
