@@ -332,6 +332,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         let dictype = this.state.dictype;
         if(url == null && dictype && typeof dictype == 'string'){
             url = Http.getRootPath() + "/dictionary/query?type=" + dictype;
+            // url = '10.10.10.6:81' + "/dictionary/query?type=" + dictype;
         }
         if(url){
             let options: any[];
@@ -422,6 +423,8 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         else
             // 非异步查询第一次时载入所有数据放到内存，以后根据内存中数据进行过滤
             this.loadData(null, callback);
+            console.log(this.state.options)
+
     }
 
     render() {

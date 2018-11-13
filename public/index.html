@@ -201,7 +201,7 @@
          <!-- <g-richtext></g-richtext> -->
         <!--<g-wrapper></g-wrapper>
         <g-cancel>取消</g-cancel> -->
-        <!-- <g-upload id="gupload" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload> -->
+        <g-upload id="gupload" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload>
         <!-- <g-inputtag></g-inputtag> -->
         <!-- <g-autocomplete id="gauto"  icon="file" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" buttonIcon="file" buttonText="btn" limit="20"></g-autocomplete> -->
           <!-- <script>
@@ -293,13 +293,13 @@
               <p>Card content</p>
             </g-cardmeta>
           </g-card> -->
-          <g-table cols="1">
-            <g-control label="用户名">
+          <!-- <g-table cols="1">
+            <div label="用户名">
               <g-text name="id" required="true" min="3" max="32" />
-            </g-control>
-            <g-control label="姓名">
+            </div>
+            <div label="姓名">
               <g-text name="name" required="true" max="64" />
-            </g-control>
+            </div>
             <g-control label="性别">
               <g-radio name="sex" dictype="DIC_SEX"></g-radio>
             </g-control>
@@ -321,9 +321,66 @@
             <g-control label="联系地址" colspan="2">
               <g-text name="address" max="128" style="width:600px"/>
             </g-control>
-          </g-table>
-        
-    </div>
+          </g-table> -->
+        <!-- <g-AutoComplete dictype="DIC_AREA" async="false"  mustMatch="true" ></g-AutoComplete> -->
+        <!-- <div><g-autocomplete id="e51"  width="400" onSearch=search mustMatch="true" prompt="通过自定义函数查询并获取数据，值必须在选项内"/></div> -->
+<!-- <div><g-autocomplete id="e52"  width="400" mustMatch="false" prompt="通过自定义函数查询并获取数据，值不一定在选项内"/></div> -->
+<!-- <div><g-check name="c1" label="单选框" value="1"></g-check></div>
+<div><g-check name="c2" label="默认选中单选框" checked="true"/></div>
+<div><g-check name="c3" label="禁用单选框" disabled="true"/></div>
+<div><g-check name="c4" dictype="radioJson1" disabled="false"/></div> -->
+<!-- <div><g-check name="c5" label="不明确状态" indeterMinate='true'></g-check></div> -->
+  <!-- <div>
+    <g-check id="ec3" dictype="checkboxJson1" indeterMinate='true'/>
+  </div>
+  <g-buttongroup>
+    <g-button id='ec3-btn1'>全选</g-button>
+    <g-button id='ec3-btn2'>全不选</g-button>
+    <g-button>999</g-button>
+  </g-buttongroup>
+  <script>
+    G(function(){
+       G("#ec3").onChange(function(newValue,oldValue){
+      // console.log(newValue,oldValue)
+      var nv = "";
+      if(newValue)
+        nv = newValue+',';						
+      var ov = "";
+      if(oldValue)
+        ov = oldValue+",";						
+      console.log("原值："+ov+" 新值："+nv);
+	  });
+      G('#ec3-btn1').onClick(function(){
+        G('#ec3').checkAll()
+      })
+      G('#ec3-btn2').onClick(function(){
+        G('#ec3').unCheckAll()
+      })
+    })
+  </script> -->
+  <!-- <div><g-check label="全选" target="ac1"/></div>
+  <div><g-check id="ac1" dictype="checkboxJson1" /></div>
+  <div><g-check id="ac2" label="全选" checked="true"/></div>
+  <div><g-check dictype="checkboxJson1" related="ac2" /></div>
+  <script>
+    G(function(){
+      console.log(G('#ac1').isChecked())
+      G('#ac1').check('zs')
+    })
+  </script>     -->
+  <div><g-checktag id="ac1" dictype="checkboxJson1" readOnly="true"  /></div>
+  <div><g-checktag dictype="checkboxJson1" id="ac2" readOnly="true" /></div>
+  <script>
+    G(function(){
+      G('#ac1').focus('zs')
+      console.log(G('#ac1'))
+      G('#ac1').checkAll()
+    })
+  </script>
+     
+      
+
+</div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -336,44 +393,35 @@
     -->
   </body>
   <script>
-    const tabList = [{
-  key: 'tab1',
-  tab: 'tab1',
-}, {
-  key: 'tab2',
-  tab: 'tab2',
-}];
+    var checkboxJson1 = [
+	{
+		label:"张三",
+		value: "zs",
+	},{
+		label:"王四",
+		value: "ws"
+	},{
+		label:"赵五",
+		value: "zw"
+	}
+];
+    var search = function(q){
+		if(q.length>0){
+			return [
+				{text:q+"@sina.com"},
+				{text:q+"@qq.com"},
+				{text:q+"@163.com"},
+				{text:q+"@gmail.com"},
+				{text:q+"@189.com"},
+			];
+		}
+		return [];
+	}
 
-const contentList = {
-  tab1: '<p>content1</p>',
-  tab2: '<p>content2</p>',
-};
 
-    const dataSource = [{
-  key: '1',
-  name: '胡彦斌',
-  age: 32,
-  address: '西湖区湖底公园1号'
-}, {
-  key: '2',
-  name: '胡彦祖',
-  age: 42,
-  address: '西湖区湖底公园1号'
-}];
 
-const columns = [{
-  title: '姓名',
-  dataIndex: 'name',
-  key: 'name',
-}, {
-  title: '年龄',
-  dataIndex: 'age',
-  key: 'age',
-}, {
-  title: '住址',
-  dataIndex: 'address',
-  key: 'address',
-}];
+
+
 // function ajaxareaTest(ctl) {
 // 	console.log(ctl);
 // 	console.log(arguments);
@@ -403,13 +451,13 @@ const columns = [{
   //   }
   var radioJson1 = [
 {
-  label:"未知",
+  label:"未知11111111111111",
   value: "1",
 },{
-  label:"男",
+  label:"男2222222222222",
   value: "0"
 },{
-  label:"女",
+  label:"女3333333333333",
   value: "2"
 }
 ];
@@ -421,6 +469,9 @@ function getExportParameters(){
       };
     }
   G(function() {
+   
+	// G("#e51").onSearch(search);	
+	// G("#e52").onSearch(search);	
     // console.log(G("#gajaxload"))
   // //   console.log(G('#gbtn'));
   // //   console.log(G('#gicon'));
@@ -527,12 +578,12 @@ function getExportParameters(){
         // })
         // G('#gtextarea').readonly(true)
         // G('#gtextarea').readonly(false)
-        // G('#gupload').onBeforeUpload(function(){
-        //   alert('上传前。。。')
-        // })
-        // G('#gupload').onChange(function(){
-        //   alert('change')
-        // })
+        G('#gupload').onBeforeUpload(function(){
+          alert('上传前。。。')
+        })
+        G('#gupload').onChange(function(){
+          alert('change')
+        })
         //穿梭框
         // G('#gtransfer').onRightTreeMoved(function(){
         //   alert('右边移出')

@@ -385,6 +385,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     getInitialState(): state {
+        console.log('getInitialState')
         // let state = this.state;
         let columns: any = this._parseColumns();        
         return {
@@ -417,6 +418,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     getProps() {
+        console.log('getProps')
         //记录ctrl按键
         G.G$(document).keydown((event)=>{
             let eventInner = event || window.event;
@@ -990,6 +992,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     render() {
         let props: any = this.getProps();
+        console.log(props);
         return <AntdTable {...props}></AntdTable>;
     }
 

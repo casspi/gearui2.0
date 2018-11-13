@@ -28,6 +28,7 @@ export interface state extends FormTag.state {
     related?: string;
     checked?: boolean;
     label?: string;
+    defaultValue?:any
 }
 interface OptionData {
     label?: any;
@@ -43,19 +44,44 @@ export default class Check<P extends typeof props, S extends state> extends Form
             target: this.props.target,
             related: this.props.related,
             checked: this.props.checked,
-            label: this.props.label
+            label: this.props.label,
+
         };
     }
-
-    render() {
-        return <AntdCheckboxGroup></AntdCheckboxGroup>;
+    //获取当前属性
+    getProps() {
+        let state:any = this.state;
+        delete state.invalidType;
+        // 绑定的change事件
+        let changeEvent = function(value:any){
+            // 传入的就是选中的新值
+            let oldValue = this.getValue();
+            this.setState({ value: value },() => {
+                this.doRelated();
+                let args = [value,oldValue];
+                //执行自定义注册的事件
+                this.doEvent("change", ...args);
+            });
+        }.bind(this);
+        // console.log(state.indeterminate)
+        return G.G$.extend({},state, {
+            options: this.state.options,
+            defaultValue: this.state.defaultValue,
+            value: this.state.value,
+            disabled: this.state.disabled || this.state.readOnly,
+            onChange: changeEvent,
+        });
     }
-
+    render() {
+        let props = this.getProps();
+        return <AntdCheckboxGroup {...props}></AntdCheckboxGroup>;
+    }
+    
     afterRender() {
         this.blur(()=>{
             this.removeAttr("tabindex");
         })       
-
+        
         let callback = ()=>{
             if(this.state.indeterminate == true) {
                 this.setIndeterminate(true);
@@ -66,11 +92,19 @@ export default class Check<P extends typeof props, S extends state> extends Form
                 if(target instanceof Check){
                     if(!target.state.related){
                         target.attr("related",this.state.id);
+                        target.setState({
+                            related:this.state.id
+                        })
                         target.doRelated();
                     }
                 }else{
-                    if(!target.attr("related"))
-                        target.attr("related",this.state.id);
+                    if(!target.attr("related")){
+
+                        target.attr("related",this.state.id) 
+                        target.setState({
+                            related:this.state.id
+                        });
+                    }
                 }
             }
             if(this.state.related) {
@@ -79,15 +113,22 @@ export default class Check<P extends typeof props, S extends state> extends Form
                 if(related instanceof Check){
                     if(!related.state.target){
                         related.attr("target",this.state.id);
+                        related.setState({
+                            target:this.state.id
+                        })
                         related.doRelated();
                     }
                 }else{
-                    if(!related.attr("target"))
+                    if(!related.attr("target")){
                         related.attr("target",this.state.id);                
+                        related.setState({
+                            target:this.state.id
+                        })
+                    }
                 }
             }
         }        
-
+        
         if (this.state.url || this.state.dictype) {
             let url = this.state.url;
             let dictype = this.state.dictype;
@@ -121,9 +162,9 @@ export default class Check<P extends typeof props, S extends state> extends Form
             }
         }
     }
-
+    
     doRelated(){
-        let related = this.state.related;
+        let related = this.state.related  || this.attr('related');
         if(related){
             let obj = G.$("#"+related);
             if(obj instanceof Check) {
@@ -136,8 +177,7 @@ export default class Check<P extends typeof props, S extends state> extends Form
                 }
             }
         }
-
-        let target = this.state.target;
+        let target = this.state.target || this.attr('target');
         if(target){
             let obj = G.$("#"+target);
             if(obj instanceof Check){
@@ -149,7 +189,7 @@ export default class Check<P extends typeof props, S extends state> extends Form
             }
         }
     }
-
+    
     setIndeterminate(indeterminate?: boolean){
         if(indeterminate == true){
             this.find(".ant-checkbox").addClass("ant-checkbox-indeterminate");
@@ -157,7 +197,7 @@ export default class Check<P extends typeof props, S extends state> extends Form
             this.find(".ant-checkbox").removeClass("ant-checkbox-indeterminate");
         }
     }
-
+    
     //获取值
     getValue(): any {
         return this.state.value || [];
@@ -177,7 +217,12 @@ export default class Check<P extends typeof props, S extends state> extends Form
         }
         return texts;
     }
-
+    onChange(fun:any) {
+        if (fun && G.G$.isFunction(fun)) {
+            this.bind("change", fun);
+        }
+    }  
+    
     // 选中所有
     checkAll(){
         let options = this.state.options;

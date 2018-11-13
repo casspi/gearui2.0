@@ -26,12 +26,16 @@ interface CheckTagOption {
 export default class CheckTag<P extends typeof props, S extends state> extends FormTag.default<P, S> {
 
     getInitialState(): state {
-        return {
-            options: []
-        };
+        return G.G$.extend({},{
+            options: [],
+            dictype:this.props.dictype,
+            url:this.props.url,
+            disabled: this.props.disabled,
+            readOnly: this.props.readOnly,
+        });
     }
-
     render() {
+            console.log(this.state.options)
         return <div {...this.getProps()}>
             {this.getTags()}
         </div>;
@@ -39,7 +43,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
 
     //获取当前属性
     getProps() {
-
+        let state = this.state;
         let className = this.state.className ? "checktag-control-wrapper " + this.state.className : "checktag-control-wrapper";
         if((this.state.disabled == true)){
             if(className) {
@@ -48,19 +52,22 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
                 className = "tag-disabled";
             }
         }
-        return {
+        return G.G$.extend({},state,{
             className: className,
-        };
+        });
     }
 
     //获取当前属性
     getCheckTagProps(key: any,value: any,text: any,checked: any) {
-        return {
+        console.log(this.state.readOnly)
+        return G.G$.extend({},{
             key:key,
             "data-value": value,
             "data-text": text,
             tabIndex:0,
             checked: checked,
+            readOnly:this.state.readOnly,
+            disabled:this.state.disabled,
             onChange:(chked: any)=>{
                 if(this.state.readOnly == true || this.state.disabled == true)
                     return;
@@ -69,7 +76,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
                     this._change(this.getValue(),oldValues);
                 });
             }
-        };
+        });
     }
 
     private getTags() {
@@ -92,6 +99,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
             let dictype = this.state.dictype;
             let fn = async () => {
                 let result = await DicUtil.getDic({url, dictype});
+                console.log(result)
                 if(result.success) {
                     let dic = result.data;
                     if(dic) {
@@ -115,6 +123,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
                 }
             }
             fn();
+            console.log(this.state.options)
         }        
     }    
 
@@ -189,6 +198,8 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
     }
 
     checkAll(){
+        console.log('checkAll')
+        console.log(this.state.options)
         this.setState({
             options:(this.state.options || []).map((option)=>{
                 option.checked = true;
