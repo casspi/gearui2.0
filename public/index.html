@@ -11,6 +11,24 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <style>
+      .checktag-control-wrapper.tag-disabled .ant-tag{
+	background-color:#666;
+	color:#555;
+}
+.checktag-control-wrapper.tag-disabled .ant-tag:hover{
+	background-color:#666;
+	color:#555;
+	opacity:1;
+}
+.checktag-control-wrapper.tag-disabled .ant-tag-checkable-checked{
+	background-color:#666;
+	color:#000;
+}
+.checktag-control-wrapper.tag-disabled .ant-tag-checkable-checked:hover{
+	background-color:#666;
+	color:#000;
+}
+
       .transfer-control-wrapper{
         position:relative;
         display:block;
@@ -201,7 +219,7 @@
          <!-- <g-richtext></g-richtext> -->
         <!--<g-wrapper></g-wrapper>
         <g-cancel>取消</g-cancel> -->
-        <g-upload id="gupload" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload>
+        <!-- <g-upload id="gupload" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload> -->
         <!-- <g-inputtag></g-inputtag> -->
         <!-- <g-autocomplete id="gauto"  icon="file" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" buttonIcon="file" buttonText="btn" limit="20"></g-autocomplete> -->
           <!-- <script>
@@ -293,13 +311,13 @@
               <p>Card content</p>
             </g-cardmeta>
           </g-card> -->
-          <!-- <g-table cols="1">
-            <div label="用户名">
+          <g-table cols="1">
+            <g-control label="用户名">
               <g-text name="id" required="true" min="3" max="32" />
-            </div>
-            <div label="姓名">
+            </g-control>
+            <g-control label="姓名">
               <g-text name="name" required="true" max="64" />
-            </div>
+            </g-control>
             <g-control label="性别">
               <g-radio name="sex" dictype="DIC_SEX"></g-radio>
             </g-control>
@@ -321,7 +339,19 @@
             <g-control label="联系地址" colspan="2">
               <g-text name="address" max="128" style="width:600px"/>
             </g-control>
-          </g-table> -->
+          </g-table>
+          <!-- <g-EditTable>
+            <g-control label="联系地址" colspan="2">
+              <g-text name="address" max="128" style="width:600px"/>
+            </g-control>
+          </g-EditTable> -->
+
+
+
+
+
+
+
         <!-- <g-AutoComplete dictype="DIC_AREA" async="false"  mustMatch="true" ></g-AutoComplete> -->
         <!-- <div><g-autocomplete id="e51"  width="400" onSearch=search mustMatch="true" prompt="通过自定义函数查询并获取数据，值必须在选项内"/></div> -->
 <!-- <div><g-autocomplete id="e52"  width="400" mustMatch="false" prompt="通过自定义函数查询并获取数据，值不一定在选项内"/></div> -->
@@ -368,19 +398,49 @@
       G('#ac1').check('zs')
     })
   </script>     -->
-  <div><g-checktag id="ac1" dictype="checkboxJson1" readOnly="true"  /></div>
-  <div><g-checktag dictype="checkboxJson1" id="ac2" readOnly="true" /></div>
+  <!-- <div><g-checktag id="ac1" dictype="checkboxJson1"  readOnly="true"/></div>
+  <div><g-checktag dictype="checkboxJson1" id="ac2" disabled="true" /></div>
   <script>
     G(function(){
       G('#ac1').focus('zs')
       console.log(G('#ac1'))
       G('#ac1').checkAll()
-    })
-  </script>
-     
-      
+      G('#ac1').onClick(function(){
 
-</div>
+        
+      })
+    })
+  </script> -->
+  <!-- <g-color showpicker="true"></g-color> -->
+  <!-- <form action="">
+    <g-combotree  label="代码集" readonly="true"  dictype="checkboxJson1" value="zs" width="300" prompt="请选择" multiple="true" editable="false"></g-combotree>
+    <g-combotree id="c11" dictype="combotreeJson" width="200"  multiple="true" cascadeCheck="true"  required="true"></g-combotree>
+    <button type="submit">submit</button>
+  </form>
+    <script>
+      G(function(){
+        console.log(G('#c11'))
+        G('#c11').onShowPanel(function(){
+          alert('打开下拉选择框')
+        });
+        G('#c11').onHidePanel(function(){
+          alert('隐藏下拉选择框')
+        })
+        G("#c11").onChange(function(newValues,oldValues){
+          console.log(newValues);//当前选中的所有值
+          console.log(oldValues);//先前选中的所有值
+        });
+        console.log(G('#c11').getNode('id001'));
+      })
+    </script>   -->
+    <!-- <g-date value="2017-08-08" disabled="2017/08/07"></g-date>
+    <g-date type="range" start="2017/09/09" end="2017/09/19" format="YYYY/MM/DD" abledate="2017/09/03,2017/09/25"></g-date> -->
+    <!-- <g-datetime name="dt6" value="2017-10-08 11:10:9" format="YYYY-MM-DD HH:mm:ss" abledate="2017-10-03,2017-10-22" abletime="8:15:30-17:30:45" hidetime="true"></g-datetime> -->
+    <!-- <g-datetime name="dt10" type="range" format="YYYY/MM/DD HH:mm:ss" value="2017/10/08 11:10:9,2017/10/14 15:10:2" abledate="2017/10/07,2017/10/22" abletime="8:30:00-17:00:00,12:00:00-17:00:00"></g-datetime> -->
+      <!-- <g-time></g-time>
+      <g-timepicker></g-timepicker> -->
+      
+  </div>
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -405,6 +465,18 @@
 		value: "zw"
 	}
 ];
+var combotreeJson = [{
+	value:"01",
+	label:"节点一"
+},{
+  id:'id001',
+	value:"02",
+	label:"节点二",
+	children:[{
+		value:"0201",
+		label:"子节点"
+	}]
+}];
     var search = function(q){
 		if(q.length>0){
 			return [
@@ -578,12 +650,12 @@ function getExportParameters(){
         // })
         // G('#gtextarea').readonly(true)
         // G('#gtextarea').readonly(false)
-        G('#gupload').onBeforeUpload(function(){
-          alert('上传前。。。')
-        })
-        G('#gupload').onChange(function(){
-          alert('change')
-        })
+        // G('#gupload').onBeforeUpload(function(){
+        //   alert('上传前。。。')
+        // })
+        // G('#gupload').onChange(function(){
+        //   alert('change')
+        // })
         //穿梭框
         // G('#gtransfer').onRightTreeMoved(function(){
         //   alert('右边移出')

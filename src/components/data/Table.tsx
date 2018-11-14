@@ -666,8 +666,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             children = [children];
         }
         if(children instanceof Array) {
-            children = children.filter(o=>o.$$typeof=='Symbol(react.element)')//过滤子集中空项
+            children = children.filter(o=>o.$$typeof!=null)//过滤子集中空项
             children.map((child:any, index)=>{
+                // console.log(child.$$typeof.toString())
                 let props = child.props;
                 let column = this._parseColumn(index,props);
                 if(this.props.sequence != false && (column.fixed == "left" || column.fixed == "right")) {
@@ -728,7 +729,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     //转换列
     protected _parseColumn(index: any,props: typeof ColumnPropsPlus): TableColumns {
-        console.log(props)
         let name = props.name || "";
         let dataIndex = props.dataIndex || "";
         let title = props.label || props.title || "";
@@ -992,8 +992,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     render() {
         let props: any = this.getProps();
-        console.log(props);
-        return <AntdTable {...props}></AntdTable>;
+        console.log(this.props.children);
+        return <AntdTable {...props}>{this.props.children}</AntdTable>;
     }
 
     afterRender() {
@@ -1170,6 +1170,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                         data = {dataList: []};
                 }
                 data = this._loadFilter(data);
+                console.log(data)
                 this.setState({
                     dataSource: data.dataList,
                     columns: data.columns||this.state.columns

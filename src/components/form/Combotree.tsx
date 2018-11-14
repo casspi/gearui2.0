@@ -163,7 +163,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                 propsNew.value = valueNew;
                 propsNew.defaultValue = [].concat([],valueNew);
             }else {
-                if(propsNew.value instanceof String || propsNew.value.label == null) {
+                if(propsNew.value instanceof String || propsNew.value==null || propsNew.value.label == null) {
                     let label = this.getTextByValue(propsNew.value);
                     if(label != null) {
                         propsNew.value = {value: propsNew.value, label};
@@ -309,8 +309,14 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             value: value
         });
     };
-
-    static onChange() {}
+    onChange(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("change",fun);
+        }
+    }
+    static onChange() {
+        
+    }
     
     //当选中节点的时候触发
     protected _onSearch(value:string,node:TreeNode) {};

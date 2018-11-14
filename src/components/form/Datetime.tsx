@@ -23,6 +23,7 @@ export var props = {
     hideTime: GearType.Boolean, //是否隐藏不可选择时间区间
     ok: GearType.Function,
     getCalendarContainer: GearType.Function,
+    locale: GearType.Object,
 }
 
 export interface state extends FormTag.state {
@@ -35,6 +36,7 @@ export interface state extends FormTag.state {
     showTime?: any;
     ableTime?: string;
     hideTime?: boolean;
+    locale?:object
 }
 
 export default class GDatetime<P extends typeof props, S extends state> extends FormTag.default<P, S> {
@@ -59,7 +61,6 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
 
         let limitStartNum: number = 0;
         let limitEndNum: number = 0;
-
         if (this.state.ableDate) {
             let ableDateArray = this.props.ableDate.split(",");
             if (ableDateArray[0].length > 1) {
@@ -73,7 +74,6 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
         }
 
         let ableTimeParams = this.getAbleTimeParams(this.state.ableTime);
-
         let props = G.G$.extend({}, this.state, {
             type: type,
             placeholder: placeholder,
@@ -84,14 +84,18 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
             value: this.state.value,
             defaultValue: this.state.value,
             disabledDate: (date: any) => {
-                if (limitStartNum != 0 && limitEndNum == 0) {
-                    return date && date.valueOf() < limitStartNum;
-                } else if (limitStartNum == 0 && limitEndNum != 0) {
-                    return date && date.valueOf() > limitEndNum;
-                } else if (limitStartNum != 0 && limitEndNum != 0) {
-                    return date.valueOf() < limitStartNum || date.valueOf() > limitEndNum;
-                } else {
-                    return false;
+                if(date){
+                    if (limitStartNum != 0 && limitEndNum == 0) {
+                        return date && date.valueOf() < limitStartNum;
+                    } else if (limitStartNum == 0 && limitEndNum != 0) {
+                        return date && date.valueOf() > limitEndNum;
+                    } else if (limitStartNum != 0 && limitEndNum != 0) {
+                        if(date){
+                            return date.valueOf() < limitStartNum || date.valueOf() > limitEndNum;
+                        }
+                    } else {
+                        return false;
+                    }
                 }
             },
             disabledTime: type != "range" ? null : (current: any, timeType: any) : any => {
@@ -177,24 +181,29 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
                 value = moment(this.props.value, format);
             }
         }
-
         if (type == "range") {
             return {
                 value: value,
                 start: this.props.start,
                 end: this.props.end,
-                showTime: { hideDisabledOptions: this.state.hideTime },
+                showTime: { hideDisabledOptions: this.props.hideTime },
                 format: format,
                 size: this.props.size,
+                ableDate:this.props.ableDate,
+                ableTime:this.props.ableTime,
+                // locale: this.props.locale||Locale,
             };
         }else {
             return {
                 value: value,
                 start: this.props.start,
                 end: this.props.end,
-                showTime: this.showTime(this.state.hideTime),
+                showTime: this.showTime(this.props.hideTime),
                 format: format,
                 size: this.props.size,
+                ableDate:this.props.ableDate,
+                ableTime:this.props.ableTime,
+                // locale: this.props.locale||Locale,
             };
         }
     }
@@ -211,7 +220,6 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
         let ableTimeRangeArrayEndMin;
         let ableTimeRangeArrayEndSec;
         let type = this.props.type || "date";
-
         if (ableTime) {
             abletimeStr = ableTime;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
             if (type == null || type == "date") {
@@ -221,6 +229,7 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
                 } else {
                     ableTimeArray = abletimeStr.split(":");
                 }
+                return ableTimeArray
             } else if (type = "range") {
                 //8:8:9-8:8:9,8:8:9-8:8:9,8:8:9-8:8:9
                 ableTimeArray = abletimeStr.split(",");

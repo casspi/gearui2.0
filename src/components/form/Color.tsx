@@ -44,7 +44,7 @@ export default class Color<P extends typeof props & InputProps, S extends state 
                         }
                     }
                 },
-                color: this.props.value || '',
+                color: this.props.value || 'ffffff',
                 showPicker: this.props.showPicker,
                 
             }

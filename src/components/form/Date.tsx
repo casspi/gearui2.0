@@ -30,6 +30,7 @@ export interface state extends FormTag.state {
     start?: string;
     end?: string;
     showTime?: boolean;
+    disabledDate?:any
 }
 
 export default class Date<P extends typeof props, S extends state> extends FormTag.default<P, S> {
@@ -154,6 +155,7 @@ export default class Date<P extends typeof props, S extends state> extends FormT
             showTime: false,
             format: format,
             size: this.props.size,
+            ableDate:this.props.ableDate
         };
     }
     //渲染
