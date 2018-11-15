@@ -1,5 +1,4 @@
 import { Switch as AntdSwitch, Icon as AntdIcon } from 'antd';
-import * as Tag from "../Tag";
 import * as React from 'react';
 import  G  from '../../Gear';
 import * as FormTag from './FormTag';

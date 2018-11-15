@@ -418,7 +418,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     getProps() {
-        console.log('getProps')
         //记录ctrl按键
         G.G$(document).keydown((event)=>{
             let eventInner = event || window.event;
@@ -443,6 +442,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             }
         };
         let state = this.state;
+        console.log(state)
         return G.G$.extend({},state,{
             locale: {
                 emptyText: this.state.emptyText,
@@ -992,7 +992,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     render() {
         let props: any = this.getProps();
-        console.log(this.props.children);
+        console.log(this.props.expandedRowRender);
         return <AntdTable {...props}>{this.props.children}</AntdTable>;
     }
 

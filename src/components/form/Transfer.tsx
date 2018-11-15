@@ -115,7 +115,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     }
 
     getLeftTreeProps() {
-
         return {
             checkbox:true,
             cascadecheck:true,
@@ -196,7 +195,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     } 
     
     getLeftCheckProps() {
-console.log(this.state.leftChecked)
+        console.log(this.state.leftChecked)     
         return {
             onChange:this._onLeftCheckChange.bind(this),
             checked:this.state.leftChecked,
@@ -364,6 +363,7 @@ console.log(this.state.leftChecked)
     private _onLeftCheckChange(e:any){
         if(this._leftTree){
             if(e.target.checked==true){
+                console.log(this._leftTree)
                 this._leftTree.checkAll(()=>{
                     this._setLeftChecked(e.target.checked);
                 });

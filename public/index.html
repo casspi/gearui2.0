@@ -210,12 +210,7 @@
         <!-- </g-from> -->
         <!-- <g-time id="gtime" inputReadOnly="true"  use12Hours="false" hideDisabled="false" width="300" size="1" placeholder="开始时间" disabledHours="5-9" disabledMinutes="20-60" disabled="false" format="HH:mm:ss"></g-time> -->
         <!-- <g-timepicker fo></g-timepicker> -->
-      
-        <!-- <g-tree url="http://10.10.10.6:81/example/Tree/data" id="gtree" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false">
-
-          </g-tree> -->
-        <!-- <g-transfer id="gtransfer0"  url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
-        <!-- <g-transfer id="gtransfer" width='996' url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
+    
          <!-- <g-richtext></g-richtext> -->
         <!--<g-wrapper></g-wrapper>
         <g-cancel>取消</g-cancel> -->
@@ -311,7 +306,7 @@
               <p>Card content</p>
             </g-cardmeta>
           </g-card> -->
-          <g-table cols="1">
+          <!-- <g-table cols="1">
             <g-control label="用户名">
               <g-text name="id" required="true" min="3" max="32" />
             </g-control>
@@ -339,17 +334,12 @@
             <g-control label="联系地址" colspan="2">
               <g-text name="address" max="128" style="width:600px"/>
             </g-control>
-          </g-table>
+          </g-table> -->
           <!-- <g-EditTable>
             <g-control label="联系地址" colspan="2">
               <g-text name="address" max="128" style="width:600px"/>
             </g-control>
           </g-EditTable> -->
-
-
-
-
-
 
 
         <!-- <g-AutoComplete dictype="DIC_AREA" async="false"  mustMatch="true" ></g-AutoComplete> -->
@@ -439,7 +429,54 @@
     <!-- <g-datetime name="dt10" type="range" format="YYYY/MM/DD HH:mm:ss" value="2017/10/08 11:10:9,2017/10/14 15:10:2" abledate="2017/10/07,2017/10/22" abletime="8:30:00-17:00:00,12:00:00-17:00:00"></g-datetime> -->
       <!-- <g-time></g-time>
       <g-timepicker></g-timepicker> -->
-      
+      <!-- <g-form validation="true" width="300"> -->
+        <!-- <g-email required="true"></g-email> -->
+        <!-- <g-file id="gfile" width="300" required="true"></g-file> -->
+        <!-- <g-hidden></g-hidden> -->
+        <!-- <g-idnumber required="true" value="idnumber" validation="false" ></g-idnumber>   -->
+        <!-- <g-formtag>
+        </g-formtag> -->
+        <!-- <g-int defaultValue="数字" required="true"></g-int> 
+        <g-ip required="true"></g-ip>
+        <g-mac></g-mac>
+        <g-number required="true"></g-number>
+        <g-password required="true"></g-password> -->
+        <!-- <g-search required="true"></g-search>
+        <g-radiogroup required="true">
+          <g-radio label="radio1" name="test"></g-radio>
+          <g-radio label="radio2" name="test"></g-radio>
+        </g-radiogroup> -->
+        <!-- <g-select>
+          <g-selectedtag>111</g-selectedtag>
+          <g-selectedtag>222</g-selectedtag>
+        </g-select> -->
+        <!-- <g-switch id="s001" icon="check,close" checked="true" code="1,0" label="开,关" showlabel="true"></g-switch> -->
+        <!-- <g-url></g-url> -->
+        <!-- <g-submit>提交</g-submit> -->
+      <!-- </g-form> -->
+      <!-- <script>
+        G(function () {
+            // G('#gfile').onChange(function(){
+            // })
+          //  setInterval(()=>{console.log(G('#gfile').getValue())},1000) 
+          //  G('#gfile').disable();
+          //  G('#gfile').enable();
+          // G('#s001').unChecked();
+        })
+      </script> -->
+      <g-tree id="gtree" dictype="treeData" autoExpandParent="true" showline="true" checkbox="true"></g-tree>
+      <g-button id="g-btn">btn</g-button>
+      <!-- <g-tree url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
+      <!-- <g-transfer id="gtransfer0"  url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
+    <g-transfer id="gtransfer" width='996' dictype="treeData"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer>
+    <!-- <g-center></g-center> -->
+    <script>
+    G(function(){
+      G('#g-btn').onClick(function () {
+        G('#gtree').checkAll();
+      })
+    })
+    </script>  
   </div>
     <!--
       This HTML file is a template.
@@ -453,6 +490,41 @@
     -->
   </body>
   <script>
+    var treeData = [{
+  label: '0-0',
+  value: '0-0',
+  children: [{
+    label: '0-0-0',
+    value: '0-0-0',
+    children: [
+      { label: '0-0-0-0', value: '0-0-0-0' },
+      { label: '0-0-0-1', value: '0-0-0-1' },
+      { label: '0-0-0-2', value: '0-0-0-2' },
+    ],
+  }, {
+    label: '0-0-1',
+    value: '0-0-1',
+    children: [
+      { label: '0-0-1-0', value: '0-0-1-0' },
+      { label: '0-0-1-1', value: '0-0-1-1' },
+      { label: '0-0-1-2', value: '0-0-1-2' },
+    ],
+  }, {
+    label: '0-0-2',
+    value: '0-0-2',
+  }],
+}, {
+  label: '0-1',
+  value: '0-1',
+  children: [
+    { label: '0-1-0-0', value: '0-1-0-0' },
+    { label: '0-1-0-1', value: '0-1-0-1' },
+    { label: '0-1-0-2', value: '0-1-0-2' },
+  ],
+}, {
+  label: '0-2',
+  value: '0-2',
+}];
     var checkboxJson1 = [
 	{
 		label:"张三",

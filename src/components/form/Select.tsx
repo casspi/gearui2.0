@@ -15,6 +15,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     }
 
     render() {
+        console.log(this.state)
         return <AntdSelect {...this.state}>
             <AntdSelect.Option value="1">aaa</AntdSelect.Option>
             <AntdSelect.Option value="2">bbb</AntdSelect.Option>

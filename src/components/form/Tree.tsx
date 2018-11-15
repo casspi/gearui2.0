@@ -111,8 +111,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     childTree: Tree<P, S>;
 
     getInitialState():state & AntdTreeProps {
-        var state = this.state;
-        return G.G$.extend({},state,{
+        return G.G$.extend({},{
             options: [],
             expandedKeys: this.props.expandedKeys,
             defaultExpandedKeys: this.props.expandedKeys,
@@ -802,6 +801,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
 
     // 全选指定集合（包括下级），并添加当前选中的值和设置option中节点状态为checked=true
     private _checkAll(keyValue:Array<string>,options: any,addValues?:Array<string>){
+        console.log(options)
         if(options){
             let optionsNew: Array<TreeNode> = [];
             if((options instanceof Array)==false){
@@ -809,7 +809,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             }else{
                 optionsNew = options;
             }
-            console.log(optionsNew)
             let gAddValues:GearArray<string>;
             if(addValues) {
                 gAddValues = new GearArray(addValues);
@@ -824,6 +823,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                         // array[i].checked = true;
                         if(gArray.contains(array[i].id)==false){
                             keyValue.push(array[i].id);
+                            console.log(keyValue)
                         }
                         if(gAddValues && array[i].value){
                             // 记录本次操作添加的值
@@ -835,7 +835,8 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 }
             }
             seek(optionsNew);
-            console.log(gArray)
+            console.log(gArray);
+            console.log(optionsNew)
         }
     }
 
@@ -1277,12 +1278,17 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         return keyValue;
     }
 
-    
+    componentDidMount(){
+        super.componentDidMount();
+        console.log(this.state.options)
+    }
     // 全选和反选
     checkAll(callback?: Function){
-        alert('quanxuan')
+        console.log('全选。。。。。。。。。。。。。。。。')
         let value: any[] = [];
         var options:any = this.state.options;
+        console.log(options);
+        // return;
         if(options){
             this._checkAll(value,options);
             this.setState({

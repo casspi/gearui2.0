@@ -56,7 +56,9 @@ export default class File<P extends typeof props, S extends state> extends FormT
     }
     
     render() {
-        return <div {...this.state}>
+        let state:any = this.state;
+        delete state.invalidType;
+        return <div {...state}>
                 <AntdInput {...this.getInputProps()}/>
                 <AntdInput {...this.getFileInputProps()}/>
             </div>;
