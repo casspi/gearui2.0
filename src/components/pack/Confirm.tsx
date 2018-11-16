@@ -51,7 +51,9 @@ export default class Confirm<P extends typeof props, S extends state> extends Bu
     }
 
     getProps() {
-        return G.G$.extend({},this.state,{
+        let state:any = this.state;
+        delete state.okText;
+        return G.G$.extend({},state,{
             title: this.state.title,
             okText: this.state.okText,
             cancelText: this.state.cancelText,

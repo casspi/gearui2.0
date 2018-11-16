@@ -72,32 +72,51 @@ export default class Menu<P extends typeof props, S extends state> extends Tag.d
     
     render() {
         let childrens = this.getChildren();
-        return <AntdMenu {...this.state}>{childrens}</AntdMenu>;
+        let state:any = this.state;
+        if(this.state.mode!=="inline"){
+            delete state.inlineCollapsed
+        }
+        return <AntdMenu {...state}>{childrens}</AntdMenu>;
     }
 
-    private getChildren(children?: any, key?: string) {
+    private getChildren(children1?: any, key?: string) {
         key = key || "";
-        children = children || this.props.children || [];
+        let children:any[] = children1 || this.props.children || [];
         if(!(children instanceof Array)) {
             children = [children];
         }
+        children.map(o=>{console.log(o!=0)})
+        children = children.filter(o => o!=0)
         let childrenNew: any[] = [];
         if(children instanceof Array) {
             children.map((child: any, index) => {
                 if(child && child.props) {
-                    if(ObjectUtil.isExtends(child, "SubMenu")) {
-                        childrenNew.push(<AntdSubMenu key={key + "SubMenu_"+index} {...child.props}>{this.getChildren(child.props.children, "SubMenu_"+index)}</AntdSubMenu>);
-                    }
-                    if(ObjectUtil.isExtends(child, "MenuItem")) {
-                        childrenNew.push(<AntdMenuItem key={key + "MenuItem_"+index} {...child.props}>{this.getChildren(child.props.children, "MenuItem_"+index)}</AntdMenuItem>);
-                    }
-                    if(ObjectUtil.isExtends(child, "MenuItemGroup")) {
+                    if(ObjectUtil.isExtends(child.type, "SubMenu")) {
+                        let props:any={
+                            children:child.props.children,
+                            disabled:child.props.disabled,
+                            title:child.props.title,
+                            onTitleClick:child.props.onTitleClick || function(){return false},
+                        }
+                        childrenNew.push(<AntdSubMenu key={key + "SubMenu_"+index} {...props}>{this.getChildren(child.props.children, "SubMenu_"+index)}</AntdSubMenu>);
+                    }else if(ObjectUtil.isExtends(child.type, "MenuItem")) {
+                        let props:any = {
+                            disabled:child.props.disabled
+                        };
+                        // delete props.titleAlign;
+                        // props.className = props.class;
+                        // delete props.class
+                        childrenNew.push(<AntdMenuItem key={key + "MenuItem_"+index} {...props}>{this.getChildren(child.props.children, "MenuItem_"+index)}</AntdMenuItem>);
+                    }else if(ObjectUtil.isExtends(child.type, "MenuItemGroup")) {
                         childrenNew.push(<AntdItemGroup key={key + "ItemGroup_"+index} {...child.props}>{this.getChildren(child.props.children, "ItemGroup_"+index)}</AntdItemGroup>);
-                    }
-                    if(ObjectUtil.isExtends(child, "MenuDivider")) {
+                    }else if(ObjectUtil.isExtends(child.type, "MenuDivider")) {
                         childrenNew.push(<AntdDivider key={key + "Divider_"+index} {...child.props}>{this.getChildren(child.props.children, "Divider_"+index)}</AntdDivider>);
+                    }else{
+                        console.log(child)
+                        childrenNew.push(child);
                     }
                 }else {
+                    console.log(child)
                     childrenNew.push(child);
                 }
             });

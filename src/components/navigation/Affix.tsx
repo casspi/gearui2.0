@@ -23,7 +23,7 @@ export default class Affix<P extends typeof props, S extends state> extends Tag.
     //獲取初始的state
     getInitialState(): state {
         let target:any = this.props.target;
-        if(target instanceof String) {
+        if(target) {
             target = () => G.G$(target)[0] || window;
         }
         return {

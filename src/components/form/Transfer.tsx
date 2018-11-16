@@ -165,7 +165,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     }
 
     getRightTreeProps() {
-        
         return {
             checkbox:true,
             cascadecheck:true,   
@@ -194,8 +193,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         };
     } 
     
-    getLeftCheckProps() {
-        console.log(this.state.leftChecked)     
+    getLeftCheckProps() {   
         return {
             onChange:this._onLeftCheckChange.bind(this),
             checked:this.state.leftChecked,
@@ -251,8 +249,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         let props:any = this.getProps();
         let leftTreeProps:any = this.getLeftTreeProps();
         let rightTreeProps:any = this.getRightTreeProps();
-        // console.log(this.getLeftTreeProps());
-        // console.log(this.getLeftCheckProps())
         return <Wrapper {...props}>
                 <div key={"left"} {...this.getLeftContainerProps()}>
                     <div key={"header"} className={"list-header"}>
@@ -363,7 +359,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     private _onLeftCheckChange(e:any){
         if(this._leftTree){
             if(e.target.checked==true){
-                console.log(this._leftTree)
                 this._leftTree.checkAll(()=>{
                     this._setLeftChecked(e.target.checked);
                 });
@@ -449,6 +444,8 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                             });
                         }                                    
                     }else{ 
+                        console.log(array[i])
+                        console.log(array[i].checked)
                         if(array[i].checked==true){
                             array[i].attributes["transfer_moved"] = true;
                             // 叶子节点，并且是选中的
@@ -470,7 +467,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                         }
                     }
                 }
-            }
+            }            
             return {
                 // 源对象剩余的部分
                 from:fromOptions.length==0?null:fromOptions,
@@ -481,14 +478,15 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                 changed:toOptions.length==0?false:true,
             };
         };
-        let data = seekCheckedData(options);
+        let data:any = seekCheckedData(options);
         // 将新拆分过来的数据和框中原本的数据进行合并
         data.to = this.dataMerge(destOptions,data.moved,"id","children");
+        console.log(data)
         return data;
     }
 
     // 将两个对象的数据根据唯一健值进行比较合并后返回
-    private dataMerge(options:Array<any>,newOptions:Array<any>,uniqueKey:string,childrenKey:string):Array<any>{
+    private dataMerge(options:Array<any>,newOptions:Array<any> | null,uniqueKey:string,childrenKey:string):Array<any>{
         if(options && options.length>0){
             if(newOptions && newOptions.length>0){
                 // 用于检查目标对象是否存在于当前列表中

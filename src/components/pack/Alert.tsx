@@ -34,20 +34,19 @@ export default class Alert<P extends typeof props, S extends state> extends Tag.
             onClose: ()=> {
                 this.doEvent("close");
             },
-            type: this.state.type,
+            type: this.props.type,
             closable: this.props.closable,
             closeText: this.props.closeText,
-            description: this.state.message
+            description: this.props.message
         };
     }
-
     render() {
         return <AntdAlert {...this.state}></AntdAlert>;
     }
 
     setTitle(title: string) {
         this.setState({
-            title: title
+            message: title
         });
     }
 
@@ -59,7 +58,7 @@ export default class Alert<P extends typeof props, S extends state> extends Tag.
 
     setMessage(message: string) {
         this.setState({
-            message: message
+            description: message
         });
     }
 }

@@ -106,7 +106,7 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <div id="root">
+    <div id="root" style="height:2000px">
         <!-- <g-text name="aaa" title="aaa" label="测试" value="123" onafterrender="testAfterRender()" onafterupdate="testOnAfterUpdate()">aaa</g-text> -->
       <!-- <form ctype="form">
           <g-text name="aaa" title="aaa" label="测试" value="123" onafterupdate="testOnAfterUpdate()" >aaa</g-text>
@@ -464,18 +464,55 @@
           // G('#s001').unChecked();
         })
       </script> -->
-      <g-tree id="gtree" dictype="treeData" autoExpandParent="true" showline="true" checkbox="true"></g-tree>
-      <g-button id="g-btn">btn</g-button>
+      <!-- <g-tree id="gtree" dictype="treeData" autoExpandParent="true" showline="true" checkbox="true"></g-tree> -->
       <!-- <g-tree url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
       <!-- <g-transfer id="gtransfer0"  url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
-    <g-transfer id="gtransfer" width='996' dictype="treeData"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer>
-    <!-- <g-center></g-center> -->
+      <!-- <g-transfer id="gtransfer" width='996' dictype="treeData"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
+      <!-- <g-center></g-center> -->
+      <!-- <g-menu></g-menu> -->
+      <!-- <g-alert id="galert" type="success" title="成功。。。" message="文本内容">110</g-alert> -->
+      <!-- <g-Confirm id=g-confirm>Confirm</g-Confirm> -->
+
+        <!-- <g-loading id="gloading" style="height:50px" icon="loading"  delay="1000" tip="加载中。。。" loading="false" spin="false"></g-loading> -->
+       <!-- <g-Affix target="window" >
+         <div style="width:200px;height:200px;background:#777"></div>
+       </g-Affix> -->
+        <!-- <g-Breadcrumb>
+            <g-BreadcrumbItem>
+              Home
+            </g-BreadcrumbItem>
+          <g-BreadcrumbItem>
+            Application Center
+            </g-BreadcrumbItem>
+        </g-Breadcrumb> -->
+        <g-menu mode="vertical">
+          <g-menuitem><a style="color: aqua">item 1</a></g-menuitem>
+          <g-menuitem>item 2</g-menuitem>
+          <g-SubMenu children="2222">item 3</g-menuitem>
+        </g-menu>
+       <g-button id="g-btn">btn</g-button>
+
     <script>
     G(function(){
       G('#g-btn').onClick(function () {
-        G('#gtree').checkAll();
-      })
+        // G('#gtree').checkAll();
+        // G('#galert').setTitle("修改后标题");
+        // G('#galert').setMessage("修改后内容");
+        // G('#galert').setType("warning");
+        
+        // G('#gloading').setLoading(true)
+        // console.log( G('#gloading').getLoading())
+
+      });
+      // G('#g-confirm').confirm(function(){
+      //     alert('确定')
+      // })
+      // G('#g-confirm').cancel(function(){
+      //     alert('取消')
+      // })
+
     })
+
     </script>  
   </div>
     <!--

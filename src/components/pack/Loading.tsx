@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Spin } from 'antd';
+import { Spin,Icon } from 'antd';
 import * as Tag from '../Tag';
 export var props = {
     ...Tag.props,
@@ -31,7 +31,11 @@ export default class Loading<P extends typeof props, S extends state> extends Ta
             spin:this.props.spin != false,
         };
     }
-
+    setIcon(){
+        if(this.state.icon){
+            return <Icon type={this.state.icon} spin={this.state.spin} />
+        }
+    }
     getProps() {
         let state = this.state
         return G.G$.extend({},state,{
@@ -39,18 +43,27 @@ export default class Loading<P extends typeof props, S extends state> extends Ta
             spinning: this.state.loading,
             tip: this.state.tip,
             size: this.state.size,
+            indicator:this.setIcon()
         });
     }
 
     render() {
         let props: any = this.getProps();
+        delete props.loading;
+        delete props.spin;
+        if(!this.state.icon){
+           delete props.indicator
+        }
         return <Spin {...props}><span style={{display:"none"}}></span></Spin>
     }
-
 
     setLoading(loading:boolean){
         this.setState({
             loading: loading
         });
+    }
+
+    getLoading(){
+        return this.state.loading
     }
 }
