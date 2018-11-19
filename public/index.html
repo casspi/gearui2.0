@@ -90,6 +90,233 @@
       .transfer-control-wrapper .transfer-operation .ant-btn{
         display:block;
       }
+      /* 输入表单基础样式 */
+table.formTable,
+table.dataTable{
+  	width: 100%;
+  	background: #FFFFFF;
+  	border: 1px solid rgba(34, 36, 38, 0.15);
+  	box-shadow: none;
+  	border-radius: 0.28571429rem;
+  	text-align: left;
+  	color: rgba(0, 0, 0, 0.87);
+  	border-collapse: separate;
+  	border-spacing: 0px;
+}
+table.formTable .formRow,
+table.dataTable .formRow{
+	
+}
+table.formTable .formColumn,
+table.dataTable .formColumn{
+  	border-top: 1px solid rgba(34, 36, 38, 0.1);
+  	border-left: 1px solid rgba(34, 36, 38, 0.1);
+  	padding:5px;
+}
+table.formTable tr:first-child .formColumn,
+table.dataTable tr:first-child .formColumn{
+  	border-top: 0px;
+  	padding:5px;
+}
+table.formTable tr .formColumn:first-child,
+table.dataTable tr .formColumn:first-child{
+  	border-left: 0px;
+  	padding:5px;
+}
+table.formTable .formControl,
+table.dataTable .formControl{
+	width:100%;
+	word-wrap:break-word;
+	word-break:break-all;
+	line-height:25px;
+}
+table.formTable .controlLabel,
+table.dataTable .controlLabel{
+	float:left;
+	text-align:right;
+	padding-right:10px;
+  	_background: #F9FAFB;
+  	color: rgba(0, 0, 0, 0.87);
+  	font-weight: bold;
+}
+table.formTable .control,
+table.dataTable .control{
+	
+}
+
+/* 一行一列的输入表单 */
+table.cols1 .controlLabel{
+	float:left;
+	width:120px;
+}
+table.cols1 .control{
+	margin-left:135px;
+}
+table.cols1 .ant-input-affix-wrapper,
+table.cols1 .ant-calendar-picker,
+table.cols1 select,
+table.cols1 textarea,
+table.cols1 .ant-select-selection{
+	width:300px; 
+}
+
+/* 一行两列的输入表单 */
+table.cols2 .formColumn{
+	width:50%;
+}
+table.cols2 .controlLabel{
+	width:120px;
+}
+table.cols2 .control{
+	margin-left:135px;
+}
+table.cols2 .ant-input-affix-wrapper,
+table.cols2 .ant-calendar-picker,
+table.cols2 select,
+table.cols2 textarea,
+table.cols2 .ant-select-selection{
+	width:250px; 
+}
+
+/* 一行三列的输入表单 */
+table.cols3 .formColumn{
+	width:33%;
+}
+table.cols3 .controlLabel{
+	width:100px;
+}
+table.cols3 .control{
+	margin-left:115px;
+}
+table.cols3 .ant-input-affix-wrapper,
+table.cols3 .ant-calendar-picker,
+table.cols3 select,
+table.cols3 textarea,
+table.cols3 .ant-select-selection{
+	width:200px; 
+}
+
+/* 一行四列的输入表单 */
+table.cols4 .formColumn{
+	width:25%;
+}
+table.cols4 .controlLabel{
+	width:100px;
+}
+table.cols4 .control{
+	margin-left:115px;
+}
+table.cols4 .ant-input-affix-wrapper,
+table.cols4 .ant-calendar-picker,
+table.cols4 select,
+table.cols4 textarea,
+table.cols4 .ant-select-selection{
+	width:150px; 
+}
+
+
+/* 查询列表的样式 */
+table.resultTable {
+  width: 100%;
+  background: #FFFFFF;
+  margin: 1em 0em;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  box-shadow: none;
+  border-radius: 0.28571429rem;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.87);
+  border-collapse: separate;
+  border-spacing: 0px;
+}
+table.resultTable:first-child {
+  margin-top: 0em;
+}
+table.resultTable:last-child {
+  margin-bottom: 0em;
+}
+
+table.resultTable th,
+table.resultTable td {
+  -webkit-transition: background 0.1s ease, color 0.1s ease;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+
+table.resultTable thead {
+  box-shadow: none;
+}
+table.resultTable thead th {
+  cursor: auto;
+  background: #F9FAFB;
+  text-align: inherit;
+  color: rgba(0, 0, 0, 0.87);
+  padding:0.5em 0.3em;
+  line-height:25px;
+  vertical-align: inherit;
+  font-style: none;
+  font-weight: bold;
+  text-transform: none;
+  border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+  border-left: 1px solid rgba(34, 36, 38, 0.1);
+}
+table.resultTable thead th.header{ 
+	background:url(../images/order.png) no-repeat;
+	background-position:center right;
+	CURSOR:pointer; 
+}
+table.resultTable thead th.headerSortUp{ 
+	background: url(../images/asc.png) no-repeat;
+	background-position:center right;
+	CURSOR:pointer;
+}
+table.resultTable thead th.headerSortDown{ 
+	background: url(../images/desc.png) no-repeat;
+	background-position:center right;
+	CURSOR:pointer; 
+}
+
+table.resultTable td {
+	line-height:25px;
+  	border-top: 1px solid rgba(34, 36, 38, 0.1);
+  	border-left: 1px solid rgba(34, 36, 38, 0.1);
+	word-wrap:break-word;
+	word-break:break-all;  	
+}
+table.resultTable tr:first-child td {
+  border-top: none;
+}
+
+table.resultTable td {
+  padding: 0.4em 0.3em;
+  text-align: inherit;
+}
+
+table.resultTable thead tr > th:first-child,
+table.resultTable tbody tr > td:first-child {
+  border-left: none;
+}
+
+table.resultTable .sequencetd{
+	text-align:right !important; 
+	width:4em;
+}
+table.resultTable .numbertd{ 
+	text-align:right !important; 
+	width:5em;
+}
+table.resultTable .actiontd{ 
+	text-align:center !important; 
+}
+.ueditor {
+	cursor: text;
+	border: 1px solid;
+}
+
+.checkbox,
+.radio {
+	float:left;
+	padding-right:10px;
+}
+
     </style>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -306,40 +533,7 @@
               <p>Card content</p>
             </g-cardmeta>
           </g-card> -->
-          <!-- <g-table cols="1">
-            <g-control label="用户名">
-              <g-text name="id" required="true" min="3" max="32" />
-            </g-control>
-            <g-control label="姓名">
-              <g-text name="name" required="true" max="64" />
-            </g-control>
-            <g-control label="性别">
-              <g-radio name="sex" dictype="DIC_SEX"></g-radio>
-            </g-control>
-            <g-control label="身份证">
-              <g-idnumber name="idnumber" min="15" max="18"/>
-            </g-control>				
-            <g-control label="出生日期">
-              <g-date name="birthday"/>
-            </g-control>
-            <g-control label="手机号码">
-              <g-text name="mobile"  max="11"/>
-            </g-control>
-            <g-control label="座机号码">
-              <g-text name="phone" max="16"/>
-            </g-control>								
-            <g-control label="电子邮箱">
-              <g-email name="email" max="64"/>
-            </g-control>	
-            <g-control label="联系地址" colspan="2">
-              <g-text name="address" max="128" style="width:600px"/>
-            </g-control>
-          </g-table> -->
-          <!-- <g-EditTable>
-            <g-control label="联系地址" colspan="2">
-              <g-text name="address" max="128" style="width:600px"/>
-            </g-control>
-          </g-EditTable> -->
+   
 
 
         <!-- <g-AutoComplete dictype="DIC_AREA" async="false"  mustMatch="true" ></g-AutoComplete> -->
@@ -429,11 +623,11 @@
     <!-- <g-datetime name="dt10" type="range" format="YYYY/MM/DD HH:mm:ss" value="2017/10/08 11:10:9,2017/10/14 15:10:2" abledate="2017/10/07,2017/10/22" abletime="8:30:00-17:00:00,12:00:00-17:00:00"></g-datetime> -->
       <!-- <g-time></g-time>
       <g-timepicker></g-timepicker> -->
-      <!-- <g-form validation="true" width="300"> -->
+      <g-form validation="true" width="300">
         <!-- <g-email required="true"></g-email> -->
         <!-- <g-file id="gfile" width="300" required="true"></g-file> -->
         <!-- <g-hidden></g-hidden> -->
-        <!-- <g-idnumber required="true" value="idnumber" validation="false" ></g-idnumber>   -->
+        <g-idnumber required="true" isStrict="" value="idnumber" validation="true" ></g-idnumber>  
         <!-- <g-formtag>
         </g-formtag> -->
         <!-- <g-int defaultValue="数字" required="true"></g-int> 
@@ -446,14 +640,11 @@
           <g-radio label="radio1" name="test"></g-radio>
           <g-radio label="radio2" name="test"></g-radio>
         </g-radiogroup> -->
-        <!-- <g-select>
-          <g-selectedtag>111</g-selectedtag>
-          <g-selectedtag>222</g-selectedtag>
-        </g-select> -->
+       
         <!-- <g-switch id="s001" icon="check,close" checked="true" code="1,0" label="开,关" showlabel="true"></g-switch> -->
         <!-- <g-url></g-url> -->
-        <!-- <g-submit>提交</g-submit> -->
-      <!-- </g-form> -->
+        <g-submit>提交</g-submit>
+      </g-form>
       <!-- <script>
         G(function () {
             // G('#gfile').onChange(function(){
@@ -485,16 +676,70 @@
             Application Center
             </g-BreadcrumbItem>
         </g-Breadcrumb> -->
-        <g-menu mode="vertical">
-          <g-menuitem><a style="color: aqua">item 1</a></g-menuitem>
-          <g-menuitem>item 2</g-menuitem>
-          <g-SubMenu children="2222">item 3</g-menuitem>
-        </g-menu>
-       <g-button id="g-btn">btn</g-button>
+        <!-- <g-menu mode="inline"  style="width:300px">
+          <g-menuitem><g-icon type="pie-chart" ></g-icon><span><a style="color: aqua">item 1</a></g-menuitem>
+          <g-menuitem><g-icon type="pie-chart" ></g-icon><span> item 2</span></g-menuitem>
+          <g-submenu title="item 3 title">
+            <g-menuitemgroup>
+              <g-menuitem>item 3-1-1</g-menuitem>
+              <g-menuitem>item 3-1-2</g-menuitem>
+            </g-menuitemgroup>
+            <g-menuitemgroup title="333">
+              <g-menuitem>item 3-2-1</g-menuitem>
+              <g-menuitem>item 3-2-1</g-menuitem>
+            </g-menuitemgroup>
+          </g-submenu>
+        </g-menu> -->
+         <!-- <g-select dictype="checkboxJson1">
+          <g-selectedtag>111</g-selectedtag>
+          <g-selectedtag>222</g-selectedtag>
+        </g-select> -->
+        <!-- <SelectedTag>222</SelectedTag> -->
+        <!-- <g-layout>
+          <g-header theme="light">Header11</g-header>
+          <g-center>Center000</g-center>
+          <g-sider>sider</g-sider>
+          <g-footer>footer</g-footer>
+        </g-layout> -->
+        <!-- <g-table cols="1">
+          <g-control label="用户名">
+            <g-text name="id" required="true" min="3" max="32"></g-text>
+          </g-control>
+          <g-control label="姓名">
+            <g-text name="name" required="true" max="64" />
+          </g-control>
+          <g-control label="性别">
+            <g-radio name="sex" dictype="DIC_SEX"></g-radio>
+          </g-control>
+          <g-control label="身份证">
+            <g-idnumber name="idnumber" min="15" max="18"/>
+          </g-control>				
+          <g-control label="出生日期">
+            <g-date name="birthday"/>
+          </g-control>
+          <g-control label="手机号码">
+            <g-text name="mobile"  max="11"/>
+          </g-control>
+          <g-control label="座机号码">
+            <g-text name="phone" max="16"/>
+          </g-control>								
+          <g-control label="电子邮箱">
+            <g-email name="email" max="64"/>
+          </g-control>	
+          <g-control label="联系地址" colspan="2">
+            <g-text name="address" max="128" style="width:600px"/>
+          </g-control>
+        </g-table> -->
+        <!-- <g-EditTable>
+          <g-control label="联系地址" colspan="2">
+            <g-text name="address" max="128" style="width:600px"/>
+          </g-control>
+        </g-EditTable> -->
+       <!-- <g-button id="g-btn">btn</g-button> -->
 
     <script>
     G(function(){
-      G('#g-btn').onClick(function () {
+      // G('#g-btn').onClick(function () {
         // G('#gtree').checkAll();
         // G('#galert').setTitle("修改后标题");
         // G('#galert').setMessage("修改后内容");
@@ -503,7 +748,7 @@
         // G('#gloading').setLoading(true)
         // console.log( G('#gloading').getLoading())
 
-      });
+      // });
       // G('#g-confirm').confirm(function(){
       //     alert('确定')
       // })

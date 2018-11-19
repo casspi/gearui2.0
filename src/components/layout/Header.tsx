@@ -10,6 +10,8 @@ export interface state extends Tag.state {
 export default class Header<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
     getInitialState(): state {
-        return {};
+        return {
+        };
     }
+    
 }

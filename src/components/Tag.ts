@@ -87,7 +87,6 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
 
     //渲染完成之后触发
     componentDidMount() {
-        // console.log(this)
         this.realDom = <Element>this.findRealDom();
         if(this.realDom) {
             G.G$(this.realDom).data("vmdom", this);

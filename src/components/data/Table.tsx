@@ -385,8 +385,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     getInitialState(): state {
-        console.log('getInitialState')
-        // let state = this.state;
+    
         let columns: any = this._parseColumns();        
         return {
             dataSource: this.props.dataSource,
@@ -665,6 +664,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(!(children instanceof Array)) {
             children = [children];
         }
+        console.log(children)
         if(children instanceof Array) {
             children = children.filter(o=>o.$$typeof!=null)//过滤子集中空项
             children.map((child:any, index)=>{
@@ -678,6 +678,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 columns.push(column);
             });
         }
+        console.log(columns)
         return columns;
     }
 
@@ -992,7 +993,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     render() {
         let props: any = this.getProps();
-        console.log(this.props.expandedRowRender);
+        console.log(this.props);
         return <AntdTable {...props}>{this.props.children}</AntdTable>;
     }
 
