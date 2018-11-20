@@ -37,10 +37,10 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
                     let __this = this;
                     let windowCon = G.$("<div ctype='window' title='"+this.props.ueTitle+"' ontext='保存' canceltext='取消' width='"+this.props.ueWidth+"'></div>");
                     windowCon.prependTo(document.body);
+                    console.log(G.$(this));
                     (function(__this) {
                         windowCon.doRender(function() {
-                            __this.dialog = windowCon;
-                            console.log(__this.dialog);
+                            __this.dialog = G.$(this);
                             __this.dialog.find(".ant-modal-body").html("<script id='"+__this.props.id+"_editor' type='text/plain'></script>");
                             __this.dialog.onOpen(() => {
                                 __this.doEvent("open");
@@ -90,7 +90,6 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
     render() {
         // return <script id={this.props.id} type="text/plain"></script>;
         let props = this.getProps();
-        console.log(props)
         return <div ref={props.ref} className={props.className} style={{border: "1px solid","minHeight": "100px",padding: "15px",cursor:"text"}} onClick={props.onClick.bind(this)}></div>;
     }
     //当关闭窗口时出发

@@ -337,9 +337,7 @@ export default class Http {
         return Http.requestAxios(_param);
     }
     static get(...args: any[]) {
-        console.log(args)
         var param = Http.formatParam(args);
-        console.log(param)
         if(param === false) {
             return Promise.reject(new HttpResponse(false, "param is null", 600));
         }

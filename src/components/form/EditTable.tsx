@@ -32,7 +32,7 @@ export interface Control {
     onclick: Function;
     ref?: Function;
 }
-
+export var useName = 'editlist';
 class EdittableControl {
     static add: Control = {
         name: "add",

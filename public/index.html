@@ -437,8 +437,7 @@ table.resultTable .actiontd{
         <!-- </g-from> -->
         <!-- <g-time id="gtime" inputReadOnly="true"  use12Hours="false" hideDisabled="false" width="300" size="1" placeholder="开始时间" disabledHours="5-9" disabledMinutes="20-60" disabled="false" format="HH:mm:ss"></g-time> -->
         <!-- <g-timepicker fo></g-timepicker> -->
-    
-         <!-- <g-richtext></g-richtext> -->
+
         <!--<g-wrapper></g-wrapper>
         <g-cancel>取消</g-cancel> -->
         <!-- <g-upload id="gupload" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload> -->
@@ -623,28 +622,28 @@ table.resultTable .actiontd{
     <!-- <g-datetime name="dt10" type="range" format="YYYY/MM/DD HH:mm:ss" value="2017/10/08 11:10:9,2017/10/14 15:10:2" abledate="2017/10/07,2017/10/22" abletime="8:30:00-17:00:00,12:00:00-17:00:00"></g-datetime> -->
       <!-- <g-time></g-time>
       <g-timepicker></g-timepicker> -->
-      <g-form validation="true" width="300">
+      <!-- <g-form validation="true" width="300"> -->
         <!-- <g-email required="true"></g-email> -->
         <!-- <g-file id="gfile" width="300" required="true"></g-file> -->
         <!-- <g-hidden></g-hidden> -->
-        <g-idnumber required="true" isStrict="" value="idnumber" validation="true" ></g-idnumber>  
         <!-- <g-formtag>
         </g-formtag> -->
         <!-- <g-int defaultValue="数字" required="true"></g-int> 
-        <g-ip required="true"></g-ip>
-        <g-mac></g-mac>
-        <g-number required="true"></g-number>
-        <g-password required="true"></g-password> -->
-        <!-- <g-search required="true"></g-search>
-        <g-radiogroup required="true">
-          <g-radio label="radio1" name="test"></g-radio>
-          <g-radio label="radio2" name="test"></g-radio>
-        </g-radiogroup> -->
-       
-        <!-- <g-switch id="s001" icon="check,close" checked="true" code="1,0" label="开,关" showlabel="true"></g-switch> -->
-        <!-- <g-url></g-url> -->
+          <g-ip required="true"></g-ip>
+          <g-mac></g-mac>
+          <g-number required="true"></g-number>
+          <g-password required="true"></g-password> -->
+          <!-- <g-search required="true"></g-search>
+            <g-radiogroup required="true">
+              <g-radio label="radio1" name="test"></g-radio>
+              <g-radio label="radio2" name="test"></g-radio>
+            </g-radiogroup> -->
+            
+            <!-- <g-switch id="s001" icon="check,close" checked="true" code="1,0" label="开,关" showlabel="true"></g-switch> -->
+            <!-- <g-url></g-url> -->
+            <!-- <g-idnumber required="true" isStrict="true" placeholder="idnumber" validation="true" ></g-idnumber>  
         <g-submit>提交</g-submit>
-      </g-form>
+      </g-form> -->
       <!-- <script>
         G(function () {
             // G('#gfile').onChange(function(){
@@ -701,41 +700,34 @@ table.resultTable .actiontd{
           <g-sider>sider</g-sider>
           <g-footer>footer</g-footer>
         </g-layout> -->
-        <!-- <g-table cols="1">
-          <g-control label="用户名">
-            <g-text name="id" required="true" min="3" max="32"></g-text>
-          </g-control>
-          <g-control label="姓名">
-            <g-text name="name" required="true" max="64" />
-          </g-control>
-          <g-control label="性别">
-            <g-radio name="sex" dictype="DIC_SEX"></g-radio>
-          </g-control>
-          <g-control label="身份证">
-            <g-idnumber name="idnumber" min="15" max="18"/>
-          </g-control>				
-          <g-control label="出生日期">
-            <g-date name="birthday"/>
-          </g-control>
-          <g-control label="手机号码">
-            <g-text name="mobile"  max="11"/>
-          </g-control>
-          <g-control label="座机号码">
-            <g-text name="phone" max="16"/>
-          </g-control>								
-          <g-control label="电子邮箱">
-            <g-email name="email" max="64"/>
-          </g-control>	
-          <g-control label="联系地址" colspan="2">
-            <g-text name="address" max="128" style="width:600px"/>
-          </g-control>
+        <!-- <g-pagination id="pagination11" style="position:relative;overflow:hidden"></g-pagination>
+        <g-pagination id="pagination12"></g-pagination>
+        <g-table bordered="true" width="920" checkType="true" id="list1" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example1" paginationId="pagination11,pagination12" scrolly="400">
+          <g-column label="姓名" width="100" name="name" orderColumn="name"></g-column>
+          <g-column label="部门" width="150" name="department" orderColumn="department" rowspan="auto"></g-column>
+          <g-column label="长号" width="100" name="longCallNumber" rowspan="auto"></g-column>
+          <g-column label="短号" width="100" name="shortCallNumber" ></g-column>
+          <g-column label="手机号码" width="100" name="mobile" orderColumn="mobile" ></g-column>
+          <g-column label="电子邮箱" width="200" name="email"></g-column>
+          <g-column label="操作" width="70" class="actiontd">
+            <g-dialogaction type="link" title="用户信息修改" url="/auth/user/updatePage?id={id}">修改</g-dialogaction>
+          </g-column>
         </g-table> -->
-        <!-- <g-EditTable>
-          <g-control label="联系地址" colspan="2">
-            <g-text name="address" max="128" style="width:600px"/>
-          </g-control>
-        </g-EditTable> -->
-       <!-- <g-button id="g-btn">btn</g-button> -->
+        <!-- <g-ajaxlist bordered="true" id="list3" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example3">
+          <g-column label="姓名" width="100" name="name" orderColumn="name"></g-column>
+          <g-column label="部门" width="200" name="department" orderColumn="name" rowspan="auto"></g-column>
+          <g-column label="长号" width="100" name="longCallNumber" rowspan="auto"></g-column>
+          <g-column label="短号" width="100" name="shortCallNumber" ></g-column>
+          <g-column label="手机号码" width="200" name="mobile" orderColumn="mobile" ></g-column>
+          <g-column label="电子邮箱" width="300" name="email"></g-column>
+        </g-ajaxlist> -->
+        <!-- <g-editlist>
+          <g-column label="用户名" width="100" name="id" editctype="text" required="true"></g-column>
+		    	<g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
+        </g-editlist> -->
+
+         <g-richtext ueTitle="标题1111" ueWidth="500"></g-richtext>
+       <g-button id="g-btn">btn</g-button>
 
     <script>
     G(function(){

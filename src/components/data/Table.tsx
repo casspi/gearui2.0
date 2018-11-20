@@ -26,7 +26,8 @@ export var props = {
     formId: GearType.String,
     sequenceLabel: GearType.String,
     lazy: GearType.Boolean,
-    paginationId: GearType.String
+    paginationId: GearType.String,
+    bordered:GearType.Boolean
 };
 
 export interface state extends Tag.state, TableProps<any> {
@@ -52,8 +53,9 @@ export interface state extends Tag.state, TableProps<any> {
     sequenceLabel?: string;//
     lazy?: boolean;//
     paginationId?: Array<string>;//
+    bordered?:boolean
 }
-
+export var useName = 'ajaxlist';
 export interface TableColumns {
     //字段名称
     name: string;
@@ -170,7 +172,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     getQueryParam(tableSubmit?:boolean) {
         let param = {};
         let paramTemp = null
-        if(this.formEle !== null) {
+        if(this.formEle) {
             if(tableSubmit == true) {
                 paramTemp = this.getLastQueryParam();
             }else {
@@ -391,6 +393,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             dataSource: this.props.dataSource,
             url: this.props.url,
             method: this.props.method||"get",
+            bordered:this.props.bordered || false,
             pagination: this.props.pagination,
             checkedRowKeys: [],
             checkedRows: [],
@@ -441,7 +444,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             }
         };
         let state = this.state;
-        console.log(state)
         return G.G$.extend({},state,{
             locale: {
                 emptyText: this.state.emptyText,
@@ -518,7 +520,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 return {
                     onClick: (record: any,index: any,event: any) => {
                         this._onRowClick(record,index,event);
-                        alert('click')
                     },
                     onMouseEnter:(record: any,index: any,event: any) => {
                         this._onMouseEnter(record,index,event);
@@ -664,11 +665,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(!(children instanceof Array)) {
             children = [children];
         }
-        console.log(children)
         if(children instanceof Array) {
-            children = children.filter(o=>o.$$typeof!=null)//过滤子集中空项
+            children = children.filter(o=>o.$$typeof!=null)//过滤子集中空项        
             children.map((child:any, index)=>{
-                // console.log(child.$$typeof.toString())
                 let props = child.props;
                 let column = this._parseColumn(index,props);
                 if(this.props.sequence != false && (column.fixed == "left" || column.fixed == "right")) {
@@ -678,7 +677,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 columns.push(column);
             });
         }
-        console.log(columns)
         return columns;
     }
 
@@ -993,8 +991,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     render() {
         let props: any = this.getProps();
-        console.log(this.props);
-        return <AntdTable {...props}>{this.props.children}</AntdTable>;
+        console.log(props.dataSource)
+        console.log(props.columns)
+        return <AntdTable  {...props}>{this.props.children}</AntdTable>;
     }
 
     afterRender() {
@@ -1171,7 +1170,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                         data = {dataList: []};
                 }
                 data = this._loadFilter(data);
-                console.log(data)
                 this.setState({
                     dataSource: data.dataList,
                     columns: data.columns||this.state.columns
@@ -1186,13 +1184,12 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let total = data.total || 0;
         let current = data.currentPage;
         let pageSize = data.pageSize;
-
         let paginations = this.paginations;
         if(paginations.length > 0) {
             for(let i = 0; i < paginations.length; i++) {
                 let p = paginations[i];
                 if(data.currentPage!=null && data.pageSize!=null){
-                    p.show();
+                    // p.show();
                     p.setParam({
                         total,
                         current,

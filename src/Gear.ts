@@ -64,7 +64,12 @@ export default class G {
             const componentConfig = requireComponent(fileName);
             let componentName:string = fileNameReal.replace(/^\.\/(.*)\.\w+$/, '$1');
             let componentNameReal = componentName;
-            componentName = componentName.toLowerCase();
+            if(componentConfig.useName){
+                componentName = componentConfig.useName.toLowerCase();
+            }else{
+                componentName = componentName.toLowerCase();
+            }
+            // componentName = componentName.toLowerCase();
             //componentName = 'g-' + componentName.toLowerCase();
             let component = componentConfig.default || componentConfig;
             if(component) {
