@@ -3,7 +3,6 @@ import * as Dialog from './Dialog';
 import * as React from 'react';
 import {Message} from '../pack';
 import  G from '../../Gear';
-
 export var props = {
     ...Tag.props,
     ueTitle: GearType.String,
@@ -35,17 +34,16 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
                     btn.prependTo(document.body);
                     btn.doRender();
                     let __this = this;
-                    let windowCon = G.$("<div ctype='window' title='"+this.props.ueTitle+"' ontext='保存' canceltext='取消' width='"+this.props.ueWidth+"'></div>");
+                    let windowCon = G.$("<g-dialog title='"+this.props.ueTitle+"'  confirmText='保存' canceltext='取消' width='"+this.props.ueWidth+"'></g-dialog>");
                     windowCon.prependTo(document.body);
-                    console.log(G.$(this));
                     (function(__this) {
                         windowCon.doRender(function() {
-                            __this.dialog = G.$(this);
+                            __this.dialog = windowCon;
                             __this.dialog.find(".ant-modal-body").html("<script id='"+__this.props.id+"_editor' type='text/plain'></script>");
                             __this.dialog.onOpen(() => {
                                 __this.doEvent("open");
                             });
-                            __this.dialog.open();
+                            // __this.dialog.open();
                             let UEDITOR_CONFIG = window["UEDITOR_CONFIG"]||{};
                             let config = {};
                             for(let key in UEDITOR_CONFIG) {

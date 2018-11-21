@@ -393,7 +393,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             dataSource: this.props.dataSource,
             url: this.props.url,
             method: this.props.method||"get",
-            bordered:this.props.bordered || false,
+            bordered:this.props.bordered || true,
             pagination: this.props.pagination,
             checkedRowKeys: [],
             checkedRows: [],
@@ -669,7 +669,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             children = children.filter(o=>o.$$typeof!=null)//过滤子集中空项        
             children.map((child:any, index)=>{
                 let props = child.props;
+                // console.log(props)
                 let column = this._parseColumn(index,props);
+                // console.log(column)
                 if(this.props.sequence != false && (column.fixed == "left" || column.fixed == "right")) {
                     columns[0].fixed = "left";
                     this.isFixed = true;
@@ -729,7 +731,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     //转换列
     protected _parseColumn(index: any,props: typeof ColumnPropsPlus): TableColumns {
         let name = props.name || "";
-        let dataIndex = props.dataIndex || "";
+        let dataIndex = props.dataIndex || props.name || "";
         let title = props.label || props.title || "";
         
         let width = props.width || 0;
@@ -816,7 +818,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 let childrenJsx: any[] = [];
                 childrenInProps.map((child:any, index: any)=>{
                     if(ObjectUtil.isExtends(child.type, "Column")) {
-                        console.log(index,child.props)
                         let columnInnder = this._parseColumn(index,child.props);
                         childrenJsx.push(columnInnder);
                     }
@@ -948,6 +949,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let render = null;
         ((children, ellipsisSpanWidth)=>{
             render = (text: any,record: any,indexColumn: any) => {
+                console.log(record)
                 let jsxEles: any[] = [];
                 if(!(children instanceof Array)) {
                     children = [children];
@@ -962,6 +964,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 return jsxEles;
             };
         })(children, ellipsisSpanWidth || 0);
+        console.log(render)
         return render;
     }
 
@@ -991,8 +994,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     render() {
         let props: any = this.getProps();
-        console.log(props.dataSource)
-        console.log(props.columns)
+        // console.log(props.dataSource)
+        // console.log(props.columns)
         return <AntdTable  {...props}>{this.props.children}</AntdTable>;
     }
 

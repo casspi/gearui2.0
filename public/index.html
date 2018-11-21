@@ -487,10 +487,13 @@ table.resultTable .actiontd{
           <g-col span="6">66666</g-col>
           </g-row> -->
           <!-- <g-color id="gcolor" value="AA2018" label="选择颜色" showpicker="true" width="300"></g-color> -->
-          <!-- <g-dialog title="我是标题">
-              <g-button id='closeDrag'>关闭拖拽</g-button>
-              <g-button id='openDrag' >打开拖拽</g-button> 
-          </g-dialog> -->
+          <!-- <g-dialog id="dialog01" title="我是标题" visible="true">
+              <g-button id='close'>关闭</g-button>
+              <g-button id='open'>打开</g-button> 
+          </g-dialog>
+          <script>
+            
+          </script> -->
           <!-- <g-dialogaction id="ela12" dragable="true" confirmText="就这么干"  maskclosable="true" value="打开一个小窗口对话框" url="http://10.10.10.6:81/example/Dialogaction/example" title="修改密码" loadType="async" onConfirm="onSavePassword(this)" onCancel="onCancel(this)" onClose="onDialogClose(this)" controlBar="true" dialogWidth="400"></g-dialogaction> -->
           <!-- <g-icon id="gicon" onClick="clickEvent" type="qq" spin="true" style="color:blue;font-size:24px"></g-icon>
           <g-button id="gbtn" onClick="clickEvent">btn</g-button>
@@ -700,19 +703,19 @@ table.resultTable .actiontd{
           <g-sider>sider</g-sider>
           <g-footer>footer</g-footer>
         </g-layout> -->
-        <!-- <g-pagination id="pagination11" style="position:relative;overflow:hidden"></g-pagination>
+        <g-pagination id="pagination11" style="position:relative;overflow:hidden"></g-pagination>
         <g-pagination id="pagination12"></g-pagination>
-        <g-table bordered="true" width="920" checkType="true" id="list1" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example1" paginationId="pagination11,pagination12" scrolly="400">
-          <g-column label="姓名" width="100" name="name" orderColumn="name"></g-column>
-          <g-column label="部门" width="150" name="department" orderColumn="department" rowspan="auto"></g-column>
+        <g-ajaxlist  checkType="true" id="list1" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example1" paginationId="pagination11,pagination12" scrolly="400">
+          <g-column label="姓名" width="100" name="name" dataIndex="name" orderColumn="name"></g-column>
+          <g-column label="部门" width="150" name="department" dataIndex="department" orderColumn="department" rowspan="auto"></g-column>
           <g-column label="长号" width="100" name="longCallNumber" rowspan="auto"></g-column>
           <g-column label="短号" width="100" name="shortCallNumber" ></g-column>
           <g-column label="手机号码" width="100" name="mobile" orderColumn="mobile" ></g-column>
           <g-column label="电子邮箱" width="200" name="email"></g-column>
           <g-column label="操作" width="70" class="actiontd">
-            <g-dialogaction type="link" title="用户信息修改" url="/auth/user/updatePage?id={id}">修改</g-dialogaction>
+            <g-dialogaction type="link" title="用户信息修改" url="http://10.10.10.6:81/auth/user/updatePage?id={id}">修改</g-dialogaction>
           </g-column>
-        </g-table> -->
+        </g-ajaxlist>
         <!-- <g-ajaxlist bordered="true" id="list3" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example3">
           <g-column label="姓名" width="100" name="name" orderColumn="name"></g-column>
           <g-column label="部门" width="200" name="department" orderColumn="name" rowspan="auto"></g-column>
@@ -726,9 +729,13 @@ table.resultTable .actiontd{
 		    	<g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
         </g-editlist> -->
 
-         <g-richtext ueTitle="标题1111" ueWidth="500"></g-richtext>
-       <g-button id="g-btn">btn</g-button>
-
+        <g-button id="g-btn">btn</g-button>
+        <!-- <g-richtext id="mytext" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
+        <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.all.js"></script>
+        <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.config.js"></script>
+        <script>
+          console.log(UE)
+        </script> -->
     <script>
     G(function(){
       // G('#g-btn').onClick(function () {

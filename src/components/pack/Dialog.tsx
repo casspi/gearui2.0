@@ -58,7 +58,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
     }
 
     getProps() {
-        let footer: any = this.state.footer;
+        let footer: any = this.props.footer===null?undefined:this.props.footer;
         if(footer==false || footer=="false"){
             footer = null;
         }
@@ -147,7 +147,6 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
 
     getInitialState(): state {
         return {
-            footer: this.props.footer,
             maximized: this.props.maximized,
             width: this.props.width,
             height: this.props.height,
@@ -169,10 +168,6 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             visible: this.props.visible != false
         };
     }
-    // componentDidMount(){
-    //     super.componentDidMount()
-    //     if(this.state.dragable) this.dragEvent();
-    // }
     dragEvent = ()=>{//拖拽效果
             let dref = this.ref
             let $dom = G.G$(document);
@@ -216,6 +211,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         }
     }
     open() {
+        console.log('open~~~~~~~~~~~~~~~~~~')
         this.setState({
             visible: true
         },()=>{
