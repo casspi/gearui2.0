@@ -294,7 +294,6 @@ table.resultTable thead tr > th:first-child,
 table.resultTable tbody tr > td:first-child {
   border-left: none;
 }
-
 table.resultTable .sequencetd{
 	text-align:right !important; 
 	width:4em;
@@ -305,6 +304,10 @@ table.resultTable .numbertd{
 }
 table.resultTable .actiontd{ 
 	text-align:center !important; 
+}
+.ant-table-tbody>tr>td, .ant-table-thead>tr>th {
+    padding: 16px 8px !important;
+    word-break: break-all;
 }
 .ueditor {
 	cursor: text;
@@ -657,9 +660,9 @@ table.resultTable .actiontd{
           // G('#s001').unChecked();
         })
       </script> -->
-      <!-- <g-tree id="gtree" dictype="treeData" autoExpandParent="true" showline="true" checkbox="true"></g-tree> -->
+      <g-tree id="gtree" dictype="treeData" autoExpandParent="true" showline="true" checkbox="true"></g-tree>
       <!-- <g-tree url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
-      <!-- <g-transfer id="gtransfer0"  url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
+      <g-transfer id="gtransfer0"  url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer>
       <!-- <g-transfer id="gtransfer" width='996' dictype="treeData"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
       <!-- <g-center></g-center> -->
       <!-- <g-menu></g-menu> -->
@@ -703,9 +706,8 @@ table.resultTable .actiontd{
           <g-sider>sider</g-sider>
           <g-footer>footer</g-footer>
         </g-layout> -->
-        <g-pagination id="pagination11" style="position:relative;overflow:hidden"></g-pagination>
-        <g-pagination id="pagination12"></g-pagination>
-        <g-ajaxlist  checkType="true" id="list1" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example1" paginationId="pagination11,pagination12" scrolly="400">
+        <!-- <g-pagination id="pagination11" style="position:relative;overflow:hidden"></g-pagination>
+        <g-ajaxlist  checkType="true" bordered="true"  id="list1" position="top" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example1" paginationId="pagination11,pagination12" scrollx="600" scrolly="400">
           <g-column label="姓名" width="100" name="name" dataIndex="name" orderColumn="name"></g-column>
           <g-column label="部门" width="150" name="department" dataIndex="department" orderColumn="department" rowspan="auto"></g-column>
           <g-column label="长号" width="100" name="longCallNumber" rowspan="auto"></g-column>
@@ -713,9 +715,10 @@ table.resultTable .actiontd{
           <g-column label="手机号码" width="100" name="mobile" orderColumn="mobile" ></g-column>
           <g-column label="电子邮箱" width="200" name="email"></g-column>
           <g-column label="操作" width="70" class="actiontd">
-            <g-dialogaction type="link" title="用户信息修改" url="http://10.10.10.6:81/auth/user/updatePage?id={id}">修改</g-dialogaction>
+              <g-button>修改</g-button>
           </g-column>
-        </g-ajaxlist>
+        </g-ajaxlist> -->
+        <!-- <g-pagination id="pagination12"></g-pagination> -->
         <!-- <g-ajaxlist bordered="true" id="list3" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example3">
           <g-column label="姓名" width="100" name="name" orderColumn="name"></g-column>
           <g-column label="部门" width="200" name="department" orderColumn="name" rowspan="auto"></g-column>
@@ -724,7 +727,7 @@ table.resultTable .actiontd{
           <g-column label="手机号码" width="200" name="mobile" orderColumn="mobile" ></g-column>
           <g-column label="电子邮箱" width="300" name="email"></g-column>
         </g-ajaxlist> -->
-        <!-- <g-editlist>
+        <!-- <g-editlist url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example3" id='list4'>
           <g-column label="用户名" width="100" name="id" editctype="text" required="true"></g-column>
 		    	<g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
         </g-editlist> -->
@@ -738,16 +741,57 @@ table.resultTable .actiontd{
         </script> -->
     <script>
     G(function(){
-      // G('#g-btn').onClick(function () {
+        // var column = G("#list1").getColumn(1);
+        // // 显示列
+        // column.show();
+        // // 隐藏列
+        // // column.hide();
+        // // 更改列头标题
+        // column.setTitle("新的标题");
+        // // 更改列宽
+        // column.setWidth(200);
+        // // 添加样式
+        // column.addClass("header");
+        // G("#list1").onExpandRow(function(data){
+        //   console.log(data);
+        //   // 这里注意必须有返回值，并且返回值应是由html标签包含的，比如下面
+        //   return "<g-button>查看详情："+data.name+"</g-button>";
+        // });
+        
+        // G("#list1").onAfterUpdate(function(){
+        //   this.find("td").each(function(){
+        //     console.log(this);
+        //     G(this).css("color","red");
+        //   });
+        // });
+  //    G("#list3").onExpandRow(function(data){
+	// 	    console.log(data);
+	// 	    // 这里注意必须有返回值，并且返回值应是由html标签包含的，比如下面
+	// 	    return "<span>查看详情："+data.name+"</span>";
+	//    });
+	
+  //     G("#list3").onAfterUpdate(function(){
+  //       this.find("td").each(function(){
+  //         console.log(this);
+  //         G(this).css("color","red");
+  //       });
+  //     });
+      G('#g-btn').onClick(function () {
+        // console.log(G('#list1').getData());
+        // console.log(G('#list1').getCurrent());
+        // console.log(G('#list1').hasCheckedRow());
+        // G('#list1').clearSorterInfo();
+        // G('#list1').setScroll({x:500,y:300});
+        // alert(G('#list1').isCheckedAll())
         // G('#gtree').checkAll();
         // G('#galert').setTitle("修改后标题");
         // G('#galert').setMessage("修改后内容");
         // G('#galert').setType("warning");
         
         // G('#gloading').setLoading(true)
-        // console.log( G('#gloading').getLoading())
+        // console.log( G('#gloading').getLoading());
 
-      // });
+      });
       // G('#g-confirm').confirm(function(){
       //     alert('确定')
       // })

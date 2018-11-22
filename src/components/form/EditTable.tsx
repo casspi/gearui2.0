@@ -17,7 +17,7 @@ export var props = {
     rowControl: GearType.Boolean,
     controlLabel: GearType.String
 }
-export interface state extends Table.state, FormTag.state {
+export interface state extends Table.state,FormTag.state {
     control?: string;
     editable?: boolean;
     title?: any;

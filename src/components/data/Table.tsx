@@ -11,6 +11,7 @@ import * as Text from '../form/Text';
 import * as Date from '../form/Date';
 import * as Datetime from '../form/Datetime';
 import * as Combotree from '../form/Combotree';
+import Column from './Column';
 export var props = {
     ...Tag.props,
     url: GearType.Or(GearType.String, GearType.Function),
@@ -393,8 +394,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             dataSource: this.props.dataSource,
             url: this.props.url,
             method: this.props.method||"get",
-            bordered:this.props.bordered || true,
-            pagination: this.props.pagination,
+            bordered:this.props.bordered,
+            pagination: this.props.pagination || false,
             checkedRowKeys: [],
             checkedRows: [],
             selections: this.props.selections,
@@ -446,7 +447,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let state = this.state;
         return G.G$.extend({},state,{
             locale: {
+                filterTitle:"筛选",
                 emptyText: this.state.emptyText,
+                sortTitle:'排序'
             },
             dataSource: this.state.dataSource,
             columns: this.getColumnsFromState(),
@@ -593,7 +596,59 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     setScrolly(y: any){
         this.setState({
             scrolly:y,
-        });        
+        });      
+    }
+    onExpand(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("expand",fun);
+        }
+    }
+
+    onAfterExpand(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("afterExpand",fun);
+        }
+    }    
+
+    //当展开某一行的时候触发
+    onExpandRow(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("expandedrow",fun);
+            this.setState({
+                expandedRow: fun
+            });
+        }
+    }
+
+    // 当展开后触发
+    onExpandedRowsChange(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("expandedRowsChange",fun);
+        }
+    }
+
+    onChange(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("change",fun);
+        }
+    }
+
+    onSelectedChange(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("selectedChange",fun);
+        }
+    }
+
+    onSelect(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("select",fun);
+        }
+    }
+
+    onSelectAll(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("selectAll",fun);
+        }
     }
 
     //设置多选框的下拉选择项
@@ -614,7 +669,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             }
         });
     }
-
     //处理数据
     /**
      * [{
@@ -669,9 +723,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             children = children.filter(o=>o.$$typeof!=null)//过滤子集中空项        
             children.map((child:any, index)=>{
                 let props = child.props;
-                // console.log(props)
                 let column = this._parseColumn(index,props);
-                // console.log(column)
                 if(this.props.sequence != false && (column.fixed == "left" || column.fixed == "right")) {
                     columns[0].fixed = "left";
                     this.isFixed = true;
@@ -733,7 +785,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let name = props.name || "";
         let dataIndex = props.dataIndex || props.name || "";
         let title = props.label || props.title || "";
-        
         let width = props.width || 0;
         let fixed = props.fixed;
         let className = props.class;
@@ -949,11 +1000,13 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let render = null;
         ((children, ellipsisSpanWidth)=>{
             render = (text: any,record: any,indexColumn: any) => {
-                console.log(record)
+                alert(999)
                 let jsxEles: any[] = [];
                 if(!(children instanceof Array)) {
                     children = [children];
                 }
+                console.log("-------------------------------------")
+                console.log(children)
                 if(children instanceof Array) {
                     children.map((child:any, index: any)=>{
                         jsxEles.push(this.parseColumnChild(child, ellipsisSpanWidth, record, indexColumn, index));
@@ -964,7 +1017,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 return jsxEles;
             };
         })(children, ellipsisSpanWidth || 0);
-        console.log(render)
         return render;
     }
 
@@ -1011,6 +1063,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         classNameArr.add(this.getDefaultClassName());
         this.addClass(classNameArr.toString(" "));
         this.setEllipsisSpanWidth();
+       
     }
     // 得到默认的样式名称
     protected getDefaultClassName() {

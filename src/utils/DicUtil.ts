@@ -17,7 +17,6 @@ export default class DicUtil {
             window[dictype] = dic;
         }
     }
-
     static async getDic(param: DicParam) {
         let url = param.url;
         let method = param.method || "get";

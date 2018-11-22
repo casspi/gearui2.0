@@ -570,6 +570,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     render() {
         let children = this.getTreeNode();
         let props = this.getProps();
+        console.log(props.options)
         return <AntdTree {...props}>{children}</AntdTree>;
     }
 
@@ -823,7 +824,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                         // array[i].checked = true;
                         if(gArray.contains(array[i].id)==false){
                             keyValue.push(array[i].id);
-                            console.log(keyValue)
                         }
                         if(gAddValues && array[i].value){
                             // 记录本次操作添加的值
@@ -1278,10 +1278,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         return keyValue;
     }
 
-    componentDidMount(){
-        super.componentDidMount();
-        console.log(this.state.options)
-    }
     // 全选和反选
     checkAll(callback?: Function){
         console.log('全选。。。。。。。。。。。。。。。。')
