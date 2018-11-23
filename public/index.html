@@ -490,7 +490,7 @@ table.resultTable .actiontd{
           <g-col span="6">66666</g-col>
           </g-row> -->
           <!-- <g-color id="gcolor" value="AA2018" label="选择颜色" showpicker="true" width="300"></g-color> -->
-          <!-- <g-dialog id="dialog01" title="我是标题" visible="true">
+          <!-- <g-dialog id="dialog01" title="我是标题" visible="false">
               <g-button id='close'>关闭</g-button>
               <g-button id='open'>打开</g-button> 
           </g-dialog>
@@ -660,10 +660,7 @@ table.resultTable .actiontd{
           // G('#s001').unChecked();
         })
       </script> -->
-      <g-tree id="gtree" dictype="treeData" autoExpandParent="true" showline="true" checkbox="true"></g-tree>
-      <!-- <g-tree url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
-      <g-transfer id="gtransfer0"  url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer>
-      <!-- <g-transfer id="gtransfer" width='996' dictype="treeData"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
+     
       <!-- <g-center></g-center> -->
       <!-- <g-menu></g-menu> -->
       <!-- <g-alert id="galert" type="success" title="成功。。。" message="文本内容">110</g-alert> -->
@@ -731,7 +728,10 @@ table.resultTable .actiontd{
           <g-column label="用户名" width="100" name="id" editctype="text" required="true"></g-column>
 		    	<g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
         </g-editlist> -->
-
+        <!-- <g-tree id="gtree" cascadeCheck="true" dictype="treeData" autoExpandParent="true" showline="true" checkbox="true"></g-tree> -->
+        <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
+        <!-- <g-transfer id="gtransfer0"   url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
+        <g-transfer id="gtransfer" width='996' dictype="treeData"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer>
         <g-button id="g-btn">btn</g-button>
         <!-- <g-richtext id="mytext" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
         <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.all.js"></script>
@@ -776,7 +776,10 @@ table.resultTable .actiontd{
   //         G(this).css("color","red");
   //       });
   //     });
-      G('#g-btn').onClick(function () {
+  G('#g-btn').onClick(function () {
+    G('#mtree').checkAll()
+        // G('#dialog01').close();
+        // G('#dialog01').open();
         // console.log(G('#list1').getData());
         // console.log(G('#list1').getCurrent());
         // console.log(G('#list1').hasCheckedRow());

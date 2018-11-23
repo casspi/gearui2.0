@@ -87,7 +87,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                 className = className +" ant-modal-dialog";
             }
         }
-        let props: any = G.G$.extend({},this.state,{
+        return G.G$.extend({},this.state,{
             className: className,
             /** 对话框是否可见*/
             visible: this.state.visible,
@@ -140,9 +140,8 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             transitionName: this.state.transitionName,
             zIndex:this.state.zIndex,
             keyboard:this.state.keyboard,
-            dragable:this.state.dragable,
+            dragable:this.state.dragable
         });
-        return props;
     }
 
     getInitialState(): state {
@@ -211,7 +210,6 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         }
     }
     open() {
-        console.log('open~~~~~~~~~~~~~~~~~~')
         this.setState({
             visible: true
         },()=>{
@@ -298,7 +296,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
     protected findRealDom() {
         return this.ref;
     }
-
+   
     private getChildren() {
         let content = this.state.content;
         if(content) {

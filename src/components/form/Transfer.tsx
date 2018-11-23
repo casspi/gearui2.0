@@ -25,7 +25,7 @@ export var props =  {
     //是否显示图标，默认为true
     showIcon:GearType.String,
     //图标样式，默认为default
-    iconstyle:GearType.String,
+    iconStyle:GearType.String,
     //是否展示连接线
     lines:GearType.Boolean,
     //当数据发生改变时触发
@@ -35,14 +35,12 @@ export var props =  {
     //禁用
     disabled: GearType.Boolean,
     //选中左树触发的事件
-    onlefttreecheck:GearType.Function,   
+    onLeftTreeCheck:GearType.Function,   
     //选中右树触发的事件
-    onrighttreecheck:GearType.Function,
+    onRightTreeCheck:GearType.Function,
     onLeftTreeMoved:GearType.Function,
     onRightTreeMoved:GearType.Function,
     className:GearType.Any     
-    // onlefttreemoved(ele):,
-    // onrighttreemoved(ele):void
 }
 export interface state extends FormTag.state{
     readOnly:boolean,
@@ -117,20 +115,20 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     getLeftTreeProps() {
         return {
             checkbox:true,
-            cascadecheck:true,
+            cascadeCheck:true,
             url:this.props.url,
             dictype:this.props.dictype,
             method:this.props.method,
             showIcon:this.props.showIcon,
-            iconstyle:this.props.iconstyle,
+            iconStyle:this.props.iconStyle,
             lines:this.props.lines,
             value:this.props.value,
             oncheck:(node:any)=>{
                 if(node.checked==false)
                     this._setLeftChecked(false);
                 try{
-                    if(this.props.onlefttreecheck)
-                        this.props.onlefttreecheck.call(this,this._leftTree,node);
+                    if(this.props.onLeftTreeCheck)
+                        this.props.onLeftTreeCheck.call(this,this._leftTree,node);
                     this.doEvent("leftTreeCheck",this._leftTree,node)
                 }catch(err){
                     console.error(err);
@@ -167,17 +165,17 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     getRightTreeProps() {
         return {
             checkbox:true,
-            cascadecheck:true,   
+            cascadeCheck:true,   
             showIcon:this.props.showIcon,
-            iconstyle:this.props.iconstyle,
+            iconStyle:this.props.iconStyle,
             lines:this.props.lines,
             style:this.state.style,         
             oncheck:(node:any)=>{
                 if(node.checked==false)
                     this._setRightChecked(false);
                 try{
-                    if(this.props.onrighttreecheck)
-                        this.props.onrighttreecheck.call(this,this._rightTree,node);
+                    if(this.props.onRightTreeCheck)
+                        this.props.onRightTreeCheck.call(this,this._rightTree,node);
                     this.doEvent("rightTreeCheck",this._rightTree,node)
                 }catch(err){
                     console.error(err);
@@ -268,7 +266,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                 <div key={"right"} {...this.getRightContainerProps()}>
                     <div key={"header"} className={"list-header"}>
                         <div key={"checkall"} className={"checkall"}>
-                            <Checkbox {...this.getRightCheckProps}>{"全选"}</Checkbox>
+                            <Checkbox {...this.getRightCheckProps()}>{"全选"}</Checkbox>
                         </div>
                         <div key={"title"} className={"header-title"}>{this.state["rightTitle"]}</div>
                     </div>
@@ -357,12 +355,15 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
 
     // 当左侧全选Check值改变时触发
     private _onLeftCheckChange(e:any){
+        console.log('左侧全选点击'+e.target.checked)
         if(this._leftTree){
             if(e.target.checked==true){
+                 console.log('左侧全选')
                 this._leftTree.checkAll(()=>{
                     this._setLeftChecked(e.target.checked);
                 });
             }else{
+                console.log('左侧反选')
                 this._leftTree.unCheckAll(()=>{
                     this._setLeftChecked(e.target.checked);
                 });
@@ -444,8 +445,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                             });
                         }                                    
                     }else{ 
-                        console.log(array[i])
-                        console.log(array[i].checked)
                         if(array[i].checked==true){
                             array[i].attributes["transfer_moved"] = true;
                             // 叶子节点，并且是选中的
@@ -481,7 +480,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         let data:any = seekCheckedData(options);
         // 将新拆分过来的数据和框中原本的数据进行合并
         data.to = this.dataMerge(destOptions,data.moved,"id","children");
-        console.log(data)
         return data;
     }
 
@@ -545,7 +543,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         }
         return values.toArray();
     }
-
     // 设置值
     setValue(value:Array<string>){
         if(value){

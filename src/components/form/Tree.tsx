@@ -6,6 +6,7 @@ import { TreeProps as AntdTreeProps, AntTreeNode } from 'antd/lib/tree';
 import { Http, UUID } from '../../utils';
 import { methods } from '../../utils/http';
 import DicUtil from '../../utils/DicUtil';
+import Check from './Check';
 const AntdTreeNodeJsx = AntdTree.TreeNode;
 export var props = {
     ...FormTag.props,
@@ -14,6 +15,8 @@ export var props = {
     onlyLeafCheck: GearType.Boolean,
     lines: GearType.Boolean,
     showIcon: GearType.Boolean,
+     //图标样式，默认为default
+    iconStyle:GearType.String,
     multiple: GearType.Boolean,
     autoExpandParent: GearType.Boolean,
     checkbox: GearType.Boolean,
@@ -41,6 +44,7 @@ export interface state extends FormTag.state {
     showLine?: boolean,
     /** 是否显示图标 */
     showIcon?: boolean,
+    iconStyle?:string,
     /** 是否支持多选 */
     multiple?: boolean,
     /** 是否自动展开父节点 */
@@ -121,6 +125,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             onlyLeafCheck: this.props.onlyLeafCheck,
             showLine: this.props.lines == true,
             showIcon: this.props.showIcon==true,
+            iconStyle: this.props.iconStyle,
             multiple: this.props.multiple,
             autoExpandParent: this.props.autoExpandParent != false,
             /** checkable状态下节点选择完全受控（父子节点选中状态不再关联）*/
@@ -802,11 +807,10 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
 
     // 全选指定集合（包括下级），并添加当前选中的值和设置option中节点状态为checked=true
     private _checkAll(keyValue:Array<string>,options: any,addValues?:Array<string>){
-        console.log(options)
         if(options){
             let optionsNew: Array<TreeNode> = [];
             if((options instanceof Array)==false){
-                optionsNew = [options];
+                optionsNew = [];
             }else{
                 optionsNew = options;
             }
@@ -835,8 +839,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 }
             }
             seek(optionsNew);
-            console.log(gArray);
-            console.log(optionsNew)
         }
     }
 
@@ -857,7 +859,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                         if(array[i] && array[i].children){
                             seek(array[i].children);
                         }
-                        //array[i].checked = false;
+                        // array[i].checked = false;
                         gArray.remove(array[i].id);
                         if(gRemovedValues && array[i].value){
                             // 记录本次操作移除的值
@@ -1280,16 +1282,15 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
 
     // 全选和反选
     checkAll(callback?: Function){
-        console.log('全选。。。。。。。。。。。。。。。。')
         let value: any[] = [];
-        var options:any = this.state.options;
-        console.log(options);
-        // return;
+        var options:any[] = this.state.options;
         if(options){
             this._checkAll(value,options);
+            // console.log(options)
+            // console.log(value)
             this.setState({
                 value:value,
-                options:options
+                options
             },function(){
                 if(callback){
                     callback();
