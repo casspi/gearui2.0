@@ -575,7 +575,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     render() {
         let children = this.getTreeNode();
         let props = this.getProps();
-        console.log(props.options)
+        console.log(this.state.value)
         return <AntdTree {...props}>{children}</AntdTree>;
     }
 

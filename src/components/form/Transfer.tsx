@@ -355,15 +355,12 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
 
     // 当左侧全选Check值改变时触发
     private _onLeftCheckChange(e:any){
-        console.log('左侧全选点击'+e.target.checked)
         if(this._leftTree){
             if(e.target.checked==true){
-                 console.log('左侧全选')
                 this._leftTree.checkAll(()=>{
                     this._setLeftChecked(e.target.checked);
                 });
             }else{
-                console.log('左侧反选')
                 this._leftTree.unCheckAll(()=>{
                     this._setLeftChecked(e.target.checked);
                 });

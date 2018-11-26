@@ -336,7 +336,7 @@ table.resultTable .actiontd{
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
-    <div id="root" style="height:2000px">
+    <div id="root">
         <!-- <g-text name="aaa" title="aaa" label="测试" value="123" onafterrender="testAfterRender()" onafterupdate="testOnAfterUpdate()">aaa</g-text> -->
       <!-- <form ctype="form">
           <g-text name="aaa" title="aaa" label="测试" value="123" onafterupdate="testOnAfterUpdate()" >aaa</g-text>
@@ -692,10 +692,7 @@ table.resultTable .actiontd{
             </g-menuitemgroup>
           </g-submenu>
         </g-menu> -->
-         <!-- <g-select dictype="checkboxJson1">
-          <g-selectedtag>111</g-selectedtag>
-          <g-selectedtag>222</g-selectedtag>
-        </g-select> -->
+         
         <!-- <SelectedTag>222</SelectedTag> -->
         <!-- <g-layout>
           <g-header theme="light">Header11</g-header>
@@ -731,16 +728,36 @@ table.resultTable .actiontd{
         <!-- <g-tree id="gtree" cascadeCheck="true" dictype="treeData" autoExpandParent="true" showline="true" checkbox="true"></g-tree> -->
         <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
         <!-- <g-transfer id="gtransfer0"   url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
-        <g-transfer id="gtransfer" width='996' dictype="treeData"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer>
-        <g-button id="g-btn">btn</g-button>
+        <!-- <g-transfer id="gtransfer" width='996' dictype="treeData" onLeftTreeMoved="onLeftTreeMoved()" onRightTreeMoved="onRightTreeMoved()"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
+        <g-button style="margin:0 0 0 0" id="g-btn">btn</g-button>
+        <!-- <g-transfer id="t21" dictype="treeData" showIcon="false"   width="300px" height="400px" leftButtonTitle="&lt;左移" rightButtonTitle="右移&gt;"></g-transfer>
+        <div id="t21-panel"></div>
+        <div>
+          <g-submit>保存</g-submit>
+          <g-button onClick="G('#t21').setValue(['0-0-0','0-0-1']);">设置值</g-button>
+          <g-button onClick="G('#t21').disable();">禁用</g-button>
+          <g-button onClick="G('#t21').enable()">启用</g-button>
+          <g-button onClick="G('#t21').reset()">重置</g-button>
+        </div> -->
         <!-- <g-richtext id="mytext" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
-        <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.all.js"></script>
-        <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.config.js"></script>
-        <script>
-          console.log(UE)
-        </script> -->
+          <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.all.js"></script>
+          <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.config.js"></script>
+          <script>
+            console.log(UE)
+          </script> -->
+          <g-dialog title="我是标题" id="testDialog" visible="false" ></g-dialog>
+          <!-- <g-select dictype="checkboxJson1">
+          </g-select> -->
     <script>
+      function onLeftTreeMoved(node) {
+        console.log(node);
+      }
+              
+      function onRightTreeMoved(node) {
+        console.log(node);
+      }
     G(function(){
+      
         // var column = G("#list1").getColumn(1);
         // // 显示列
         // column.show();
@@ -776,23 +793,24 @@ table.resultTable .actiontd{
   //         G(this).css("color","red");
   //       });
   //     });
-  G('#g-btn').onClick(function () {
-    G('#mtree').checkAll()
-        // G('#dialog01').close();
-        // G('#dialog01').open();
-        // console.log(G('#list1').getData());
-        // console.log(G('#list1').getCurrent());
-        // console.log(G('#list1').hasCheckedRow());
-        // G('#list1').clearSorterInfo();
-        // G('#list1').setScroll({x:500,y:300});
-        // alert(G('#list1').isCheckedAll())
-        // G('#gtree').checkAll();
-        // G('#galert').setTitle("修改后标题");
-        // G('#galert').setMessage("修改后内容");
-        // G('#galert').setType("warning");
-        
-        // G('#gloading').setLoading(true)
-        // console.log( G('#gloading').getLoading());
+      G('#g-btn').onClick(function () {
+        G("#testDialog").setVisible(true)
+          // G('#mtree').checkAll()
+          // G('#dialog01').close();
+          // G('#dialog01').open();
+          // console.log(G('#list1').getData());
+          // console.log(G('#list1').getCurrent());
+          // console.log(G('#list1').hasCheckedRow());
+          // G('#list1').clearSorterInfo();
+          // G('#list1').setScroll({x:500,y:300});
+          // alert(G('#list1').isCheckedAll())
+          // G('#gtree').checkAll();
+          // G('#galert').setTitle("修改后标题");
+          // G('#galert').setMessage("修改后内容");
+          // G('#galert').setType("warning");
+          
+          // G('#gloading').setLoading(true)
+          // console.log( G('#gloading').getLoading());
 
       });
       // G('#g-confirm').confirm(function(){

@@ -5,6 +5,7 @@ import { Modal as AntdModal } from 'antd';
 import { ObjectUtil, UUID } from '../../utils';
 import VoidTag from '../VoidTag';
 import Footer from '../layout/Footer';
+import {Icon as AntdIcon} from 'antd';
 export var props = {
     ...Tag.props,
     footer: GearType.Or<boolean, string>(GearType.Boolean, GearType.String),
@@ -24,7 +25,9 @@ export var props = {
     loadType: GearType.Enum<'async' | 'iframe'>(),
     url: GearType.Or(GearType.String, GearType.Function),
     //是否可以拖动
-    dragable:GearType.Boolean
+    dragable:GearType.Boolean,
+    maxable:GearType.Boolean,
+    maxIconClick:GearType.Function
 }
 export interface state extends Tag.state {
     footer?: boolean | string;
@@ -46,7 +49,10 @@ export interface state extends Tag.state {
     destory?: boolean;
     loadType?: 'async' | 'iframe';
     url?: string | Function;
-    dragable?:boolean
+    dragable?:boolean,
+    maxable?:boolean,//是否显示最大化按钮
+    maxTitle?:string,//最大化提示语
+    isMax?:boolean,//是否已经最大化
 }
 
 export default class Dialog<P extends typeof props, S extends state> extends Tag.default<P, S> {
@@ -125,6 +131,9 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             afterClose: () => {
                 this.doEvent("afterClose");
             },
+            maxIconClick:()=>{
+                this.maxIconClick();
+            },
             /** 是否显示遮盖层 */
             mask: this.state.mask,
             /** 底部内容*/
@@ -164,44 +173,56 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             loadType: this.props.loadType,
             url: this.props.url,
             dragable: this.props.dragable != false,
-            visible: this.props.visible != false
+            visible: this.props.visible != false,
+            maxable: this.props.maxable||false,
+            maxTitle: "最大化",
+            isMax: false
         };
+    }
+    getMaxIconProps(){
+        return {
+            maxable:this.state.maxable,
+            title:this.state.maxTitle,
+            type:"border"
+        }
     }
     dragEvent = ()=>{//拖拽效果
             let dref = this.ref
             let $dom = G.G$(document);
-            $dom.on('mousedown','.ant-modal',function(ev: any){
+            $dom.on('mousedown.dragable','.ant-modal',function(ev: any){
                 dref.onselectstart=()=>{//禁止选中文字
                     return false
                 }
                 let $modal =  G.$(this);
                 G.$(this).css({
-                    "left":G.$(this).offset().left+"px",
+                    "left":G.$(this).offset().left-(document.documentElement.scrollLeft||document.body.scrollLeft)+"px",
                     "margin":0,
                     "padding-bottom":0,   
                 })
                 let e = ev || window.event;
-                let disX = e.pageX-G.$(this).offset().left;     //点击时鼠标X坐标与元素原点距离
-                let disY = e.pageY-G.$(this).offset().top;     //点击时鼠标Y坐标与元素原点距离
-                $dom.on("mousemove" , (ev: any)=>{
-                    var e = ev||window.event;
-                    var l = e.pageX-disX;
-                    var t = e.pageY-disY;
+                let disX = e.clientX-G.$(this).offset().left+(document.documentElement.scrollLeft||document.body.scrollLeft);     //点击时鼠标X坐标与元素原点距离
+                let disY = e.clientY-G.$(this).offset().top+(document.documentElement.scrollTop||document.body.scrollTop);     //点击时鼠标Y坐标与元素原点距离
+                let dw = window.innerWidth;
+                let dh = window.innerHeight;
+                $dom.on("mousemove.dragable" , (ev: any)=>{
+                    let e = ev||window.event;
+                    let l = e.clientX-disX;
+                    let t = e.clientY-disY;
                     if(l<0){
                         l=0
-                    }else if(l>document.documentElement.clientWidth-$modal.width()){
-                            l = document.documentElement.clientWidth-$modal.width();
+                    }else if(l>dw-$modal.width()){
+                            l =dw-$modal.width();
                     }
                     if(t<0){
                         t=0
-                    }else if(t>document.documentElement.clientHeight-$modal.height()){
-                            t = document.documentElement.clientHeight-$modal.height();
+                    }else if(t>dh-$modal.height()){
+                            t = dh-$modal.height();
                     }
                     $modal.css({'left': l +'px',"top":t+"px"});
                 })
             })
-            document.addEventListener('mouseup',()=>{
-                $dom.off("mousemove")
+            $dom.on('mouseup.dragable',()=>{
+                $dom.off("mousemove.dragable")
             })  
     }
     onOpen(fun:Function) {
@@ -259,9 +280,58 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             }
         }
     }    
+    private oL;oT;oW;oH;bodyH;
+    maxIconClick(){
+        if(!this.state.isMax){//最大化
+            //记录原始大小
+            this.oH = G.G$(document).find('.ant-modal-content').outerHeight();
+            this.oW = G.G$(document).find('.ant-modal-content').outerWidth();
+            this.oT = G.G$('.ant-modal-dialog').offset().top;
+            this.oL = G.G$('.ant-modal-dialog').offset().left;
+            this.bodyH = G.G$('.ant-modal-body').outerHeight();
+            console.log(this.bodyH)
+            this.setState({
+                isMax:true,
+                maxTitle:'向下还原',
+                dragable:false
 
+            },function(){
+                let $dom = G.G$(document);
+                $dom.off('mousedown.dragable','.ant-modal');//解除拖拽事件
+                G.G$('.ant-modal-dialog').css({
+                    left:0,
+                    top:0
+                })
+                $dom.find('.ant-modal-content').outerHeight(window.innerHeight);
+                $dom.find('.ant-modal-content').outerWidth(window.innerWidth);
+                $dom.find('.ant-modal-body').outerHeight(window.innerHeight-G.G$('.ant-modal-footer').outerHeight()-G.G$('.ant-modal-header').outerHeight());
+            })
+        }else{//向下还原
+           
+            this.setState({
+                isMax:false,
+                maxTitle:'最大化',
+                dragable:true
+
+            },function(){
+                let $dom = G.G$(document);
+                this.dragEvent();//重新绑定拖拽
+                G.G$('.ant-modal-dialog').css({
+                    left:this.oL,
+                    top:this.oT
+                })
+                $dom.find('.ant-modal-content').outerHeight(this.oH)
+                $dom.find('.ant-modal-content').outerWidth(this.oW)
+                $dom.find('.ant-modal-body').outerHeight(this.bodyH)
+            })
+        }
+        
+
+    }
     render() {
-        let props = this.getProps();
+        let props:any = this.getProps();
+        let iconProps:any = this.getMaxIconProps();
+        delete iconProps.maxable;
         let children = this.getChildren() || "";//避免子节点为空时，VoidTag 报错
         if(this.state.destory) {
             return null;
@@ -269,11 +339,11 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         let style:Object;
         if(this.state.dragable){
             style={
-                cursor:"move"
+                cursor:"move",
             };
         }else{
             style={
-                cursor:"default"
+                cursor:"default",
             };
         }
         let voidTagProps:any = {
@@ -283,12 +353,34 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                 }
             }
         }
+        let iconStyle:any = {
+            cursor:"pointer",
+            border: 0,
+            background: "transparent",
+            position: "absolute",
+            right: "56px",
+            top: "22px",
+            zIndex:10,
+            fontWeight: 700,
+            lineHeight: 1,
+            textDecoration: "none",
+            WebkitTransition: "color .3s",
+            OTransition: "color .3s",
+            transition: "color .3s",
+            color: "rgba(0, 0, 0, 0.45)",
+            outline: 0,
+            padding: 0,
+            height:"16px",
+            width:"16px",
+        };
+    
         return <AntdModal {...props} style={style} getContainer={()=>{
             this.ref = document.createElement("div");
             document.body.appendChild(this.ref);
             if(this.state.dragable) this.dragEvent();
             return this.ref;
         }}>
+            {this.state.maxable?<AntdIcon {...iconProps} onClick={props.maxIconClick}  style={iconStyle}/>:null}
             <VoidTag {...voidTagProps}>{children}</VoidTag>
         </AntdModal>;
     }
@@ -375,11 +467,17 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             this.dragEvent()
         }else{
             let $dom = G.G$(document);
-            $dom.off('mousedown','.ant-modal');
+            $dom.off('mousedown.dragable','.ant-modal');
         }     
         this.setState({
             dragable: dragable
         });
+    }
+    //设置是否可以最大化
+    setMaxable(maxable:boolean){
+        this.setState({
+            maxable:maxable
+        })
     }
 
 }
