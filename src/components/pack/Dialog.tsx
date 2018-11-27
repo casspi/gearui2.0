@@ -187,7 +187,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         }
     }
     dragEvent = ()=>{//拖拽效果
-            let dref = this.ref
+            let dref = this.ref;
             let $dom = G.G$(document);
             $dom.on('mousedown.dragable','.ant-modal',function(ev: any){
                 dref.onselectstart=()=>{//禁止选中文字
@@ -286,10 +286,9 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             //记录原始大小
             this.oH = G.G$(document).find('.ant-modal-content').outerHeight();
             this.oW = G.G$(document).find('.ant-modal-content').outerWidth();
-            this.oT = G.G$('.ant-modal-dialog').offset().top;
-            this.oL = G.G$('.ant-modal-dialog').offset().left;
+            this.oT = G.G$('.ant-modal-dialog').offset().top-(document.documentElement.scrollTop||document.body.scrollTop);
+            this.oL = G.G$('.ant-modal-dialog').offset().left-(document.documentElement.scrollTop||document.body.scrollTop);
             this.bodyH = G.G$('.ant-modal-body').outerHeight();
-            console.log(this.bodyH)
             this.setState({
                 isMax:true,
                 maxTitle:'向下还原',

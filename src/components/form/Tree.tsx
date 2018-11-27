@@ -522,7 +522,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 this._onBeforeDrop(options);
                 Tree.onBeforeDrop.call(this,options);
                 this.doEvent("beforeDrop", options);
-                
                 let node:any = options.node;
                 let dragNode:any = options.dragNode;
                 let dropPosition:number = options.dropPosition;
@@ -575,7 +574,8 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     render() {
         let children = this.getTreeNode();
         let props = this.getProps();
-        console.log(this.state.value)
+        console.log(this.state.value);
+        console.log(this.state.options);
         return <AntdTree {...props}>{children}</AntdTree>;
     }
 

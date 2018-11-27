@@ -725,7 +725,7 @@ table.resultTable .actiontd{
           <g-column label="用户名" width="100" name="id" editctype="text" required="true"></g-column>
 		    	<g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
         </g-editlist> -->
-        <!-- <g-tree id="gtree" cascadeCheck="true" dictype="treeData" autoExpandParent="true" showline="true" checkbox="true"></g-tree> -->
+        <g-tree id="gtree" cascadeCheck="true" dictype="treeData"  onlyLeafCheck="true" defaultExpandAll="true" defaultexpandlevel="1"  dragable="true" autoExpandParent="true" lines="true" draggable="true" checkbox="true"></g-tree>
         <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
         <!-- <g-transfer id="gtransfer0"   url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
         <!-- <g-transfer id="gtransfer" width='996' dictype="treeData" onLeftTreeMoved="onLeftTreeMoved()" onRightTreeMoved="onRightTreeMoved()"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
@@ -745,7 +745,7 @@ table.resultTable .actiontd{
           <script>
             console.log(UE)
           </script> -->
-          <g-dialog title="我是标题" id="testDialog" visible="false" ></g-dialog>
+          <g-dialog title="我是标题" id="testDialog" visible="false" maxable="true"></g-dialog>
           <!-- <g-select dictype="checkboxJson1">
           </g-select> -->
     <script>
