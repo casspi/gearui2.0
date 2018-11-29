@@ -66,14 +66,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
 
     constructor(props: P) {
         super(props);
-        if(this.props.onLeftTreeMoved) {
-            this.bind("lefttreemoved", this.props.onLeftTreeMoved);
-        }
-        if(this.props.onRightTreeMoved) {
-            this.bind("righttreemoved", this.props.onRightTreeMoved);
-        }
     }
-
     getProps() {
         let state: state = this.state;
         let className = this.props.className?"transfer-control-wrapper "+this.props.className:"transfer-control-wrapper";
@@ -288,7 +281,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             // 得到左侧树节点的数据
             let options = this._rightTree.getRoots();
             let destOptions = this._leftTree.getRoots();
-
             let newOptions = this.getOptionsAfterTransfer(options,destOptions);
             let oldValue:any;
             if(newOptions.changed==true){

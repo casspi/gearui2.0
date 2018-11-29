@@ -725,20 +725,41 @@ table.resultTable .actiontd{
           <g-column label="用户名" width="100" name="id" editctype="text" required="true"></g-column>
 		    	<g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
         </g-editlist> -->
-        <g-tree id="gtree" cascadeCheck="true" dictype="treeData"  onlyLeafCheck="true" defaultExpandAll="true" defaultexpandlevel="1"  dragable="true" autoExpandParent="true" lines="true" draggable="true" checkbox="true"></g-tree>
+        <!-- <g-tree id="gtree" cascadeCheck="true" dictype="treeData"   autoExpandParent="true" lines="true" draggable="true" checkbox="true"></g-tree> -->
         <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
         <!-- <g-transfer id="gtransfer0"   url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
         <!-- <g-transfer id="gtransfer" width='996' dictype="treeData" onLeftTreeMoved="onLeftTreeMoved()" onRightTreeMoved="onRightTreeMoved()"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
         <g-button style="margin:0 0 0 0" id="g-btn">btn</g-button>
-        <!-- <g-transfer id="t21" dictype="treeData" showIcon="false"   width="300px" height="400px" leftButtonTitle="&lt;左移" rightButtonTitle="右移&gt;"></g-transfer>
+        <g-transfer id="t21" lines="true" dictype="treeData" showIcon="false"   width="300px" height="400px" leftButtonTitle="&lt;左移" rightButtonTitle="右移&gt;"></g-transfer>
         <div id="t21-panel"></div>
         <div>
           <g-submit>保存</g-submit>
-          <g-button onClick="G('#t21').setValue(['0-0-0','0-0-1']);">设置值</g-button>
-          <g-button onClick="G('#t21').disable();">禁用</g-button>
-          <g-button onClick="G('#t21').enable()">启用</g-button>
-          <g-button onClick="G('#t21').reset()">重置</g-button>
-        </div> -->
+          <g-button id="t21btn1">按钮</g-button>
+        </div>
+        <script>
+          G(function(){
+              // G('#gtree').onExpand(function(){
+              //   console.log('展开树')
+              // })
+              // G('#gtree').onBeforeCollapse(function(){
+              //   alert('折叠之前')
+              // })
+              // G('#gtree').onCollapse(function(){
+              //   console.log('折叠树')
+              // })
+              G('#t21btn1').onClick(function(){
+                  // G('#t21').disable();
+                  // G('#t21').enable();
+                  G('#t21').reset()
+              })
+            G('#g-btn').onClick(function(){
+                // G('#gtree').checkAll();
+                // G('#gtree').setValue(['0-0-0']);
+                console.log(G('#gtree').getSelected());
+                // console.log(G('#gtree').getRoots());
+            })
+          })
+        </script>
         <!-- <g-richtext id="mytext" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
           <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.all.js"></script>
           <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.config.js"></script>
@@ -794,7 +815,7 @@ table.resultTable .actiontd{
   //       });
   //     });
       G('#g-btn').onClick(function () {
-        G("#testDialog").setVisible(true)
+          // G("#testDialog").setVisible(true)
           // G('#mtree').checkAll()
           // G('#dialog01').close();
           // G('#dialog01').open();

@@ -53,6 +53,7 @@ export interface state extends Tag.state {
     maxable?:boolean,//是否显示最大化按钮
     maxTitle?:string,//最大化提示语
     isMax?:boolean,//是否已经最大化
+    maxIconType:string
 }
 
 export default class Dialog<P extends typeof props, S extends state> extends Tag.default<P, S> {
@@ -176,14 +177,15 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             visible: this.props.visible != false,
             maxable: this.props.maxable||false,
             maxTitle: "最大化",
-            isMax: false
+            isMax: false,
+            maxIconType:'border'//switcher//border
         };
     }
     getMaxIconProps(){
         return {
             maxable:this.state.maxable,
             title:this.state.maxTitle,
-            type:"border"
+            type:this.state.maxIconType
         }
     }
     dragEvent = ()=>{//拖拽效果
@@ -292,14 +294,16 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             this.setState({
                 isMax:true,
                 maxTitle:'向下还原',
-                dragable:false
+                dragable:false,
+                maxIconType:"switcher"
 
             },function(){
                 let $dom = G.G$(document);
                 $dom.off('mousedown.dragable','.ant-modal');//解除拖拽事件
                 G.G$('.ant-modal-dialog').css({
                     left:0,
-                    top:0
+                    top:0,
+                    margin:0
                 })
                 $dom.find('.ant-modal-content').outerHeight(window.innerHeight);
                 $dom.find('.ant-modal-content').outerWidth(window.innerWidth);
@@ -310,7 +314,8 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             this.setState({
                 isMax:false,
                 maxTitle:'最大化',
-                dragable:true
+                dragable:true,
+                maxIconType:'border'
 
             },function(){
                 let $dom = G.G$(document);

@@ -31,6 +31,7 @@ export var props = {
     value: GearType.Or(GearType.Array, GearType.Function, GearType.String),
     selected: GearType.Or(GearType.Array, GearType.Function, GearType.String),
     defaultExpandLevel: GearType.Number,
+    defaultExpandAll:GearType.Boolean
 };
 export interface state extends FormTag.state {
     options: Array<TreeNode>,
@@ -69,7 +70,8 @@ export interface state extends FormTag.state {
     target?: string;
     lower?: string;
     upper?: string;
-    defaultExpandLevel?: number
+    defaultExpandLevel?: number,
+    defaultExpandAll?:boolean
 }
 export interface TreeNode {
     id:string;
@@ -115,7 +117,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     childTree: Tree<P, S>;
 
     getInitialState():state & AntdTreeProps {
-        return G.G$.extend({},{
+        return {
             options: [],
             expandedKeys: this.props.expandedKeys,
             defaultExpandedKeys: this.props.expandedKeys,
@@ -141,7 +143,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             defaultExpandAll: this.props.defaultExpandAll,
             dictype: this.props.dictype,
             url: this.props.url
-        })
+        }
     }
 
     //获取jsx格式的node节点
@@ -219,11 +221,9 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 if(new GearArray(keyValue).contains(ele.id) == false) {
                     keyValue.push(ele.id);
                 }
-
                 // ---------------------------------------------------------------------------------------------
                 // modify by hechao 2018.3.2
                 // 因为在同一个树上，可能有多个节点的值相同，因此在选中一个节点，同样要选中与其值相同的其它节点                    
-                
                 // 本次操作新添加的值
                 let addValues = [];
                 if(ele.value){
@@ -234,7 +234,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                     // 选中下级所有子节点
                     this._checkAll(keyValue,ele.children,addValues);
                 }
-
                 // 如果节点有值，在选中时，如果有其它同值的节点，也应一同选中
                 // 对所有节点进行遍历，如果有节点的值在本次添加的值中，也应添加到选中节点列表中
                 let gAddValues = new GearArray(addValues);
@@ -257,7 +256,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
 
             ele.unCheck = (callback?:Function) => {
                 let keyValue:Array<any> = this.getCheckedKeys()||this.state.value;
-
                 // 当节点取消选中时，移除自已经包括所有上级的选中
                 let removeParentChecked = (id: any,keys: any)=>{
                     let gvalue = new GearArray(keys);
@@ -574,8 +572,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     render() {
         let children = this.getTreeNode();
         let props = this.getProps();
-        console.log(this.state.value);
-        console.log(this.state.options);
         return <AntdTree {...props}>{children}</AntdTree>;
     }
 
@@ -810,7 +806,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         if(options){
             let optionsNew: Array<TreeNode> = [];
             if((options instanceof Array)==false){
-                optionsNew = [];
+                optionsNew = [options];
             }else{
                 optionsNew = options;
             }

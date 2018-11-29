@@ -1,47 +1,47 @@
-import * as React from 'react';
-import * as FormTag from './FormTag';
-import { Select as AntdSelect } from 'antd';
-import { SelectProps } from 'antd/lib/select';
-export var props = {
-    ...FormTag.props
-};
-export interface state extends FormTag.state {
+// // import * as React from 'react';
+// // import * as FormTag from './FormTag';
+// // import { Select as AntdSelect } from 'antd';
+// // import { SelectProps } from 'antd/lib/select';
+// // export var props = {
+// //     ...FormTag.props
+// // };
+// // export interface state extends FormTag.state {
 
-}
-export default class Select<P extends typeof props & SelectProps, S extends state & SelectProps> extends FormTag.default<P, S> {
+// // }
+// // export default class Select<P extends typeof props & SelectProps, S extends state & SelectProps> extends FormTag.default<P, S> {
 
-    constructor(props: P, context: {}) {
-        super(props, context);
-    }
+// //     constructor(props: P, context: {}) {
+// //         super(props, context);
+// //     }
 
-    render() {
-        return <AntdSelect {...this.state}>
-            <AntdSelect.Option value="1">aaa</AntdSelect.Option>
-            <AntdSelect.Option value="2">bbb</AntdSelect.Option>
-        </AntdSelect>;
-    }
+// //     render() {
+// //         return <AntdSelect {...this.state}>
+// //             <AntdSelect.Option value="1">aaa</AntdSelect.Option>
+// //             <AntdSelect.Option value="2">bbb</AntdSelect.Option>
+// //         </AntdSelect>;
+// //     }
 
-    getInitialState(): state & SelectProps {
-        return {
-            value: this.props.value,
-            labelInValue: true,
-            onChange: (event)=>{
-                console.log(event);
-                if(typeof event == "string") {
-                    this.setValue(event);
-                }else if(typeof event == "number") {
+// //     getInitialState(): state & SelectProps {
+// //         return {
+// //             value: this.props.value,
+// //             labelInValue: true,
+// //             onChange: (event)=>{
+// //                 console.log(event);
+// //                 if(typeof event == "string") {
+// //                     this.setValue(event);
+// //                 }else if(typeof event == "number") {
 
-                }else if(event instanceof Array) {
+// //                 }else if(event instanceof Array) {
 
-                }else {
-                    this.setValue("2");
-                }
+// //                 }else {
+// //                     this.setValue("2");
+// //                 }
                 
-            }
-        };
-    }
+// //             }
+// //         };
+// //     }
 
-}
+// // }
 
 // import * as React from 'react';
 // import * as FormTag from './FormTag';
@@ -61,37 +61,37 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
 // export var props = {
 //     ...FormTag.props,
 //     size: GearType.Enum<size>(),
-//     notfoundcontent: GearType.Any,
-//     transitionname: GearType.String,
-//     choicetransitionname: GearType.String,
+//     notFoundContent: GearType.Any,
+//     transitionName: GearType.String,
+//     choiceTransitionName: GearType.String,
 //     editable: GearType.Boolean,
-//     allowclear: GearType.Boolean,
+//     allowClear: GearType.Boolean,
 //     disabled: GearType.Boolean,
-//     readonly: GearType.Boolean,
+//     readOnly: GearType.Boolean,
 //     prompt: GearType.String,
-//     dropdownclassName: GearType.String,
-//     dropdownstyle: GearType.CssProperties,
-//     dropdownmenustyle: GearType.CssProperties,
+//     dropdownClassName: GearType.String,
+//     dropdownStyle: GearType.CssProperties,
+//     dropdownMenuStyle: GearType.CssProperties,
 //     onSearch: (value: string) => GearType.Any,
-//     filteroption: GearType.Boolean || ((inputValue: string, option: Object) => GearType.Any),
+//     filterOption: GearType.Boolean || ((inputValue: string, option: Object) => GearType.Any),
 //     mode: GearType.Enum<mode>(),
 //     multiple: GearType.Boolean,
 //     tags: GearType.Boolean,
 //     combobox: GearType.Boolean,
-//     optionlabelprop: GearType.Boolean,
-//     onbeforeselect: GearType.Function,
+//     optionLabelProp: GearType.Boolean,
+//     onBeforeSelect: GearType.Function,
 //     onChange: (value: SelectValue) => GearType.VoidT<any>(),
 //     onSelect: (value: SelectValue, option: Object) => GearType.Any,
 //     onUnselect: (value: SelectValue) =>  GearType.Any,
 //     onHidepanel: () =>  GearType.Any,
 //     onShowpanel: () =>  GearType.Any,
 //     dropdownmatchselectwidth:  GearType.Boolean,
-//     optionfilterprop:  GearType.String,
-//     defaultactivefirstoption: GearType.Boolean,
+//     optionFilterProp:  GearType.String,
+//     defaultActiveFirstOption: GearType.Boolean,
 //     labelinvalue:  GearType.Boolean,
 //     //getpopupcontainer?: (triggerNode: Element) => HTMLElement;
-//     tokenseparators: GearType.Array<string>(),
-//     getinputelement: GearType.Any,
+//     tokenSeparators: GearType.Array<string>(),
+//     getInputElement: GearType.Any,
 //     dictype: GearType.Object,
 //     url: GearType.String,
 //     lower: GearType.String,
@@ -118,38 +118,24 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
 //     //父级树
 //     parentSelect: Select<typeof props,state>;
 //     //子级树
-//     childSelect: Select<GSelectProps>;
+//     childSelect: Select<typeof props,state>;
 //     constructor(props: P, context: {}) {
 //         super(props, context);
-//     }
-//     getProps(): state & SelectProps {
-//         let value = this.getPropStringArrayValue(this.props.value);
-//         return{
-//             disabled: this.state.disabled,
-//             readOnly: this.state.readOnly,
-//             onBlur: this.state.onHidepanel,
-//             onFocus: this.props.onShowpanel,
-//             url: this.state.url,
-//             dictype: this.state.dictype,
-//             method: this.state.method,
-//             value: value,
-//             options: []
-//         }
 //     }
 //     getInitialState() {
 //         return G.G$.extend({},{
 //             size: this.props.size,
-//             notFoundContent: this.props.notfoundcontent,
-//             transitionName: this.props.transitionname,
-//             choiceTransitionName: this.props.choicetransitionname,
+//             notFoundContent: this.props.notFoundContent,
+//             transitionName: this.props.transitionName,
+//             choiceTransitionName: this.props.choiceTransitionName,
 //             showSearch: this.props.editable,
 //             onHidepanel: this.props.onHidepanel,
-//             allowClear: this.props.allowclear||true,
+//             allowClear: this.props.allowClear||true,
 //             disabled: this.props.disabled || this.props.readOnly,
 //             placeholder: this.props.prompt,
-//             dropdownClassName: this.props.dropdownclassName,
-//             dropdownStyle: this.props.dropdownstyle,
-//             dropdownMenuStyle: this.props.dropdownmenustyle,
+//             dropdownClassName: this.props.dropdownClassName,
+//             dropdownStyle: this.props.dropdownStyle,
+//             dropdownMenuStyle: this.props.dropdownMenuStyle,
 //             onSearch: this.props.onSearch,
 //             //搜索
 //             filterOption: (input:any, option:any) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0,
@@ -159,7 +145,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
 //             // multiple: this.props.multiple,
 //             tags: this.props.tags,
 //             combobox: this.props.combobox,
-//             optionLabelProp: this.props.optionlabelprop,
+//             optionLabelProp: this.props.optionLabelProp,
 //             onChange: (value:any) => {
 //                 value = value||[];
 //                 let oldValue = this.getValue();
@@ -199,9 +185,9 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
 //                 this._onShowPanel();
 //                 this.doEvent("showPanel");
 //             },
-//             dropdownMatchSelectWidth: this.props.dropdownmatchselectwidth,
-//             optionFilterProp: this.props.optionfilterprop,
-//             defaultActiveFirstOption: this.props.defaultactivefirstoption,
+//             dropdownMatchSelectWidth: this.props.dropdownMatchSelectWidth,
+//             optionFilterProp: this.props.optionFilterProp,
+//             defaultActiveFirstOption: this.props.defaultActiveFirstOption,
 //             labelInValue: this.props.labelinvalue,
 //             getPopupContainer: ()=>{
 //                 // let container = document.body;
@@ -246,9 +232,23 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
 //                 }
 //                 return container;                   
 //             },
-//             tokenSeparators: this.props.tokenseparators,
-//             getInputElement: this.props.getinputelement
+//             tokenSeparators: this.props.tokenSeparators,
+//             getInputElement: this.props.getInputElement
 //         });
+//     }
+//     getProps():  {
+//         let value = this.getPropStringArrayValue(this.props.value);
+//         return{
+//             disabled: this.state.disabled,
+//             readOnly: this.state.readOnly,
+//             onBlur: this.state.onHidepanel,
+//             onFocus: this.props.onShowpanel,
+//             url: this.state.url,
+//             dictype: this.state.dictype,
+//             method: this.state.method,
+//             value: value,
+//             options: []
+//         }
 //     }
 //     render() {
 //         let props = this.getProps();
@@ -256,7 +256,6 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
 //         let optionsMap = options.map(function(ele) {
 //             return ele;
 //         });
-//         console.log(this.state)
 //         return <AntdSelect {...props}>{optionsMap}</AntdSelect>;
 //     }
 
