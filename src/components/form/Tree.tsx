@@ -1282,8 +1282,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         var options:any[] = this.state.options;
         if(options){
             this._checkAll(value,options);
-            // console.log(options)
-            // console.log(value)
             this.setState({
                 value:value,
                 options

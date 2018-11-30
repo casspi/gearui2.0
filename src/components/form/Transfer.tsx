@@ -117,6 +117,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             lines:this.props.lines,
             value:this.props.value,
             oncheck:(node:any)=>{
+                console.log(node.checked)
                 if(node.checked==false)
                     this._setLeftChecked(false);
                 try{

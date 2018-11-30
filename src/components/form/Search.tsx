@@ -69,7 +69,6 @@ export default class Search<P extends typeof props & SearchProps,S extends (stat
     }
     render() {
         let props = this.getProps();
-        console.log(props)
         return <AntdSearch {...props} ></AntdSearch>;
     }
 }

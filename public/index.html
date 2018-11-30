@@ -729,13 +729,15 @@ table.resultTable .actiontd{
         <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
         <!-- <g-transfer id="gtransfer0"   url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
         <!-- <g-transfer id="gtransfer" width='996' dictype="treeData" onLeftTreeMoved="onLeftTreeMoved()" onRightTreeMoved="onRightTreeMoved()"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
-        <g-button style="margin:0 0 0 0" id="g-btn">btn</g-button>
+        <g-select id="s22" dictype='treeData'  editable="true" mode="combobox " autoFocus="true" label="地区" disabled="false" width="240" prompt="请选择"></g-select>
+        <!-- <g-select  width="300" refid="s22"></g-select> -->
+        <!-- <g-button style="margin:0 0 0 0" id="g-btn">btn</g-button>
         <g-transfer id="t21" lines="true" dictype="treeData" showIcon="false"   width="300px" height="400px" leftButtonTitle="&lt;左移" rightButtonTitle="右移&gt;"></g-transfer>
         <div id="t21-panel"></div>
         <div>
           <g-submit>保存</g-submit>
           <g-button id="t21btn1">按钮</g-button>
-        </div>
+        </div> -->
         <script>
           G(function(){
               // G('#gtree').onExpand(function(){
@@ -747,17 +749,17 @@ table.resultTable .actiontd{
               // G('#gtree').onCollapse(function(){
               //   console.log('折叠树')
               // })
-              G('#t21btn1').onClick(function(){
+              // G('#t21btn1').onClick(function(){
                   // G('#t21').disable();
                   // G('#t21').enable();
-                  G('#t21').reset()
-              })
-            G('#g-btn').onClick(function(){
-                // G('#gtree').checkAll();
-                // G('#gtree').setValue(['0-0-0']);
-                console.log(G('#gtree').getSelected());
-                // console.log(G('#gtree').getRoots());
-            })
+                  // G('#t21').reset()
+              // })
+            // G('#g-btn').onClick(function(){
+            //     // G('#gtree').checkAll();
+            //     // G('#gtree').setValue(['0-0-0']);
+            //     console.log(G('#gtree').getSelected());
+            //     // console.log(G('#gtree').getRoots());
+            // })
           })
         </script>
         <!-- <g-richtext id="mytext" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
@@ -814,7 +816,7 @@ table.resultTable .actiontd{
   //         G(this).css("color","red");
   //       });
   //     });
-      G('#g-btn').onClick(function () {
+      // G('#g-btn').onClick(function () {
           // G("#testDialog").setVisible(true)
           // G('#mtree').checkAll()
           // G('#dialog01').close();
@@ -833,7 +835,7 @@ table.resultTable .actiontd{
           // G('#gloading').setLoading(true)
           // console.log( G('#gloading').getLoading());
 
-      });
+      // });
       // G('#g-confirm').confirm(function(){
       //     alert('确定')
       // })
@@ -892,6 +894,9 @@ table.resultTable .actiontd{
   label: '0-2',
   value: '0-2',
 }];
+var selectData = [
+{"value":"0","label":"上海"},{"value":"1","label":"北京"},{"value":"2","label":"宁波"}
+]
     var checkboxJson1 = [
 	{
 		label:"张三",
