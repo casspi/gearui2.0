@@ -860,6 +860,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             column.filterIcon = <Icon type="filter" style={{ color: this.state.filtered[filterId] ? '#108ee9' : '#aaa' }} />;
         }
         let childrenInProps = props.children;
+        console.log(childrenInProps)
         if(childrenInProps) {
             if(!(childrenInProps instanceof Array)) {
                 childrenInProps = [childrenInProps];
@@ -876,6 +877,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 column.children = childrenJsx;
             }
         }
+        console.log(column.render)
         return column;
     }
 
@@ -1000,13 +1002,10 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let render = null;
         ((children, ellipsisSpanWidth)=>{
             render = (text: any,record: any,indexColumn: any) => {
-                alert(999)
                 let jsxEles: any[] = [];
                 if(!(children instanceof Array)) {
                     children = [children];
                 }
-                console.log("-------------------------------------")
-                console.log(children)
                 if(children instanceof Array) {
                     children.map((child:any, index: any)=>{
                         jsxEles.push(this.parseColumnChild(child, ellipsisSpanWidth, record, indexColumn, index));
@@ -1046,8 +1045,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     render() {
         let props: any = this.getProps();
-        // console.log(props.dataSource)
-        // console.log(props.columns)
         return <AntdTable  {...props}>{this.props.children}</AntdTable>;
     }
 

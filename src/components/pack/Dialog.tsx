@@ -329,8 +329,6 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                 $dom.find('.ant-modal-body').outerHeight(this.bodyH)
             })
         }
-        
-
     }
     render() {
         let props:any = this.getProps();

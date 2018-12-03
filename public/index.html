@@ -700,7 +700,7 @@ table.resultTable .actiontd{
           <g-sider>sider</g-sider>
           <g-footer>footer</g-footer>
         </g-layout> -->
-        <!-- <g-pagination id="pagination11" style="position:relative;overflow:hidden"></g-pagination>
+        <g-pagination id="pagination11" style="position:relative;overflow:hidden"></g-pagination>
         <g-ajaxlist  checkType="true" bordered="true"  id="list1" position="top" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example1" paginationId="pagination11,pagination12" scrollx="600" scrolly="400">
           <g-column label="姓名" width="100" name="name" dataIndex="name" orderColumn="name"></g-column>
           <g-column label="部门" width="150" name="department" dataIndex="department" orderColumn="department" rowspan="auto"></g-column>
@@ -711,7 +711,7 @@ table.resultTable .actiontd{
           <g-column label="操作" width="70" class="actiontd">
               <g-button>修改</g-button>
           </g-column>
-        </g-ajaxlist> -->
+        </g-ajaxlist>
         <!-- <g-pagination id="pagination12"></g-pagination> -->
         <!-- <g-ajaxlist bordered="true" id="list3" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example3">
           <g-column label="姓名" width="100" name="name" orderColumn="name"></g-column>
@@ -729,37 +729,46 @@ table.resultTable .actiontd{
         <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
         <!-- <g-transfer id="gtransfer0"   url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
         <!-- <g-transfer id="gtransfer" width='996' dictype="treeData" onLeftTreeMoved="onLeftTreeMoved()" onRightTreeMoved="onRightTreeMoved()"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
-        <g-select id="s22" dictype='treeData'  editable="true" mode="combobox " autoFocus="true" label="地区" disabled="false" width="240" prompt="请选择"></g-select>
+        <!-- <g-select id="s22" dictype='treeData' editable="true"  autoFocus="true" label="地区" disabled="false" width="240" prompt="请选择"></g-select> -->
         <!-- <g-select  width="300" refid="s22"></g-select> -->
-        <!-- <g-button style="margin:0 0 0 0" id="g-btn">btn</g-button>
-        <g-transfer id="t21" lines="true" dictype="treeData" showIcon="false"   width="300px" height="400px" leftButtonTitle="&lt;左移" rightButtonTitle="右移&gt;"></g-transfer>
+        <g-button style="margin:0 0 0 0" id="g-btn">btn</g-button>
+        <!-- <g-transfer id="t21" lines="true" dictype="treeData" showIcon="false"   width="300px" height="400px" leftButtonTitle="&lt;左移" rightButtonTitle="右移&gt;"></g-transfer>
         <div id="t21-panel"></div>
         <div>
           <g-submit>保存</g-submit>
           <g-button id="t21btn1">按钮</g-button>
         </div> -->
         <script>
+          
           G(function(){
-              // G('#gtree').onExpand(function(){
-              //   console.log('展开树')
-              // })
-              // G('#gtree').onBeforeCollapse(function(){
-              //   alert('折叠之前')
-              // })
-              // G('#gtree').onCollapse(function(){
-              //   console.log('折叠树')
-              // })
               // G('#t21btn1').onClick(function(){
                   // G('#t21').disable();
                   // G('#t21').enable();
                   // G('#t21').reset()
               // })
-            // G('#g-btn').onClick(function(){
-            //     // G('#gtree').checkAll();
-            //     // G('#gtree').setValue(['0-0-0']);
-            //     console.log(G('#gtree').getSelected());
-            //     // console.log(G('#gtree').getRoots());
-            // })
+              
+              // G('#s22').onSelect(function(){
+              //   console.log('select')
+              // })
+              G('#g-btn').onClick(function(){
+                // G('#s22').onShowPanel(function(){
+                //   alert('onShowPanel')
+                // });
+                // G('#s22').showPanel();
+                // setTimeout(function(){
+                //   G('#s22').hidePanel()
+                // },2000)
+                // G('#s22').focus();
+                // G('#s22').setValues('0-0-1');
+                // setTimeout(function(){
+                //   G('#s22').unselect('0-0-1');
+                // },2000)
+                // G('#s22').showPanel();
+                // G('#gtree').checkAll();
+                // G('#gtree').setValue(['0-0-0']);
+                // console.log(G('#gtree').getSelected());
+                // console.log(G('#gtree').getRoots());
+              })
           })
         </script>
         <!-- <g-richtext id="mytext" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
@@ -768,17 +777,10 @@ table.resultTable .actiontd{
           <script>
             console.log(UE)
           </script> -->
-          <g-dialog title="我是标题" id="testDialog" visible="false" maxable="true"></g-dialog>
+          
           <!-- <g-select dictype="checkboxJson1">
           </g-select> -->
     <script>
-      function onLeftTreeMoved(node) {
-        console.log(node);
-      }
-              
-      function onRightTreeMoved(node) {
-        console.log(node);
-      }
     G(function(){
       
         // var column = G("#list1").getColumn(1);
@@ -804,18 +806,18 @@ table.resultTable .actiontd{
         //     G(this).css("color","red");
         //   });
         // });
-  //    G("#list3").onExpandRow(function(data){
-	// 	    console.log(data);
-	// 	    // 这里注意必须有返回值，并且返回值应是由html标签包含的，比如下面
-	// 	    return "<span>查看详情："+data.name+"</span>";
-	//    });
-	
-  //     G("#list3").onAfterUpdate(function(){
-  //       this.find("td").each(function(){
-  //         console.log(this);
-  //         G(this).css("color","red");
-  //       });
-  //     });
+        //    G("#list3").onExpandRow(function(data){
+        // 	    console.log(data);
+        // 	    // 这里注意必须有返回值，并且返回值应是由html标签包含的，比如下面
+        // 	    return "<span>查看详情："+data.name+"</span>";
+        //    });
+        
+        //     G("#list3").onAfterUpdate(function(){
+        //       this.find("td").each(function(){
+        //         console.log(this);
+        //         G(this).css("color","red");
+        //       });
+        //     });
       // G('#g-btn').onClick(function () {
           // G("#testDialog").setVisible(true)
           // G('#mtree').checkAll()
@@ -831,7 +833,6 @@ table.resultTable .actiontd{
           // G('#galert').setTitle("修改后标题");
           // G('#galert').setMessage("修改后内容");
           // G('#galert').setType("warning");
-          
           // G('#gloading').setLoading(true)
           // console.log( G('#gloading').getLoading());
 

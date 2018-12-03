@@ -29,8 +29,8 @@ export var props = {
     dropdownClassName: GearType.String,
     dropdownStyle: GearType.CssProperties,
     dropdownMenuStyle: GearType.CssProperties,
-    onSearch: (value: string) => GearType.Any,
-    filterOption: GearType.Boolean || ((inputValue: string, option: Object) => GearType.Any),
+    onSearch: GearType.Function,
+    filterOption: GearType.Function,
     mode: GearType.Enum<mode>(),
     multiple: GearType.Boolean,
     tags: GearType.Boolean,
@@ -78,6 +78,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     childSelect: Select<typeof props,state>;
     constructor(props: P, context: {}) {
         super(props, context);
+        this.onShowPanel(this.props.onShowPanel);
     }
     getProps() {
         return G.G$.extend({},this.state,{
@@ -93,9 +94,8 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             dropdownClassName: this.props.dropdownClassName,
             dropdownStyle: this.props.dropdownStyle,
             dropdownMenuStyle: this.props.dropdownMenuStyle,
-            onSearch: this.props.onSearch,
+            onSearch: this.props.onSearch||function(value: string){return},
             //搜索
-            // filterOption: (input:any, option:any) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0,
             filterOption: (input:any, option:any) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0,
             value: this.state.value,
             defaultValue: this.state.value,
@@ -144,7 +144,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             },
             dropdownMatchSelectWidth: this.props.dropdownMatchSelectWidth,
             optionFilterProp: this.props.optionFilterProp,
-            defaultActiveFirstOption: this.props.defaultActiveFirstOption,
+            defaultActiveFirstOption: this.props.defaultActiveFirstOption||true,
             labelInValue: this.props.labelinvalue,
             getPopupContainer: ()=>{
                 // let container = document.body;
@@ -286,7 +286,6 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
 
     getParentTree() {
         let upperName = this.props.upper;
-        console.log(upperName)
         if(!upperName) {
             return null;
         }
@@ -390,387 +389,388 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     //获取焦点
     showPanel() {
         let dom = G.G$(this.realDom);
-        dom.find("input").blur();
+        dom.find("input").focus();
+        dom.trigger('click');
     }
     // 失去焦点
     hidePanel() {
         let dom = G.G$(this.realDom);
-        dom.find("input").focus();
+        dom.find("input").blur();
     }
-        // 加载数据
-        loadData(param?:any,callback?:Function) {
-            let url = null;
-            let data = null;
-            let method = this.state.method;
-            if(param) {
-                if(typeof param == "string") {
-                    url = param;
-                }
-                if(param instanceof Object) {
-                    data = param;
-                }
-            }else {
-                url = this.state.url;
-                data = this.state.dictype;
+    // 加载数据
+    loadData(param?:any,callback?:Function) {
+        let url = null;
+        let data = null;
+        let method = this.state.method;
+        if(param) {
+            if(typeof param == "string") {
+                url = param;
             }
-            this.reload(url,data,this.state.method,callback);
+            if(param instanceof Object) {
+                data = param;
+            }
+        }else {
+            url = this.state.url;
+            data = this.state.dictype;
         }
-        // 通过指定的url或者data加载数据
-        reload(url:string,dictype:object,method:methods,callback?:Function) {
-            let fn = async ()=> {
-                let result = await DicUtil.getDic({url, method, dictype});
-                if(result.success){
-                    let dic = result.data;
-                    if(dic){
-                        dic = this._loadFilter(dic);
-                        if(dic==null){
-                            this.triggerChange([]);
-                            this.setState({
-                                options: [],
-                                value: []
-                            });
-                            return;
-                        }
-                        let result = this.doEvent("loadFilter",dic);
-                        if(result && result.length > 0) {
-                            dic = result[result.length - 1];
-                        }
-                        let initValue = this.getInitValue(dic);
-                        this.triggerChange(initValue);
+        this.reload(url,data,this.state.method,callback);
+    }
+    // 通过指定的url或者data加载数据
+    reload(url:string,dictype:object,method:methods,callback?:Function) {
+        let fn = async ()=> {
+            let result = await DicUtil.getDic({url, method, dictype});
+            if(result.success){
+                let dic = result.data;
+                if(dic){
+                    dic = this._loadFilter(dic);
+                    if(dic==null){
+                        this.triggerChange([]);
                         this.setState({
-                            value: initValue||[],
-                            options: dic
-                        },()=>{
-                            if(this._onLoadSuccess) {
-                                this._onLoadSuccess();
-                            }
-                            this.doEvent("loadSuccess");
-                            if(callback){
-                                callback.call(this);
-                            }
+                            options: [],
+                            value: []
                         });
-                        this._onLoadSuccess();
-                        this.doEvent("loadSuccess",dic);
+                        return;
                     }
-                }else{
-                    this._onLoadError();
-                    this.doEvent("loadError",result);
-                    if(callback){
-                        callback.call(this);
+                    let result = this.doEvent("loadFilter",dic);
+                    if(result && result.length > 0) {
+                        dic = result[result.length - 1];
                     }
-                }
-            };
-            fn();
-        }
-
-        //获取初始值
-        getInitValue(dic:any) {
-            let value:any = this.state.value;
-            if(this.props.multiple != true && value instanceof Array) {
-                value = value[0];
-            }
-            let valueC = value;
-            if(this.props.multiple == true) {
-                valueC = [];
-                if(value instanceof Array) {
-                    value.forEach((valueIn)=>{
-                        let nodeRe = this.findByValue(valueIn,dic);
-                        if(nodeRe != null) {
-                            valueC.push(valueIn);
+                    let initValue = this.getInitValue(dic);
+                    this.triggerChange(initValue);
+                    this.setState({
+                        value: initValue||[],
+                        options: dic
+                    },()=>{
+                        if(this._onLoadSuccess) {
+                            this._onLoadSuccess();
+                        }
+                        this.doEvent("loadSuccess");
+                        if(callback){
+                            callback.call(this);
                         }
                     });
+                    this._onLoadSuccess();
+                    this.doEvent("loadSuccess",dic);
                 }
-            }else {
-                let nodeRe = this.findByValue(valueC,dic);
-                if(nodeRe == null) {
-                    valueC = [];
+            }else{
+                this._onLoadError();
+                this.doEvent("loadError",result);
+                if(callback){
+                    callback.call(this);
                 }
             }
-            return valueC;
+        };
+        fn();
+    }
+
+    //获取初始值
+    getInitValue(dic:any) {
+        let value:any = this.state.value;
+        if(this.props.multiple != true && value instanceof Array) {
+            value = value[0];
         }
-        //格式化数据
-        protected _loadFilter(data:any) {
-            if(data == null) {
-                return null;
+        let valueC = value;
+        if(this.props.multiple == true) {
+            valueC = [];
+            if(value instanceof Array) {
+                value.forEach((valueIn)=>{
+                    let nodeRe = this.findByValue(valueIn,dic);
+                    if(nodeRe != null) {
+                        valueC.push(valueIn);
+                    }
+                });
             }
-            if(!data) {
-                return null;
+        }else {
+            let nodeRe = this.findByValue(valueC,dic);
+            if(nodeRe == null) {
+                valueC = [];
             }
-            if(this.props.dictype != null) {
-                let dic = null;
-                if(this.parentSelect && this.parentSelect instanceof Tag) {
-                    let value = this.parentSelect.getValue();
-                    if(value.length > 0) {
-                        let code = value[0];
-                        for(var i=0;i<data.length;i++){
-                            if(data[i].value==code || data[i].id==code){
-                                dic = data[i];
-                            }
+        }
+        return valueC;
+    }
+    //格式化数据
+    protected _loadFilter(data:any) {
+        if(data == null) {
+            return null;
+        }
+        if(!data) {
+            return null;
+        }
+        if(this.props.dictype != null) {
+            let dic = null;
+            if(this.parentSelect && this.parentSelect instanceof Tag) {
+                let value = this.parentSelect.getValue();
+                if(value.length > 0) {
+                    let code = value[0];
+                    for(var i=0;i<data.length;i++){
+                        if(data[i].value==code || data[i].id==code){
+                            dic = data[i];
                         }
-                        if(dic != null) {
-                            data = dic.children;
-                        }else {
-                            data = null;
-                        }
+                    }
+                    if(dic != null) {
+                        data = dic.children;
                     }else {
                         data = null;
                     }
-                }
-            }
-            let treeNodes:Array<LabeledValue> = null;
-            if(data != null) {
-                if(data['data']) {
-                    treeNodes = data.data;
                 }else {
-                    treeNodes = data;
+                    data = null;
                 }
-                for(let i = 0; i < treeNodes.length; i++) {
-                    this.parse(treeNodes[i]);
-                }
-            }
-            return treeNodes;
-        }
-        private parse(dataInner:LabeledValue) {
-            if(!dataInner) {
-                return;
-            }
-            if(dataInner['attributes'] == null) {
-                dataInner['attributes'] = {};
-            }
-            // 支持将lvb中properties的属性加入到树节点的attributes中
-            if(dataInner['properties']){
-                dataInner['attributes'] = G.G$.extend({},dataInner['attributes'],dataInner['properties']);
-                delete dataInner['properties'];
-            }
-            
-            let link = dataInner['attributes']["link"] || this.props.link;
-            if(link){
-                //处理link
-                link = link.replace("{id}",dataInner['id']);
-                for(let key in dataInner['attributes']) {
-                    link = link.replace("{"+key+"}",dataInner['attributes'][key]);
-                }
-                dataInner['attributes']["link"] = link;
-                dataInner['attributes']["target"] = dataInner['attributes']["target"] || this.props.target;
-            }
-            
-            if(dataInner.children && dataInner.children.length > 0) {
-                for(let i = 0; i < dataInner.children.length; i++) {
-                    this.parse(dataInner.children[i]);
-                }
-            }
-            if(!dataInner["label"]) {
-                dataInner["label"] = dataInner["text"];
-            }
-            if(!dataInner["value"]) {
-                dataInner["value"] = dataInner["id"];
-            }
-        };
-        //数据过滤
-        loadFilter(fun:Function) {
-            if(fun && $.isFunction(fun)) {
-                this.bind("loadFilter",fun);
             }
         }
-        protected _onChange() {
+        let treeNodes:Array<LabeledValue> = null;
+        if(data != null) {
+            if(data['data']) {
+                treeNodes = data.data;
+            }else {
+                treeNodes = data;
+            }
+            for(let i = 0; i < treeNodes.length; i++) {
+                this.parse(treeNodes[i]);
+            }
+        }
+        return treeNodes;
+    }
+    private parse(dataInner:LabeledValue) {
+        if(!dataInner) {
+            return;
+        }
+        if(dataInner['attributes'] == null) {
+            dataInner['attributes'] = {};
+        }
+        // 支持将lvb中properties的属性加入到树节点的attributes中
+        if(dataInner['properties']){
+            dataInner['attributes'] = G.G$.extend({},dataInner['attributes'],dataInner['properties']);
+            delete dataInner['properties'];
+        }
+        
+        let link = dataInner['attributes']["link"] || this.props.link;
+        if(link){
+            //处理link
+            link = link.replace("{id}",dataInner['id']);
+            for(let key in dataInner['attributes']) {
+                link = link.replace("{"+key+"}",dataInner['attributes'][key]);
+            }
+            dataInner['attributes']["link"] = link;
+            dataInner['attributes']["target"] = dataInner['attributes']["target"] || this.props.target;
+        }
+        
+        if(dataInner.children && dataInner.children.length > 0) {
+            for(let i = 0; i < dataInner.children.length; i++) {
+                this.parse(dataInner.children[i]);
+            }
+        }
+        if(!dataInner["label"]) {
+            dataInner["label"] = dataInner["text"];
+        }
+        if(!dataInner["value"]) {
+            dataInner["value"] = dataInner["id"];
+        }
+    };
+    //数据过滤
+    loadFilter(fun:Function) {
+        if(fun && $.isFunction(fun)) {
+            this.bind("loadFilter",fun);
+        }
+    }
+    protected _onChange() {
 
+    }
+    onChange(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("change",fun);
         }
-        onChange(fun:Function) {
-            if(fun && G.G$.isFunction(fun)) {
-                this.bind("change",fun);
+    }
+    // 当被选中的时候触发
+    protected _onSelect() {
+    }
+    onSelect(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("select",fun);
+        }
+    }
+    // 当数据加载完成的时候触发
+    protected _onLoadSuccess() {
+        var value = this.getValue();
+        // G.G$(this.propDom).attr("init_first","false");
+    };
+    onLoadSuccess(fun:Function) {
+        if(fun && $.isFunction(fun)) {
+            this.bind("loadSuccess",fun);
+        }
+    }
+    //清空数据
+    clear() {
+        this.triggerChange([]);
+        this.setState({
+            value: []
+        });
+        this._onClear();
+        this.doEvent("clear");
+    }
+    protected _onClear() {
+    };
+    onClear(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("clear",fun);
+        }
+    }
+
+    protected _onBeforeLoad(){
+
+    }
+    onBeforeLoad(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("beforeLoad",fun);
+        }
+    }
+    protected _onLoadError(){
+
+    }
+    onLoadError(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("loadError",fun);
+        }
+    }
+    protected _onUnselect() {
+
+    }
+    onUnselect(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("unSelect",fun);
+        }
+    }
+    findByValue(value:any,data?:any):any {
+        let dataInner = data||this.getAllData();
+        for(var i = 0; i < dataInner.length; i++) {
+            if(value == dataInner[i]["value"]) {
+                return dataInner[i];
+            }else if(dataInner[i]["value"] instanceof Array) {
+                return this.findByValue(value,dataInner[i]["value"]);
             }
         }
-        // 当被选中的时候触发
-        protected _onSelect() {
-        }
-        onSelect(fun:Function) {
-            if(fun && G.G$.isFunction(fun)) {
-                this.bind("select",fun);
-            }
-        }
-        // 当数据加载完成的时候触发
-        protected _onLoadSuccess() {
-            var value = this.getValue();
-            // G.G$(this.propDom).attr("init_first","false");
-        };
-        onLoadSuccess(fun:Function) {
-            if(fun && $.isFunction(fun)) {
-                this.bind("loadSuccess",fun);
-            }
-        }
-        //清空数据
-        clear() {
+        return null;
+    }
+    getAllData() {
+        return this.state.options;
+    }
+
+    // 设置值
+    setValues(values:any) {
+        this.setValue(values);
+    }
+    // 设置值
+    setValue(...value:any) {
+        if(value && value.length > 0) {
+            this.triggerChange(value[0]);
+            this.setState({
+                value: value[0]
+            });
+        }else {
             this.triggerChange([]);
             this.setState({
                 value: []
             });
-            this._onClear();
-            this.doEvent("clear");
         }
-        protected _onClear() {
-        };
-        onClear(fun:Function) {
-            if(fun && $.isFunction(fun)) {
-                this.bind("clear",fun);
+    }
+    // 获取值
+    getValue() {
+        return this.state.value;
+    }
+    // 通过文本设置值
+    setTexts(texts:any) {
+        this.setText(texts);
+    }
+    // 通过文本设置值
+    setText(...text:any) {
+        if(text) {
+            if(text instanceof Array && text[0] instanceof Array) {
+                text = text[0];
             }
-        }
-
-        protected _onBeforeLoad(){
-
-        }
-        onBeforeLoad(fun:Function) {
-            if(fun && G.G$.isFunction(fun)) {
-                this.bind("beforeLoad",fun);
-            }
-        }
-        protected _onLoadError(){
-
-        }
-        onLoadError(fun:Function) {
-            if(fun && G.G$.isFunction(fun)) {
-                this.bind("loadError",fun);
-            }
-        }
-        protected _onUnselect() {
-
-        }
-        onUnselect(fun:Function) {
-            if(fun && G.G$.isFunction(fun)) {
-                this.bind("unSelect",fun);
-            }
-        }
-        findByValue(value:any,data?:any):any {
-            let dataInner = data||this.getAllData();
-            for(var i = 0; i < dataInner.length; i++) {
-                if(value == dataInner[i]["value"]) {
-                    return dataInner[i];
-                }else if(dataInner[i]["value"] instanceof Array) {
-                    return this.findByValue(value,dataInner[i]["value"]);
+            let values = Array<any>();
+            if(text instanceof Array) {
+                for(let i = 0; i < text.length;i++) {
+                    values.push(this.getValueByText(text[i]));
                 }
-            }
-            return null;
-        }
-        getAllData() {
-            return this.state["options"];
-        }
-
-        // 设置值
-        setValues(values:any) {
-            this.setValue(values);
-        }
-        // 设置值
-        setValue(...value:any) {
-            if(value && value.length > 0) {
-                this.triggerChange(value[0]);
-                this.setState({
-                    value: value[0]
-                });
             }else {
-                this.triggerChange([]);
-                this.setState({
-                    value: []
-                });
+                values.push(this.getValueByText(text));
             }
+            this.triggerChange(values);
+            this.setState({
+                value: values
+            });
+        }else {
+            this.triggerChange([]);
+            this.setState({
+                value: []
+            });
         }
-        // 获取值
-        getValue() {
-            return this.state.value;
-        }
-        // 通过文本设置值
-        setTexts(texts:any) {
-            this.setText(texts);
-        }
-        // 通过文本设置值
-        setText(...text:any) {
-            if(text) {
-                if(text instanceof Array && text[0] instanceof Array) {
-                    text = text[0];
+    }
+    // 通过值获取对应的文本
+    getValueByText(text:any,options?:Array<any>) {
+        options = options||this.state.options||[];
+        let value = null;
+        options.map((ele) => {
+            if(ele instanceof Array) {
+                value = this.getValueByText(text,ele);
+                if(value) {
+                    return value;
                 }
-                let values = Array<any>();
-                if(text instanceof Array) {
-                    for(let i = 0; i < text.length;i++) {
-                        values.push(this.getValueByText(text[i]));
-                    }
-                }else {
-                    values.push(this.getValueByText(text));
-                }
-                this.triggerChange(values);
-                this.setState({
-                    value: values
-                });
             }else {
-                this.triggerChange([]);
-                this.setState({
-                    value: []
-                });
+                if(ele.label == text) {
+                    value = ele.value;
+                }
             }
-        }
-        // 通过值获取对应的文本
-        getValueByText(text:any,options?:Array<any>) {
-            options = options||this.state.options||[];
-            let value = null;
-            options.map((ele) => {
-                if(ele instanceof Array) {
-                    value = this.getValueByText(text,ele);
-                    if(value) {
-                        return value;
-                    }
+        });
+        return value;
+    }
+    // 通过文本获取对应值
+    getTextByValue(value:any,options?:Array<any>):any {
+        options = options||this.state.options||[];
+        let text = null;
+        for(let i = 0; i < options.length; i++) {
+            let ele = options[i];
+            if(ele instanceof Array) {
+                text = this.getTextByValue(value,ele);
+            }else {
+                if(ele.value == value) {
+                    text = ele.label;
                 }else {
-                    if(ele.label == text) {
-                        value = ele.value;
+                    if(ele.children instanceof Array) {
+                        text = this.getTextByValue(value,ele.children);
                     }
                 }
-            });
-            return value;
-        }
-        // 通过文本获取对应值
-        getTextByValue(value:any,options?:Array<any>):any {
-            options = options||this.state.options||[];
-            let text = null;
-            for(let i = 0; i < options.length; i++) {
-                let ele = options[i];
-                if(ele instanceof Array) {
-                    text = this.getTextByValue(value,ele);
-                }else {
-                    if(ele.value == value) {
-                        text = ele.label;
-                    }else {
-                        if(ele.children instanceof Array) {
-                            text = this.getTextByValue(value,ele.children);
-                        }
-                    }
-                }
-                if(text != null) {
-                    break;
-                }
             }
-            return text;
-        }
-
-        disable() {
-            this.setState({
-                disabled: true
-            });
-        }
-
-        enable() {
-            this.setState({
-                disabled: false
-            });
-        }
-
-        onBeforeSelect(fun:Function) {
-            if(fun && G.G$.isFunction(fun)) {
-                this.bind("beforeSelect",fun);
+            if(text != null) {
+                break;
             }
         }
+        return text;
+    }
 
-        focus(...args:any) { 
-            this.find(".ant-select-selection").focus(...args);      
-        }
+    disable() {
+        this.setState({
+            disabled: true
+        });
+    }
 
-        blur(...args:any){
-            this.find(".ant-select-selection").blur(...args);
+    enable() {
+        this.setState({
+            disabled: false
+        });
+    }
+
+    onBeforeSelect(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("beforeSelect",fun);
         }
+    }
+
+    focus(...args:any) { 
+        this.find(".ant-select-selection").focus(...args);      
+    }
+
+    blur(...args:any){
+        this.find(".ant-select-selection").blur(...args);
+    }
 
 }
