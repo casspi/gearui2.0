@@ -700,19 +700,38 @@ table.resultTable .actiontd{
           <g-sider>sider</g-sider>
           <g-footer>footer</g-footer>
         </g-layout> -->
+       
+        
+           
+            
         <g-pagination id="pagination11" style="position:relative;overflow:hidden"></g-pagination>
-        <g-ajaxlist  checkType="true" bordered="true"  id="list1" position="top" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example1" paginationId="pagination11,pagination12" scrollx="600" scrolly="400">
-          <g-column label="姓名" width="100" name="name" dataIndex="name" orderColumn="name"></g-column>
+        <g-ajaxlist sequenceLabel="编号" checkType="checkbox" checkAll="false" bordered="true" width="920"  id="list1" 
+        onLoadSuccess="onLoadSuccess"
+            onRowClick="onRowClick" 
+          onLoadFailed="onLoadFailed()" 
+          onAfterUpdate="onAfterUpdate"
+          onBeforeLoad = "onBeforeLoad"
+           url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example1" paginationId="pagination11,pagination12" scrolly="400">
+          <g-column label="姓名" width="100" ellipsis="true" name="name" dataIndex="name" filter="true"  filterType="text"></g-column>
           <g-column label="部门" width="150" name="department" dataIndex="department" orderColumn="department" rowspan="auto"></g-column>
           <g-column label="长号" width="100" name="longCallNumber" rowspan="auto"></g-column>
           <g-column label="短号" width="100" name="shortCallNumber" ></g-column>
-          <g-column label="手机号码" width="100" name="mobile" orderColumn="mobile" ></g-column>
-          <g-column label="电子邮箱" width="200" name="email"></g-column>
-          <g-column label="操作" width="70" class="actiontd">
-              <g-button>修改</g-button>
+          <g-column label="手机号码" width="100" name="mobile" orderColumn="mobile"></g-column>
+          <!-- <g-column label="电子邮箱" width="200" name="email">
+              <g-column label="手机号码" width="100" name="mobile" orderColumn="mobile"></g-column>
+              <g-column label="内部操作" width="100">
+                <g-column label="内部操作" width="100"><g-button>修改</g-button></g-column>
+                <g-column label="内部操作" width="100"><g-button>修改</g-button></g-column>
+              </g-column>
           </g-column>
+          <g-column label="操作" width="70" name="area" class="actiontd" rowspan="2">
+              <div>
+                  <g-button>修改</g-button>
+                  <g-button>修改</g-button>
+              </div>
+          </g-column> -->
         </g-ajaxlist>
-        <!-- <g-pagination id="pagination12"></g-pagination> -->
+        <g-pagination id="pagination12"></g-pagination>
         <!-- <g-ajaxlist bordered="true" id="list3" url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example3">
           <g-column label="姓名" width="100" name="name" orderColumn="name"></g-column>
           <g-column label="部门" width="200" name="department" orderColumn="name" rowspan="auto"></g-column>
@@ -739,6 +758,23 @@ table.resultTable .actiontd{
           <g-button id="t21btn1">按钮</g-button>
         </div> -->
         <script>
+            function onRowClick(e){
+              console.log(e)
+            }
+            function onBeforeLoad (){
+              console.log('加载之前')
+            }
+            function onLoadSuccess(){
+              console.log('加载成功')
+            }
+            function onLoadFailed(){
+              console.log('加载失败')
+            }
+            function onAfterUpdate(){
+              console.log('更新成功')
+            }
+      </script>
+        <script>
           
           G(function(){
               // G('#t21btn1').onClick(function(){
@@ -751,6 +787,18 @@ table.resultTable .actiontd{
               //   console.log('select')
               // })
               G('#g-btn').onClick(function(){
+                // console.log(G('#g-btn'))
+                // console.log(G('#pagination11'))
+                // console.log(G('#list1').getCurrent());
+                // console.log(G('#list1').isCheckedAll());
+                // console.log(G('#list1').getTotal())
+                // console.log(G('#list1').hasCheckedRow())
+                // console.log(G('#list1').getOrderColumn())
+                // console.log(G('#list1').getPaginations())
+                // G('#list1').request()
+                G('#list1').refresh()
+                console.log(G('#list1').getRow('G7065e'))
+               
                 // G('#s22').onShowPanel(function(){
                 //   alert('onShowPanel')
                 // });

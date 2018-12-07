@@ -63,12 +63,11 @@ export default class G {
             let fileNameReal = "./" + fileNameArr[fileNameArr.length - 1];
             const componentConfig = requireComponent(fileName);
             let componentName:string = fileNameReal.replace(/^\.\/(.*)\.\w+$/, '$1');
-            let componentNameReal = componentName;
             if(componentConfig.useName){
-                componentName = componentConfig.useName.toLowerCase();
-            }else{
-                componentName = componentName.toLowerCase();
+                componentName = componentConfig.useName
             }
+            let componentNameReal = componentName;
+            componentName = componentName.toLowerCase();
             // componentName = componentName.toLowerCase();
             //componentName = 'g-' + componentName.toLowerCase();
             let component = componentConfig.default || componentConfig;
@@ -115,7 +114,7 @@ export default class G {
                 for(let i = 0; i < doms.length;i++) {
                     let dom = this.G$(doms[i]);
                     try{
-                        let gObj = dom.data("vmdom");
+                        let gObj = dom.data("vmdom"); 
                         if(gObj) {
                             //记录自定义方法名称
                             for(let key in gObj) {
@@ -223,8 +222,6 @@ export default class G {
     private static findVmDomFromCacheAst(selector: string|Element) {
         let vmdoms: any[] = [];
         let jEleFromCache = G.G$(this.cacheHtml).find(selector);
-        // console.log(this.cacheHtml)
-        // console.log(jEleFromCache)
         if(jEleFromCache.length > 0 && this.cacheAst) {
             jEleFromCache.each((i, ele)=>{
                 let index = this.G$(ele).attr(Constants.HTML_PARSER_DOM_INDEX);

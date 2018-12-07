@@ -81,9 +81,13 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
     }
     render() {
         let props: any = this.getProps();
-        return <AntdPagination {...props}/>;
+        return <AntdPagination {...props}></AntdPagination>;
     }
-
+    afterRender() {
+        // if(this.props.id){
+        //     G.G$("#"+this.props.id).data("vmdom", this)
+        // }
+    }
     getPageSize() {
         return this.state.pageSize ||10;
     }

@@ -11,7 +11,6 @@ import * as Text from '../form/Text';
 import * as Date from '../form/Date';
 import * as Datetime from '../form/Datetime';
 import * as Combotree from '../form/Combotree';
-import Column from './Column';
 export var props = {
     ...Tag.props,
     url: GearType.Or(GearType.String, GearType.Function),
@@ -41,7 +40,7 @@ export interface state extends Tag.state, TableProps<any> {
     sorterInfo?: any;
     filteredInfo?: any;
     checkType?: "radio" | "checkbox";
-    isCheckedAll?: boolean;//是否全部被选中
+    isCheckAll?: boolean;//是否全部被选中
     filtered?: any;
     filterVisible?: any;
     scrolly?: number;
@@ -275,7 +274,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     //是否选中全部
     isCheckedAll() {
-        return this.state.isCheckedAll;
+        return this.state.isCheckAll;
     }
     // 是否有选中行
     hasCheckedRow(){
@@ -365,6 +364,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 }
             }
         }
+        return this.paginations
     }
 
     //根据ID获取分页器对象
@@ -372,7 +372,10 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(!paginationId) {
             return null;
         }
+        console.log(paginationId)
         let p = G.$("#" + paginationId);
+        console.log(p);
+
         if((ObjectUtil.isExtends(p, "Pagination")) == false) {
             if(p[0]) {
                 p.doRender();
@@ -387,9 +390,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         return p;
     }
 
-    getInitialState(): state {
-    
-        let columns: any = this._parseColumns();        
+    getInitialState(): state {    
         return {
             dataSource: this.props.dataSource,
             url: this.props.url,
@@ -403,13 +404,13 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             loading: false,
             filteredInfo: null,
             checkType: this.props.checkType,
-            isCheckedAll: false,
+            isCheckAll: false,
             filtered: {},
             filterVisible: {},
             scrollx: this.props.scrollx,
             scrolly: this.props.scrolly,
             otherParam: {},
-            columns: columns,
+            columns: [],
             emptyText: this.props.emptyText || "",
             checkAll: this.props.checkAll,
             sequence: this.props.sequence,
@@ -419,8 +420,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             formId: this.props.formId
         };
     }
-
-    getProps() {
+    getProps() {        
         //记录ctrl按键
         G.G$(document).keydown((event)=>{
             let eventInner = event || window.event;
@@ -438,7 +438,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             x: this.state.scrollx,
             y: this.state.scrolly
         };
-
         let containerProps: any = {
             onAfterRender:(robj: any)=>{
                 this.doEvent("afterExpand",robj,this._expandRecord);
@@ -783,7 +782,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     //转换列
     protected _parseColumn(index: any,props: typeof ColumnPropsPlus): TableColumns {
         let name = props.name || "";
-        let dataIndex = props.dataIndex || props.name || "";
+        let dataIndex = props.dataIndex || props.name ||"";//
         let title = props.label || props.title || "";
         let width = props.width || 0;
         let fixed = props.fixed;
@@ -838,10 +837,10 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             //禁用排序图标的自动控制，使用自定义控制setSortClass方法
             column.sortOrder = false;
         }
-        let filter:any = props.filter;
-        let filterId:any = props.filterId;
-        let filterType:any = props.filterType;
-        if(filterId && filter && filterType) {
+        let filter:any = props.filter!=false;
+        let filterId:any = props.filterId||name;
+        let filterType:any = props.filterType||'';
+        if(filterId != null && filterId != "" && filter != false && filterType != "") {
             column.filterDropdown = this.getFilter(props);
             column.filterDropdownVisible = this.state.filterVisible[filterId];
             column.onFilterDropdownVisibleChange = (visible: any) => {
@@ -860,7 +859,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             column.filterIcon = <Icon type="filter" style={{ color: this.state.filtered[filterId] ? '#108ee9' : '#aaa' }} />;
         }
         let childrenInProps = props.children;
-        console.log(childrenInProps)
         if(childrenInProps) {
             if(!(childrenInProps instanceof Array)) {
                 childrenInProps = [childrenInProps];
@@ -874,10 +872,11 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                         childrenJsx.push(columnInnder);
                     }
                 });
-                column.children = childrenJsx;
+                if(childrenJsx.length>0){
+                    column.children = childrenJsx;
+                }
             }
         }
-        console.log(column.render)
         return column;
     }
 
@@ -937,7 +936,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     // 文本过滤器
     protected getFilter(props: any) {
-        let filterId:any = props.filterId;
+        let filterId:any = props.filterId||props.name;
         let filterProps: any = {
             getCalendarContainer: ()=> {
                 return G.G$("#" + this.filterContainerId)[0];
@@ -952,7 +951,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 width: 200,
                 onClickButton: this._search.bind(this)
             };
-            filterJsx = <Text.default ref={ele => this.searchNodes[filterId] = ele} {...textProps}/>;
+            filterJsx = <Text.default ref={(ele:any) => this.searchNodes[filterId] = ele} {...textProps}/>;
+            // console.log(filterId)
+            // console.log(this.searchNodes[filterId])
         }else {
             let elseProps: any;
             if(filterType == "date" || filterType == "datetime") {
@@ -978,11 +979,11 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             }
             filterJsx = [];
             if(filterType == "date") {
-                filterJsx.push(<Date.default ref={ele => this.searchNodes[name] = ele} {...elseProps}/>);
+                filterJsx.push(<Date.default ref={(ele:any) => this.searchNodes[name] = ele} {...elseProps}/>);
             }else if(filterType == "datetime") {
-                filterJsx.push(<Datetime.default ref={ele => this.searchNodes[name] = ele} {...elseProps}/>);
+                filterJsx.push(<Datetime.default ref={(ele:any) => this.searchNodes[name] = ele} {...elseProps}/>);
             }else {
-                filterJsx.push(<Combotree.default ref={ele => this.searchNodes[name] = ele} {...elseProps}/>);
+                filterJsx.push(<Combotree.default ref={(ele:any) => this.searchNodes[name] = ele} {...elseProps}/>);
             }
             filterJsx.push(<Button type="primary" onClick={this._search.bind(this)}>查询</Button>);
         }
@@ -1006,13 +1007,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 if(!(children instanceof Array)) {
                     children = [children];
                 }
-                if(children instanceof Array) {
-                    children.map((child:any, index: any)=>{
-                        jsxEles.push(this.parseColumnChild(child, ellipsisSpanWidth, record, indexColumn, index));
-                    });
-                }else {
-                    jsxEles.push(this.parseColumnChild(children, ellipsisSpanWidth, record, indexColumn, 0));
-                }
+                children.map((child:any, index: any)=>{
+                    jsxEles.push(this.parseColumnChild(child, ellipsisSpanWidth, record, indexColumn, index));
+                });
                 return jsxEles;
             };
         })(children, ellipsisSpanWidth || 0);
@@ -1045,11 +1042,13 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     render() {
         let props: any = this.getProps();
-        return <AntdTable  {...props}>{this.props.children}</AntdTable>;
+        return <AntdTable  {...props} >{this.props.children}</AntdTable>;
     }
-
     afterRender() {
-        this.getPaginations();
+        let columns: any = this._parseColumns();    
+        this.setState({
+            columns:columns
+        })
         this.getForm();
         //加载数据
         if(this.state.lazy != true) {
@@ -1060,14 +1059,19 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         classNameArr.add(this.getDefaultClassName());
         this.addClass(classNameArr.toString(" "));
         this.setEllipsisSpanWidth();
-       
+        if(this.props.id){
+            G.$("#"+this.props.id).data("vmdom", this)
+        }
+        
     }
+
     // 得到默认的样式名称
     protected getDefaultClassName() {
         return "ant-table-ajaxlist";
     }
 
     afterUpdate() {
+        this.getPaginations();
         if(this.formEle && this.formEle.state.action != this.state.url) {
             this.formEle.setForm({action: this.state.url});
         }
@@ -1467,6 +1471,32 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             console.error(err);
         }
     }
+    //数据加载完成的回调
+    onLoadSuccess(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("loadSuccess",fun);
+        }
+    }
 
+    //数据加载完成的回调
+    onLoadFailed(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("loadFailed",fun);
+        }
+    }
+
+    //数据加载前触发
+    onBeforeLoad(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("beforeLoad",fun);
+        }
+    }  
+
+    //数据加载后触发
+    onAfterLoad(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("afterLoad",fun);
+        }
+    }
 
 }
