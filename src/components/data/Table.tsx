@@ -372,10 +372,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(!paginationId) {
             return null;
         }
-        console.log(paginationId)
         let p = G.$("#" + paginationId);
-        console.log(p);
-
         if((ObjectUtil.isExtends(p, "Pagination")) == false) {
             if(p[0]) {
                 p.doRender();
@@ -390,7 +387,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         return p;
     }
 
-    getInitialState(): state {    
+    getInitialState(): state {  
+        // let columns:any = this._parseColumns(); 
+        // let columns:any = this.getColumns
         return {
             dataSource: this.props.dataSource,
             url: this.props.url,
@@ -410,7 +409,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             scrollx: this.props.scrollx,
             scrolly: this.props.scrolly,
             otherParam: {},
-            columns: [],
+            columns:[],
             emptyText: this.props.emptyText || "",
             checkAll: this.props.checkAll,
             sequence: this.props.sequence,
@@ -420,7 +419,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             formId: this.props.formId
         };
     }
-    getProps() {        
+    getProps() {  
         //记录ctrl按键
         G.G$(document).keydown((event)=>{
             let eventInner = event || window.event;
@@ -842,7 +841,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let filterType:any = props.filterType||'';
         if(filterId != null && filterId != "" && filter != false && filterType != "") {
             column.filterDropdown = this.getFilter(props);
-            column.filterDropdownVisible = this.state.filterVisible[filterId];
             column.onFilterDropdownVisibleChange = (visible: any) => {
                 let filterVisible = this.state.filterVisible||{};
                 filterVisible[filterId] = visible;
@@ -856,6 +854,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                     }
                 });
             };
+            column.filterDropdownVisible = this.state.filterVisible[filterId];
             column.filterIcon = <Icon type="filter" style={{ color: this.state.filtered[filterId] ? '#108ee9' : '#aaa' }} />;
         }
         let childrenInProps = props.children;
@@ -951,9 +950,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 width: 200,
                 onClickButton: this._search.bind(this)
             };
-            filterJsx = <Text.default ref={(ele:any) => this.searchNodes[filterId] = ele} {...textProps}/>;
-            // console.log(filterId)
-            // console.log(this.searchNodes[filterId])
+            filterJsx =  <Text.default id={this.filterContainerId} key={UUID.get()} ref={(ele:any) => {this.searchNodes[filterId] = ele}} {...textProps}></Text.default>
         }else {
             let elseProps: any;
             if(filterType == "date" || filterType == "datetime") {
@@ -1042,6 +1039,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     render() {
         let props: any = this.getProps();
+        console.log(this.state.columns)
         return <AntdTable  {...props} >{this.props.children}</AntdTable>;
     }
     afterRender() {
@@ -1099,7 +1097,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             });
             
         }
-        
         
     }
 
