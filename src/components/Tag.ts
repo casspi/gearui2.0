@@ -158,6 +158,7 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
     //获取公共state
     private getCommonsState(): state {
         let style = this.props.style || {};
+        console.log(this.props.width)
         if(this.props.width != undefined) {
             style.width = this.props.width || "none";
         }

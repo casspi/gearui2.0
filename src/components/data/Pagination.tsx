@@ -53,7 +53,6 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
         };
     }
     getProps() {
-        // let props = super.getProps();
         let state = this.state;
         return G.G$.extend({},state,{
             total: this.state.total || 0,//数据总数
@@ -82,11 +81,6 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
     render() {
         let props: any = this.getProps();
         return <AntdPagination {...props}></AntdPagination>;
-    }
-    afterRender() {
-        // if(this.props.id){
-        //     G.G$("#"+this.props.id).data("vmdom", this)
-        // }
     }
     getPageSize() {
         return this.state.pageSize ||10;

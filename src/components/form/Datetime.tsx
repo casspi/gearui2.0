@@ -360,6 +360,7 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
     render() {
         let props: any = this.getProps();
         let type = this.props.type;
+        console.log(moment.locale)
         if (type == null || type == "date") {
             return <DatePicker {...props}></DatePicker>;
         } else if (type == "range") {

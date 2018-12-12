@@ -388,8 +388,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     getInitialState(): state {  
-        // let columns:any = this._parseColumns(); 
-        // let columns:any = this.getColumns
         return {
             dataSource: this.props.dataSource,
             url: this.props.url,
@@ -841,21 +839,23 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let filterType:any = props.filterType||'';
         if(filterId != null && filterId != "" && filter != false && filterType != "") {
             column.filterDropdown = this.getFilter(props);
+            // column.filterDropdownVisible = this.state.filterVisible[filterId];
             column.onFilterDropdownVisibleChange = (visible: any) => {
                 let filterVisible = this.state.filterVisible||{};
                 filterVisible[filterId] = visible;
                 this.setState({
                     filterVisible: filterVisible
                 },()=>{
+                    column.filterDropdownVisible = this.state.filterVisible[filterId];
                     if(visible == true) {
                         this.searchNodes[filterId].focus();
                     }else {
+                        console.log('search')
                         this._search();
                     }
                 });
             };
-            column.filterDropdownVisible = this.state.filterVisible[filterId];
-            column.filterIcon = <Icon type="filter" style={{ color: this.state.filtered[filterId] ? '#108ee9' : '#aaa' }} />;
+            column.filterIcon = <Icon type="filter"  style={{ color: this.state.filtered[filterId] ? '#108ee9' : '#aaa' }} />;
         }
         let childrenInProps = props.children;
         if(childrenInProps) {
@@ -888,7 +888,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         for(let filterId in searchNodes) {
             let node = searchNodes[filterId];
             let value = null;
-            if(ObjectUtil.isExtends(node, "Date")) {
+            if(ObjectUtil.isExtends(node.type, "Date")) {
                 value = node.getFormatValue();
             }else {
                 value = node.getValue();
@@ -904,7 +904,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                         valueRe.push(item);
                     }
                 }
-            }else {
+            }else if(value==undefined){
+                
+            }else{
                 if(value.value) {
                     valueRe = value.value;
                 }else {
@@ -923,6 +925,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 }
             }
         }
+        console.log(filter)
         this.setState({
             filteredInfo: filter,
             filterVisible,
@@ -976,15 +979,15 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             }
             filterJsx = [];
             if(filterType == "date") {
-                filterJsx.push(<Date.default ref={(ele:any) => this.searchNodes[name] = ele} {...elseProps}/>);
+                filterJsx.push(<Date.default key={UUID.get()}  ref={(ele:any) => this.searchNodes[filterId] = ele} {...elseProps}/>);
             }else if(filterType == "datetime") {
-                filterJsx.push(<Datetime.default ref={(ele:any) => this.searchNodes[name] = ele} {...elseProps}/>);
+                filterJsx.push(<Datetime.default key={UUID.get()}  ref={(ele:any) => this.searchNodes[filterId] = ele} {...elseProps}/>);
             }else {
-                filterJsx.push(<Combotree.default ref={(ele:any) => this.searchNodes[name] = ele} {...elseProps}/>);
+                filterJsx.push(<Combotree.default key={UUID.get()}  ref={(ele:any) => this.searchNodes[filterId] = ele} {...elseProps}/>);
             }
-            filterJsx.push(<Button type="primary" onClick={this._search.bind(this)}>查询</Button>);
+            filterJsx.push(<Button type="primary" key={UUID.get()}  onClick={this._search.bind(this)}>查询</Button>);
         }
-        return <div className="list-custom-filter-dropdown">
+        return <div key={UUID.get()}  className="list-custom-filter-dropdown">
             {filterJsx}
       </div>;
     }
@@ -1036,17 +1039,19 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let newProps: any = ObjectUtil.parseDynamicProps(props, record);
         return newProps;
     }
-
-    render() {
-        let props: any = this.getProps();
-        console.log(this.state.columns)
-        return <AntdTable  {...props} >{this.props.children}</AntdTable>;
-    }
-    afterRender() {
+    componentWillMount(){
+        super.componentWillMount()
         let columns: any = this._parseColumns();    
         this.setState({
             columns:columns
         })
+    }
+    render() {
+        let props: any = this.getProps();
+        console.log(props.width)
+        return <AntdTable  {...props} >{this.props.children}</AntdTable>;
+    }
+    afterRender() {
         this.getForm();
         //加载数据
         if(this.state.lazy != true) {
@@ -1367,6 +1372,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                     if(result.success) {
                         this.lastQueryParam = this.getQueryParam(tableSubmit);
                         this.doEvent("afterLoad","success",data);
+                        console.log("success...")
                         this.success(data);
                     }else {
                         this.doEvent("afterLoad","fail",data);

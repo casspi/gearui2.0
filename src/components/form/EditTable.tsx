@@ -22,6 +22,7 @@ export interface state extends Table.state,FormTag.state {
     editable?: boolean;
     title?: any;
     controlLabel?: string;
+    value?:any
 }
 export interface EditTableColumns extends Table.TableColumns {
     editCType: string;
@@ -183,7 +184,10 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     protected cacheData:any;
     //记录单元格是否已经渲染过了，防止在column["render"]中多次渲染----antd的bug
     protected cellRendered = {};
-
+    constructor(props:P){
+        super(props);
+        console.log(props)
+    }
     //获取控制按钮
     getControls() {
         let controls = new Array();
@@ -216,11 +220,13 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
 
     getInitialState(): state {
-        return {
+        let state = super.getInitialState();
+        return G.G$.extend(state,{
             editable: this.props.editable != false,
             control: this.props.control,
-            controlLabel: this.props.controlLabel
-        };
+            controlLabel: this.props.controlLabel,
+            // width: this.props.width
+        });
     }
 
     getProps() {
@@ -525,7 +531,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 dataSource.push(this.copyRow);
             }
             let data = this._loadFilter({dataList:dataSource});
-            let editable = this.state["editable"]||{};
+            let editable = this.state.editable||{};
             if(typeof editable == "boolean") {
                 editable = {};
                 for(let i=0; i < data.dataList.length; i++) {
@@ -621,7 +627,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             return;
         }
         this.cacheData = new GearArray(dataSource).clone().toArray();
-        let editable = this.state["editable"]||{};
+        let editable = this.state.editable||{};
         if(dataSource && typeof editable == "boolean") {
             editable = {};
             for(let i=0; i < dataSource.length; i++) {

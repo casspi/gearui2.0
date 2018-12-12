@@ -20,7 +20,6 @@ export default class Layout<P extends typeof props, S extends state> extends Tag
 
     render() {
         let childrens = this.getChildren();
-        console.log(this.state)
         return <AntdLayout {...this.state}>{...childrens}</AntdLayout>;
     }
 
