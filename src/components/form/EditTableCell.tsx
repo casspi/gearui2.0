@@ -160,7 +160,12 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         let editCType = this.props.editCType;
         let lower = this.props.lower;
         let upper = this.props.upper;
-        props = G.G$.extend(props,{
+        console.log(this.props)
+        let props = G.G$.extend({},{
+            dictype:this.props['dictype'],
+            width:this.props['width'],
+            url:this.props['url']
+        },{
             id: this.props.id,
             key: this.props.id,
             name: this.props.name,
@@ -182,7 +187,9 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
             },
             value: this.state.value
         });
-        return GearUtil.newInstanceByType(editCType, props);;
+        console.log(props)
+        console.log(GearUtil.newInstanceByType(editCType, props))
+        return editCType?GearUtil.newInstanceByType(editCType, props):this.props.children;
     }
 
     setValue(value: any,callback?: Function) {

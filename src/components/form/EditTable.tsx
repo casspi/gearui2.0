@@ -184,10 +184,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     protected cacheData:any;
     //记录单元格是否已经渲染过了，防止在column["render"]中多次渲染----antd的bug
     protected cellRendered = {};
-    constructor(props:P){
-        super(props);
-        console.log(props)
-    }
     //获取控制按钮
     getControls() {
         let controls = new Array();
@@ -213,7 +209,9 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         }
         return controls;
     }
-
+    constructor(props:P){
+        super(props)
+    }
     protected _loadSuccess() {
         let dataSource = this.getData();
         this.cacheData = new GearArray(dataSource).clone().toArray();
@@ -841,6 +839,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
 
     //解析表头
     protected _parseColumn(index: any,props: typeof Table.ColumnPropsPlus) {
+        const children = props.children;
         let column = super._parseColumn(index, props);
         ((column, props)=>{
             column.render = (text: any,record: any)=>{
@@ -859,7 +858,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                         editable = this.props.editable == null ? true : this.props.editable;
                     }
                 }
-                let cellProps: any = {
+                let cellProps: any = G.G$.extend(newProps,{
                     id: id,
                     value: text,
                     editCType,
@@ -868,6 +867,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                     upper: upper,
                     editCell: this.props.editCell,
                     name: name,
+                    // dictype:newProps.dictype,
                     form: this.props.form,
                     ref:(ele: any) => {
                         let cells = this.cells[record.key]||{};
@@ -894,8 +894,9 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                             props.onChange(value, oldValue);
                         }
                     }
-                };
-                return <EditTableCell.default {...cellProps}/>;
+                });
+                console.log(cellProps)
+                return <EditTableCell.default {...cellProps}>{children}</EditTableCell.default>;
             };
         })(column, props);
         return column;

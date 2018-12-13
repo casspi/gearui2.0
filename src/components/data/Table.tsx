@@ -111,7 +111,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     private filterContainerId = UUID.get();
     //当前展开的记录行
     private _expandRecord = null;
-
+    constructor(props:P){
+        super(props)
+    }
     //获取form对象，并且绑定提交成功事件
     getForm() {
         let formId = this.state.formId;
@@ -850,7 +852,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                     if(visible == true) {
                         this.searchNodes[filterId].focus();
                     }else {
-                        console.log('search')
                         this._search();
                     }
                 });
@@ -925,7 +926,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 }
             }
         }
-        console.log(filter)
         this.setState({
             filteredInfo: filter,
             filterVisible,
@@ -1048,7 +1048,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
     render() {
         let props: any = this.getProps();
-        console.log(props.width)
         return <AntdTable  {...props} >{this.props.children}</AntdTable>;
     }
     afterRender() {
@@ -1372,7 +1371,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                     if(result.success) {
                         this.lastQueryParam = this.getQueryParam(tableSubmit);
                         this.doEvent("afterLoad","success",data);
-                        console.log("success...")
                         this.success(data);
                     }else {
                         this.doEvent("afterLoad","fail",data);

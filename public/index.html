@@ -309,6 +309,108 @@ table.resultTable .actiontd{
     padding: 16px 8px !important;
     word-break: break-all;
 }
+.ant-table-editlist{
+
+}
+
+.ant-table-editlist .ant-table-title{
+	padding:2px 0;
+	text-align:right;
+}
+
+.ant-table-editlist .ant-table-title .list-header{
+	display:inline;
+}
+.ant-table-editlist .ant-table-title .list-control{
+	display:inline;margin-left:10px;
+}
+.ant-table-editlist .ant-table-tbody .edit-table-cell{
+	display:block;margin:0;
+}
+.ant-table-editlist .ant-table-tbody .edit-table-cell input{
+	border:1px solid #95B8E7;
+}
+.ant-table-editlist .ant-table-tbody .ant-select-selection{
+	border:1px solid #95B8E7;
+}
+.ant-table-editlist .ant-table-tbody .edit-table-cell .has-error input{
+	border:1px solid red;
+}
+.ant-table-editlist .ant-table-tbody .edit-table-cell .has-error .ant-select-selection{
+	border:1px solid red;
+}
+.ant-table-editlist .ant-table-tbody table{
+	width:100%;
+}
+.ant-table-editlist .list-row-selected{
+	background-color:#dddddd;
+}
+.ant-table-editlist .ant-table-tbody td{
+	height:28px;
+	padding:0;
+	border-bottom:none;
+}
+.ant-table-editlist .ant-table-sequence-column{
+	width:50px !important;
+	text-align:right !important;
+	padding-right:5px !important;
+}
+.ant-table-editlist .ant-table-column-control{
+	width:60px;
+	text-align:center;
+}
+.ant-table-editlist td.ant-table-column-control .list-conlum-control-edit,
+.ant-table-editlist td.ant-table-column-control .list-conlum-control-delete,
+.ant-table-editlist td.ant-table-column-control .list-conlum-control-save,
+.ant-table-editlist td.ant-table-column-control .list-conlum-control-rowback{
+	font-size:16px;	
+	margin-left:1px;
+	margin-right:1px;
+	cursor:pointer;
+}
+
+
+
+.ant-table-editlist .actiontd{
+	text-align:center;
+}
+.ant-table-editlist .actiontd > *{
+	margin-left:1px;
+	margin-right:1px;
+}
+
+.ant-table-editlist .cell-value{
+	display:block;
+	min-width:12px;	
+	min-height:12px;
+}
+
+ .ant-table-tbody > tr > td{
+	font-weight:bold;
+	padding:8px 5px;
+	border-bottom:none;
+}
+
+.ant-popover .ant-popover-inner-content{
+	padding:2px !important;
+}
+
+.ant-popover .editable-cell-control .editable-cell-icon-edit{
+	color:blue;
+	font-size:16px;	
+	margin:2px;
+}
+.ant-popover .editable-cell-control .editable-cell-icon-save{
+	color:blue;
+	font-size:16px;	
+	margin:2px;
+}
+.ant-popover .editable-cell-control .editable-cell-icon-reset{
+	color:red;
+	font-size:16px;	
+	margin:2px;
+}
+
 .ueditor {
 	cursor: text;
 	border: 1px solid;
@@ -646,6 +748,7 @@ table.resultTable .actiontd{
             <!-- <g-switch id="s001" icon="check,close" checked="true" code="1,0" label="开,关" showlabel="true"></g-switch> -->
             <!-- <g-url></g-url> -->
             <!-- <g-idnumber required="true" isStrict="true" placeholder="idnumber" validation="true" ></g-idnumber>  
+            <g-telephone  required="true" format="mobile" placeholder="tel"></g-telephone>
         <g-submit>提交</g-submit>
       </g-form> -->
       <!-- <script>
@@ -724,16 +827,30 @@ table.resultTable .actiontd{
           </g-column>
         </g-ajaxlist>
         <g-pagination id="pagination12"></g-pagination> -->
-        <g-editlist url="http://10.10.10.6:81/example/webview/definition/Ajaxlist/example3" id='list4'>
-		    	<g-column label="姓名"  name="name" editctype="text" required="true"></g-column>
-        </g-editlist>
+        <!-- <g-combotree dictype="checkboxJson1" width="100" multiple="true" ></g-combotree>
+        <span ctype="select" name="selectctl" dictype="selectData"  width="100"></span> -->
+        <g-form id="editlist-form1">
+          <g-editlist url="http://10.10.10.6:81/example/webview/definition/Editlist/data" id='list4' control="save,reset,add,delete,up,down,clear" rowControl="true">
+            <g-column label="用户名" width="100" name="id" editctype="text" required="true"></g-column>
+            <g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
+            <g-column label="动态生成" width="100" name="nameControl" editctype="component"></g-column>
+            <g-column label="手机号码" width="100" name="mobile" editctype="telephone" ></g-column>
+            <!-- <g-column label="选项" width="100">
+              <span ctype="select" name="selectctl" dictype="selectData"  width="100"></span>
+              <span ctype="select" name="selectctl" dictype="selectData"  width="100"></span>
+            </g-column> -->
+            <g-column label="电子邮箱" width="200" name="email" multiple="true"  editctype="email" ></g-column>
+            <g-column label="单位" width="200" id="unitId1" name="unitId" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_TEST"></g-column>
+            <g-column label="部门" width="200" id="groupId1" name="groupId" refid="unitId1" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_DEPARTMENT_TEST"></g-column>
+          </g-editlist>
+        </g-form>
         <!-- <g-tree id="gtree" cascadeCheck="true" dictype="treeData"   autoExpandParent="true" lines="true" draggable="true" checkbox="true"></g-tree> -->
         <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
         <!-- <g-transfer id="gtransfer0"   url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
         <!-- <g-transfer id="gtransfer" width='996' dictype="treeData" onLeftTreeMoved="onLeftTreeMoved()" onRightTreeMoved="onRightTreeMoved()"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
         <!-- <g-select id="s22" dictype='treeData' editable="true"  autoFocus="true" label="地区" disabled="false" width="240" prompt="请选择"></g-select> -->
         <!-- <g-select  width="300" refid="s22"></g-select> -->
-        <g-button width="200" style="margin:0 0 0 0" id="g-btn">btn</g-button>
+        <!-- <g-button width="200" style="margin:0 0 0 0" id="g-btn">btn</g-button> -->
         <!-- <g-transfer id="t21" lines="true" dictype="treeData" showIcon="false"   width="300px" height="400px" leftButtonTitle="&lt;左移" rightButtonTitle="右移&gt;"></g-transfer>
           <div id="t21-panel"></div>
           <div>
@@ -781,7 +898,7 @@ table.resultTable .actiontd{
               // G('#s22').onSelect(function(){
               //   console.log('select')
               // })
-              G('#g-btn').onClick(function(){
+              // G('#g-btn').onClick(function(){
                 // console.log(G('#g-btn'))
                 // console.log(G('#pagination11'))
                 // console.log(G('#list1').getCurrent());
@@ -804,7 +921,7 @@ table.resultTable .actiontd{
                 // console.log(G('#list1').getRowSelectionType());
                 // G('#list1').loadUrl('http://10.10.10.6:81/example/webview/definition/Ajaxlist/example1');
                 // 通过序号获得列
-                var column = G("#list1").getColumn(1);
+                // var column = G("#list1").getColumn(1);
                 // 显示列
                 // column.show();
                 // 隐藏列
@@ -832,7 +949,7 @@ table.resultTable .actiontd{
                 // G('#gtree').setValue(['0-0-0']);
                 // console.log(G('#gtree').getSelected());
                 // console.log(G('#gtree').getRoots());
-              })
+              // })
           })
         </script>
         <!-- <g-richtext id="mytext" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
