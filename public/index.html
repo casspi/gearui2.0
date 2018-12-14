@@ -829,21 +829,21 @@ table.resultTable .actiontd{
         <g-pagination id="pagination12"></g-pagination> -->
         <!-- <g-combotree dictype="checkboxJson1" width="100" multiple="true" ></g-combotree>
         <span ctype="select" name="selectctl" dictype="selectData"  width="100"></span> -->
-        <g-form id="editlist-form1">
+        <!-- <g-form id="editlist-form1"> -->
           <g-editlist url="http://10.10.10.6:81/example/webview/definition/Editlist/data" id='list4' control="save,reset,add,delete,up,down,clear" rowControl="true">
-            <g-column label="用户名" width="100" name="id" editctype="text" required="true"></g-column>
+            <g-column label="用户名" width="150" name="id" editctype="text" required="true"></g-column>
             <g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
             <g-column label="动态生成" width="100" name="nameControl" editctype="component"></g-column>
             <g-column label="手机号码" width="100" name="mobile" editctype="telephone" ></g-column>
-            <!-- <g-column label="选项" width="100">
-              <span ctype="select" name="selectctl" dictype="selectData"  width="100"></span>
-              <span ctype="select" name="selectctl" dictype="selectData"  width="100"></span>
-            </g-column> -->
+            <g-column label="选项" width="100">
+              <span ctype="select" name="selectctl" dictype="selectData" required="true" width="100"></span>
+              <span ctype="select" name="selectctl" dictype="selectData" required="true" width="100"></span>
+            </g-column>
             <g-column label="电子邮箱" width="200" name="email" multiple="true"  editctype="email" ></g-column>
-            <g-column label="单位" width="200" id="unitId1" name="unitId" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_TEST"></g-column>
-            <g-column label="部门" width="200" id="groupId1" name="groupId" refid="unitId1" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_DEPARTMENT_TEST"></g-column>
+            <g-column required="true" label="单位" width="200" id="unitId1" name="unitId" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_TEST"></g-column>
+            <!-- <g-column label="部门" width="200" id="groupId1" name="groupId" refid="unitId1" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_DEPARTMENT_TEST"></g-column> -->
           </g-editlist>
-        </g-form>
+        <!-- </g-form> -->
         <!-- <g-tree id="gtree" cascadeCheck="true" dictype="treeData"   autoExpandParent="true" lines="true" draggable="true" checkbox="true"></g-tree> -->
         <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
         <!-- <g-transfer id="gtransfer0"   url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->

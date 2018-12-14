@@ -271,8 +271,10 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     //根据tag名称获取对应的校验器
     public getRules(tagName: string, validateReactNode?: any) {
+        console.log(tagName)
         if(validateReactNode == null) {
             if(this.state && this.state.formTagStates) {
+                console.log(tagName)
                 return this.state.formTagStates[tagName].rules;
             }
             return [];

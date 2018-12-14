@@ -160,12 +160,16 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         let editCType = this.props.editCType;
         let lower = this.props.lower;
         let upper = this.props.upper;
-        console.log(this.props)
-        let props = G.G$.extend({},{
-            dictype:this.props['dictype'],
-            width:this.props['width'],
-            url:this.props['url']
-        },{
+        let props = G.G$.extend({},
+            {
+            // dictype:this.props['dictype'],
+            // width:this.props['width'],
+            url:this.props['url'],
+            // required:this.props['required']
+            }
+            // this.props
+            
+        ,{
             id: this.props.id,
             key: this.props.id,
             name: this.props.name,
@@ -178,17 +182,22 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
             upper: upper,
             "data-cellId": this.props.id,
             onChange: (value: any,oldValue: any) => {
+                console.log('change')
+                console.log(value)
+                console.log(oldValue)
                 let label = this.getLabel();
-                this.setState({
-                    oldValue,
-                    value,
-                    label
-                })
+                console.log(label)
+                // this.setState({
+                //     oldValue,
+                //     value,
+                //     label
+                // })
             },
             value: this.state.value
         });
-        console.log(props)
-        console.log(GearUtil.newInstanceByType(editCType, props))
+        // console.log(props)
+        // console.log(GearUtil.newInstanceByType(editCType, props))
+        // console.log(this.props.children)
         return editCType?GearUtil.newInstanceByType(editCType, props):this.props.children;
     }
 
