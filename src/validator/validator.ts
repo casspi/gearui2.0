@@ -170,6 +170,7 @@ export default class Validator {
                 || ObjectUtil.isExtends(clazz, "Password")
                 || ObjectUtil.isExtends(clazz, "Email")) {
                 //校验文本框内容长度
+                console.log(ObjectUtil.isExtends(clazz, "Text"))
                 props.type = "text";
                 validatorsArray.push(new validators.LengthValidator(props));
             } else if (ObjectUtil.isExtends(clazz, "Datetime")) {

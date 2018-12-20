@@ -111,6 +111,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                         childReactNode = child.props.children[0];
                     }
                     let tagName = childReactNode.props.name;
+                    console.log(validateReactNode)
                     let rules = this.getRules(tagName, validateReactNode);
                     let validation = this.getValidation(tagName, validateReactNode);
                     
@@ -271,7 +272,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     //根据tag名称获取对应的校验器
     public getRules(tagName: string, validateReactNode?: any) {
-        console.log(tagName)
         if(validateReactNode == null) {
             if(this.state && this.state.formTagStates) {
                 console.log(tagName)
@@ -281,6 +281,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         }else {
             let props = validateReactNode.props;
             let clazz = validateReactNode.type;
+            console.log(validateReactNode.props);
             return Validator.getValidators(props, clazz);
         }
     }
@@ -559,7 +560,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     validate():boolean {
         let result = false;
-        if(this.state.validate == true) {
+        if(this.state['validate'] == true) {
             this.props.form.validateFieldsAndScroll({force:true},(err, values) => {
                 if (!err) {
                     result = true; 

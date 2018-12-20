@@ -12,6 +12,7 @@ export var props = {
     height: GearType.Number,
     disabled: GearType.Boolean,
     visible: GearType.Boolean,
+    remove: GearType.Boolean,//删除该组件节点
     class: GearType.String,
     needUpdateToState: GearType.Array<string>(),
     //gearui内部使用的children对象
@@ -27,6 +28,7 @@ export interface state extends JqueryTagState {
     titleAlign?: string,
     disabled?: boolean,
     visible?: boolean,
+    remove?:number,//删除该组件节点
     className?: string,
     style?: React.CSSProperties
 }
@@ -106,12 +108,19 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
         }
         if(this.ast) {
             this.ast.vmdom = this;
-        }
-        
+        } 
         this.afterRender();
         this.doEvent("afterRender");
+        if(this.state.remove==1){
+            this.removeDom();
+        }
     }
-
+    removeDom(){
+        this.setState({
+            remove:1
+        })
+        G.G$(this.realDom).remove();
+    }
     componentDidUpdate() {
         this.afterUpdate();
         this.doEvent("afterUpdate");
@@ -206,7 +215,8 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
             onMouseOut:(e)=>{
                 this.doEvent("mouseOut",e);
             },
-            style: style
+            style: style,
+            remove:this.props.remove==true? 1:0
         };
         return commonState;
     }

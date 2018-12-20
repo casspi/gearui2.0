@@ -869,7 +869,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                     upper: upper,
                     editCell: this.props.editCell,
                     name: name,
-                    // dictype:newProps.dictype,
                     form: this.props.form,
                     ref:(ele: any) => {
                         let cells = this.cells[record.key]||{};
