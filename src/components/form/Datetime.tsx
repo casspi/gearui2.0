@@ -1,4 +1,4 @@
-import { DatePicker } from 'antd';
+import { DatePicker, LocaleProvider } from 'antd';
 import * as moment from 'moment';
 import * as React from 'react';
 import * as FormTag from './FormTag';
@@ -6,6 +6,7 @@ import Tag from '../Tag';
 // 推荐在入口文件全局设置 locale
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
+import zhCN from 'antd/lib/locale-provider/zh_CN';
 const { RangePicker } = DatePicker;
 
 export var props = {
@@ -360,11 +361,10 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
     render() {
         let props: any = this.getProps();
         let type = this.props.type;
-        console.log(moment.locale)
         if (type == null || type == "date") {
-            return <DatePicker {...props}></DatePicker>;
+            return <LocaleProvider locale={zhCN}><DatePicker {...props}></DatePicker></LocaleProvider>;
         } else if (type == "range") {
-            return <RangePicker {...props}></RangePicker>;
+            return <LocaleProvider locale={zhCN}><RangePicker {...props}></RangePicker></LocaleProvider>;
         }
         return null;
     }

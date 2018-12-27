@@ -81,4 +81,23 @@ export default class StringUtil {
         }
         return false;
     }
+
+    //获取字符串字节数
+    static getBytesLength(str:string){
+        var totalLength = "";     
+        var charCode;  
+        for (var i = 0; i < str.length; i++) {  
+            charCode = str.charCodeAt(i);  
+            if (charCode < 0x007f)  {     
+                totalLength+="a";     
+            } else if ((0x0080 <= charCode) && (charCode <= 0x07ff))  {     
+                totalLength += "aa";     
+            } else if ((0x0800 <= charCode) && (charCode <= 0xffff))  {     
+                totalLength += "aaa";   
+            } else{  
+                totalLength += "aaaa";   
+            }          
+        }  
+        return totalLength;   
+    } 
 }

@@ -1,8 +1,9 @@
 import * as React from 'react';
-import {Pagination as AntdPagination} from 'antd';
+import { Pagination as AntdPagination, message as AntdMessage,Tooltip as AntdTooltip } from 'antd';
 import { PaginationProps } from '../../../node_modules/antd/lib/pagination/Pagination';
 const Locale = require('../../../node_modules/rc-pagination/es/locale/zh_CN').default;
 import * as Tag from '../Tag';
+import {Message} from '../pack';
 export var props={
     ...Tag.props,
     total: GearType.String,//数据总数
@@ -16,12 +17,14 @@ export var props={
     pageSizeOptions: GearType.Or(GearType.Array,GearType.String),//指定每页可以显示多少条
     // onpagesizechange: GearType.Function,//pageSize 变化的回调
     showquickjumper: GearType.Boolean,//是否可以快速跳转至某页
+    showJumpertips:GearType.Boolean,//是否显示超出总页数，跳转到最后一页提示
     // showtotal: (total: number, range: [number, number]) => React.ReactNode,//用于显示数据总量和当前数据顺序
     size: GearType.String,//当为「small」时，是小尺寸分页
     simple: GearType.Boolean,//当添加该属性时，显示为简单分页
     locale: GearType.Object,
     selectPrefixcls: GearType.String,
     // itemrender: (page: number, type: 'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next') => React.ReactNode,//用于自定义页码的结构，可用于优化 SEO
+    showTooltipAble:GearType.Boolean
 }
 export interface state extends Tag.state  {
     total?: string,//数据总数
@@ -38,6 +41,7 @@ export interface state extends Tag.state  {
     locale?: Object,
     selectPrefixcls?: string,
     itemrender?: (page: number, type: 'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next') => React.ReactNode;//用于自定义页码的结构，可用于优化 SEO
+    showTooltip?:boolean,
 }
 export declare type PaginationLocale = any;
 export default class Pagination<P extends typeof props & PaginationProps, S extends state> extends Tag.default<P, S> {
@@ -50,6 +54,7 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
             pageSize: this.getPropIntValue(this.props.pageSize),
             current: this.getPropIntValue(this.props.current),
             pageSizeOptions: this.getPropStringArrayValue(this.props.pageSizeOptions),
+            showTooltip:false,
         };
     }
     getProps() {
@@ -75,12 +80,16 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
             locale: this.props.locale||Locale,
             selectPrefixCls: this.props.selectPrefixcls || 'ant-select',
             showTotal: (total:any, range:any) => `共${total}条记录`,
-            itemRender: this.state.itemrender 
+            itemRender: this.state.itemrender,
         });
     }
     render() {
         let props: any = this.getProps();
-        return <AntdPagination {...props}></AntdPagination>;
+        return this.props.showTooltipAble!==false
+        ?<AntdTooltip placement="right"  visible={this.state.showTooltip}  title="跳转页大于总页数，为您跳转到最后一页">
+           <span><AntdPagination {...props}></AntdPagination></span> 
+        </AntdTooltip>
+        :<AntdPagination {...props}></AntdPagination>;
     }
     getPageSize() {
         return this.state.pageSize ||10;
@@ -93,9 +102,25 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
     getTotal() {
         return this.state.total || 0;
     }
-
+    timer:any;
     protected _onChange(page: string, pageSize: string) {
         let ret = this.doEvent("beforeChange",page,pageSize);
+        if(this.props.showJumpertips!==false&&this.props.showQuickJumper!==false){
+            let total:any=this.state.total;
+            let value = G.$(this.realDom).find('.ant-pagination-options-quick-jumper input').val();
+            if(value>Math.ceil(parseInt(total)/parseInt(pageSize))){
+                clearTimeout(this.timer);
+                this.setState({
+                    showTooltip:true,
+                },()=>{
+                    this.timer = setTimeout(()=>{
+                        this.setState({
+                            showTooltip:false
+                        })
+                    },5500)
+                })
+            }
+        }
         if(ret && ret instanceof Array){
             for(var i=0;i<ret.length;i++){
                 if(ret[i]==false)

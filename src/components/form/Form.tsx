@@ -34,7 +34,7 @@ export interface state extends Tag.state {
     ajax?: boolean;
     method?: methods;
     redirect?: string;
-    // validate?: boolean;
+    validate?: boolean;
 };
 
 export class Form<P extends (typeof props & FormComponentProps), S extends state> extends Tag.default<P, S> {
@@ -111,7 +111,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                         childReactNode = child.props.children[0];
                     }
                     let tagName = childReactNode.props.name;
-                    console.log(validateReactNode)
                     let rules = this.getRules(tagName, validateReactNode);
                     let validation = this.getValidation(tagName, validateReactNode);
                     
@@ -274,15 +273,13 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     public getRules(tagName: string, validateReactNode?: any) {
         if(validateReactNode == null) {
             if(this.state && this.state.formTagStates) {
-                console.log(tagName)
                 return this.state.formTagStates[tagName].rules;
             }
             return [];
         }else {
             let props = validateReactNode.props;
             let clazz = validateReactNode.type;
-            console.log(validateReactNode.props);
-            return Validator.getValidators(props, clazz);
+            return Validator.getValidators(G.G$.extend({},props), clazz);
         }
     }
 

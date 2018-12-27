@@ -213,7 +213,6 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
 
     render() {
         let props = this.getProps();
-        console.log(props)
         return <AntdInput {...props} ref={ele=>this.ref=ele} ></AntdInput>;
     }
     

@@ -39,7 +39,8 @@ export var props = {
     rules: GearType.Array<any>(),
     value: GearType.Any,
     ...Validate.props,
-    ...Tag.props
+    ...Tag.props,
+    judgeString: GearType.Boolean,
 };
 export interface state extends Tag.state {
     value?: string | string[] | number;

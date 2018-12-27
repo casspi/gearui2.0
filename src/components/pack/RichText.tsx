@@ -3,6 +3,9 @@ import * as Dialog from './Dialog';
 import * as React from 'react';
 import {Message} from '../pack';
 import  G from '../../Gear';
+import  BraftEditor from 'braft-editor';
+console.log(BraftEditor)
+import 'braft-editor/dist/index.css'
 export var props = {
     ...Tag.props,
     ueTitle: GearType.String,
@@ -19,7 +22,7 @@ export interface state extends Tag.state {
     // textId: string,
     // htmlId: string
 }
-export default class Ueditor<P extends typeof props,S extends state> extends Tag.default<P,S> {
+export default class Editor<P extends typeof props,S extends state> extends Tag.default<P,S> {
     
     dialog: Dialog.default<typeof Dialog.props,Dialog.state>;
     ue: any;
@@ -39,7 +42,7 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
                     (function(__this) {
                         windowCon.doRender(function() {
                             __this.dialog = windowCon;
-                            __this.dialog.find(".ant-modal-body").html("<script id='"+__this.props.id+"_editor' type='text/plain'></script>");
+                            __this.dialog.find(".ant-modal-body").html("<BraftEditor></BraftEditor>");
                             __this.dialog.onOpen(() => {
                                 __this.doEvent("open");
                             });
@@ -88,6 +91,7 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
     render() {
         // return <script id={this.props.id} type="text/plain"></script>;
         let props = this.getProps();
+        // return <div><BraftEditor></BraftEditor></div>
         return <div ref={props.ref} className={props.className} style={{border: "1px solid","minHeight": "100px",padding: "15px",cursor:"text"}} onClick={props.onClick.bind(this)}></div>;
     }
     //当关闭窗口时出发

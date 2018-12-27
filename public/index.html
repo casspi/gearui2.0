@@ -493,8 +493,8 @@ table.resultTable .actiontd{
       </g-dialog> -->
       
       <!-- <g-alert type='info' message="Info Text"></g-alert> -->
-      <!-- <g-pagination  id="pagination_id"  current="5" total="888" showSizeChanger="true" beforeChange="alert('before')" pageSize="10" showQuickJumper="true" pageSizeOptions="['30','40','50','60']"></g-pagination>
-      <g-button>btn</g-button>
+      <!-- <g-pagination  id="pagination_id" style="margin-left:750px" current="5" total="888" showSizeChanger="true" beforeChange="alert('before')" pageSize="10" showQuickJumper="true" pageSizeOptions="['10','20','30','40','50','60']"></g-pagination> -->
+      <!-- <g-button>btn</g-button>
   
       <g-radio id="radiogroup" dictype="[
       { label: 'Apple', value: 'Apple' },
@@ -724,11 +724,11 @@ table.resultTable .actiontd{
     </script>   -->
     <!-- <g-date value="2017-08-08" disabled="2017/08/07"></g-date>
     <g-date type="range" start="2017/09/09" end="2017/09/19" format="YYYY/MM/DD" abledate="2017/09/03,2017/09/25"></g-date> -->
-    <!-- <g-datetime name="dt6" value="2017-10-08 11:10:9" format="YYYY-MM-DD HH:mm:ss" abledate="2017-10-03,2017-10-22" abletime="8:15:30-17:30:45" hidetime="true"></g-datetime> -->
-    <!-- <g-datetime name="dt10" type="range" format="YYYY/MM/DD HH:mm:ss" value="2017/10/08 11:10:9,2017/10/14 15:10:2" abledate="2017/10/07,2017/10/22" abletime="8:30:00-17:00:00,12:00:00-17:00:00"></g-datetime> -->
+    <!-- <g-datetime name="dt6" value="2017-10-08 11:10:9" format="YYYY-MM-DD HH:mm:ss" abledate="2017-10-03,2017-10-22" abletime="8:15:30-17:30:45" hidetime="true"></g-datetime>
+    <g-datetime name="dt10" type="range" format="YYYY/MM/DD HH:mm:ss" value="2017/10/08 11:10:9,2017/10/14 15:10:2" abledate="2017/10/07,2017/10/22" abletime="8:30:00-17:00:00,12:00:00-17:00:00"></g-datetime> -->
       <!-- <g-time></g-time>
       <g-timepicker></g-timepicker> -->
-      <g-form validation="true" width="300">
+      <!-- <g-form validation="true" width="300"> -->
         <!-- <g-email required="true"></g-email> -->
         <!-- <g-file id="gfile" width="300" required="true"></g-file> -->
         <!-- <g-hidden></g-hidden> -->
@@ -747,11 +747,11 @@ table.resultTable .actiontd{
             
             <!-- <g-switch id="s001" icon="check,close" checked="true" code="1,0" label="开,关" showlabel="true"></g-switch> -->
             <!-- <g-url></g-url> -->
-            <g-text required="true" max="10" min="5"></g-text>
-            <!-- <g-idnumber required="true" isStrict="true" placeholder="idnumber" validation="true" ></g-idnumber>  
-            <g-telephone  required="true" format="mobile" placeholder="tel"></g-telephone> -->
-            <g-submit>提交</g-submit> 
-      </g-form>
+            <!-- <g-text name="userName" judgestring="true" required="true" max="10" min="5"></g-text> -->
+            <!-- <g-idnumber required="true" isStrict="true" placeholder="idnumber" validation="true"></g-idnumber>   -->
+            <!-- <g-telephone  required="true" format="mobile" placeholder="tel"></g-telephone> -->
+            <!-- <g-submit>提交</g-submit>  -->
+      <!-- </g-form> -->
       <!-- <script>
         G(function () {
             // G('#gfile').onChange(function(){
@@ -830,8 +830,8 @@ table.resultTable .actiontd{
         <g-pagination id="pagination12"></g-pagination> -->
         <!-- <g-combotree dictype="checkboxJson1" width="100" multiple="true" ></g-combotree>
         <span ctype="select" name="selectctl" dictype="selectData"  width="100"></span> -->
-        <!-- <g-form id="editlist-form1">
-          <g-editlist url="http://10.10.10.6:81/example/webview/definition/Editlist/data" id='list4' control="save,reset,add,delete,up,down,clear" rowControl="true">
+        <!-- <g-form id="editlist-form1"> -->
+          <!-- <g-editlist url="http://10.10.10.6:81/example/webview/definition/Editlist/data" id='list4' control="save,reset,add,delete,up,down,clear" rowControl="true">
             <g-column label="用户名" width="150" name="id" editctype="text" required="true"></g-column>
             <g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
             <g-column label="动态生成" width="100" name="nameControl" editctype="component"></g-column>
@@ -842,8 +842,8 @@ table.resultTable .actiontd{
             <g-column label="电子邮箱" width="200" name="email" multiple="true"  editctype="email" ></g-column>
             <g-column required="true" label="单位" width="200" id="unitId1" name="unitId" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_TEST"></g-column>
             <g-column label="部门" width="200" id="groupId1" name="groupId" refid="unitId1" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_DEPARTMENT_TEST"></g-column>
-          </g-editlist>
-        </g-form> -->
+          </g-editlist> -->
+        <!-- </g-form> -->
         <!-- <g-tree id="gtree" cascadeCheck="true" dictype="treeData"   autoExpandParent="true" lines="true" draggable="true" checkbox="true"></g-tree> -->
         <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
         <!-- <g-transfer id="gtransfer0"   url="http://10.10.10.6:81/example/Tree/data"  showIcon="false"  lines="true"  rightTitle="右边列表"></g-transfer> -->
@@ -855,8 +855,9 @@ table.resultTable .actiontd{
           <div id="t21-panel"></div> -->
           <div>
             <!-- <g-submit visible="false">保存</g-submit> -->
-            <g-button  id="t21btn1">按钮</g-button>
+            <!-- <g-button  id="t21btn1">按钮</g-button> -->
           </div>
+          <g-richtext id="mytext" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
         <!-- <div>
                 <span><h4>有标题的布局</h4></span>
                 <g-layout id="layout11" style="width:700px;height:400px;">
@@ -952,8 +953,8 @@ table.resultTable .actiontd{
               // })
           })
         </script>
-        <!-- <g-richtext id="mytext" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
-          <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.all.js"></script>
+       
+           <!-- <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.all.js"></script>
           <script type="text/javascript" charset="utf-8" src="../src/components/pack/utf8-jsp/ueditor.config.js"></script>
           <script>
             console.log(UE)

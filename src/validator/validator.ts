@@ -46,7 +46,7 @@ export default class Validator {
     /** custom validate function (Note: callback must be called) */
     //validator? = (rule: any, value: any, callback: any, source?: any, options?: any) => {};
     validator?: any;
-    
+    judgeString?:boolean;
     //自定义校验规则
     static customvalidtors = {};
     //全局校验提示信息
@@ -59,13 +59,13 @@ export default class Validator {
             return;
         }
         this.props = props;
-        if (props.name) {
-            this.name = props.name;
-        }
+        // if (props.name) {
+        //     this.name = props.name;
+        // }
         this.message = this.props.invalidMessage || Validator.invalidMessage[this.name] || this.message;
-        if (props.type) {
-            this.type = props.type;
-        }
+        // if (props.type) {
+        //     this.type = props.type;
+        // }
         if (props.required) {
             this.required = props.required;
         }
@@ -76,10 +76,10 @@ export default class Validator {
             this.len = props.len;
         }
         if (props.min) {
-            this.min = props.min;
+            this.min = parseInt(props.min);
         }
         if (props.max) {
-            this.max = props.max;
+            this.max = parseInt(props.max);
         }
         if (props.enum) {
             this.enum = props.enum;
@@ -91,14 +91,13 @@ export default class Validator {
             this.transform = props.transform;
         }
         if (props.validator) {
-            this.validator = props.validator;
+            this.validator = props.validator || null;
         }
         this.parseMessage(props);
     }
 
     //解析验证信息中的正则信息
     parseMessage(props: any) {
-
         if(this.message) {
             this.message = this.message.replace(/\{([a-zA-Z0-9_\-]+)\}/g,function(match,m1){
                 var propertyName = m1;
@@ -170,7 +169,6 @@ export default class Validator {
                 || ObjectUtil.isExtends(clazz, "Password")
                 || ObjectUtil.isExtends(clazz, "Email")) {
                 //校验文本框内容长度
-                console.log(ObjectUtil.isExtends(clazz, "Text"))
                 props.type = "text";
                 validatorsArray.push(new validators.LengthValidator(props));
             } else if (ObjectUtil.isExtends(clazz, "Datetime")) {
@@ -285,6 +283,7 @@ export default class Validator {
                 }
             }
         }
+        // console.log(validatorsArray)
         return validatorsArray;
     }
 }
