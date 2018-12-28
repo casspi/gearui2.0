@@ -89,6 +89,7 @@ export default class G {
                 let isHtml = StringUtil.isHtmlString(selector);
                 if(isHtml){
                     let parser = new Parser();
+                    console.log(parser.parseToReactInstance(selector))
                     return parser.parseToReactInstance(selector);
                 }
             }

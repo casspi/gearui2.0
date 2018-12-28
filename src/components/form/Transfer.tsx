@@ -115,9 +115,8 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             showIcon:this.props.showIcon,
             iconStyle:this.props.iconStyle,
             lines:this.props.lines,
-            value:this.props.value,
-            oncheck:(node:any)=>{
-                console.log(node.checked)
+            // value:this.props.value,
+            onCheck:(node:any)=>{
                 if(node.checked==false)
                     this._setLeftChecked(false);
                 try{
@@ -136,7 +135,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                 readonly:false,
             },
             // 当加载成功后触发
-            onloadsuccess:()=>{
+            onLoadSuccess:()=>{
                 if(this._initiated==false){
                     // 获取树节点的数据，并将其缓存在本地变量中
                     var options = this._leftTree.getRoots();
@@ -164,7 +163,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             iconStyle:this.props.iconStyle,
             lines:this.props.lines,
             style:this.state.style,         
-            oncheck:(node:any)=>{
+            onCheck:(node:any)=>{
                 if(node.checked==false)
                     this._setRightChecked(false);
                 try{
@@ -298,7 +297,10 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             this._leftTree.loadData(newOptions.to||[]);
             this._setLeftChecked(false);
             this._setRightChecked(false);
-            this.doEvent("righttreemoved", newOptions.moved);
+            this.doEvent("rightTreeMoved", newOptions.moved);
+            this._rightTree.setState({//清空右侧选中的数据
+                value:[]
+            })
         }else{
 
         }
@@ -341,6 +343,9 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             this._setLeftChecked(false);
             this._setRightChecked(false);
             this.doEvent("lefttreemoved", newOptions.moved);
+            this._leftTree.setState({//清空左侧选中的数据
+                value:[]
+            })
         }else{
 
         }
@@ -515,10 +520,10 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
 
     // 得到当前已选择的值
     getValue(){
-        let values = new GearArray([]);
+        let values:any = new GearArray([]);
         if(this._rightTree){
             let options = this._rightTree.getRoots();
-            var seek = function(array:any){
+            var seek = function(array:any[]){
                 if(array){
                     for(var i=0;i<array.length;i++){
                         if(array[i].children){
@@ -594,13 +599,13 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
 
     onLeftTreeMoved(fun:Function){
         if(fun && G.G$.isFunction(fun)) {
-            this.bind("lefttreemoved",fun);
+            this.bind("leftTreeMoved",fun);
         }
     }
 
     onRightTreeMoved(fun:Function){
         if(fun && G.G$.isFunction(fun)) {
-            this.bind("righttreemoved",fun);
+            this.bind("rightTreeMoved",fun);
         }
     }
 
@@ -622,6 +627,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         }
         this._setLeftChecked(false);
         this._setRightChecked(false);
+        
     }   
 
     focus(...args:any[]) { 

@@ -282,7 +282,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             }
         }
     }    
-    private oL;oT;oW;oH;bodyH;
+    private oL:any;oT:any;oW:any;oH:any;bodyH:any;
     maxIconClick(){
         if(!this.state.isMax){//最大化
             //记录原始大小

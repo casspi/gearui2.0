@@ -56,6 +56,7 @@ export default class DicUtil {
                 let response = new HttpResponse(true, "",0 , dicNew);
                 return Promise.resolve(response);
             }else{
+                
                 return Promise.reject({success: false, message: "无字典", statuCode: 99});
             }
         }
