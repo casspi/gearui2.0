@@ -765,7 +765,6 @@ table.resultTable .actiontd{
       </script> -->
      
       <!-- <g-center></g-center> -->
-      <!-- <g-menu></g-menu> -->
       <!-- <g-alert id="galert" type="success" title="成功。。。" message="文本内容">110</g-alert> -->
       <!-- <g-Confirm id=g-confirm>Confirm</g-Confirm> -->
 
@@ -781,20 +780,23 @@ table.resultTable .actiontd{
             Application Center
             </g-BreadcrumbItem>
         </g-Breadcrumb> -->
-        <!-- <g-menu mode="inline"  style="width:300px">
-          <g-menuitem><g-icon type="pie-chart" ></g-icon><span><a style="color: aqua">item 1</a></g-menuitem>
+        <g-menu mode="horizontal" multiple="true"  >
+          <g-menuitem selected="true"><a style="color: aqua">item 1</a></g-menuitem>
           <g-menuitem><g-icon type="pie-chart" ></g-icon><span> item 2</span></g-menuitem>
-          <g-submenu title="item 3 title">
-            <g-menuitemgroup>
+          <g-menuitem>item 3-1-1</g-menuitem>
+          <g-submenu open="true" title="item 3 title">
+            <!-- <g-menuitemgroup title="222"> -->
               <g-menuitem>item 3-1-1</g-menuitem>
               <g-menuitem>item 3-1-2</g-menuitem>
-            </g-menuitemgroup>
+            <!-- </g-menuitemgroup> -->
+          </g-submenu>
+          <g-submenu open="true" title="99999">
             <g-menuitemgroup title="333">
               <g-menuitem>item 3-2-1</g-menuitem>
               <g-menuitem>item 3-2-1</g-menuitem>
             </g-menuitemgroup>
           </g-submenu>
-        </g-menu> -->
+        </g-menu>
          
         <!-- <SelectedTag>222</SelectedTag> -->
         <!-- <g-layout>
@@ -902,7 +904,7 @@ table.resultTable .actiontd{
             <!-- <g-submit visible="false">保存</g-submit> -->
             <!-- <g-button  id="t21btn1">按钮</g-button> -->
           </div>
-          <g-richtext id="mytext" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
+          <!-- <g-richtext id="mytext" visible="false" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext> -->
         <!-- <div>
                 <span><h4>有标题的布局</h4></span>
                 <g-layout id="layout11" style="width:700px;height:400px;">

@@ -270,8 +270,9 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
     render() {
         // return <script id={this.props.id} type="text/plain"></script>;
         let props = this.getProps();
-        // return <div><BraftEditor></BraftEditor></div>
-        return <div ref={props.ref} className={props.className} style={{border: "1px solid","minHeight": "100px",padding: "15px",cursor:"text"}} onClick={props.onClick.bind(this)}></div>;
+        return <BraftEditor></BraftEditor>
+        // <div style={{width:"100%"}}></div>
+        // return <div ref={props.ref} className={props.className} style={{border: "1px solid","minHeight": "100px",padding: "15px",cursor:"text"}} onClick={props.onClick.bind(this)}></div>;
     }
     //当关闭窗口时出发
     onClose(fun:Function) {
