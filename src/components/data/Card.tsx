@@ -51,6 +51,7 @@ export interface state extends Tag.state {
 export default class Card<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
     getInitialState(): state {
+        console.log(this.props.extra);
         return {
             activeTabKey: this.props.activeTabKey,
             defaultActiveTabKey: this.props.activeTabKey,
@@ -73,8 +74,8 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
             actions: this.getActions(),
             cover: G.$(this.state.cover),
             extra: G.$(this.props.extra),
-            tabList: this.getTabList(),
-            title: G.$(this.props.title),
+            // tabList: this.getTabList(),
+            // title: G.$(this.props.title),
             onTabChange: (key: string) => {
                 this.doEvent("tabChange", key);
             }
@@ -84,7 +85,7 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
     render() {
         let props = this.getProps();
         let children = this.getChildren();
-        console.log(children)
+        console.log(props);
         return <AntdCard {...props}>{children}</AntdCard>;
     }
 
@@ -101,6 +102,7 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
 
     private getTabList() {
         let list = this.state.tabList;
+        console.log(list)
         let listJsxs: any[] = [];
         if(list) {
             for(let i = 0; i < list.length; i++) {
@@ -114,7 +116,7 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
 
     private getChildren() {
         let childrenJsxs: any[] = [];
-        console.log(this.props.children)
+        
         let children:any[] = this.props.children;
         console.log(children)
         if(!(children instanceof Array)) {
@@ -123,16 +125,16 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
         if(children instanceof Array) {
             children.map((child: any, index)=>{
                 let childJsx = child;
-                console.log(childJsx)
                 if(child && child.type) {
                     let props = {
                         key: this.props.id ? this.props.id + "_grid_meta_" + index : UUID.get(),
                         className: child.props.class,
                         style: child.props.style,
                     }
-                    console.log(child.type)
                     if(ObjectUtil.isExtends(child.type, "CardGrid")) {
-                        childJsx = <AntdCard.Grid {...props}>{child.props.children}</AntdCard.Grid>;
+                        let childrens = child.props.children;
+                        childrens = childrens.filter((o:any)=>o!=0);
+                        childJsx = <AntdCard.Grid key={UUID.get()} {...props}>{childrens}</AntdCard.Grid>;
                     }else if(ObjectUtil.isExtends(child.type, "CardMeta")) {
                         let metaProps = {
                             ...props,
@@ -140,9 +142,11 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
                             description: child.props.description,
                             title: child.props.title
                         };
-                        console.log(child.props.children)
-                        childJsx = <AntdCard.Meta {...metaProps}>{child.props.children}</AntdCard.Meta>;
-                        console.log(childJsx)
+                        let childrens = child.props.children;
+                        childrens = childrens.filter((o:any)=>o!=0);
+                        childJsx = <AntdCard.Meta {...metaProps}>{childrens}</AntdCard.Meta>;
+                    }else{
+                        childJsx = child
                     }
                 }
                 childrenJsxs.push(childJsx);;

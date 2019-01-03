@@ -5,7 +5,7 @@ const AntdMenuItem = AntdMenu.Item;
 const AntdItemGroup = AntdMenu.ItemGroup;
 const AntdDivider = AntdMenu.Divider;
 import * as Tag from '../Tag';
-import { ObjectUtil } from '../../utils';
+import { ObjectUtil,UUID } from '../../utils';
 import { stat } from 'fs';
 export var props = {
     ...Tag.props,
@@ -61,23 +61,16 @@ export default class Menu<P extends typeof props, S extends state> extends Tag.d
             openKeys: this.props.openKeys,
             selectable: this.props.selectable || true,
             selectedKeys: this.props.selectedKeys,
-            style: this.props.style,
             subMenuCloseDelay: this.props.subMenuCloseDelay || 0.1,
             subMenuOpenDelay: this.props.subMenuOpenDelay || 0,
             theme: this.props.theme||'light',
             openAnimation: this.props.openAnimation,
             openTransitionName: this.props.openTransitionName,
             focusable: this.props.focusable,
+            
         };
     }
     getProps(){
-      
-        // return G.G$.extend({},state,{
-
-        // })
-    }
-    render() {
-        let childrens = this.getChildren();
         let state:any = this.state;
         if(this.state.mode!=="inline"){
             delete state.inlineCollapsed
@@ -88,8 +81,12 @@ export default class Menu<P extends typeof props, S extends state> extends Tag.d
         if(state.selectedKeys==null || state.selectedKeys.length<=0){//该属性未定义或者为空时，无法选中节点，所以手动删除
             delete  state.selectedKeys
         }
-        console.log(state)
-        return <AntdMenu {...state}>{...childrens}</AntdMenu>;
+        return G.G$.extend({},state,{
+        })
+    }
+    render() {
+        let childrens = this.getChildren();
+        return <AntdMenu {...this.getProps()}>{...childrens}</AntdMenu>;
     }
 
     private getChildren(children1?: any, key?: string) {
@@ -99,43 +96,41 @@ export default class Menu<P extends typeof props, S extends state> extends Tag.d
             children = [children];
         }
         children = children.filter(o => o!=0)
-        // console.log(children)
         let childrenNew: any[] = [];
         if(children instanceof Array) {
             children.map((child: any, index) => {
                 if(child && child.props) {
                     if(ObjectUtil.isExtends(child.type, "SubMenu")) {
                         let props:any={
-                            children:this.getChildren(child.props.children, "SubMenu_"+index),
                             disabled:child.props.disabled,
                             title:child.props.title,
                             onTitleClick:child.props.onTitleClick||function(){}
                         }
                         let subKey:string=key + "SubMenu_"+index;
-                        if(child.props.open===true){
-                            let defaultOpenKeys = this.state.defaultOpenKeys || [];
+                        if(child.props.open===true){//默认打开的submenu
+                            let defaultOpenKeys:any = this.state.defaultOpenKeys || [];
                             defaultOpenKeys.push(subKey)
                         }
-                        childrenNew.push(<AntdSubMenu key={subKey} {...props}></AntdSubMenu>);
+                        childrenNew.push(<AntdSubMenu key={subKey} {...props}>{this.getChildren(child.props.children, subKey)}</AntdSubMenu>);
                     }else if(ObjectUtil.isExtends(child.type, "MenuItem")) {
                         let props:any = {
-                            disabled:child.props.disabled
+                            disabled:child.props.disabled,
+                            title:child.props.title
                         };
                         let itemKey:string=key + "MenuItem_"+index;
-                        if(child.props.selected===true){
-                            let defaultSelectedKeys = this.state.defaultSelectedKeys || [];
+                        if(child.props.selected===true){//默认选中的itemenu
+                            let defaultSelectedKeys:any = this.state.defaultSelectedKeys || [];
                             defaultSelectedKeys.push(itemKey)
                         }
                         childrenNew.push(<AntdMenuItem key={itemKey} {...props}>{this.getChildren(child.props.children, "MenuItem_"+index)}</AntdMenuItem>);
                     }else if(ObjectUtil.isExtends(child.type, "MenuItemGroup")) {
-                        console.log(child.props.title)
                         let props:any = {
                             title:child.props.title,
-                            // children:child.props.children
                         };
-                        childrenNew.push(<AntdItemGroup key={key + "ItemGroup_"+index} {...props}>{this.getChildren(child.props.children, "ItemGroup_"+index)}</AntdItemGroup>);
+                        let ItemGroupKey = key + "ItemGroup_"+index;
+                        childrenNew.push(<AntdItemGroup key={ItemGroupKey} {...props}>{this.getChildren(child.props.children, ItemGroupKey)}</AntdItemGroup>);
                     }else if(ObjectUtil.isExtends(child.type, "MenuDivider")) {
-                        childrenNew.push(<AntdDivider key={key + "Divider_"+index} {...child.props}>{this.getChildren(child.props.children, "Divider_"+index)}</AntdDivider>);
+                        childrenNew.push(<AntdDivider key={key + "Divider_"+index}></AntdDivider>);
                     }else{
                         childrenNew.push(child)
                     }

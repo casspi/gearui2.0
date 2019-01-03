@@ -174,7 +174,7 @@ import * as React from 'react';
 import {Message} from '../pack';
 import  G from '../../Gear';
 import  BraftEditor from 'braft-editor';
-console.log(BraftEditor)
+
 import 'braft-editor/dist/index.css'
 export var props = {
     ...Tag.props,
