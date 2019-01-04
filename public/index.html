@@ -631,7 +631,7 @@ table.resultTable .actiontd{
             <g-listaction url="http://10.10.10.6:81/example/Listaction/batchDisable" actionType="batchAction" icon="cross-circle-o" listId="result1">停用</g-listaction>
             <g-listaction url="http://10.10.10.6:81/example/Listaction/export" actionType="exportAction" parameters="getExportParameters()" listId="result1" icon="file-excel" method="post">下载</g-listaction>
           </div>		 -->
-          <!-- <g-Calendar fullScreen="false"></g-Calendar> -->
+          <g-Calendar fullScreen="false" onSelect="go"></g-Calendar>
           <a id="prop" href="javascript:void(0);">￥</a>
           <!-- tabList="[{key: 'tab1',tab: 'tab1',}, {key: 'tab2',tab: 'tab2'}]" -->
           <!-- <g-card style="width:300px" extra="#prop"  cover="0" hoverable="true" title="Card title" >
@@ -787,14 +787,14 @@ table.resultTable .actiontd{
             alert(msg)
           }
         </script>
-        <g-menu mode="inline"  id="gmenu"  onDeselect="go('onDeselect')" onOpenChange="go('onOpenChange')" onSelect="go('onSelect')"	 multiple=""  >
+        <g-menu mode="inline"  id="gmenu"  onDeselect="go('onDeselect')" onOpenChange="go()" onSelect="go('onSelect')"	 multiple=""  >
           <g-menuitem selected="true"><a style="color: aqua">item 1</a></g-menuitem>
           <g-menuitem><g-icon type="pie-chart" ></g-icon><span> item 2</span></g-menuitem>
           <g-menuitem>item 3-1-1</g-menuitem>
           <g-submenu open="true" title="item 3 title">
             <g-menuitemgroup title="222">
               <g-menuitem disabled="true">item 3-1-1</g-menuitem>
-              <g-menudivider>9999988888</g-menudivider>
+              <g-menudivider>9988</g-menudivider>
               <g-menuitem>item 3-1-2</g-menuitem>
             </g-menuitemgroup>
           </g-submenu>

@@ -1,9 +1,10 @@
 import * as Tag from "../Tag";
-import { Calendar as AntdCalendar } from 'antd';
+import { Calendar as AntdCalendar,LocaleProvider } from 'antd';
 import * as React from 'react';
 import * as moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
+import zhCN from 'antd/lib/locale-provider/zh_CN';
 export var props = {
     ...Tag.props,
     //是否全屏显示
@@ -112,13 +113,13 @@ export default class Calendar<P extends typeof props, S extends state> extends T
     }
 
     render() {
-        console.log(this.getProps())
+        console.log(this.getProps().onPanelChange)
         if (this.state.fullScreen == false) {
             return <div style={{ width: this.state.style ? this.state.style.width || 300 : 300, border: '1px solid #d9d9d9', borderRadius: 4 }}>
-                <AntdCalendar {...this.state} {...this.getProps()}></AntdCalendar>
+               <LocaleProvider locale={zhCN}><AntdCalendar {...this.state} {...this.getProps()}></AntdCalendar></LocaleProvider>
             </div>;
         } else {
-            return <AntdCalendar {...this.state} {...this.getProps()}></AntdCalendar>;
+            return <LocaleProvider locale={zhCN}><AntdCalendar {...this.state} {...this.getProps()}></AntdCalendar></LocaleProvider>;
         }
     }
 
