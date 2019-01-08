@@ -60,7 +60,6 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 if(key.startsWith("on")) {
                     let keyLower = key.substring(2, key.length);
                     keyLower = lowerFirst(keyLower);
-                    console.log(this.bind(keyLower, event))
                     this.bind(keyLower, event);
                 }else {
                     let keyLower = lowerFirst(key);

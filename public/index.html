@@ -631,8 +631,7 @@ table.resultTable .actiontd{
             <g-listaction url="http://10.10.10.6:81/example/Listaction/batchDisable" actionType="batchAction" icon="cross-circle-o" listId="result1">停用</g-listaction>
             <g-listaction url="http://10.10.10.6:81/example/Listaction/export" actionType="exportAction" parameters="getExportParameters()" listId="result1" icon="file-excel" method="post">下载</g-listaction>
           </div>		 -->
-          <g-Calendar fullScreen="false" onSelect="go"></g-Calendar>
-          <a id="prop" href="javascript:void(0);">￥</a>
+          <!-- <g-Calendar fullScreen="false" onSelect="go"></g-Calendar> -->
           <!-- tabList="[{key: 'tab1',tab: 'tab1',}, {key: 'tab2',tab: 'tab2'}]" -->
           <!-- <g-card style="width:300px" extra="#prop"  cover="0" hoverable="true" title="Card title" >
             <g-cardmeta>
@@ -783,12 +782,12 @@ table.resultTable .actiontd{
         </g-Breadcrumb> -->
         <!-- horizontal-->
         <script>
-          let go = function(msg){
-            alert(msg)
+          let go = function(arg){
+            console.log(arg)
           }
         </script>
-        <g-menu mode="inline"  id="gmenu"  onDeselect="go('onDeselect')" onOpenChange="go()" onSelect="go('onSelect')"	 multiple=""  >
-          <g-menuitem selected="true"><a style="color: aqua">item 1</a></g-menuitem>
+        <!-- <g-menu mode="inline"  id="gmenu" onDeselect="go" onOpenChange="go" onSelect="go" >
+          <g-menuitem selected="true"><a >item 1</a></g-menuitem>
           <g-menuitem><g-icon type="pie-chart" ></g-icon><span> item 2</span></g-menuitem>
           <g-menuitem>item 3-1-1</g-menuitem>
           <g-submenu open="true" title="item 3 title">
@@ -798,7 +797,7 @@ table.resultTable .actiontd{
               <g-menuitem>item 3-1-2</g-menuitem>
             </g-menuitemgroup>
           </g-submenu>
-          <g-submenu open="true" title="99999" onTitleClick="go('onTitleClick')">
+          <g-submenu open="true" title="99999" onTitleClick="go">
             <g-menuitemgroup title="333">
               <g-menuitem>item 3-2-1</g-menuitem>
               <g-menuitem>item 3-2-1</g-menuitem>
@@ -811,14 +810,7 @@ table.resultTable .actiontd{
               <g-menuitem>item 3-1-2</g-menuitem>
             </g-menuitemgroup>
           </g-submenu>
-        </g-menu>
-         <script>
-           G(function(){
-             G('#gmenu').onOpenChange(function(){
-                alert('lalala');
-             })
-           })
-         </script>
+        </g-menu> -->
         <!-- <SelectedTag>222</SelectedTag> -->
         <!-- <g-layout>
           <g-header theme="light">Header11</g-header>
@@ -849,18 +841,18 @@ table.resultTable .actiontd{
         <!-- <g-combotree dictype="checkboxJson1" width="100" multiple="true" ></g-combotree>
         <span ctype="select" name="selectctl" dictype="selectData"  width="100"></span> -->
         <!-- <g-form id="editlist-form1"> -->
-          <!-- <g-editlist url="http://10.10.10.6:81/example/webview/definition/Editlist/data" id='list4' control="save,reset,add,delete,up,down,clear" rowControl="true">
+          <g-editlist url="http://10.10.10.6:81/example/webview/definition/Editlist/data" id='list4' control="save,reset,add,delete,up,down,clear" rowControl="true">
             <g-column label="用户名" width="150" name="id" editctype="text" required="true"></g-column>
             <g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
             <g-column label="动态生成" width="100" name="nameControl" editctype="component"></g-column>
-            <g-column label="手机号码" width="100" name="mobile" editctype="telephone" ></g-column>
+            <g-column label="手机号码" width="120" name="mobile" editctype="telephone" ></g-column>
             <g-column label="选项" width="100">
               <span ctype="select" name="selectctl" dictype="selectData" required="true" width="100"></span>
             </g-column>
-            <g-column label="电子邮箱" width="200" name="email" multiple="true"  editctype="email" ></g-column>
+            <g-column label="电子邮箱" width="180" name="email" multiple="true"  editctype="email" ></g-column>
             <g-column required="true" label="单位" width="200" id="unitId1" name="unitId" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_TEST"></g-column>
             <g-column label="部门" width="200" id="groupId1" name="groupId" refid="unitId1" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_DEPARTMENT_TEST"></g-column>
-          </g-editlist> -->
+          </g-editlist>
         <!-- </g-form> -->
         <!-- <g-tree id="gtree" cascadeCheck="true" dictype="treeData"   autoExpandParent="true" lines="true" draggable="true" checkbox="true"></g-tree> -->
         <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->

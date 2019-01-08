@@ -113,7 +113,6 @@ export default class Calendar<P extends typeof props, S extends state> extends T
     }
 
     render() {
-        console.log(this.getProps().onPanelChange)
         if (this.state.fullScreen == false) {
             return <div style={{ width: this.state.style ? this.state.style.width || 300 : 300, border: '1px solid #d9d9d9', borderRadius: 4 }}>
                <LocaleProvider locale={zhCN}><AntdCalendar {...this.state} {...this.getProps()}></AntdCalendar></LocaleProvider>

@@ -844,8 +844,8 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         ((column, props)=>{
             column.render = (text: any,record: any)=>{
                 let newProps = super.parseRegexColumnValue(props, record);
-                console.log(props);
-                console.log(newProps);
+                // console.log(props);
+                // console.log(newProps);
                 let editCType: string = newProps.editCType || "";
                 let lower: string = newProps.lower ? newProps.lower + record.key : "";
                 let upper: string = newProps.upper ? newProps.upper + record.key : "";

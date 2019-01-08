@@ -83,15 +83,18 @@ export default class Menu<P extends typeof props, S extends state> extends Tag.d
         }
         return G.G$.extend({},state,{
             onOpenChange:({ item, key, selectedKeys }:any)=>{
-                this.doEvent("openchange", { item, key, selectedKeys });
+                this.doEvent("openChange", { item, key, selectedKeys });
             },
-            onDeselect:()=>{this.doEvent('deselect')},
-            onSelect:({ item, key, selectedKeys }:any)=>{this.doEvent('select',{ item, key, selectedKeys })}	
+            onDeselect:({ item, key, selectedKeys }:any)=>{
+                this.doEvent('deSelect'),{ item, key, selectedKeys }
+            },
+            onSelect:({ item, key, selectedKeys }:any)=>{
+                this.doEvent('select',{ item, key, selectedKeys })
+            }	
         })
     }
     render() {
         let childrens = this.getChildren();
-        console.log(this.getProps().onOpenChange);
         return <AntdMenu {...this.getProps()}>{...childrens}</AntdMenu>;
     }
 
