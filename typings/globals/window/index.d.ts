@@ -67,7 +67,7 @@ interface Message {
         success(content:string,duration?:number,onClose?:Function): void;
         loading(content:string,duration?:number,onClose?:Function): void;
     };
-    confirm(title:string,message:string,...args: any[]): void;
+    confirm({}): void;
 }
 declare var G: {
     SockJs:any;

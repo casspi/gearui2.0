@@ -631,7 +631,7 @@ table.resultTable .actiontd{
             <g-listaction url="http://10.10.10.6:81/example/Listaction/batchDisable" actionType="batchAction" icon="cross-circle-o" listId="result1">停用</g-listaction>
             <g-listaction url="http://10.10.10.6:81/example/Listaction/export" actionType="exportAction" parameters="getExportParameters()" listId="result1" icon="file-excel" method="post">下载</g-listaction>
           </div>		 -->
-          <!-- <g-Calendar fullScreen="false" onSelect="go"></g-Calendar> -->
+          <!-- <g-Calendar fullScreen="false" onPanelChange="go" onChange="go" onSelect="go"></g-Calendar> -->
           <!-- tabList="[{key: 'tab1',tab: 'tab1',}, {key: 'tab2',tab: 'tab2'}]" -->
           <!-- <g-card style="width:300px" extra="#prop"  cover="0" hoverable="true" title="Card title" >
             <g-cardmeta>
@@ -841,7 +841,7 @@ table.resultTable .actiontd{
         <!-- <g-combotree dictype="checkboxJson1" width="100" multiple="true" ></g-combotree>
         <span ctype="select" name="selectctl" dictype="selectData"  width="100"></span> -->
         <!-- <g-form id="editlist-form1"> -->
-          <g-editlist url="http://10.10.10.6:81/example/webview/definition/Editlist/data" id='list4' control="save,reset,add,delete,up,down,clear" rowControl="true">
+          <!-- <g-editlist url="http://10.10.10.6:81/example/webview/definition/Editlist/data" id='list4' control="save,reset,add,delete,up,down,clear" rowControl="true">
             <g-column label="用户名" width="150" name="id" editctype="text" required="true"></g-column>
             <g-column label="姓名" width="100" name="name" editctype="text" required="true"></g-column>
             <g-column label="动态生成" width="100" name="nameControl" editctype="component"></g-column>
@@ -852,7 +852,7 @@ table.resultTable .actiontd{
             <g-column label="电子邮箱" width="180" name="email" multiple="true"  editctype="email" ></g-column>
             <g-column required="true" label="单位" width="200" id="unitId1" name="unitId" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_TEST"></g-column>
             <g-column label="部门" width="200" id="groupId1" name="groupId" refid="unitId1" editctype="combotree" url="http://10.10.10.6:81/dictionary/tree?type=DIC_UNIT_DEPARTMENT_TEST"></g-column>
-          </g-editlist>
+          </g-editlist> -->
         <!-- </g-form> -->
         <!-- <g-tree id="gtree" cascadeCheck="true" dictype="treeData"   autoExpandParent="true" lines="true" draggable="true" checkbox="true"></g-tree> -->
         <!-- <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree> -->
@@ -911,7 +911,7 @@ table.resultTable .actiontd{
             <!-- <g-submit visible="false">保存</g-submit> -->
             <!-- <g-button  id="t21btn1">按钮</g-button> -->
           </div>
-          <!-- <g-richtext id="mytext" visible="false" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext> -->
+          <g-richtext id="mytext" visible="false" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext>
         <!-- <div>
                 <span><h4>有标题的布局</h4></span>
                 <g-layout id="layout11" style="width:700px;height:400px;">

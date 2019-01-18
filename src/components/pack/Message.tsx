@@ -111,41 +111,34 @@ export default class Messager {
     }
 
     // 显示一个确认消息框
-    static confirm(title:string,message:string,...args: any[]){
-        // 按钮类型 primary、danger
-        let type;
-        let fun: Function;
-        let delay;
-        if(args){
-            for(let i=0;i<args.length;i++){
-                if(ObjectUtil.isInteger(args[i]))
-                    delay = parseInt(args[i]);
-                else if(ObjectUtil.isFunction(args[i]))
-                    fun = args[i];
-                else if(ObjectUtil.isString(args[i]))
-                    type = args[i];
-            }
-        }
+    static confirm(args:any){
         let param = {
-            title: title||"操作确认",
-            content: message||"你确定要进行该操作吗？",
-            okText:"确定",
-            cancelText:"取消",
-            iconType:"question-circle",
-            okType:type||"primary",
+             // 按钮类型 primary、danger
+            title: args.title||"操作确认",
+            content: args.message||"你确定要进行该操作吗？",
+            className:args.className,
+            width: args.width || (args.style && args.style.width)?args.style.width:null,
+            style: args.style,
+            okText: args.okText||"确定",
+            cancelText: args.cancelText || "取消",
+            iconType: args.iconType ||"question-circle",
+            okType: args.type||"primary",
+            maskClosable: args.maskClosable || false,
+            okButtonProps: args.okButtonProps,
             onOk:function(){
-                if(fun)
-                    fun.call(this,true);
+                if(args.callback)
+                args.callback.call(this,true);
             },
             onCancel:function(){
-                if(fun)
-                    fun.call(this,false);         
+                if(args.callback)
+                args.callback.call(this,false);         
             },
-            zIndex:9999
+            zIndex:args.zIndex || 9999
         };
+        
         let modal = AntdModal.confirm(param);
-        if(delay)
-            setTimeout(() => modal.destroy(), delay);        
+        if(args.delay)
+            setTimeout(() => modal.destroy(), args.delay);        
     }
 
 }

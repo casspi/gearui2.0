@@ -88,11 +88,15 @@ export default class AjaxAction<P extends typeof props, S extends state> extends
             }
         };
         if(confirm){
-            G.messager.confirm(title,confirm,(r: boolean)=>{
+            G.messager.confirm({
+                title:title,
+                message:confirm,
+                callback:(r: boolean)=>{
                 if(r){
                     fun.call(obj,obj);
                 }
-            });
+            }
+        });
         }else{
             fun.call(obj,obj);
         }

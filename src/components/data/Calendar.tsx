@@ -55,6 +55,7 @@ export default class Calendar<P extends typeof props, S extends state> extends T
             dateCellRender: (date: moment.Moment) => {
                 if(this.haveEvent("dateCellRender")) {
                     let r = this.doEvent("dateCellRender", date.toDate());
+                    console.log(r)
                     if(r && r[0]) {
                         return G.$(r[0]);
                     }

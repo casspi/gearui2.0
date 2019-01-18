@@ -1,4 +1,3 @@
-import * as React from 'react';
 import * as ClickAction from './ClickAction';
 import Http, { methods } from '../../utils/http';
 import Table from '../data/Table';
@@ -88,36 +87,40 @@ export default class ListAction<P extends typeof props, S extends state> extends
                         confirm = "你确定要"+actionName+"选中的记录吗？";
                     }
                 }
-                G.messager.confirm("操作确认",confirm,"danger",(r: any) => {
-                    if(r){
-                        let fn = async () => {
-                            let result = await Http.ajax(method, url, param);
-                            if(result.success) {
-                                let data = result.data;
-                                if(data) {
-                                    if(data.status==0){
-                                        let message = data.message || "操作成功！"
-                                        G.messager.alert("提示消息",message);
-                                        // 刷新列表
-                                        if(refreshList){
-                                            list.refresh();
+                G.messager.confirm({
+                    title:"操作确认",
+                    message:confirm,
+                    type:"danger",
+                    callback:(r: any) => {
+                        if(r){
+                            let fn = async () => {
+                                let result = await Http.ajax(method, url, param);
+                                if(result.success) {
+                                    let data = result.data;
+                                    if(data) {
+                                        if(data.status==0){
+                                            let message = data.message || "操作成功！"
+                                            G.messager.alert("提示消息",message);
+                                            // 刷新列表
+                                            if(refreshList){
+                                                list.refresh();
+                                            }
+                                            this.doEvent("afterSuccess");
+                                        }else{
+                                            let message = data.message || "操作失功，消息代码“"+data.status+"”！"
+                                            G.messager.error("错误",message);
                                         }
-                                        this.doEvent("afterSuccess");
-                                    }else{
-                                        let message = data.message || "操作失功，消息代码“"+data.status+"”！"
-                                        G.messager.error("错误",message);
+                                    }else {
+                                        G.messager.error("错误","返回消息格式不正确！");
                                     }
                                 }else {
-                                    G.messager.error("错误","返回消息格式不正确！");
+                                    G.messager.error("错误","操作失败，发生未知错误！");
                                 }
-                            }else {
-                                G.messager.error("错误","操作失败，发生未知错误！");
                             }
+                            fn();
                         }
-                        fn();
                     }
                 });
-
             }else{
                 G.messager.alert("提示消息","请先选择要"+actionName+"的记录！");
             }
@@ -179,11 +182,16 @@ export default class ListAction<P extends typeof props, S extends state> extends
                 }
                 let confirm: any = this.state.confirm;
                 if(confirm){
-                    G.messager.confirm("操作确认",confirm,"danger",(r: any)=>{
-                        if(r){
-                            fun.call(this);
-                        }
-                    });
+                    G.messager.confirm({
+                        title:"操作确认",
+                        message:confirm,
+                        type:"danger",
+                        callback:(r: any)=>{
+                            if(r){
+                                fun.call(this);
+                            }
+                        }}
+                    );
                 }else{
                     fun.call(this);
                 }
