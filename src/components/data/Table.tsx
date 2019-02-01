@@ -789,11 +789,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let rowspan = props.rowspan;
         let classNameArr = GearArray.fromString(className," ")||new GearArray();
         let ellipsis = props.ellipsis;
-        let ellipsisSpanWidth = 0;
-        if(ellipsis){
-            classNameArr.add("ant-table-ellipsis-column");
-            ellipsisSpanWidth = width;
-        }        
+        let ellipsisSpanWidth = 0;     
         if(this.props.sequence != false) {
             index = index+1;
         }
@@ -812,6 +808,11 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             rowspan: rowspan,
             ref: name,
         }, this.getColumnProtype());
+        if(ellipsis){
+            classNameArr.add("ant-table-ellipsis-column");
+            ellipsisSpanWidth = width;
+            column.render = (text:any)=><span style={{'cursor':'pointer'}} title={text}>{text}</span>
+        }   
         if(fixed != null) {
             column.fixed = fixed;
         }

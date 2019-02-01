@@ -62,7 +62,9 @@ export default class Validator {
         // if (props.name) {
         //     this.name = props.name;
         // }
-        this.message = this.props.invalidMessage || Validator.invalidMessage[this.name] || this.message;
+        this.message = typeof this.props.invalidMessage==="string"?this.props.invalidMessage:null || 
+        (this.props.invalidMessage&&this.props.invalidMessage[this.props.vtype])?this.props.invalidMessage[this.props.vtype]:null ||
+         Validator.invalidMessage[this.name] || this.message;
         // if (props.type) {
         //     this.type = props.type;
         // }
@@ -76,10 +78,10 @@ export default class Validator {
             this.len = props.len;
         }
         if (props.min) {
-            this.min = parseInt(props.min);
+            this.min = props.min;
         }
         if (props.max) {
-            this.max = parseInt(props.max);
+            this.max = props.max;
         }
         if (props.enum) {
             this.enum = props.enum;
@@ -132,73 +134,93 @@ export default class Validator {
         let validatorsArray: Array<any> = [];
         //必填校验
         if ((props.required && props.required == true)) {
+            props.vtype = 'required';
             validatorsArray.push(new validators.RequiredValidator(props));
         }
         //Email格式校验
         if (ObjectUtil.isExtends(clazz, "Email")) {
+            props.vtype = 'email';
             validatorsArray.push(new validators.EmailValidator(props));
         }
         //身份证格式校验
         if (ObjectUtil.isExtends(clazz, "IdNumber")) {
+            props.vtype = 'idnumber';
             validatorsArray.push(new validators.IdNumberValidator(props));
         }
         //IP格式校验
         if (ObjectUtil.isExtends(clazz, "Ip")) {
+            props.vtype = 'ip';
             validatorsArray.push(new validators.IpValidator(props));
         }
         //MAC地址格式校验
         if (ObjectUtil.isExtends(clazz, "Mac")) {
+            props.vtype = 'mac';
             validatorsArray.push(new validators.MacValidator(props));
         }
         //电话号码格式校验
         if (ObjectUtil.isExtends(clazz, "Telephone")) {
+            props.vtype = 'telephone';
             validatorsArray.push(new validators.TelephoneValidator(props));
         }
         //url格式校验
         if (ObjectUtil.isExtends(clazz, "Url")) {
+            props.vtype = 'url';
             validatorsArray.push(new validators.UrlValidator(props));
         }
         //number格式校验
         if (ObjectUtil.isExtends(clazz, "Number")) {
+            props.vtype = 'number';
             validatorsArray.push(new validators.NumberValidator(props));
         }
         //长度及最大最小值校验
         if (props.min || props.max) {
             if ((ObjectUtil.isExtends(clazz, "Textarea")) 
-                || ObjectUtil.isExtends(clazz, "Text")
                 || ObjectUtil.isExtends(clazz, "Password")
                 || ObjectUtil.isExtends(clazz, "Email")) {
                 //校验文本框内容长度
                 props.type = "text";
+                props.vtype = 'length';
                 validatorsArray.push(new validators.LengthValidator(props));
             } else if (ObjectUtil.isExtends(clazz, "Datetime")) {
                 //校验日期时间的最大最小值
                 props.type = "datetime";
+                props.vtype = 'range';
                 validatorsArray.push(new validators.RangeValidator(props));
             } else if (ObjectUtil.isExtends(clazz, "Date")) {
                 //校验日期的最大最小值
                 props.type = "date";
+                props.vtype = 'range';
                 validatorsArray.push(new validators.RangeValidator(props));
             } else if (ObjectUtil.isExtends(clazz, "Time")) {
                 //校验日期的最大最小值
                 props.type = "time";
+                props.vtype = 'range';
                 validatorsArray.push(new validators.RangeValidator(props));
             } else if (ObjectUtil.isExtends(clazz, "Ip")) {
                 //校验IP地址最大最小值
                 props.type = "ip";
+                props.vtype = 'range';
                 validatorsArray.push(new validators.RangeValidator(props));
             } else if (ObjectUtil.isExtends(clazz, "Mac")) {
                 //校验mac地址最大最小值
                 props.type = "mac";
+                props.vtype = 'range';
                 validatorsArray.push(new validators.RangeValidator(props));
             } else if (ObjectUtil.isExtends(clazz, "Number")) {
                 //校验数值最大最小值
                 props.type = "number";
+                props.vtype = 'range';
                 validatorsArray.push(new validators.RangeValidator(props));
             } else if (ObjectUtil.isExtends(clazz, "Int")) {
                 //校验整数最大最小值
                 props.type = "int";
+                props.vtype = 'range';
                 validatorsArray.push(new validators.RangeValidator(props));
+            } else if(ObjectUtil.isExtends(clazz, "Text")){
+                //校验文本框内容长度
+                props.type = "text";
+                props.vtype = 'length';
+                validatorsArray.push(new validators.LengthValidator(props));
             }
         }
         if (props.equals) {
@@ -211,6 +233,7 @@ export default class Validator {
                         srcEle.onChange((newValue: any, oldValue: any) => {
                             form.validateField(props.id);
                         });
+                        props.vtype = 'equals';
                         validatorsArray.push(new validators.EqualsValidator(props));
                     }
                 }
@@ -232,19 +255,22 @@ export default class Validator {
                         formEle.validateField(props.id);
                         formEle.validateField(ele1.props.id);
                     });
+                    props.vtype = 'compare';
                     validatorsArray.push(new validators.CompareValidator(props, clazz));
                 }
             }
         })(props);
         if (props.remote) {
+            props.vtype = 'remote';
             validatorsArray.push(new validators.RemoteValidator(props));
         }
         if (props.regexp) {
+            props.vtype = 'regexp';
             validatorsArray.push(new validators.RegexValidator(props));
         }
         if (props.validatorName) {
             if (this.customvalidtors[props.validatorName]) {
-                validatorsArray.push(new Validator(this.customvalidtors[props.validatorName]));
+            validatorsArray.push(new Validator(this.customvalidtors[props.validatorName]));
             }
         }
         // 自定义的验证过程
@@ -283,7 +309,7 @@ export default class Validator {
                 }
             }
         }
-        // console.log(validatorsArray)
+        console.log(validatorsArray)
         return validatorsArray;
     }
 }

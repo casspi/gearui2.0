@@ -28,10 +28,10 @@ export var props = {
     //验证
     validation: GearType.Boolean,
     //错误的校验信息
-    invalidMessage: GearType.String,
+    invalidMessage: GearType.Any,
     
     validationType: GearType.String,
-
+    // 表单验证方式，优先取控件本身的，如果控件本身无配置再获取form上的
     invalidType: GearType.String,
 
     readOnly: GearType.Boolean,
@@ -40,7 +40,7 @@ export var props = {
     value: GearType.Any,
     ...Validate.props,
     ...Tag.props,
-    judgeString: GearType.Boolean,
+    judgeString: GearType.Boolean,//为true时长度判断为字符串长度
 };
 export interface state extends Tag.state {
     value?: string | string[] | number;
@@ -71,6 +71,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         let state:any = this.state;
         delete state.invalidType;
         delete state.validation
+        return state
     }
     getInitialState(): state {
         return {

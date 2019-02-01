@@ -1,5 +1,5 @@
 import {Validator} from './index';
-export default class IdNumberValidator extends Validator {
+export default class UrlValidator extends Validator {
     
     name:string = this.name||"url";
     type:string = this.type || "url";

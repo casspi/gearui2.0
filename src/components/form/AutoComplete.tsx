@@ -423,7 +423,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         else
             // 非异步查询第一次时载入所有数据放到内存，以后根据内存中数据进行过滤
             this.loadData(null, callback);
-            console.log(this.state.options)
 
     }
 

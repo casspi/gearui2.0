@@ -1,4 +1,4 @@
-import { DatePicker } from 'antd';
+import { DatePicker,LocaleProvider } from 'antd';
 import * as moment from 'moment';
 import * as FormTag from './FormTag';
 import * as React from 'react';
@@ -6,6 +6,7 @@ import * as React from 'react';
 import 'moment/locale/zh-cn';
 import Tag from '../Tag';
 moment.locale('zh-cn');
+import zhCN from 'antd/lib/locale-provider/zh_CN';
 const { MonthPicker, RangePicker } = DatePicker;
 
 export var props = {
@@ -163,12 +164,12 @@ export default class Date<P extends typeof props, S extends state> extends FormT
         let props = this.getProps();
         let type = this.props.type;
         if (type == null || type == "date") {
-            return <DatePicker {...props}></DatePicker>;
+            return <LocaleProvider locale={zhCN}><DatePicker {...props}></DatePicker></LocaleProvider>;
         } else if (type == "month") {
-            return <MonthPicker {...props}></MonthPicker>;
+            return <LocaleProvider locale={zhCN}><MonthPicker {...props}></MonthPicker></LocaleProvider>;
         } else if (type == "range") {
             // console.log(props);
-            return <RangePicker {...props}></RangePicker>;
+            return <LocaleProvider locale={zhCN}><RangePicker {...props}></RangePicker></LocaleProvider>;
         }
         return null;
     }
@@ -176,6 +177,7 @@ export default class Date<P extends typeof props, S extends state> extends FormT
     //改变事件
     protected _change(e: any) {
         let oldValue = this.getFormatValue();
+        console.log(oldValue)
         super.setValue(e, () => {
             let args = [this.getFormatValue(),oldValue];
             //执行自定义注册的事件

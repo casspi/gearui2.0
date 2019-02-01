@@ -9,7 +9,7 @@ export default class EqualsValidator extends Validator {
         if(props.message) {
             this.message = props.message;
         }else {
-            this.message = this.props.invalidMessage || "值必须和：" + equalsSrc + "相同";
+            this.message = this.message || "值必须和：" + equalsSrc + "相同";
         }
         this.parseMessage(props);
     }

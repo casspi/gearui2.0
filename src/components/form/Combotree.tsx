@@ -3,6 +3,8 @@ import { TreeSelect } from 'antd';
 import { TreeProps as AntdTreeProps } from 'antd/lib/tree';
 import * as Tree from './Tree';
 import Tag from '../Tag';
+import { default as Http} from '../../utils/http';
+import {StringUtil} from '../../utils';
 export var props = {
     ...Tree.props,
     editable: GearType.Boolean,
@@ -18,13 +20,15 @@ export var props = {
     treeNodeFilterProp: GearType.String,
     treeNodeLabelProp: GearType.String,
     treeDataSimpleMode: GearType.Boolean,
-    showCheckedStrategy: GearType.Enum<'SHOW_ALL' | 'SHOW_PARENT' | 'SHOW_CHILD'>()
+    showCheckedStrategy: GearType.Enum<'SHOW_ALL' | 'SHOW_PARENT' | 'SHOW_CHILD'>(),
+    //汉字转拼音字符集url
+    pinyinUrl:GearType.String
 };
 export interface state extends Tree.state {
 }
 type TreeNode = Tree.TreeNode;
 export default class Combotree<P extends typeof props & AntdTreeProps, S extends state & Partial<AntdTreeProps>> extends Tree.default<P, S> {
-
+    pinyinData = {}
     getInitialState(): state & Partial<AntdTreeProps> {
         return {
            options: [],
@@ -116,8 +120,12 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             labelInValue: false,
             treeCheckStrictly: this.props.multiple?(this.props.onlyLeafCheck?true:(this.props.cascadeCheck!=undefined?!this.props.cascadeCheck:false)):false,
             disabled: this.state.disabled || this.state.readOnly,
+            pinyinUrl:this.props.pinyinUrl,
             filterTreeNode: (input: string, node: any) =>{
                 if(node.props.title.toLowerCase().indexOf(input.trim().toLowerCase()) != -1) {
+                    return true;
+                }
+                if(StringUtil.getPinyin(node.props.title,true,this.pinyinData).toLowerCase().indexOf(input.trim().toLowerCase()) != -1 || StringUtil.getPinyin(node.props.title,false,this.pinyinData).toLowerCase().indexOf(input.trim().toLowerCase()) != -1){
                     return true;
                 }
                 return false;
@@ -189,6 +197,16 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         super.afterRender();
         if(this.props.multiple == true && this.props.editable == false) {
             this.find(".ant-select-selection").find("input").remove();
+        }
+        if(this.getProps().pinyinUrl){
+            let p = Http.getMethod('get')(this.getProps().pinyinUrl,'json');
+            if(p){
+                p.then((response)=>{
+                    this.pinyinData = response.data;
+                }).catch((error)=>{
+                    return Promise.resolve(error);
+                });
+            }
         }
     }
 

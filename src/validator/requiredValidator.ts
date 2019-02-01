@@ -3,14 +3,10 @@ export default class RequiredValidator extends validates.Validator {
 
     name:string = this.name || "required";
     // required = this.required || true;
-    message:string = this.message || "值不能为空";
+    message:string =  "值不能为空";
 
     validator = (rule: any,value: any,callback: any) => {
-        //console.log(rule);
-        //console.log(value);
-        //if(rule.props.ctype=="autocomplete")
-        //    debugger;
-        if(value != null) {
+        if(value != null && typeof value=="string"?value.trim()!="":value) {
             if(value instanceof Array) {
                 
                 if(value.length > 0) {
@@ -26,9 +22,10 @@ export default class RequiredValidator extends validates.Validator {
                 callback();
                 return;
             }
+        }else{
+            callback(this.message);
+            return;
         }
-        callback(this.message);
-        return;
     }
 
     // param: {required?:boolean;}
