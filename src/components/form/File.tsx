@@ -54,7 +54,6 @@ export default class File<P extends typeof props, S extends state> extends FormT
             placeholder: this.props.prompt,
         };
     }
-    
     render() {
         let state:any = this.state;
         delete state.invalidType;
@@ -79,7 +78,13 @@ export default class File<P extends typeof props, S extends state> extends FormT
             disabled: true
         });
     }
-
+    onChange(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("change",fun);
+        }else{
+            this.find("input").change();
+        }     
+    }
     //启用
     enable() {
         this.setState({

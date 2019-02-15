@@ -41,6 +41,8 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     private values = {};
 
+    private cacheItems: any = null;
+
     constructor(props: P, context: {}) {
         super(props, context);
     }
@@ -81,7 +83,14 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
         
     render() {
-        let items = this.getFormItems();
+        let items: any = this.getFormItems();
+        // if(this.cacheItems != null) {
+        //     items = this.cacheItems;
+        // }else {
+        //     items = this.getFormItems();
+        //     this.cacheItems = items;
+        // }
+        // let items = this.getFormItems();
         let props:any = this.getProps();
         delete props.otherParams;
         delete props.formTagStates;
@@ -101,28 +110,38 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             children = [children];
         }
         let formTagStates:{[idx: string]:FormTag.state} = {};
-        if(children instanceof Array) {
-            children.map((child:any, index)=>{
-                if(child && child.type && (ObjectUtil.isExtends(child.type, "FormTag")) || ObjectUtil.isExtends(child.type, "Validate")) {
-                    //如果是validate标签
-                    let childReactNode: any = child;
-                    let validateReactNode: any = child;
-                    if(ObjectUtil.isExtends(child.type, "Validate")) {
-                        childReactNode = child.props.children[0];
+        let mapChildren = (children:any)=>{
+            if(children instanceof Array) {
+                children.map((child:any, index)=>{
+                    if(child && child.type && (ObjectUtil.isExtends(child.type, "FormTag")) ||  ObjectUtil.isExtends(child.type, "Validate")) {
+                        //如果是validate标签
+                        let childReactNode: any = child;
+                        let validateReactNode: any = child;
+                        if(ObjectUtil.isExtends(child.type, "Validate")) {
+                            childReactNode = child.props.children[0];
+                        }
+                        //解决输入框外部包裹div标签时bug
+                        if(child && child.props && child.props.children && child.props.children[0] && child.props.children[0].type && (ObjectUtil.isExtends(child.props.children[0].type, "FormTag"))){
+                            childReactNode = child.props.children[0];
+                            validateReactNode = child.props.children[0];
+                        }
+                        let tagName = childReactNode.props.name;
+                        let rules = this.getRules(tagName, validateReactNode);
+                        let validation = this.getValidation(tagName, validateReactNode);
+                        
+                        let invalidType = this.getInvalidType(tagName, validateReactNode);
+                        formTagStates[tagName] = {
+                            validation,
+                            invalidType,
+                            rules
+                        };
+                    }else if(child && child.props && child.props.children && child.props.children){
+                        mapChildren(child.props.children)
                     }
-                    let tagName = childReactNode.props.name;
-                    let rules = this.getRules(tagName, validateReactNode);
-                    let validation = this.getValidation(tagName, validateReactNode);
-                    
-                    let invalidType = this.getInvalidType(tagName, validateReactNode);
-                    formTagStates[tagName] = {
-                        validation,
-                        invalidType,
-                        rules
-                    };
-                }
-            });
+                });
+            }
         }
+        mapChildren(children);
         return formTagStates;
     }
 
@@ -156,11 +175,17 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 let rules: any = this.getRules(tagName);
                 let props: any = this.getFormTagProps(index, tagName);
                 let validation = this.getValidation(tagName)?true:false;
+                /*-----------------
+                由于此处的child.props是readonly,
+                不能修改,所以需要将老的props合并成一个新的props,
+                然后在创建一个reactelement,传入这个新的props,以这种方式来变相修改老的props
+                -------------------*/
                 //合并新的信息，将当前存储的tagname对应state信息合并到props，并传递给formTag
                 props = G.G$.extend({}, childReactNode.props, props, this.state.formTagStates[tagName], {
                     needUpdateToState: ["validation", "invalidType", "rules","data-__field", "data-__meta"]
                 });
                 delete props.value;
+                delete props.validation;
                 let formTag: any = React.createElement(childReactNode.type, props, props.children);
                 let initialValue = this.values[tagName] || childReactNode.props.value;
                 formTag = this.props.form.getFieldDecorator(tagName,{
@@ -305,7 +330,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             return this.state.invalidType;
         }else {
             let props = validateReactNode.props;
-            // console.log(this.props)
             return props.invalidType || this.props.invalidType;
         }
     } 
@@ -883,6 +907,11 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
     resetDirty() {
         // this[this.tagName]("resetDirty");
+    }
+
+    //是否更新
+    shouldUpdate(nextProps: P, nextState: S): boolean {
+        return true;
     }
 
     focus() {

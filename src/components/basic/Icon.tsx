@@ -34,16 +34,15 @@ export default class Icon<P extends typeof props, S extends state> extends Tag.d
     getInitialState(): state {
         let state = this.state;
         return G.G$.extend({},state,{
-            icon: this.props.icon,
+            type: this.props.type || this.props.icon,
             spin: this.props.spin,
             // onClick: this.clickEvent.bind(this),
-            type: this.props.type
+            // type: this.props.type
         });
     }    
     getProps(){
         let state = this.state;
         return G.G$.extend({},state,{
-            icon: this.state.icon,
             spin: this.state.spin,
             type: this.state.type,
             onClick: this.clickEvent.bind(this),
@@ -65,7 +64,6 @@ export default class Icon<P extends typeof props, S extends state> extends Tag.d
     }
 
     hide() {
-        console.log(this.ref);
         G.G$(this.ref).hide()
        
     }

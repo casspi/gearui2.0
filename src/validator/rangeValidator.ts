@@ -5,7 +5,6 @@ export default class RangeValidator extends Validator {
     name:string = this.name || "range";
 
     validator = (rule: any, value: any, callback: any) => {
-        console.log(value)
         if(value) {
             if (this.props.type == "mac") {
                 let min = this.props.min + "";

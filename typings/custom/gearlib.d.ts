@@ -91,6 +91,10 @@ interface ASTElement {
   iterator2?: any;
   index: number[];
   vmdom?: any;
+  afterRender?:any;
+  componentDidMount?:any;
+  componentWillMount?:any;
+  componentDidUpdate?:any;
 }
 
 interface ASTIfCondition {

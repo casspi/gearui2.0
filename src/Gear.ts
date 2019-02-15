@@ -98,7 +98,9 @@ export default class G {
                 for(let i = 0; i < vmdoms.length; i++) {
                     let vmdom = vmdoms[i];
                     if(!doms) {
-                        doms = this.G$(vmdom.realDom);
+                        if(vmdom){
+                            doms = this.G$(vmdom.realDom);
+                        }
                     }else {
                         doms = doms.add(vmdom.realDom);
                     }
@@ -196,6 +198,9 @@ export default class G {
                 if(eles.length > 0) {
                     return eles[0];
                 }else {
+                    if(react) {
+                        return vmdoms;
+                    }
                     return this.G$([]);
                 }
             }

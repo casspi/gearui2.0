@@ -56,7 +56,7 @@ export default class IdNumberValidator extends Validator {
             callback(this.message);
         }else {
             if(this.props.isStrict){//是否严格校验
-                console.log('严格模式')
+                // console.log('严格模式')
                 // 身份号码位数及格式检验
                 switch (value.length) {
                     case 15 :

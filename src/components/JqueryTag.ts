@@ -31,6 +31,9 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     constructor(props?: P, context?: any) {
         super(props || <any>{}, context);
         this.ast = this.props.__ast__;
+        if(this.ast) {
+            this.ast.vmdom = this;
+        }
         //绑定所有的props里面注册的事件
         this.bindAllEvents();
         this.addOnEventsMethod();

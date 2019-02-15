@@ -39,7 +39,7 @@ export default class Button<P extends typeof props, S extends state> extends Tag
 
     getInitialState(): state {
         return {
-            onClick: this.clickEvent.bind(this),
+            onClick:this.clickEvent.bind(this),
             ghost: this.props.ghost,
             type: this.props.buttonStyle,
             shape: this.props.shape,

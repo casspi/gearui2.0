@@ -85,6 +85,7 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
     }
 
     componentWillMount() {
+        
     }
 
     //渲染完成之后触发
@@ -103,14 +104,13 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
                     } catch (error) {
                     }
                 }
-            }
-            
+            } 
         }
-        if(this.ast) {
-            this.ast.vmdom = this;
-        } 
         this.afterRender();
         this.doEvent("afterRender");
+        if(this.props && this.props.__ast__ && this.props.__ast__.afterRender){
+            this.props.__ast__.afterRender()
+        }
         if(this.state.remove==1){
             this.removeDom();
         }

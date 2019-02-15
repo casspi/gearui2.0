@@ -5,6 +5,7 @@ import { InputProps } from "antd/lib/input";
 import { UUID } from "../../utils";
 export var props = {
     ...FormTag.props,
+    prompt:GearType.String,
     icon: GearType.String,
     buttonText: GearType.String,
     buttonIcon: GearType.String,
@@ -110,11 +111,15 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         }
         
         if(this.props.icon){
+            let classStr = ""
+            if(this.props.icon.indexOf('icon-')>-1){
+                classStr = "anticon-image"+" "+this.props.icon;
+            }
             // 包装一个span用于响应鼠标效果和事件
             let spanProps = {
                 key: UUID.get(),
                 type: this.props.icon,
-                className: "icon",
+                className: "icon  "+classStr,
                 style: {cursor:"pointer"},
                 onClick: (e: any) => {
                     //控件基础改变事件
@@ -164,9 +169,8 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
 
     getInitialState():state & InputProps {
         return {
-            placeholder: this.props.placeholder,
+            placeholder: this.props.placeholder || this.props.prompt,
             size: this.props.size,
-            style:this.props.style,
             addonBefore: this.getAddonBefore(),
             addonAfter: this.getAddonAfter(),
             prefix: this.getPrefix(),
@@ -232,7 +236,6 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
             this.find("input").focus();
         }        
     }
-
     //鼠标点击事件
     click(fun: Function) {
         if (fun && G.G$.isFunction(fun)) {
@@ -241,11 +244,16 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
             this.find("input").click();
         }         
     }
-
+    onChange(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("change",fun);
+        }else{
+            this.find("input").change();
+        }     
+    }
     getText() {
         return this.getValue();
     }
-
     setIcons(options: any) {
         if(options && options instanceof Array){
             for(let i = 0;i<options.length;i++){

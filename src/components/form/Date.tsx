@@ -168,7 +168,6 @@ export default class Date<P extends typeof props, S extends state> extends FormT
         } else if (type == "month") {
             return <LocaleProvider locale={zhCN}><MonthPicker {...props}></MonthPicker></LocaleProvider>;
         } else if (type == "range") {
-            // console.log(props);
             return <LocaleProvider locale={zhCN}><RangePicker {...props}></RangePicker></LocaleProvider>;
         }
         return null;
@@ -177,7 +176,6 @@ export default class Date<P extends typeof props, S extends state> extends FormT
     //改变事件
     protected _change(e: any) {
         let oldValue = this.getFormatValue();
-        console.log(oldValue)
         super.setValue(e, () => {
             let args = [this.getFormatValue(),oldValue];
             //执行自定义注册的事件

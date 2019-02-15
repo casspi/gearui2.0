@@ -225,19 +225,24 @@ export default class Validator {
         }
         if (props.equals) {
             ((props) => {
-                let equalsSrc = props.equals;
-                let srcEle: any = G.$(equalsSrc);
-                if(srcEle && srcEle.props) {
-                    let form: any = srcEle.props.form;
-                    if(form) {
-                        srcEle.onChange((newValue: any, oldValue: any) => {
-                            form.validateField(props.id);
-                        });
-                        props.vtype = 'equals';
-                        validatorsArray.push(new validators.EqualsValidator(props));
+                // let afterRender = props.__ast__.afterRender;
+                props.__ast__.afterRender = () => {//定义一个afterRender函数，在渲染后执行
+                    // afterRender();
+                    let equalsSrc = props.equals;
+                    let srcEle: any = G.$(equalsSrc, true);
+                    if(srcEle && srcEle.props) {
+                        let form: any = srcEle.props.form;
+                        if(form) {
+                            srcEle.onChange(function(newValue: any, oldValue: any){
+                                form.validateField(props.name||props.id);
+                            });
+                        }
                     }
                 }
+                props.vtype = 'equals';
+                validatorsArray.push(new validators.EqualsValidator(props));
             })(props);
+           
         }
         ((props) => {
             let compare = props.compare;

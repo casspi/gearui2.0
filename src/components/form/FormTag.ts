@@ -58,7 +58,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
         return {
             value: nextProps.value,
-            onChange: nextProps.onChange
+            // ????
+            // onChange: nextProps.onChange
         };
     }
 
@@ -87,7 +88,11 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     setValue(value: any, callback?: Function) {
         if(this.props.form) {
-            this.triggerChange(value, callback);
+            this.setState({
+                value
+            }, () => {
+                    this.triggerChange(value, callback);
+            });            
         }else {
             this.setState({
                 value

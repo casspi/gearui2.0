@@ -26,5 +26,6 @@ export default class EqualsValidator extends Validator {
             }
             callback(this.message);
         }
+        callback();
     }
 }

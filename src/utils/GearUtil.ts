@@ -336,7 +336,7 @@ export default class GearUtil {
             let funs = [];
             for(let i = 0; i < values.length; i++) {
                 let valueInner = values[i];
-                if(typeConstractor == "script") {
+                if(typeConstractor == "script" || typeConstractor == "function") {
                     valueInner = valueInner.replace(/^javascript:/,"");
                     return function(...args: any[]){
                         try{
