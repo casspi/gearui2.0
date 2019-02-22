@@ -146,11 +146,14 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
                 }
             }
         }
+        // console.log(nextProps)
+        // console.log(this.state)
         //返回将被更新至state中的属性
         let newState = this.afterReceiveProps(nextProps);
         if(newState && !G.G$.isEmptyObject(newState)) {
-            state = G.G$.extend({}, state, newState);
+            state = G.G$.extend({}, state, newState,this.state);
         }
+        // console.log(state.value)
         //排除不能被更新的属性
         if(this.cannotUpdate && this.cannotUpdate.toArray()) {
             this.cannotUpdate.toArray().forEach(key => {

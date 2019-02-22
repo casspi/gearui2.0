@@ -761,18 +761,23 @@ table.resultTable .actiontd{
             <g-combotree name="e3" dictype="checkboxJson1" pinyinUrl="./pinyin.json" width="300" multiple="true" ></g-combotree> -->
             <!-- <g-date value="2017-08-08" required="true"></g-date>               -->
             <!-- {mac:'格式不对',range:'不在规定范围'} -->
-            <div id="f2-panel"></div>
-						<div><g-file id="f2" label="标准" width="300" prompt="请选择附件"></g-file></div>
+            <!-- <div id="f2-panel"></div> -->
+						<div><g-file id="f2" label="标准" width="300" required="true" prompt="请选择附件"></g-file></div>
 						<div>
 							<g-submit>保存</g-submit>
 							<g-button onClick="G('#f2').disable();">禁用</g-button>
 							<g-button onClick="G('#f2').enable()">启用</g-button>
 							<g-button onClick="G.messager.simple.info(G('#f2').getValue())">取值</g-button>
+							<g-button onClick="G.messager.simple.info(G('#f2').getOriginurl())">本地路径</g-button>
 							<g-button onClick="G('#f2').clear()">清除</g-button>
 						</div>
+            <g-date value="2017-08-08"></g-date> 
+            <!-- <g-autocomplete width="300" url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA&q=&limit=10"></g-autocomplete>
+            <g-inputtag url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA&q=&limit=10" name="tag00"></g-inputtag> -->
+            <div><span>有默认值（逗号分隔的字符串，在mustMatch为true的情况下，不设置dictype将无法自动转换出名称）：</span><g-inputtag name="t12" value="310000,110000,120000,500000" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" async="true" mustMatch="true"></g-inputtag></div>
+						<div><span>有默认值（逗号分隔的字符串，在mustMatch为true的情况下，只有设置了dictype属性时才能正确转换）：</span><g-inputtag name="t13" value="310000,110000,120000,500000" dictype="DIC_AREA" async="true" mustMatch="true"></g-inputtag></div> 
             <g-submit>提交</g-submit> 
-        </g-form>
-          <g-date value="2017-08-08"></g-date>  
+          </g-form>
       <script>
         G(function () {
           // G('#source').onClick(function(e){

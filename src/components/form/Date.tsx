@@ -175,9 +175,9 @@ export default class Date<P extends typeof props, S extends state> extends FormT
 
     //改变事件
     protected _change(e: any) {
-        let oldValue = this.getFormatValue();
+        let oldValue = this.getValue();
         super.setValue(e, () => {
-            let args = [this.getFormatValue(),oldValue];
+            let args = [this.getValue(),oldValue];
             //执行自定义注册的事件
             this.doEvent("change", ...args);
             //执行控件属性指定的事件
@@ -200,7 +200,10 @@ export default class Date<P extends typeof props, S extends state> extends FormT
         } else if (moment.isMoment(value)) {
             valueRe = value.format(this.state.format);
         }
+        // console.log(valueRe)
+        // return valueRe;
         return valueRe;
+
     }
 
     focus(...args: any[]) { 
@@ -231,7 +234,7 @@ export default class Date<P extends typeof props, S extends state> extends FormT
         }
         super.setValue(value, callback);
     }
-    
+
     setStart(val: any,callback?: Function) {
         if(this.props.type == "range") {
             let format = this.getFormat();
@@ -242,7 +245,10 @@ export default class Date<P extends typeof props, S extends state> extends FormT
             super.setValue(value);
         }
     }
-
+    afterRender(){
+        super.afterRender()
+        // console.log(this.state.value)
+    }
     setEnd(val: any,callback?: Function) {
         if(this.props.type == "range") {
             let format = this.getFormat();

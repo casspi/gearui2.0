@@ -111,15 +111,16 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         }
         
         if(this.props.icon){
-            let classStr = ""
-            if(this.props.icon.indexOf('icon-')>-1){
-                classStr = "anticon-image"+" "+this.props.icon;
-            }
+            // let classStr = ""
+            // if(this.props.icon.indexOf('icon-')>-1){
+            //     classStr = "anticon-image"+" "+this.props.icon;
+            // }
             // 包装一个span用于响应鼠标效果和事件
             let spanProps = {
                 key: UUID.get(),
                 type: this.props.icon,
-                className: "icon  "+classStr,
+                className: "icon",
+                // className: "icon"+classStr,
                 style: {cursor:"pointer"},
                 onClick: (e: any) => {
                     //控件基础改变事件
@@ -202,6 +203,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
     }
 
     afterRender() {
+        super.afterRender()
         let style = this.state.style;
         if(style != null && G.G$.isEmptyObject(style) == false) {
             this.css(style);

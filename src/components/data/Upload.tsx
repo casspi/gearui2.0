@@ -21,6 +21,7 @@ export var props =  {
     // onRemove: GearType.Function,//点击移除文件时的回调，返回值为 false 时不移除。支持返回一个 Promise 对象，Promise 对象 resolve(false) 或 reject 时不移除。
     supportserverrender: GearType.Boolean,//服务端渲染时需要打开这个
     disabled: GearType.Boolean,//是否禁用
+    readonly: GearType.Boolean,
     withcredentials:GearType.Boolean//上传请求时是否携带 cookie
 }
 export interface state extends FormTag.state{
@@ -47,12 +48,12 @@ export default class GUpload<P extends typeof props,S extends state> extends For
         delete props["key"];
         delete props["data-id"];
         delete props["value"];
-        delete props["ref"];        
-        return G.G$.extend({},props,{
+        delete props["ref"];       
+        return G.G$.extend({},props,{//http://localhost:8080/example/Upload/intro
             name: this.props.name,
             defaultFileList: this.state["fileList"],//默认已经上传的文件列表
             fileList: this.state["fileList"],//已经上传的文件列表（受控），使用此参数时，如果遇到 onChange 只调用一次的问题，请参考 
-            action: this.props.url || Http.absoluteUrl("/upload"),//必选参数, 上传的地址
+            action: this.props.url || Http.absoluteUrl("upload"),//必选参数, 上传的地址
             data: this.props.data,//上传所需参数或返回上传参数的方法
             //headers: this.props.headers,//设置上传的请求头部，IE10 以上有效
             showUploadList: this.props.showuploadlist,//是否展示 uploadList, 可设为一个对象，用于单独设定 showPreviewIcon 和 showRemoveIcon
@@ -64,12 +65,14 @@ export default class GUpload<P extends typeof props,S extends state> extends For
             customRequest: this.props.customrequest,//通过覆盖默认的上传行为，可以自定义自己的上传实现
             listtype: this.props.listtype,//上传列表的内建样式，支持三种基本样式 text, picture 和 picture-card
             onChange: (info:any) => {
+                console.log(info.file.status)
                 if (info.file.status == 'uploading') {
                     // 在上传开始时将文件列表加入，不加的话后面就不走了..
                     this.setState({
                         fileList:info.fileList,
                     });
                 }
+                console.log(info.file.response)
                 if (info.file.status === 'done') {
                     if(info.file.response && info.file.response.status==0 && ObjectUtil.isEmpty(info.file.response.data)==false){
                         let data = info.file.response.data;
@@ -130,7 +133,8 @@ export default class GUpload<P extends typeof props,S extends state> extends For
             previewVisible: false,
             previewImage: null,
             fileList: fileList,
-            disabled: this.props.disabled
+            disabled: this.props.disabled,
+            readonly: this.props.readonly
         });
     }
 

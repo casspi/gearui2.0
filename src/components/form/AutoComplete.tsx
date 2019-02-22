@@ -45,6 +45,7 @@ interface OptionData {
 export default class AutoComplete<P extends typeof props & InputProps, S extends state & InputProps> extends Text.default<P, S> {
 
     getInitialState(): state {
+        console.log(this.props.value)
         return {
             mustMatch: this.props.mustMatch,
             rows: this.props.rows,
@@ -86,7 +87,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         delete state.className;
         // 取消父对象Text中对value属性的设置
         delete state.value;
-        delete state.ref;
+        // delete state.ref;
         delete state.mustMatch;
         delete state.searchOptions;
         delete state.controlType;
@@ -368,6 +369,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 fn();
             }
         }    
+        console.log(this.state.options)
     }
 
     // 设置初始时的默认Options
@@ -417,13 +419,15 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 this.match(this.props.value);
             }
         };
-        if(this.props.async == true)
+        if(this.props.async == true){
             // 异步查询根据默认值加载数据
             this.loadData(this.getValue(), callback);
-        else
+        }
+        else{
             // 非异步查询第一次时载入所有数据放到内存，以后根据内存中数据进行过滤
             this.loadData(null, callback);
-
+        } 
+        console.log(this.state.value)
     }
 
     render() {
@@ -434,7 +438,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             input= <AntdInput {...this.getInputProps()}></AntdInput>;
         }
         let acprops = this.getAutoCompleteProps();  
-        console.log(acprops)  
         if(this.state.mustMatch == true){
             let hiddenProps = {
                 key: this.getKey(),
@@ -466,16 +469,19 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
     // }
 
     reset(){
+        console.log(this.props.value)
         super.reset();
-        this.setState({
-            value:this.props.value || "",
+        this.setValue(
+            this.props.value || ""
             // text:this.props.value || "",
-        },()=>{
+        ,()=>{
+            console.log(this.state.value)
             this.loadData();
         });
     }
 
     clear(){
+        // console.log('clear')
         this.setValue("");
         this.setDefaultOptions();
     }
@@ -485,13 +491,37 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         let option = this.getOption(this.state.value);
         return option ? option.text : "";
     }
-
+    
     focus(...args: any[]) { 
         this.find("input").focus(...args);      
     }
 
     blur(...args: any[]){
         this.find("input").blur(...args);
-    }    
+    }   
+    // 格式化匹配的行
+    private _matchFormat:Function;
+    onMatchFormat(fun:Function){
+        if (fun && G.G$.isFunction(fun)) {
+            this._matchFormat = fun;
+            // 设置了格式化函数后设用该方法对当前的默认选项进行格式化
+            this.setDefaultOptions();
+        }
+    }
+
+    // // 根据自定义函数返回的格式对显示内容进行格式化
+    // private _doMatchFormat(option){
+    //     let props = {
+    //         key : option.value || UUID.get(),
+    //         value : option.value || option.text,
+    //         text : option.text,
+    //         attributes: option.attributes
+    //     }
+    //     if(this._matchFormat){
+    //         return <Option {...props}>{HtmlToJsx.htmlToJsx(this._matchFormat.call(this,option))}</Option>;
+    //     }else{
+    //         return <Option {...props}>{option.text}</Option>;
+    //     }
+    // }
 
 }

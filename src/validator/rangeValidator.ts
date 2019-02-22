@@ -90,7 +90,7 @@ export default class RangeValidator extends Validator {
                 let min = this.props.min;
                 let max = this.props.max;
                 let valueFormat = typeof value=="string"?value:value.format(this.props.format || "YYYY-MM-DD");
-                console.log(valueFormat)
+                // console.log(valueFormat)
                 if ((min == undefined || min == null) && (max != undefined && max != null)) {
                     if (valueFormat <= max) {
                         callback();

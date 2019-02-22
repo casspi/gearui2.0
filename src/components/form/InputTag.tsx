@@ -24,7 +24,8 @@ export var props = {
     limit: GearType.Number,
     rows: GearType.Number,
     value: GearType.Or(GearType.Array, GearType.Function, GearType.String),
-    prompt: GearType.String
+    prompt: GearType.String,
+    readonly:GearType.Boolean
 };
 
 export interface state extends FormTag.state {
@@ -49,7 +50,6 @@ export interface state extends FormTag.state {
     prompt?: string;
 }
 
-// 穿梭框
 export default class InputTag<P extends typeof props, S extends state> extends FormTag.default<P, S>{
 
     // 是否严格匹配，主要用于数字代码集的选择，默认为true
@@ -67,7 +67,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                 className = "tag-disabled";
         }
 
-        return G.G$.extend(state, {
+        return G.G$.extend({},state, {
             className: className
         });        
     }
@@ -78,7 +78,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             value: value,
             text: text,
             color: this.state.color,
-            closable:((this.state.readOnly) || this.state.disabled)?false:true,
+            closeable:((this.state.readOnly) || this.state.disabled)?false:true,
             onClose:(e: any) => {
                 // 移除当前tag
                 this._removeValue(key);
@@ -87,9 +87,9 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     }   
 
     getInputProps() {
-        return {
+        return G.G$.extend({},{
             className: "inputtag-text-control",
-            style: { width: this.state.inputWidth || 150, display: this.state.inputVisible ? "" : "none" },
+            style: { width: this.state.inputWidth || 150,},// display: this.state.inputVisible ? "" : "none" },
             onBlur:() => {
                 let value = this._inputControl.getValue();
                 let text = this._inputControl.getText();
@@ -120,7 +120,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             ref:(ele: any)=>{
                 this._inputControl = ele;
             },            
-        };
+        });
     }     
 
     getAutoCompleteProps() {
@@ -146,6 +146,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             },
             onChange: () => {
                 if(this.state.mustMatch){
+                    console.log(this._inputControl)
                     let value = this._inputControl.getValue();
                     let text = this._inputControl.getValue();
                     if(value && value.length>0){
@@ -194,22 +195,24 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             url: this.props.url,
             controlType: this.props.controlType,
             dropdownWidth: this.props.dropdownWidth,
-            prompt: this.props.prompt
+            prompt: this.props.prompt,
+            readOnly: this.props.readonly
         };
     }
     
-    render() {        
+    render() {  
         // 输入框是否可见
         let inputControl;
         let props: any;
         let _props:any = this.getProps();
         delete _props.inputVisible;
         // delete _props.loading;
-        console.log(_props.loading)
+        // console.log(_props.loading)
         delete _props.repeatAble;
         delete _props.mustMatch;
         delete _props.controlType;
         delete _props.dropdownWidth;
+        console.log(this.state.inputVisible)
         if(this.state.dictype || this.state.url){
             props = this.getAutoCompleteProps();
             inputControl = <AutoComplete.default key={"input"} {...props}></AutoComplete.default>;
@@ -217,6 +220,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             props = this.getInputProps();
             inputControl = <Text.default key={"input"} {...props}></Text.default>;
         }
+        // console.log(inputControl)
         return <div {..._props}>
                 <AntdSpin size={"default"} spinning={this.state.loading} delay={100}>
                     <div key={"taglist"} className={"tag-list"}>
@@ -224,8 +228,8 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                     </div>
                     {(this.state.readOnly || this.state.disabled) ? null : (
                     <div key={"taginput"} className={"tag-input"}>
-                        {inputControl}
-                        {<AntdButton key={"button"} size="small" type="dashed" {...this.getButtonProps()}>{this.state.prompt || " + 添加新值"}</AntdButton>}
+                        <span style={{display:this.state.inputVisible?"":"none"}}>{inputControl}</span>
+                        <AntdButton key={"button"} size="small" type="dashed" {...this.getButtonProps()}>{this.state.prompt || " + 添加新值"}</AntdButton>
                     </div>)}
                 </AntdSpin>
             </div>;
@@ -234,10 +238,12 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     //获取所有的标签
     private getTags() {
         let values: any = this.state.value;
+        console.log(values)
         let tags: any[] = [];
         if(values instanceof Array) {
             values.map((value: any)=>{
                 let props: any = this.getSelectedTagProps(value.key,value.value,value.text);
+                console.log(props)
                 tags.push(<SelectedTag.default key={"tag_"+(value.key)} {...props}/>);
             });
         }
@@ -246,6 +252,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
 
     //渲染完成之后处理默认值
     afterRender() {
+        console.log('afterRender')
         this._loadDefault();
     }
 
@@ -327,8 +334,10 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     private _removeValue(key: string){
         let oldValues = this.getValue();
         let values = this.state.value;
+        console.log(oldValues);
+        console.log(values);
         if(values){
-            let newValues = [];
+            let newValues:any = [];
             for(var i=0;i<values.length;i++){
                 if(values[i].key!=key){
                     newValues.push(values[i]);
@@ -355,7 +364,6 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     }
 
     private _change(newValues: any, oldValues: any){
-        this.setValue(newValues);
         this.doEvent("change",newValues,oldValues);
     }
 

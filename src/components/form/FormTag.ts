@@ -62,10 +62,11 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             // onChange: nextProps.onChange
         };
     }
-
+    needChange:any;
     triggerChange(changedValue: any, callback?: Function) {
         if(this.props.form) {
             this.props.form.setFieldValue(this.props.name, changedValue, callback);
+            this.needChange = true;
         }
     }
     protected getProps(){
@@ -84,7 +85,13 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         };
     }
 
-    onChange(fun: Function): void{}
+    onChange(fun: Function): void{
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("change",fun);
+        }else{
+            this.find("input").change();
+        }  
+    }
 
     setValue(value: any, callback?: Function) {
         if(this.props.form) {
@@ -203,6 +210,12 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             return true;
         else
             return false;
+    }
+
+    onClick(fun:Function) {
+        if (fun && G.G$.isFunction(fun)) {
+            this.bind("click", fun);
+        }
     }
     
 }

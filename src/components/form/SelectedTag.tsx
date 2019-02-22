@@ -11,7 +11,7 @@ export var props = {
 
 export interface state extends FormTag.state {
     // 是否可以关闭，默认为false
-    closable?: boolean;
+    closeable?: boolean;
     // 颜色
     color?: string;
     // 文本值
@@ -24,9 +24,10 @@ export default class SelectedTag<P extends typeof props, S extends state> extend
     getProps() {
         let state = this.state
         return G.G$.extend({}, state, {
-            closable: this.state.closable,
+            closable: this.state.closeable,
             color: this.state.color,
             value: this.state.value,
+            text: this.state.text,
             onClose: (e: any) => {
                 this.doEvent("close");
             },
@@ -42,11 +43,11 @@ export default class SelectedTag<P extends typeof props, S extends state> extend
             color: this.props.color,
             value: this.props.value,
             text: this.props.text,
+            closeable:this.props.closeable
         };
     }
     
     render() {        
-        // 输入框是否可见
         return <AntdTag {...this.getProps()}>{this.getText()||this.getValue()}</AntdTag>;
     }
 

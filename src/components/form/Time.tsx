@@ -67,11 +67,13 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
             },
             onChange: (time:any, timeString: string)=>{
                 if(this.isValid(timeString)){
+                    // let oldValue = this.getValue();
                     let oldValue = this.getFormatValue();
-                    this.triggerChange(time);
-                    this.doEvent("change",timeString, oldValue);
                     this.setState({
                         value:time
+                    },()=>{
+                        this.triggerChange(time);
+                        this.doEvent("change",time, oldValue);
                     });
                 }
             },
@@ -128,9 +130,9 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
     //插件初始化，状态发生变化重新进行渲染
     getInitialState() {
         let hidedisabled = this.props.hideDisabled;
-        let disabledHours:Array<any> = this.props.disabledHours;
-        let disabledMinutes:Array<any> = this.props.disabledMinutes;
-        let disabledSeconds:Array<any> = this.props.disabledSeconds;
+        let disabledHours:Array<any> = this.props.disabledHours||[];
+        let disabledMinutes:Array<any> = this.props.disabledMinutes||[];
+        let disabledSeconds:Array<any> = this.props.disabledSeconds||[];
         if((this.props.hourStep!=null && this.props.hourStep>0)
             || (this.props.minuteStep!=null && this.props.minuteStep>0)
             || (this.props.secondStep!=null && this.props.secondStep>0)){
@@ -318,9 +320,8 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
     }
 
     clear(){
-        this.setValue(null);
+        super.setValue(null);
     }
-
     getFormatValue(values?:any) {
         let value = values || this.getValue();
         let valueRe:any = null;

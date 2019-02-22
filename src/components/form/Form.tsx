@@ -1,5 +1,6 @@
 import * as Tag from "../Tag";
 import { Form as AntdForm } from 'antd';
+import * as moment from 'moment';
 import { FormComponentProps } from 'antd/es/form/Form';
 import { FormTag } from '.';
 import * as React from 'react';
@@ -84,6 +85,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         
     render() {
         let items: any = this.getFormItems();
+        // console.log(items)
         // if(this.cacheItems != null) {
         //     items = this.cacheItems;
         // }else {
@@ -154,6 +156,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         if(!(children instanceof Array)) {
             children = [children];
         }
+        children = children.filter((o:any) => o!=0)
         children.map((child:any, index: number)=>{
             let formItem = child;
             if(child && child.type && ((ObjectUtil.isExtends(child.type, "FormTag")) || ObjectUtil.isExtends(child.type, "Validate"))) {
@@ -181,13 +184,17 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 然后在创建一个reactelement,传入这个新的props,以这种方式来变相修改老的props
                 -------------------*/
                 //合并新的信息，将当前存储的tagname对应state信息合并到props，并传递给formTag
+                // console.log(this.state.formTagStates[tagName])
                 props = G.G$.extend({}, childReactNode.props, props, this.state.formTagStates[tagName], {
                     needUpdateToState: ["validation", "invalidType", "rules","data-__field", "data-__meta"]
                 });
                 delete props.value;
                 delete props.validation;
                 let formTag: any = React.createElement(childReactNode.type, props, props.children);
+                // console.log(childReactNode.type)
+                // console.log(childReactNode)
                 let initialValue = this.values[tagName] || childReactNode.props.value;
+                // console.log(initialValue)
                 formTag = this.props.form.getFieldDecorator(tagName,{
                     initialValue: initialValue,
                     rules: validation ? rules: []
@@ -232,7 +239,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         }
         return null;
     }
-
     /**
      * 获取扩展的formTag的Props
      * @param index 

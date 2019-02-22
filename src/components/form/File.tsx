@@ -40,8 +40,9 @@ export default class File<P extends typeof props, S extends state> extends FormT
             onChange: (e: any) => {
                 let oldValue = this.getValue();
                 let newValue = e.target.value;
-                this.setValue(newValue);
-                this.doEvent("change", newValue, oldValue);
+                this.setValue(newValue,()=>{
+                    this.doEvent("change", newValue, oldValue);
+                });
             },
         };
     }    
@@ -66,6 +67,7 @@ export default class File<P extends typeof props, S extends state> extends FormT
     afterRender() {
         this.find("button").attr("tabindex","-1");
         this.find("input:hidden").attr("tabindex","-1");
+        console.log(this.state.value)
     }
 
     getValue(){
@@ -106,5 +108,16 @@ export default class File<P extends typeof props, S extends state> extends FormT
 
     blur(...args: any[]){
         this.find("input").blur(...args);
+    } 
+
+    getOriginurl(){
+        let fileInput:any = this.realDom.querySelectorAll('input')[1];
+        if(fileInput.files[0]){
+            let url = window.URL.createObjectURL(fileInput.files[0]);
+            return url;
+        }else{
+            console.error('您还没有选中任何文件!')
+            return
+        }
     }  
 }

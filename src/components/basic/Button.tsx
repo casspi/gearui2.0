@@ -38,6 +38,7 @@ export interface state extends Tag.state {
 export default class Button<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
     getInitialState(): state {
+        // console.log(this.props.url)
         return {
             onClick:this.clickEvent.bind(this),
             ghost: this.props.ghost,

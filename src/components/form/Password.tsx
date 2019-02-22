@@ -16,9 +16,9 @@ export default class Password<P extends typeof props & InputProps, S extends (st
         return {
             value: this.props.value,
             type: "password",
-            onChange: (event)=>{
-                this.setValue(event.target.value);
-            }
+            // onChange: (event)=>{
+            //     this.setValue(event.target.value);
+            // }
         };
     }
 }
