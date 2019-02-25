@@ -45,7 +45,7 @@ interface OptionData {
 export default class AutoComplete<P extends typeof props & InputProps, S extends state & InputProps> extends Text.default<P, S> {
 
     getInitialState(): state {
-        console.log(this.props.value)
+        console.log(this.props.onChange)
         return {
             mustMatch: this.props.mustMatch,
             rows: this.props.rows,
@@ -130,7 +130,11 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 }        
                 //执行自定义注册的事件
                 this.doEvent("blur", e);
-            },              
+                //执行控件属性指定的事件
+                if (this.props.onBlur) {
+                    this.props.onBlur.call(this, e);
+                }
+            }            
         });
     }
 
@@ -154,6 +158,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 }
             });
         }
+        // console.log(optionsJsx)
         return optionsJsx;
     }
 
@@ -361,7 +366,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                         this.setState({
                             options: options,
                             searchOptions: options
-                        }, callback);
+                        },callback);
                     }else {
                         this.doEvent("error", result);
                     }
@@ -369,7 +374,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 fn();
             }
         }    
-        console.log(this.state.options)
     }
 
     // 设置初始时的默认Options
@@ -445,6 +449,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 value: this.state.value || "",
                 name: this.state.name || this.props.id
             };
+            console.log(acprops.dataSource)
             return <span><AntdAutoComplete {...acprops}>{input}</AntdAutoComplete><input {...hiddenProps}/></span>;
         }else {
             return <AntdAutoComplete {...acprops}>{input}</AntdAutoComplete>;

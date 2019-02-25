@@ -6,12 +6,12 @@ export var props = {
     ...FormTag.props,
     color: GearType.String,
     text: GearType.String,
-    closeable: GearType.Boolean
+    closable: GearType.Boolean
 };
 
 export interface state extends FormTag.state {
     // 是否可以关闭，默认为false
-    closeable?: boolean;
+    closable?: boolean;
     // 颜色
     color?: string;
     // 文本值
@@ -24,7 +24,7 @@ export default class SelectedTag<P extends typeof props, S extends state> extend
     getProps() {
         let state = this.state
         return G.G$.extend({}, state, {
-            closable: this.state.closeable,
+            closable: this.state.closable,
             color: this.state.color,
             value: this.state.value,
             text: this.state.text,
@@ -43,7 +43,7 @@ export default class SelectedTag<P extends typeof props, S extends state> extend
             color: this.props.color,
             value: this.props.value,
             text: this.props.text,
-            closeable:this.props.closeable
+            closable:this.props.closable
         };
     }
     

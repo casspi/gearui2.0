@@ -78,7 +78,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             value: value,
             text: text,
             color: this.state.color,
-            closeable:((this.state.readOnly) || this.state.disabled)?false:true,
+            closable:((this.state.readOnly) || this.state.disabled)?false:true,
             onClose:(e: any) => {
                 // 移除当前tag
                 this._removeValue(key);
@@ -107,36 +107,34 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                     }
                 }
                 this._hideInput();
-                if(this._triggerButton)
-                    this._triggerButton.focus();
+                // if(this._triggerButton)
+                //     this._triggerButton.focus();
             },
-            onKeydown: (e: any) => {
-                if(e.keyCode==13){
-                    if(this.state.mustMatch==false || (this.state.dictype ==null && this.state.url == null)){
-                        this.blur();
-                    }
+            onPressEnter: (e: any) => {
+                if(this.state.mustMatch==false || (this.state.dictype ==null && this.state.url == null)){
+                    this._inputControl.blur();
                 }
             },
             ref:(ele: any)=>{
                 this._inputControl = ele;
-            },            
+            }        
         });
     }     
 
     getAutoCompleteProps() {
         let inputProps = this.getInputProps();
-        return G.G$.extend({}, inputProps, {
+        return G.G$.extend({}, {
             dictype: this.state.dictype,
             url: this.state.url,
             mustMatch: this.state.mustMatch,
             controlType: this.state.controlType,
             dropdownWidth: this.state.dropdownWidth || 150,
             async: this.state.async,
-            limit: this.state.limit,
+            limit: this.props.limit,
             rows: this.state.rows,
-            onMatchFormat: (option: any) => {
-                this.doEvent("matchFormat", option);
-            },
+            // onMatchFormat: (option: any) => {
+            //     this.doEvent("matchFormat", option);
+            // },
             onBlur: (e: any) => {
                 if(this.state.mustMatch){
                     this._hideInput();
@@ -144,11 +142,14 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                     inputProps.onBlur.call(this,e);
                 }
             },
-            onChange: () => {
-                if(this.state.mustMatch){
-                    console.log(this._inputControl)
-                    let value = this._inputControl.getValue();
-                    let text = this._inputControl.getValue();
+            onSelect: (value:any) => {//更具antd api 将onchange改为onSelect
+                console.log('onchange')
+                console.log(value)
+                if(this.state.mustMatch && this._inputControl){
+                    console.log(this._inputControl.getValue())
+                    // let value = this._inputControl.getValue();
+                    // let text = this._inputControl.getValue();
+                    let text = value;
                     if(value && value.length>0){
                         // 如果设置为不允许重复，先检查是否和现有值重复
                         if(this.state.repeatAble){
@@ -164,8 +165,13 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                             this._hideInput();
                         }
                     }
+                }else{
+                    console.log(this._inputControl.getValue())
                 }
-            }
+            },
+            ref:(ele: any)=>{
+                this._inputControl = ele;
+            } 
         });
     }    
 
@@ -196,7 +202,8 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             controlType: this.props.controlType,
             dropdownWidth: this.props.dropdownWidth,
             prompt: this.props.prompt,
-            readOnly: this.props.readonly
+            readOnly: this.props.readonly,
+            limit:this.props.limit
         };
     }
     
@@ -206,21 +213,20 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         let props: any;
         let _props:any = this.getProps();
         delete _props.inputVisible;
-        // delete _props.loading;
+        delete _props.loading;
         // console.log(_props.loading)
         delete _props.repeatAble;
         delete _props.mustMatch;
         delete _props.controlType;
         delete _props.dropdownWidth;
-        console.log(this.state.inputVisible)
+        // console.log(this.state.inputVisible)
         if(this.state.dictype || this.state.url){
             props = this.getAutoCompleteProps();
-            inputControl = <AutoComplete.default key={"input"} {...props}></AutoComplete.default>;
+            inputControl = <span style={{display:this.state.inputVisible?'block':'none'}}><AutoComplete.default key={"input"} {...props}></AutoComplete.default></span>;
         }else{
             props = this.getInputProps();
-            inputControl = <Text.default key={"input"} {...props}></Text.default>;
+            inputControl = <span style={{display:this.state.inputVisible?'block':'none'}}><Text.default key={"input"} {...props}></Text.default></span>;
         }
-        // console.log(inputControl)
         return <div {..._props}>
                 <AntdSpin size={"default"} spinning={this.state.loading} delay={100}>
                     <div key={"taglist"} className={"tag-list"}>
@@ -228,7 +234,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                     </div>
                     {(this.state.readOnly || this.state.disabled) ? null : (
                     <div key={"taginput"} className={"tag-input"}>
-                        <span style={{display:this.state.inputVisible?"":"none"}}>{inputControl}</span>
+                        {inputControl}
                         <AntdButton key={"button"} size="small" type="dashed" {...this.getButtonProps()}>{this.state.prompt || " + 添加新值"}</AntdButton>
                     </div>)}
                 </AntdSpin>
@@ -238,12 +244,12 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     //获取所有的标签
     private getTags() {
         let values: any = this.state.value;
-        console.log(values)
+        // console.log(values)
         let tags: any[] = [];
         if(values instanceof Array) {
             values.map((value: any)=>{
                 let props: any = this.getSelectedTagProps(value.key,value.value,value.text);
-                console.log(props)
+                // console.log(props)
                 tags.push(<SelectedTag.default key={"tag_"+(value.key)} {...props}/>);
             });
         }
@@ -254,6 +260,9 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     afterRender() {
         console.log('afterRender')
         this._loadDefault();
+        console.log(this._inputControl)
+        console.log(this._triggerButton)
+        console.log(this.refs)
     }
 
     private _loadDefault(){
@@ -334,8 +343,8 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     private _removeValue(key: string){
         let oldValues = this.getValue();
         let values = this.state.value;
-        console.log(oldValues);
-        console.log(values);
+        // console.log(oldValues);
+        // console.log(values);
         if(values){
             let newValues:any = [];
             for(var i=0;i<values.length;i++){
