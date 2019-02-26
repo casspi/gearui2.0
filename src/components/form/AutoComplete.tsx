@@ -45,7 +45,6 @@ interface OptionData {
 export default class AutoComplete<P extends typeof props & InputProps, S extends state & InputProps> extends Text.default<P, S> {
 
     getInitialState(): state {
-        console.log(this.props.onChange)
         return {
             mustMatch: this.props.mustMatch,
             rows: this.props.rows,
@@ -204,6 +203,9 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                     if(r && r[0]) {
                         optionJsx = <AntdOption {...props}>{G.$(r[0])}</AntdOption>;
                     }
+                }else if(this._matchFormat && G.G$.isFunction(this._matchFormat)){
+                    console.log(G.G$(G.G$(this._matchFormat(props))[0]))
+                    optionJsx = <AntdOption {...props}>{}</AntdOption>;//{this._matchFormat(props)}
                 }else {
                     optionJsx = <AntdOption {...props}>{text}</AntdOption>;
                 }
@@ -431,7 +433,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             // 非异步查询第一次时载入所有数据放到内存，以后根据内存中数据进行过滤
             this.loadData(null, callback);
         } 
-        console.log(this.state.value)
     }
 
     render() {
@@ -449,7 +450,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 value: this.state.value || "",
                 name: this.state.name || this.props.id
             };
-            console.log(acprops.dataSource)
             return <span><AntdAutoComplete {...acprops}>{input}</AntdAutoComplete><input {...hiddenProps}/></span>;
         }else {
             return <AntdAutoComplete {...acprops}>{input}</AntdAutoComplete>;
@@ -490,9 +490,8 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         this.setValue("");
         this.setDefaultOptions();
     }
-
+    
     getText() {
-        // return this.state.text;
         let option = this.getOption(this.state.value);
         return option ? option.text : "";
     }

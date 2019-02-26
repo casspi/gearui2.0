@@ -64,7 +64,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             action: this.props.action,
             iframe: this.props.iframe,
             target: this.props.target,
-            ajax: this.props.ajax,
+            ajax: this.props.ajax==false?false:true,
             method: this.props.method,
             validate: true,
             redirect: this.props.redirect
@@ -101,6 +101,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         delete props.showProgress;
         delete props.validate;
         delete props.validation;
+        delete props.ajax;
         return (<AntdForm {...props}>
             {items}
         </AntdForm>);

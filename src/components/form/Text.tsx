@@ -271,4 +271,9 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
             });
         }
     }
+    clear(){
+        this.setValue(null,()=>{
+            console.log(this.state.value)
+        })
+    }
 }

@@ -77,7 +77,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             key: key,
             value: value,
             text: text,
-            color: this.state.color,
+            color: this.props.color,
             closable:((this.state.readOnly) || this.state.disabled)?false:true,
             onClose:(e: any) => {
                 // 移除当前tag
@@ -122,7 +122,6 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     }     
 
     getAutoCompleteProps() {
-        let inputProps = this.getInputProps();
         return G.G$.extend({}, {
             dictype: this.state.dictype,
             url: this.state.url,
@@ -136,20 +135,19 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             //     this.doEvent("matchFormat", option);
             // },
             onBlur: (e: any) => {
-                if(this.state.mustMatch){
+                this._inputControl.blur()
+                // if(this.state.mustMatch){
                     this._hideInput();
-                }else{
-                    inputProps.onBlur.call(this,e);
-                }
+                // }else{
+                //     this._addValue(this._inputControl.getValue(),this._inputControl.getValue())
+                // }
             },
-            onSelect: (value:any) => {//更具antd api 将onchange改为onSelect
-                console.log('onchange')
-                console.log(value)
-                if(this.state.mustMatch && this._inputControl){
-                    console.log(this._inputControl.getValue())
-                    // let value = this._inputControl.getValue();
-                    // let text = this._inputControl.getValue();
-                    let text = value;
+            onSelect: (v:any) => {//根据antd api 将onchange改为onSelect
+                console.log('onSelect')
+                console.log(this._inputControl.getOption(v))
+                let value = this._inputControl.getOption(v).value||"";
+                let text = this._inputControl.getOption(v).text||this._inputControl.getOption(v).value;
+                if(this.state.mustMatch){
                     if(value && value.length>0){
                         // 如果设置为不允许重复，先检查是否和现有值重复
                         if(this.state.repeatAble){
@@ -166,7 +164,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                         }
                     }
                 }else{
-                    console.log(this._inputControl.getValue())
+                    this._addValue(value, text)
                 }
             },
             ref:(ele: any)=>{
@@ -244,7 +242,12 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     //获取所有的标签
     private getTags() {
         let values: any = this.state.value;
-        // console.log(values)
+        console.log(values)
+        // if(this._inputControl.getOption){
+        //     values.map((value:any)=>{
+        //         // value.
+        //     })
+        // }
         let tags: any[] = [];
         if(values instanceof Array) {
             values.map((value: any)=>{
@@ -266,14 +269,14 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     }
 
     private _loadDefault(){
-        if(this.state.value){
+        if(this.props.value){
             this.setState({
                 loading: true
             },()=>{
+                console.log(this.props.value)
                 // 如果有设置默认值，支持以逗号分隔的字符串，支持json格式字符串
-                if(typeof this.state.value == "string"){
-                    // 以逗号分隔的字符串
-                    let values: any = this.state.value;
+                if(G.G$.isArray(this.props.value)){
+                    let values: any = this.props.value;
                     if(this.state.dictype && this.state.mustMatch) {
                         let url = this.state.url;
                         let method = this.state.method;
@@ -282,13 +285,22 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                             let result = await DicUtil.getDic({url, method, dictype});
                             if(result.success) {
                                 let message = result.data;
-                                this.setValue(message.data);
+                                let nValues = [];
+                                for(var i=0;i<values.length;i++){
+                                    for(var j=0;j<message.length;j++){
+                                        if(values[i]==message[j].value){
+                                            nValues.push(message[j])
+                                        }
+                                    }
+                                }
+                                this.setValue(nValues);
                             }else {
                                 this.setState({
                                     loading: false
                                 });
                             }
                         }
+                        fn()
                     }else{
                         // 否则直接赋值
                         this.setValue(values);
@@ -318,6 +330,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         this.setState({
             inputVisible: false,
         },()=>{
+            console.log(this._inputControl)
             if(this._inputControl){
                 this._inputControl.clear();
             }
@@ -516,13 +529,13 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     }  
 
     reset(){
-        if(this.props.form) {
-            super.reset();
-        }else {
-            this.setValue([], ()=>{
-                this._loadDefault();
-            });
-        }
+        // if(this.props.form) {
+        //     super.reset();
+        // }else {
+            this._loadDefault();
+            // this.setValue([], ()=>{
+            // });
+        // }
         
     }
 

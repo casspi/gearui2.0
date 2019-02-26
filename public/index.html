@@ -772,15 +772,21 @@ table.resultTable .actiontd{
 							<g-button onClick="G('#f2').clear()">清除</g-button>
 						</div>
             <g-date value="2017-08-08"></g-date>  -->
-            <g-autocomplete  width="300" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" async="true" mustMatch="true"></g-autocomplete>
+            <div><g-autocomplete id="e31"  width="400" async="false" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" mustMatch="true" prompt="自定义选项格式"></g-autocomplete></div>
+            <!-- <g-autocomplete  width="300" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" async="true" mustMatch="true"></g-autocomplete> -->
             <!--<g-inputtag url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA&q=&limit=10" name="tag00"></g-inputtag> -->
 						<!-- <div><span>有默认值（逗号分隔的字符串，在mustMatch为true的情况下，只有设置了dictype属性时才能正确转换）：</span><g-inputtag name="t13" value="310000,110000,120000,500000" dictype="DIC_AREA" async="true" mustMatch="true"></g-inputtag></div>  -->
-            
+            <g-text width="400" id="test1"></g-text>
+            <g-inputtag></g-inputtag>
             <g-submit>提交</g-submit> 
           </g-form>
-          <div><span>有默认值（逗号分隔的字符串，在mustMatch为true的情况下，不设置dictype将无法自动转换出名称）：</span><g-inputtag  name="t12" value="310000" repeatAble="true" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" async="true" ></g-inputtag></div>
+          <!-- <div><span>有默认值（逗号分隔的字符串，在mustMatch为true的情况下，不设置dictype将无法自动转换出名称）：</span><g-inputtag  name="t12" value="310000" repeatAble="true" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" async="true" ></g-inputtag></div> -->
       <script>
         G(function () {
+          G('#test1').blur(()=>{G("#test1").clear()})
+          // G("#e31").onMatchFormat(function(option){
+          //   return "<div width='100%'><div style='float:left'>"+option.value+"</div><div style='float:right'>"+option.text+"</div></div>";
+          // });
           // G('#source').onClick(function(e){
           //   console.log(e)
           //   console.log(7777)
