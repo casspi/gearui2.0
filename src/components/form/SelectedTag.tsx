@@ -1,12 +1,13 @@
 import { Tag as AntdTag} from 'antd';
 import * as React from 'react';
 import * as FormTag from './FormTag';
+import UUID from '../../utils/uuid';
 
 export var props = {
     ...FormTag.props,
     color: GearType.String,
     text: GearType.String,
-    closable: GearType.Boolean
+    closable: GearType.Boolean,
 };
 
 export interface state extends FormTag.state {
@@ -20,9 +21,9 @@ export interface state extends FormTag.state {
 
 // 穿梭框
 export default class SelectedTag<P extends typeof props, S extends state> extends FormTag.default<P, S> {
-
+    
     getProps() {
-        let state = this.state
+        let state:any = this.state;
         return G.G$.extend({}, state, {
             closable: this.state.closable,
             color: this.state.color,
@@ -43,12 +44,12 @@ export default class SelectedTag<P extends typeof props, S extends state> extend
             color: this.props.color,
             value: this.props.value,
             text: this.props.text,
-            closable:this.props.closable
+            closable:this.props.closable,
         };
     }
     
     render() {        
-        return <AntdTag {...this.getProps()}>{this.getText()||this.getValue()}</AntdTag>;
+        return <AntdTag key={UUID.get()} {...this.getProps()}>{this.getText()||this.getValue()}</AntdTag>;
     }
 
     getText(){

@@ -79,6 +79,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             text: text,
             color: this.props.color,
             closable:((this.state.readOnly) || this.state.disabled)?false:true,
+            // showValue:(this.state.mustMatch && this.state.dictype)?true:false,
             onClose:(e: any) => {
                 // 移除当前tag
                 this._removeValue(key);
@@ -134,37 +135,61 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             // onMatchFormat: (option: any) => {
             //     this.doEvent("matchFormat", option);
             // },
-            onBlur: (e: any) => {
-                this._inputControl.blur()
-                // if(this.state.mustMatch){
-                    this._hideInput();
-                // }else{
-                //     this._addValue(this._inputControl.getValue(),this._inputControl.getValue())
-                // }
-            },
-            onSelect: (v:any) => {//根据antd api 将onchange改为onSelect
-                console.log('onSelect')
-                console.log(this._inputControl.getOption(v))
-                let value = this._inputControl.getOption(v).value||"";
-                let text = this._inputControl.getOption(v).text||this._inputControl.getOption(v).value;
+            onPressEnter:(e:any)=>{
                 if(this.state.mustMatch){
-                    if(value && value.length>0){
-                        // 如果设置为不允许重复，先检查是否和现有值重复
-                        if(this.state.repeatAble){
-                            // 如果不允许重复，先检查值是否已经存在了
-                            if(this.existValue(value)==false){
-                                this._addValue(value, text);
-                                this._hideInput();
+                    this._hideInput();
+                }else{
+                    if(this._inputControl.getValue()){
+                        // 如果不允许重复，先检查值是否已经存在了
+                        if(this.state.repeatAble == false){
+                            if(this.existValue(this._inputControl.getValue())==false){
+                                this._addValue(this._inputControl.getValue(),this._inputControl.getValue());
                             }else{
                                 G.messager.simple.info("输入值已存在于选中项中！");
                             }
                         }else{
-                            this._addValue(value, text);
-                            this._hideInput();
+                            this._addValue(this._inputControl.getValue(),this._inputControl.getValue());
                         }
                     }
+                    this._hideInput();
+                }
+            },
+            onBlur: (e: any) => {
+                this._hideInput();
+                
+            },
+            onSelect: (v:any) => {//根据antd api 将onchange改为onSelect
+                let vobj = this._inputControl.getOption(v);
+                let value = vobj.value||"";
+                let text = vobj.text || vobj.value;
+                if(this.state.mustMatch){
+                    // 如果设置为不允许重复，先检查是否和现有值重复
+                    if(this.state.repeatAble == false){
+                        // 如果不允许重复，先检查值是否已经存在了
+                        if(this.existValue(value)==false){
+                            if((this.state.mustMatch && this.state.dictype)){
+                                this._addValue(value, text);
+                            }else{
+                                this._addValue(value, value);
+                            }
+                        }else{
+                            G.messager.simple.info("输入值已存在于选中项中！");
+                        }
+                    }else{
+                        if((this.state.mustMatch && this.state.dictype)){
+                            this._addValue(value, text);
+                        }else{
+                            this._addValue(value, value);
+                        }
+                    }
+                    this._hideInput();
                 }else{
-                    this._addValue(value, text)
+                    if(this.state.repeatAble == false && (this.existValue(value)==true || this.existValue(text)==true)){
+                        G.messager.simple.info("输入值已存在于选中项中！");
+                    }else{
+                        this._addValue(value, text);
+                    }
+                    this._hideInput();
                 }
             },
             ref:(ele: any)=>{
@@ -192,7 +217,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             inputVisible: this.props.inputVisible,
             disabled: this.props.disabled,
             loading: false,
-            repeatAble: this.props.repeatAble,
+            repeatAble: this.props.repeatAble==true,
             mustMatch: this.props.mustMatch,
             method: this.props.method,
             dictype: this.props.dictype,
@@ -212,12 +237,10 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         let _props:any = this.getProps();
         delete _props.inputVisible;
         delete _props.loading;
-        // console.log(_props.loading)
         delete _props.repeatAble;
         delete _props.mustMatch;
         delete _props.controlType;
         delete _props.dropdownWidth;
-        // console.log(this.state.inputVisible)
         if(this.state.dictype || this.state.url){
             props = this.getAutoCompleteProps();
             inputControl = <span style={{display:this.state.inputVisible?'block':'none'}}><AutoComplete.default key={"input"} {...props}></AutoComplete.default></span>;
@@ -226,9 +249,9 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             inputControl = <span style={{display:this.state.inputVisible?'block':'none'}}><Text.default key={"input"} {...props}></Text.default></span>;
         }
         return <div {..._props}>
-                <AntdSpin size={"default"} spinning={this.state.loading} delay={100}>
+                <AntdSpin size={"default"} spinning={this.state.loading}  delay={100}>
                     <div key={"taglist"} className={"tag-list"}>
-                        {this.getTags()}
+                        {...this.getTags()}
                     </div>
                     {(this.state.readOnly || this.state.disabled) ? null : (
                     <div key={"taginput"} className={"tag-input"}>
@@ -242,18 +265,11 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     //获取所有的标签
     private getTags() {
         let values: any = this.state.value;
-        console.log(values)
-        // if(this._inputControl.getOption){
-        //     values.map((value:any)=>{
-        //         // value.
-        //     })
-        // }
         let tags: any[] = [];
         if(values instanceof Array) {
             values.map((value: any)=>{
                 let props: any = this.getSelectedTagProps(value.key,value.value,value.text);
-                // console.log(props)
-                tags.push(<SelectedTag.default key={"tag_"+(value.key)} {...props}/>);
+                tags.push(<SelectedTag.default key={"tag_"+(value.key)+UUID.get()} {...props}/>);
             });
         }
         return tags;
@@ -261,22 +277,21 @@ export default class InputTag<P extends typeof props, S extends state> extends F
 
     //渲染完成之后处理默认值
     afterRender() {
-        console.log('afterRender')
+        console.log(this.props.value)
         this._loadDefault();
-        console.log(this._inputControl)
-        console.log(this._triggerButton)
-        console.log(this.refs)
-    }
+        console.log(this.props.value)
 
+    }
+   
     private _loadDefault(){
+        console.log(this.props.value)
         if(this.props.value){
             this.setState({
                 loading: true
             },()=>{
-                console.log(this.props.value)
                 // 如果有设置默认值，支持以逗号分隔的字符串，支持json格式字符串
-                if(G.G$.isArray(this.props.value)){
-                    let values: any = this.props.value;
+                if(typeof this.props.value=='string'){
+                    let values: any = this.getPropStringArrayValue(this.props.value);
                     if(this.state.dictype && this.state.mustMatch) {
                         let url = this.state.url;
                         let method = this.state.method;
@@ -301,13 +316,14 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                             }
                         }
                         fn()
-                    }else{
+                    }
+                    else{
                         // 否则直接赋值
                         this.setValue(values);
                     }
                 }else{
                     // Json对象或数组
-                    let values: any = this.state.value;
+                    let values: any = this.props.value;
                     this.setValue(values);
                 }
             });
@@ -326,14 +342,13 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     }
 
     // 隐藏输入框
-    private _hideInput(){         
+    private _hideInput(){    
         this.setState({
             inputVisible: false,
         },()=>{
-            console.log(this._inputControl)
             if(this._inputControl){
                 this._inputControl.clear();
-            }
+            }     
         });
     }    
 
@@ -529,13 +544,12 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     }  
 
     reset(){
-        // if(this.props.form) {
-        //     super.reset();
-        // }else {
+        console.log(this.props.value)
+        if(this.props.form) {
+            super.reset();
+        }else {
             this._loadDefault();
-            // this.setValue([], ()=>{
-            // });
-        // }
+        }
         
     }
 

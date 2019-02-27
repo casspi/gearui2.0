@@ -99,7 +99,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
             let fn = async () => {
                 let result = await DicUtil.getDic({url, dictype});
                 if(result.success) {
-                    let dic = result.data;
+                    let dic = G.G$.isArray(result.data)?result.data:result.data.data;
                     if(dic) {
                         this.setState({
                             options: dic.map((ele: any)=>{

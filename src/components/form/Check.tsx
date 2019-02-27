@@ -5,6 +5,7 @@ import { ObjectUtil, Http } from '../../utils';
 import DicUtil from '../../utils/DicUtil';
 const AntdCheckboxGroup = AntdCheckbox.Group;
 export var props = {
+    ...FormTag.props,
     //checkbox属性
     checked: GearType.Boolean,
     indeterminate: GearType.Boolean,
@@ -17,7 +18,7 @@ export var props = {
     related: GearType.String,
     cascadeTarget: GearType.String,
     label: GearType.String,
-    ...FormTag.props
+    value: GearType.Any
 }
 export interface state extends FormTag.state {
     dictype?: object | string | Function,
@@ -28,7 +29,8 @@ export interface state extends FormTag.state {
     related?: string;
     checked?: boolean;
     label?: string;
-    defaultValue?:any
+    defaultValue?:any,
+    value?:any
 }
 interface OptionData {
     label?: any;
@@ -38,9 +40,10 @@ export default class Check<P extends typeof props, S extends state> extends Form
 
     getInitialState(): state {
         return {
+            value:this.getPropStringArrayValue(this.props.value)||[],
             dictype: this.props.dictype,
             url: this.props.url,
-            indeterminate: this.props.indeterminate,
+            indeterminate: this.props.indeterminate==true,
             target: this.props.target,
             related: this.props.related,
             checked: this.props.checked,
@@ -63,13 +66,13 @@ export default class Check<P extends typeof props, S extends state> extends Form
                 this.doEvent("change", ...args);
             });
         }.bind(this);
-        // console.log(state.indeterminate)
         return G.G$.extend({},state, {
             options: this.state.options,
             defaultValue: this.state.defaultValue,
             value: this.state.value,
             disabled: this.state.disabled || this.state.readOnly,
             onChange: changeEvent,
+            // indeterminate: this.props.indeterminate==true
         });
     }
     render() {
@@ -135,11 +138,12 @@ export default class Check<P extends typeof props, S extends state> extends Form
             let fn = async () => {
                 let result = await DicUtil.getDic({url, dictype});
                 if(result.success) {
-                    let dic = result.data;
+                    let dic = G.G$.isArray(result.data)?result.data:result.data.data;
                     if(dic) {
                         this.setState({
                             options: dic
                         },()=>{
+                            // console.log(this.state.options)
                             callback.call(this);
                         });
                     }

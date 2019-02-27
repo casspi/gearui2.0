@@ -129,10 +129,10 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 }        
                 //执行自定义注册的事件
                 this.doEvent("blur", e);
-                //执行控件属性指定的事件
-                if (this.props.onBlur) {
-                    this.props.onBlur.call(this, e);
-                }
+                // //执行控件属性指定的事件
+                // if (this.props.onBlur) {
+                //     this.props.onBlur.call(this, e);
+                // }
             }            
         });
     }

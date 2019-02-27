@@ -54,7 +54,11 @@ export interface state extends Tag.state {
 export default abstract class FormTag<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
     protected cannotUpdate:GearArray<keyof S> = new GearArray<keyof state>(["name","id"]);
-
+    private _propsValue:any;
+    constructor(props:any){
+        super(props);
+        this._propsValue = this.props.value;
+    }    
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
         return {
             value: nextProps.value,
@@ -180,6 +184,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     reset(){
         if(this.props.form) {
+            debugger;
             this.props.form.reset(this.props.name);
         }
     }
