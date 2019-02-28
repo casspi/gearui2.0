@@ -42,6 +42,7 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
             }
         }
         if(this.state.icon){
+            console.log(this.state.icon)
             var iconProps: any = {
                 key:"icon",
                 icon: this.state.icon

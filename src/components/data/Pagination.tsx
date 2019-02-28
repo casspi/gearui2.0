@@ -69,7 +69,7 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
                 this._onChange(page,pageSize);
             },//页码改变的回调，参数是改变后的页码及每页条数
             showSizeChanger: this.props.showSizeChanger || false,//是否可以改变 pageSize
-            pageSizeOptions: this.props.pageSizeOptions || ["10","20","30","40"],//指定每页可以显示多少条
+            pageSizeOptions: this.state.pageSizeOptions || ["10","20","30","40"],//指定每页可以显示多少条
             onShowSizeChange: (current: string, size: string) => {
                 this._onPageSizeChange(current,size);
             },//pageSize 变化的回调

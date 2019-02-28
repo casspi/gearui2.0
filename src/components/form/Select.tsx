@@ -77,7 +77,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     //子级树
     childSelect: Select<typeof props,state>;
     constructor(props: P, context: {}) {
-        super(props, context);
+        super(props);
         this.onShowPanel(this.props.onShowPanel);
     }
     getProps() {
@@ -170,7 +170,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                     if("parent"==this.props.popupcontainer){
                         // 在其父级
                         if(this.realDom != null) {
-                            let parent = G.$(this.realDom.parentElement);
+                            let parent= G.$(this.realDom.parentElement);
                             if(parent instanceof FormTag) {
                                 parent = parent.realDom;
                             }else {
@@ -355,7 +355,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
 
     // 获取文本
     getText() {
-        let value = this.getValue();
+        let value:any = this.getValue();
         if(value instanceof Array) {
             let texts = [];
             for(let i=0; i < value.length; i++) {

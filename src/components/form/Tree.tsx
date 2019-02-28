@@ -132,7 +132,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             autoExpandParent: this.props.autoExpandParent != false,
             /** checkable状态下节点选择完全受控（父子节点选中状态不再关联）*/
             checkStrictly: this.props.onlyLeafCheck ? true : (this.props.cascadeCheck != undefined ? !this.props.cascadeCheck : false),
-            checkable: this.props.checkbox,
+            checkable: this.props.checkbox==true,
             dragable: this.props.dragable == true,
             method: this.props.method || "get",
             link: this.props.link,
