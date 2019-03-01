@@ -170,10 +170,11 @@
 // }
 import * as Tag from '../Tag';
 import * as Dialog from './Dialog';
+import * as Dialogaction from '../basic/DialogAction';
 import * as React from 'react';
 import {Message} from '../pack';
 import  G from '../../Gear';
-import  BraftEditor from 'braft-editor';
+import BraftEditor from 'braft-editor'
 
 import 'braft-editor/dist/index.css'
 export var props = {
@@ -183,76 +184,84 @@ export var props = {
     viewId: GearType.String,
     textId: GearType.String,
     htmlId: GearType.String,
-    length:GearType.Any
+    length:GearType.Any,
 }
 export interface state extends Tag.state {
-    // ueTitle: string,
-    // ueWidth: number,
-    // viewId: string,
-    // textId: string,
-    // htmlId: string
+    ueTitle: string,
+    ueWidth: number,
+    viewId: string,
+    textId: string,
+    htmlId: string,
+    controls:any[]
 }
-export default class Ueditor<P extends typeof props,S extends state> extends Tag.default<P,S> {
+export default class Richtext<P extends typeof props,S extends state> extends Tag.default<P,S> {
     
     dialog: Dialog.default<typeof Dialog.props,Dialog.state>;
     ue: any;
     getProps() {
         let state = this.state;
         return G.G$.extend({},state,{
-            onClick:() => {
-                if(this.dialog) {
-                    this.dialog.open();
-                }else {
-                    let btn = G.$("<input ctype='button' value='test'/>");
-                    btn.prependTo(document.body);
-                    btn.doRender();
-                    console.log(G.$(btn))
-                    // let __this = this;
-                    let windowCon = G.$("<g-dialog title='"+this.props.ueTitle+"' dragable='false'  confirmText='保存' canceltext='取消' width='"+this.props.ueWidth+"'></g-dialog>");
-                    windowCon.prependTo(document.body);
-                    windowCon.doRender();
-                    this.dialog = G.$("<g-dialog title='"+this.props.ueTitle+"' dragable='false'  confirmText='保存' canceltext='取消' width='"+this.props.ueWidth+"'></g-dialog>");
-                    this.dialog.onOpen(() => {
-                                this.doEvent("open");
-                    });
-                    console.log(this.dialog)
-                    // (function(__this) {
-                    //     windowCon.doRender(function() {
-                    //         __this.dialog = windowCon;
-                    //         __this.dialog.find(".ant-modal-body").html("<script id='"+__this.props.id+"_editor' type='text/plain'></script>");
-                    //         __this.dialog.onOpen(() => {
-                    //             __this.doEvent("open");
-                    //         });
-                    //         // __this.dialog.open();
-                    //         let UEDITOR_CONFIG = window["UEDITOR_CONFIG"]||{};
-                    //         let config = {};
-                    //         for(let key in UEDITOR_CONFIG) {
-                    //             let lowerKey = key.toLowerCase();
-                    //             if(__this.props[lowerKey] != null) {
-                    //                 config[key] = __this.props[lowerKey];
-                    //             }else {
-                    //                 config[key] = UEDITOR_CONFIG[key];
-                    //             }
-                    //         }
-                    //         __this.ue = window["UE"].getEditor(__this.props.id + "_editor",config);
-                    //         (function(__this,) {
-                    //             __this.ue.ready( function( ueditor:any ) {
-                    //                 var value = __this.props.value?__this.props.value:'<p></p>';
-                    //                 __this.ue.setContent(value); 
-                    //             })
-                    //         })(__this);
-                    //         __this.dialog.onConfirm(() => {
-                    //             Ueditor.save(__this);
-                    //             __this._save();
-                    //             __this.doEvent("save");
-                    //         });
-                    //         __this.dialog.onCancel(() => {
-                    //             __this.doEvent("close");
-                    //         });
-                    //     });
-                    // })(__this);
-                }
-            }
+            defaultValue:this.props.value,            
+            // onClick:() => {
+            //     if(this.dialog) {
+            //         this.dialog.onOpen(() => {
+            //             this.doEvent("open");
+            // });
+            //     }else {
+            //         // let btn = G.$("<input ctype='button' value='test'/>");
+            //         // btn.prependTo(document.body);
+            //         // btn.doRender();
+            //         // console.log(G.$(btn))
+            //         // let __this = this;
+            //         let windowCon = G.$("<g-dialog title='"+this.props.ueTitle+"' dragable='false' content='"+999+"'  confirmText='保存' canceltext='取消' width='"+this.props.ueWidth+"'></g-dialog>");
+            //         windowCon.prependTo(document.body);
+            //         windowCon.doRender(()=>{
+            //             this.dialog = windowCon;
+            //             this.dialog.find('.ant-modal-body');
+            //             this.dialog.onOpen(() => {
+            //                 this.doEvent("open");
+            //             });
+            //             console.log(this.dialog)
+            //         });
+            //         // this.dialog = G.$("<g-dialog title='"+this.props.ueTitle+"' dragable='false'  confirmText='保存' canceltext='取消' width='"+this.props.ueWidth+"'></g-dialog>");
+                    
+            //         // (function(__this) {
+            //         //     windowCon.doRender(function() {
+            //         //         __this.dialog = windowCon;
+            //         //         __this.dialog.find(".ant-modal-body").html("<script id='"+__this.props.id+"_editor' type='text/plain'></script>");
+            //         //         __this.dialog.onOpen(() => {
+            //         //             __this.doEvent("open");
+            //         //         });
+            //         //         // __this.dialog.open();
+            //         //         let UEDITOR_CONFIG = window["UEDITOR_CONFIG"]||{};
+            //         //         let config = {};
+            //         //         for(let key in UEDITOR_CONFIG) {
+            //         //             let lowerKey = key.toLowerCase();
+            //         //             if(__this.props[lowerKey] != null) {
+            //         //                 config[key] = __this.props[lowerKey];
+            //         //             }else {
+            //         //                 config[key] = UEDITOR_CONFIG[key];
+            //         //             }
+            //         //         }
+            //         //         __this.ue = window["UE"].getEditor(__this.props.id + "_editor",config);
+            //         //         (function(__this,) {
+            //         //             __this.ue.ready( function( ueditor:any ) {
+            //         //                 var value = __this.props.value?__this.props.value:'<p></p>';
+            //         //                 __this.ue.setContent(value); 
+            //         //             })
+            //         //         })(__this);
+            //         //         __this.dialog.onConfirm(() => {
+            //         //             Ueditor.save(__this);
+            //         //             __this._save();
+            //         //             __this.doEvent("save");
+            //         //         });
+            //         //         __this.dialog.onCancel(() => {
+            //         //             __this.doEvent("close");
+            //         //         });
+            //         //     });
+            //         // })(__this);
+            //     }
+            // }
         });
     }
     clickHandler(){
@@ -261,8 +270,12 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
     getInitialState() {
         let state = this.state;
         return G.G$.extend({},state,{
-            readOnly: true,
-            autosize: true
+            readOnly: false,
+            autosize: true,
+            className:'richtext '+""+this.props.class,
+            // controls : this.props,//['bold', 'italic', 'underline', 'text-color', 'separator', 'link', 'separator', 'media' ]
+            value: this.props.value
+            // style:{width:this.props.width}
         });
     }
 
@@ -270,9 +283,9 @@ export default class Ueditor<P extends typeof props,S extends state> extends Tag
     render() {
         // return <script id={this.props.id} type="text/plain"></script>;
         let props = this.getProps();
-        return <BraftEditor></BraftEditor>
+        return <BraftEditor {...props}></BraftEditor>
         // <div style={{width:"100%"}}></div>
-        // return <div ref={props.ref} className={props.className} style={{border: "1px solid","minHeight": "100px",padding: "15px",cursor:"text"}} onClick={props.onClick.bind(this)}></div>;
+        //return <div ref={props.ref} className={props.className} style={{border: "1px solid","minHeight": "100px",padding: "15px",cursor:"text"}} onClick={props.onClick.bind(this)}></div>;
     }
     //当关闭窗口时出发
     onClose(fun:Function) {

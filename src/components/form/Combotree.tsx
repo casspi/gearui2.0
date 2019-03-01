@@ -21,6 +21,7 @@ export var props = {
     treeNodeLabelProp: GearType.String,
     treeDataSimpleMode: GearType.Boolean,
     showCheckedStrategy: GearType.Enum<'SHOW_ALL' | 'SHOW_PARENT' | 'SHOW_CHILD'>(),
+    refid:GearType.String,
     //汉字转拼音字符集url
     pinyinUrl:GearType.String
 };

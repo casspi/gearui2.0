@@ -421,7 +421,10 @@ table.resultTable .actiontd{
 	float:left;
 	padding-right:10px;
 }
-
+.richtext{
+  border: 1px solid #d1d1d1;
+    border-radius: 5px;
+}
     </style>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -701,9 +704,9 @@ table.resultTable .actiontd{
     })
   </script> -->
   <!-- <g-color showpicker="true"></g-color> -->
-   <!-- <form action="">
-    <g-combotree  label="代码集" readonly="true"  dictype="checkboxJson1" value="zs" width="300" prompt="请选择" multiple="true" editable="false"></g-combotree>
-    <g-combotree id="c11" dictype="combotreeJson" width="200"  multiple="true" cascadeCheck="true"  required="true"></g-combotree>
+   <form action="">
+    <g-combotree  label="代码集" readonly="false"  dictype="checkboxJson1" value="zs" width="300" prompt="请选择" multiple="true" editable="true"></g-combotree>
+    <g-combotree id="c11" url="http://10.10.10.6:81/example/Combotree/data" width="200"  multiple="true" cascadeCheck="true"  required="true"></g-combotree>
     <button ctype="submit">submit</button>
   </form>
     <script>
@@ -721,7 +724,7 @@ table.resultTable .actiontd{
         });
         console.log(G('#c11').getNode('id001'));
       })
-    </script>   -->
+    </script>  
     <!-- <g-date value="2017-08-08" disabled="2017/08/07"></g-date>
     <g-date type="range" start="2017/09/09" end="2017/09/19" format="YYYY/MM/DD" abledate="2017/09/03,2017/09/25"></g-date> -->
     <!-- <g-datetime name="dt6" value="2017-10-08 11:10:9" format="YYYY-MM-DD HH:mm:ss" abledate="2017-10-03,2017-10-22" abletime="8:15:30-17:30:45" hidetime="true"></g-datetime>
@@ -774,11 +777,13 @@ table.resultTable .actiontd{
             <g-date value="2017-08-08"></g-date>  -->
             <!-- <div><g-autocomplete id="e31"  width="400" async="false" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" mustMatch="true" prompt="自定义选项格式"></g-autocomplete></div> -->
             <!-- <g-autocomplete  width="300" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" async="true" mustMatch="true"></g-autocomplete> -->
-            <g-inputtag  id="test1"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA&q=&limit=10" name="tag00"></g-inputtag>
+            <!-- <g-inputtag  id="test1"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA&q=&limit=10" name="tag00"></g-inputtag> -->
 						<!-- <div><span>有默认值（逗号分隔的字符串，在mustMatch为true的情况下，只有设置了dictype属性时才能正确转换）：</span><g-inputtag name="t13" value="310000,110000,120000,500000" dictype="DIC_AREA" async="true" mustMatch="true"></g-inputtag></div>  -->
-            <g-tree id="gtree" cascadeCheck="true" dictype="treeData"   autoExpandParent="true" lines="true" draggable="true" checkbox="true"></g-tree>
+            <!-- <g-tree id="gtree" cascadeCheck="true" dictype="treeData"   autoExpandParent="true" lines="true" draggable="true" checkbox="true"></g-tree>
             <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree>
-            <g-tree url="http://10.10.10.6:81/example/Tree/data"></g-tree>
+            <g-tree url="http://10.10.10.6:81/example/Tree/data"></g-tree> -->
+
+            <g-richtext id="mytext" onSave="run" value="标题1111" width="500" height="300"></g-richtext>
             <g-button id="btn0" >btn00</g-button>
             <g-submit>提交</g-submit> 
           </g-form>
@@ -786,6 +791,9 @@ table.resultTable .actiontd{
           <g-icon icon="check-circle"></g-icon>
           <!-- <div><span>有默认值（逗号分隔的字符串，在mustMatch为true的情况下，不设置dictype将无法自动转换出名称）：</span><g-inputtag  name="t12" value="310000" repeatAble="true" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" async="true" ></g-inputtag></div> -->
       <script>
+        function run(){
+          alert(999)
+        }
         G(function () {
           G('#btn0').onClick(()=>{G("#test1").clear()})
           // G("#e31").onMatchFormat(function(option){
@@ -953,7 +961,6 @@ table.resultTable .actiontd{
             <!-- <g-submit visible="false">保存</g-submit> -->
             <!-- <g-button  id="t21btn1">按钮</g-button> -->
           </div>
-          <!-- <g-richtext id="mytext" visible="false" ueTitle="标题1111" width="500" ueWidth="500"></g-richtext> -->
         <!-- <div>
                 <span><h4>有标题的布局</h4></span>
                 <g-layout id="layout11" style="width:700px;height:400px;">
