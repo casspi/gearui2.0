@@ -476,13 +476,18 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
     reset(){
         console.log(this.props.value)
         super.reset();
-        this.setValue(
-            this.props.value || ""
-            // text:this.props.value || "",
-        ,()=>{
+        this.setState({
+            value:this.props.value || ""
+        },()=>{
             console.log(this.state.value)
             this.loadData();
-        });
+        })
+        // this.setValue(
+        //     this.props.value || ""
+        // ,()=>{
+        //     console.log(this.state.value)
+        //     this.loadData();
+        // });
     }
 
     clear(){

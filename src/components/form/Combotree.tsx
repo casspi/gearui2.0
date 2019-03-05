@@ -26,6 +26,8 @@ export var props = {
     pinyinUrl:GearType.String
 };
 export interface state extends Tree.state {
+    refid?:string,
+
 }
 type TreeNode = Tree.TreeNode;
 export default class Combotree<P extends typeof props & AntdTreeProps, S extends state & Partial<AntdTreeProps>> extends Tree.default<P, S> {
@@ -33,7 +35,8 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
     getInitialState(): state & Partial<AntdTreeProps> {
         return {
            options: [],
-           method: this.props.method
+           method: this.props.method,
+           refid:this.props.refid,
         };
     }
     static newJsxInstance(props: any) {
@@ -190,6 +193,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             return ele;
         });
         let props = this.getProps();
+        console.log(props)
         return <TreeSelect {...props}>{childrenMap}</TreeSelect>;
     }
 
