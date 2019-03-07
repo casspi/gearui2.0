@@ -200,8 +200,6 @@ export default class Date<P extends typeof props, S extends state> extends FormT
         } else if (moment.isMoment(value)) {
             valueRe = value.format(this.state.format);
         }
-        // console.log(valueRe)
-        // return valueRe;
         return valueRe;
 
     }

@@ -86,7 +86,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     render() {
         console.log(this.props.value)
         let items: any = this.getFormItems();
-        // console.log(items)
+        console.log(items)
         // if(this.cacheItems != null) {
         //     items = this.cacheItems;
         // }else {

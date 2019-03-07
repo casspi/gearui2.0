@@ -14,6 +14,7 @@ export default class Hidden<P extends typeof props & InputProps, S extends (stat
 
     getInitialState():state & InputProps {
         return {
+            disabled: true,
             value: this.props.value,
             type: "hidden",
             onChange: (event)=>{

@@ -1,6 +1,7 @@
 import * as ReactDOM from 'react-dom';
 import JqueryTag, { props as JqueryTagProps, state as JqueryTagState } from "./JqueryTag";
 import { ObjectUtil, UUID } from '../utils';
+import * as Date from './form/Date';
 export var props = {
     id: GearType.String,
     name: GearType.String,
@@ -135,6 +136,7 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
 
     //父节点改变本节点的props的时候触发
     componentWillReceiveProps(nextProps: P) {
+        // console.log(nextProps);
         let state: any = {};
         if(nextProps.needUpdateToState) {
             for(let i in nextProps.needUpdateToState) {
@@ -146,14 +148,17 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
                 }
             }
         }
-        // console.log(nextProps)
-        // console.log(this.state)
+        //console.log(nextProps)
         //返回将被更新至state中的属性
         let newState = this.afterReceiveProps(nextProps);
-        if(newState && !G.G$.isEmptyObject(newState)) {
-            state = G.G$.extend({}, state, newState,this.state);
-        }
+        // console.log(newState)
+        // console.log(this.ctype)
         // console.log(state.value)
+        // console.log(this.state.value)
+        if(newState && !G.G$.isEmptyObject(newState)) {
+            state = G.G$.extend({}, state, newState);
+        }
+        console.log(state.value)
         //排除不能被更新的属性
         if(this.cannotUpdate && this.cannotUpdate.toArray()) {
             this.cannotUpdate.toArray().forEach(key => {

@@ -68,7 +68,6 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                 }
                 this.doEvent("beforeSelect",node);
                 this.select(value);
-                
                 this._onSelect(node);
                 Tree.default.onSelect.call(this,node);
                 this.doEvent("select",node);
@@ -193,7 +192,6 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             return ele;
         });
         let props = this.getProps();
-        console.log(props)
         return <TreeSelect {...props}>{childrenMap}</TreeSelect>;
     }
 
@@ -305,6 +303,8 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                 valueOld.push(id);
             }
         }
+        console.log(valueOld)
+        debugger;
         this.setValue(valueOld);
     }
 

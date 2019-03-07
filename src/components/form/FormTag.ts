@@ -61,7 +61,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }    
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
         return {
-            value: nextProps.value,
+            value: this.state.value,//
             // ????
             // onChange: nextProps.onChange
         };
@@ -184,7 +184,6 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     reset(){
         if(this.props.form) {
-            debugger;
             this.props.form.reset(this.props.name);
         }
     }

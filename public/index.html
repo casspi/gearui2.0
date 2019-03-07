@@ -704,7 +704,7 @@ table.resultTable .actiontd{
     })
   </script> -->
   <!-- <g-color showpicker="true"></g-color> -->
-   <form action="">
+   <!-- <form action="">
     <g-combotree  label="代码集" readonly="false"  dictype="checkboxJson1" value="zs" width="300" prompt="请选择" multiple="true" editable="true"></g-combotree>
     <g-combotree id="c11" url="http://10.10.10.6:81/example/Combotree/data" width="200"  multiple="true" cascadeCheck="true"  required="true"></g-combotree>
     <button ctype="submit">submit</button>
@@ -724,12 +724,12 @@ table.resultTable .actiontd{
         });
         console.log(G('#c11').getNode('id001'));
       })
-    </script>  
+    </script>   -->
     <!-- <g-date value="2017-08-08" disabled="2017/08/07"></g-date>
     <g-date type="range" start="2017/09/09" end="2017/09/19" format="YYYY/MM/DD" abledate="2017/09/03,2017/09/25"></g-date> -->
     <!-- <g-datetime name="dt6" value="2017-10-08 11:10:9" format="YYYY-MM-DD HH:mm:ss" abledate="2017-10-03,2017-10-22" abletime="8:15:30-17:30:45" hidetime="true"></g-datetime>
     <g-datetime name="dt10" type="range" format="YYYY/MM/DD HH:mm:ss" value="2017/10/08 11:10:9,2017/10/14 15:10:2" abledate="2017/10/07,2017/10/22" abletime="8:30:00-17:00:00,12:00:00-17:00:00"></g-datetime> -->
-      <!-- <g-time></g-time>
+      <!-- 
       <g-timepicker></g-timepicker> -->
       <g-form  >
         <!-- <g-email required="true"></g-email>
@@ -774,7 +774,7 @@ table.resultTable .actiontd{
 							<g-button onClick="G.messager.simple.info(G('#f2').getOriginurl())">本地路径</g-button>
 							<g-button onClick="G('#f2').clear()">清除</g-button>
 						</div>
-            <g-date value="2017-08-08"></g-date>  -->
+             -->
             <!-- <div><g-autocomplete id="e31"  width="400" async="false" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" mustMatch="true" prompt="自定义选项格式"></g-autocomplete></div> -->
             <!-- <g-autocomplete  width="300" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" async="true" mustMatch="true"></g-autocomplete> -->
             <!-- <g-inputtag  id="test1"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA&q=&limit=10" name="tag00"></g-inputtag> -->
@@ -783,19 +783,25 @@ table.resultTable .actiontd{
             <g-tree id="mtree" url="http://10.10.10.6:81/example/Tree/data" checkbox="true" cascadeCheck="true" lines="true" onlyLeafCheck="false"></g-tree>
             <g-tree url="http://10.10.10.6:81/example/Tree/data"></g-tree> -->
 
-            <g-richtext id="mytext" onSave="run" value="标题1111" width="500" height="300"></g-richtext>
-            <g-button id="btn0" >btn00</g-button>
+            <!-- <g-richtext id="mytext" onSave="run" value="标题1111" width="500" height="300"></g-richtext>
+            <g-button id="btn0" >btn00</g-button> -->
+            <!-- <g-time value="08:02:25"></g-time> -->
+            <!-- <g-date value="2017-08-08"></g-date>  -->
+            <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree>
+            <!-- <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree> -->
+            <!-- <g-tree multiple="true" url="http://10.10.10.6:81/example/Combotree/data"></g-tree> -->
             <g-submit>提交</g-submit> 
           </g-form>
-          <!-- <g-label name="nowTime" format="yyyy-MM-dd HH:mm:ss.SSS"></g-label>  -->
-          <g-icon icon="check-circle"></g-icon>
+            <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree>
+            <!-- <g-label name="nowTime" format="yyyy-MM-dd HH:mm:ss.SSS"></g-label>  -->
+          <!-- <g-icon icon="check-circle"></g-icon> -->
           <!-- <div><span>有默认值（逗号分隔的字符串，在mustMatch为true的情况下，不设置dictype将无法自动转换出名称）：</span><g-inputtag  name="t12" value="310000" repeatAble="true" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" async="true" ></g-inputtag></div> -->
       <script>
         function run(){
           alert(999)
         }
         G(function () {
-          G('#btn0').onClick(()=>{G("#test1").clear()})
+          // G('#btn0').onClick(()=>{G("#test1").clear()})
           // G("#e31").onMatchFormat(function(option){
           //   return "<div width='100%'><div style='float:left'>"+option.value+"</div><div style='float:right'>"+option.text+"</div></div>";
           // });

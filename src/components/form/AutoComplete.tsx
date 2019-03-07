@@ -157,7 +157,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 }
             });
         }
-        // console.log(optionsJsx)
         return optionsJsx;
     }
 
@@ -195,7 +194,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                     value: value,
                     text: text,
                     disabled: option.disabled == true,
-                    attributes: option.attribute
+                    attributes: option.attribute,
                 };
                 //通过自定义格式化输出
                 if(this.haveEvent("matchFormat")) {
@@ -204,8 +203,8 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                         optionJsx = <AntdOption {...props}>{G.$(r[0])}</AntdOption>;
                     }
                 }else if(this._matchFormat && G.G$.isFunction(this._matchFormat)){
-                    console.log(G.G$(G.G$(this._matchFormat(props))[0]))
-                    optionJsx = <AntdOption {...props}>{}</AntdOption>;//{this._matchFormat(props)}
+                    console.log(this._matchFormat(props));
+                    optionJsx = <AntdOption {...props}>{this._matchFormat(props)}</AntdOption>;//{this._matchFormat(props)}
                 }else {
                     optionJsx = <AntdOption {...props}>{text}</AntdOption>;
                 }
@@ -250,13 +249,13 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
 
     getAutoCompleteProps(): any {
         return {
-            allowClear : false,
-            className : "autocomplete-control" + (this.state.className ? " " + this.state.className : ""),
+            allowClear: false,
+            className: "autocomplete-control" + (this.state.className ? " " + this.state.className : ""),
             style: { width: this.state.style ? this.state.style.width : null,height: this.state.style ? this.state.style.height : null},
             size: this.state.size,
-            dataSource : this.getOptionJsxs(),
+            dataSource: this.getOptionJsxs(),
             optionLabelProp : "text",
-            onChange : (value: any) => {
+            onChange: (value: any) => {
                 if(this.state.mustMatch == true){
                     // 判断如果当前值和之前值不同，则触发change事件
                     if(ObjectUtil.isValueEqual(value, this.getValue())){
@@ -268,15 +267,15 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                     this._change(value);
                 }            
             },
-            onSearch : (value: any) => {
+            onSearch: (value: any) => {
                 // 如果是异步查询，需要在每次输入内容变更时重新去后台获取数据
                 this.search(value);
             },
-            onSelect : (value: any,option: any) => {
+            onSelect: (value: any,option: any) => {
                 this._select(value, option);
             },
-            defaultValue : this.state.value,
-            value : this.state.value,
+            defaultValue: this.state.value,
+            value: this.state.value,
             getPopupContainer: ()=>{
                 let container:any = document.body;
                 if(this.props.popupContainer) {
@@ -474,12 +473,10 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
     // }
 
     reset(){
-        console.log(this.props.value)
         super.reset();
         this.setState({
             value:this.props.value || ""
         },()=>{
-            console.log(this.state.value)
             this.loadData();
         })
         // this.setValue(
@@ -491,7 +488,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
     }
 
     clear(){
-        // console.log('clear')
         this.setValue("");
         this.setDefaultOptions();
     }
