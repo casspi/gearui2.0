@@ -375,7 +375,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             height:"16px",
             width:"16px",
         };
-    
+        delete props.dragable
         return <AntdModal {...props} style={style} getContainer={()=>{
             this.ref = document.createElement("div");
             document.body.appendChild(this.ref);

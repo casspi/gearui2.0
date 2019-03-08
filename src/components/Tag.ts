@@ -158,7 +158,7 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
         if(newState && !G.G$.isEmptyObject(newState)) {
             state = G.G$.extend({}, state, newState);
         }
-        console.log(state.value)
+        // console.log(state.value)
         //排除不能被更新的属性
         if(this.cannotUpdate && this.cannotUpdate.toArray()) {
             this.cannotUpdate.toArray().forEach(key => {

@@ -26,7 +26,6 @@ export var props = {
     pinyinUrl:GearType.String
 };
 export interface state extends Tree.state {
-    refid?:string,
 
 }
 type TreeNode = Tree.TreeNode;
@@ -36,16 +35,17 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         return {
            options: [],
            method: this.props.method,
-           refid:this.props.refid,
         };
     }
     static newJsxInstance(props: any) {
+        console.log(props.refid)
         return <Combotree {...props}/>;
     }
 
     getProps() {
         let props = super.getProps();
         let propsNew = G.G$.extend({},props,{
+            // refid:this.props.refid,
             inputValue: null,
             showSearch: this.props.editable,
             value: this.state.value,
@@ -303,8 +303,6 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                 valueOld.push(id);
             }
         }
-        console.log(valueOld)
-        debugger;
         this.setValue(valueOld);
     }
 

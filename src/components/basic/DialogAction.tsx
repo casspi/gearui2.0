@@ -93,6 +93,12 @@ export default class DialogAction<P extends typeof props, S extends state> exten
         } 
     };
 
+    onProcess(fun:Function){
+        if (fun && G.G$.isFunction(fun)) {
+            this.bind("process", fun); 
+        }
+    }
+
     static getDialogId(obj: DialogAction<typeof props, state>) {
         return obj.props.id + "_dialog";
     }

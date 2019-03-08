@@ -1720,6 +1720,10 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
 
     //当加载完成的时候触发
     protected _onLoadSuccess(data: any){}
-
+    onLoadSuccess(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("loadSuccess",fun);
+        }
+    }
     protected _onBeforeLoad(){}
 }

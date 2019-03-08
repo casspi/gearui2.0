@@ -60,8 +60,13 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         this._propsValue = this.props.value;
     }    
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
+        let value:any = nextProps.value;
+        //日期组件特殊处理
+        if(nextProps.ctype==="date"||nextProps.ctype=="datetime"||nextProps.ctype=="time"){
+            value = this.state.value
+        }
         return {
-            value: this.state.value,//
+            value: value,//
             // ????
             // onChange: nextProps.onChange
         };

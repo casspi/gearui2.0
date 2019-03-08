@@ -30,7 +30,7 @@ export interface state extends FormTag.state {
 export default class Radio<P extends typeof props &  RadioProps,S extends state & RadioProps> extends FormTag.default<P,S> {
 
     constructor(props: P, context: {}) {
-        super(props, context);
+        super(props);
     }
 
     //获取当前属性

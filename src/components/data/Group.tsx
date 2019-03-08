@@ -14,7 +14,7 @@ export default class Group<P extends typeof props, S extends state> extends Tag.
 
     render() {
         let name = {name: this.state.name};
-        return <span id={this.props.id} {...name} className={"ajaxload-group" + (this.state.className ? " " + this.state.className : "")}></span>;
+        return <span id={this.props.id} ref={ele=>this.ref=ele} {...name} className={"ajaxload-group" + (this.state.className ? " " + this.state.className : "")}>{this.props.children}</span>;
     }
 
     setValue(data: any){
@@ -26,18 +26,31 @@ export default class Group<P extends typeof props, S extends state> extends Tag.
                         value = value();
                     }
                 }catch(e){}
-                let jdom = this.find("[name='"+key+"']");
-                if(jdom.length>0){
-                    jdom.each((index,dom)=>{
-                        let parent = G.G$(dom).parents(".ajaxload-group:first");
-                        if(parent.length > 0 && G.$(parent) == this){
-                            let gele = G.$(dom);
-                            if(gele && gele.setValue) {
-                                gele.setValue(value);
-                            }
-                        }
-                    });
+                let gele:any;
+                for(let i=0;i<this.realDom.children.length;i++){
+                    if(G.$((this.realDom.children[i])).state.name==key){
+                        // console.log(G.$((this.realDom.children[i])))
+                        gele = G.$((this.realDom.children[i]));
+                    }
                 }
+                // console.log(gele)
+                if(gele && gele.setValue) {
+                    gele.setValue(value);
+                }
+                // let jdom = this.find("[name='"+key+"']");
+                // if(jdom.length>0){
+                //     jdom.each((index,dom)=>{
+                //         let parent = G.G$(dom).parents(".ajaxload-group:first");
+                       
+                //         if(parent.length > 0 && G.$(parent[0]) == this){//G.$(parent[0])为Group
+                //             // let gele = G.$(dom);
+                //             console.log(gele)
+                //             if(gele && gele.setValue) {
+                //                 gele.setValue(value);
+                //             }
+                //         }
+                //     });
+                // }
             }
         }
     }
@@ -47,7 +60,7 @@ export default class Group<P extends typeof props, S extends state> extends Tag.
         let fn = (ele: any) => {
             ele.children_g_().each((index: any,dom: any)=>{
                 let parent = G.G$(dom).parents(".ajaxload-group:first");
-                if(parent.length > 0 && G.$(parent) == this){
+                if(parent.length > 0 && G.$(parent[0]) == this){
                     let gele = G.$(dom);
                     if(gele && gele.getValue && gele.props && gele.props.name) {
                         value[gele.props.name] = gele.getValue();

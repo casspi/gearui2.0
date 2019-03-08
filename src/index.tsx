@@ -1,6 +1,7 @@
 import G from './Gear';
 import { WindowUtil } from './utils';
 import { Message } from './components/pack';
+import { Dialog } from './components/pack';
 import * as utils from './utils';
 WindowUtil.extendPrototype();
 const SockJs = require('sockjs-client');
@@ -13,6 +14,7 @@ window.G = GearWeb;
 window.G.SockJs = SockJs;
 window.G.registerCustomComponents();
 window.G.messager = Message;
+window.G.dialog = Dialog;
 window.G.utils = utils;
 
 window.onload = function() {

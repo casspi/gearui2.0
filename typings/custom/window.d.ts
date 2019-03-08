@@ -86,6 +86,7 @@ declare var G: {
     tag: any;
     messager: Message;
     utils: any;
+    dialog: any;
 }
 interface Window extends EventTarget, WindowTimers, WindowSessionStorage, WindowLocalStorage, WindowConsole, GlobalEventHandlers, IDBEnvironment, WindowBase64, GlobalFetch {
     Blob: typeof Blob;
