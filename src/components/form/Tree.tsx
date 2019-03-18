@@ -117,6 +117,17 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     childTree: Tree<P, S>;
 
     getInitialState():state & AntdTreeProps {
+        // 是否显示图标
+        let showIcon = (this.props.showIcon==null || this.props.showIcon==true);
+        // 图标样式
+        let className = this.props.className;
+        if(showIcon){
+            let iconstyle = this.props.iconStyle || "default";
+            if(className)
+                className = className + " ant-tree-icon-" + iconstyle;
+            else
+                className = " ant-tree-icon-" + iconstyle;
+        }
         return {
             options: [],
             expandedKeys: this.props.expandedKeys,
@@ -126,7 +137,8 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             defaultSelectedKeys: [],
             onlyLeafCheck: this.props.onlyLeafCheck,
             showLine: this.props.lines == true,
-            showIcon: this.props.showIcon==true,
+            showIcon: showIcon,
+            className:className,
             iconStyle: this.props.iconStyle,
             multiple: this.props.multiple,
             autoExpandParent: this.props.autoExpandParent != false,
@@ -142,7 +154,8 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             defaultExpandLevel: this.props.defaultExpandLevel,
             defaultExpandAll: this.props.defaultExpandAll,
             dictype: this.props.dictype,
-            url: this.props.url
+            url: this.props.url,
+            value:[]
         }
     }
 
@@ -417,6 +430,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 expanded: boolean;
             }) => {
                 let node = info.node.props.nodeEle;
+                console.log(node);
                 this.doEvent("beforeExpand", node, expandedKeys);
                 this._onBeforeExpand(node);
                 Tree.onBeforeExpand.call(expandedKeys,info);
@@ -457,6 +471,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             },
             /** 点击树节点触发 */
             onSelect: (selected: Array<string>, e: any) => {
+                console.log(e)
                 let node = e.node.props.nodeEle;
                 this._triggerOnSelect(node,e);            
             },
@@ -572,7 +587,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     render() {
         let children = this.getTreeNode();
         let props = this.getProps();
-        return <AntdTree {...props}>{children}</AntdTree>;
+        return <AntdTree ref={ele=>this.ref=ele} {...props}>{children}</AntdTree>;
     }
 
     afterRender() {
@@ -588,7 +603,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             this.loadData(null,(dic: any,callback?: Function)=>{
                 let keyValue: any[] = [];
                 // 默认值
-                let defaultValue: any = this.state.value || this.state.selected;
+                let defaultValue: any = this.props.value || this.state.selected;
                 if(defaultValue){
                     // 如果默认值存在，则根据默认值获得相应的节点id，放到value中
                     this._findKeyByValue(defaultValue,dic,keyValue);
@@ -1043,6 +1058,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             }
             
         }
+        console.log(valueC)
         return valueC;
     }
     // 根据节点的值得到节点的key
@@ -1590,7 +1606,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         }
     }
 
-    // 解发onSelect事件，这个方法由两处调用，所以公共出来，一外是Tree的OnSelect事件，一处是节点的select
+    // 解放onSelect事件，这个方法由两处调用，所以公共出来，一处是Tree的OnSelect事件，一处是节点的select
     private _triggerOnSelect(node?: TreeNode,e?: any){
         let rebe = this._onBeforeSelect(node);
         if(rebe == false) {
@@ -1678,7 +1694,12 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     static onExpand(expandedKeys: any,info: any){}
 
     protected _onRightClick(node?: TreeNode) {}
-    static onRightClick(node?: TreeNode) {}
+    onRightClick(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("rightClick",fun);
+        }
+    }
+    static onRightClick(node?: TreeNode){}
 
     protected _onCheck(node?: TreeNode){}
     static onCheck(e: any) {}

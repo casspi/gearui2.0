@@ -17,12 +17,7 @@ export interface state extends Button.state {
 
 export default class ClickAction<P extends typeof props, S extends state> extends Button.default<P, S> {
 
-    getInitialState(): state {
-        return {
-            type: this.props.type || 'link',
-            actionType: this.props.actionType
-        };
-    }
+   
 
     getIconState() {
         let style = this.state.style;
@@ -30,27 +25,27 @@ export default class ClickAction<P extends typeof props, S extends state> extend
             style.cursor = "pointer";
         }
         let state = G.G$.extend({},this.state, {
-            type: this.state.icon
+            icon: this.state.icon
         });
         return state;
     }
     getProps(){
-        let state:any = G.G$.extend({}, this.state);
+        let state:any = G.G$.extend({}, this.state,{
+            actionType: this.props.actionType,
+        });
         return state
     }
     render() {
-        let type = this.state.type ;
         let state = this.getProps()
-        console.log(state)
-        if(type) {
-            if(type == "link") {
-                return <a {...state}>{this.state.text}</a>; 
-            }else if(type == "icon") {
-                let state = this.getIconState();
-                return <AntdIcon {...state}/>;
-            }
+        let type = this.props.type;
+        if(type && type == "link") {
+            return <a {...state}>{this.state.text}</a>; 
+        }else if(type && type == "icon") {
+            let state = this.getIconState();
+            return <AntdIcon {...state}/>;
+        }else{
+            return super.render();
         }
-        return super.render();
     }
 
     protected clickEvent(e?: any) {

@@ -79,7 +79,7 @@ export default class Component<P extends typeof props, S extends state> extends 
     afterRender() {
         this.doEvent("afterRender",true);
     }
-
+    
     afterUpdate() {
         this.doEvent("afterRender",false);
     }
@@ -211,6 +211,12 @@ export default class Component<P extends typeof props, S extends state> extends 
             }else{
                 components.blur(...args);
             }
+        }
+    }
+
+    onAfterRender(fun:any) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("afterRender",fun);
         }
     }
 }

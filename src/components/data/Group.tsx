@@ -1,5 +1,6 @@
 import * as Tag from "../Tag";
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 export var props = {
     ...Tag.props
 }
@@ -26,31 +27,47 @@ export default class Group<P extends typeof props, S extends state> extends Tag.
                         value = value();
                     }
                 }catch(e){}
-                let gele:any;
-                for(let i=0;i<this.realDom.children.length;i++){
-                    if(G.$((this.realDom.children[i])).state.name==key){
-                        // console.log(G.$((this.realDom.children[i])))
-                        gele = G.$((this.realDom.children[i]));
-                    }
-                }
-                // console.log(gele)
-                if(gele && gele.setValue) {
-                    gele.setValue(value);
-                }
-                // let jdom = this.find("[name='"+key+"']");
-                // if(jdom.length>0){
-                //     jdom.each((index,dom)=>{
-                //         let parent = G.G$(dom).parents(".ajaxload-group:first");
-                       
-                //         if(parent.length > 0 && G.$(parent[0]) == this){//G.$(parent[0])为Group
-                //             // let gele = G.$(dom);
-                //             console.log(gele)
-                //             if(gele && gele.setValue) {
-                //                 gele.setValue(value);
-                //             }
-                //         }
-                //     });
+
+                // let gele:any;
+                // for(let i=0;i<this.realDom.children.length;i++){
+                //     console.log(G.$(this.realDom.children))
+                //     if(G.$((this.realDom.children[i])).state&&G.$((this.realDom.children[i])).state.name&&G.$((this.realDom.children[i])).state.name==key){
+                //         // console.log(G.$((this.realDom.children[i])))
+                //         gele = G.$((this.realDom.children[i]));
+                //     }
                 // }
+                // // console.log(gele)
+                // if(gele && gele.setValue) {
+                //     gele.setValue(value);
+                // }
+                
+                let jdom = this.find("[name='"+key+"']");// let jdom = G.$(this.realDom).find("[name='"+key+"']");
+                // console.log(jdom)
+                if(jdom.length>0){
+                    jdom.each((index:number,dom:any)=>{
+                        let parent = G.G$(dom).parents(".ajaxload-group:first");
+                        // console.log(dom);
+                        // console.log(jdom[index]);
+                        // console.log(parent[0])
+                        if(parent.length > 0 && G.$(parent[0]) == this){//G.$(parent[0])为Group
+                            let children = G.$(parent).find('*');
+                            for(let i=0;i<children.length;i++){
+                                if(G.$(children[i]).state&&G.$(children[i]).state.name ==key&&G.$(children[i]).setValue){
+                                    G.$(children[i]).setValue(value)
+                                }
+                            }
+                            // gele.doRender((ele:any)=>{
+                            //     console.log(999)
+                            //     gele = G.$('ele');
+                            //     if(gele["setValue"])
+                            //         gele.setValue(value);
+                            // });
+                            // if(gele && gele.setValue) {                         
+                            //     gele.setValue(value);
+                            // }
+                        }
+                    });
+                }
             }
         }
     }

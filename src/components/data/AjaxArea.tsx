@@ -3,6 +3,7 @@ import * as React from 'react';
 import { Spin as AntdSpin } from 'antd';
 import { Http } from '../../utils';
 import { methods } from '../../utils/http';
+import Parser from '../../core/Parser';
 export var props = {
     ...Tag.props,
     url: GearType.Or(GearType.String, GearType.Function),
@@ -98,11 +99,11 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
         let fn = async () => {
             let result = await Http.ajax(method, url, dataType, data);
             if(result.success) {
-                let data = result.data || {};
+                data = result.data || {};
                 if(obj.haveEvent("complete")) {
                     obj.doEvent("complete", data);
                 }else {
-                    console.log(AjaxArea.complete)
+                    // console.log(data)
                     AjaxArea.complete.bind(obj)(obj, data);
                 }
             }else {
@@ -140,20 +141,37 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
         } 
         obj.setLoading(false);  
     }
-
+    
     static success(obj: AjaxArea<typeof props, state>, data: any) {
+        //当请求的结果为html时，将<script></script>包裹代码放在doRender后插入，保证dom已渲染完成
+        let jsStr = "";
+        let jsReg = new RegExp(/<script.*?>([\s\S]+?)<\/script>/img);
+        let htmlStr:any;
         if(data.status !=null && data.data){
             obj.setState({
                 children: data.data
             });
+        }else if(obj.props.dataType == "html"){
+            G.G$(obj.realDom).find('script').remove();           
+            data=data.data?data:data;
+            data.replace(jsReg,function(str:any,js:any){
+                jsStr=str
+            })
+            htmlStr =  data.replace(jsReg,"");
+            let parser =new Parser();
+            htmlStr = parser.parseToReactInstance(htmlStr)
+            obj.setState({
+                children: htmlStr
+            });
+            G.G$(obj.realDom).children().append(jsStr)
         }else{
             obj.setState({
-                // children: G.G$(data, true)
-                children:data.data
+                children: data
             });
         }
+        
     }
-
+   
     static failed(obj: AjaxArea<typeof props, state>, data: any) {
         if(data && data.status!=null) {
             obj.setState({
@@ -167,7 +185,7 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
     }
 
     render() {
-        return <AntdSpin spinning={this.state.loading} style={{"minHeight":"21px"}}>{this.state.children}</AntdSpin>;
+        return <AntdSpin ref={this.state.ref} spinning={this.state.loading} style={{"minHeight":"21px"}}>{this.state.children}</AntdSpin>;
     }
 
     setLoading(loading?: boolean) {

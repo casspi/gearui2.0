@@ -42,10 +42,9 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
             }
         }
         if(this.state.icon){
-            console.log(this.state.icon)
             var iconProps: any = {
                 key:"icon",
-                icon: this.state.icon
+                icon: this.state.icon,
             };
             return <span {...this.state}><Icon.default {...iconProps}/><span key="text" dangerouslySetInnerHTML={{__html:value}}></span></span>;
         }else

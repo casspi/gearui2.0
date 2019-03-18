@@ -15,7 +15,8 @@ export default class Tabs<P,S> extends Tag.default<P,S> {
 
     private initlizate() {
         let _this = this;
-        let _real = G.G$(this.realDom);        
+        let _real = G.G$(this.realDom);    
+        console.log(this.realDom)    
         if(!_real.data("initialized")){
             // 添加样式
             _real.addClass("gearui-tabs");
@@ -92,7 +93,8 @@ export default class Tabs<P,S> extends Tag.default<P,S> {
             // 标识标签页已经初始化完成
             _real.data("initialized",true);
             // 对内容进行渲染
-            Parser.parse(content[0]);
+            let parser = new Parser();
+            parser.parse(content[0]);
             // 注册onresize事件
             //G.G$(window).resize(this.resizeTab.bind(this));
         }
@@ -299,7 +301,7 @@ export default class Tabs<P,S> extends Tag.default<P,S> {
     /* 在选中某标签页前触发的事件，如果事件返回false，则阻止选中 */
     onBeforeSelect(fun:any) {
         if(fun && G.G$.isFunction(fun)) {
-            this.bind("beforeSelect",(event,args)=>{
+            this.bind("beforeSelect",(event:any,args:any)=>{
                 if(fun.call(this,...args)==false){
                     return false;
                 }

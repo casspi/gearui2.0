@@ -1,7 +1,7 @@
 import * as Tag from "./Tag";
 export var props = {
     voidElement: Element,
-    ...Tag.props
+    ...Tag.props,
 };
 export interface state extends Tag.state {
     

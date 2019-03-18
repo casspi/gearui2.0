@@ -15,12 +15,13 @@ export interface state extends ClickAction.state {
 export default class AjaxAction<P extends typeof props, S extends state> extends ClickAction.default<P, S> {
 
     getInitialState(): state {
-        let state: state = G.G$.extend({}, this.state);
+        let state: state = this.state;
+        if(state&&state.actionType)
         delete state.actionType;//clcikAction 中含有的属性
-        return {
+        return  G.G$.extend({},state,{
             data: this.props.data,
-            method: this.props.method
-        };
+            method: this.props.method,
+        });
     }
     clickEvent(e?: any) {
         let ret = this.doEvent("click", e);

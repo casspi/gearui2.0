@@ -4,19 +4,14 @@ import { ObjectUtil, UUID, } from '../../utils';
 export var props = {
     ...Tag.props,
     size: GearType.Number,
-    onrender: GearType.VoidT<void>()
+    onRender: GearType.VoidT<void>()
 }
 export interface state extends Tag.state {
     size: number,
 }
 export default class Repeat<P extends  typeof props, S extends state> extends Tag.default<P, S> {
 
-    constructor(props:any) {
-        super(props);
-        if(this.props.onrender) {
-            this.bind("render", this.props.onrender);
-        }
-    }
+  
 
     getInitialState() {
         let state = this.state;
@@ -45,15 +40,18 @@ export default class Repeat<P extends  typeof props, S extends state> extends Ta
             children = [children];
         }
         children = children.filter(item =>item.$$typeof);
-        console.log(children)
+        
         if(children instanceof Array) {
-            children.map((child: any, index)=>{
+            children.map((child: any, i)=>{
                 let item = child;
                 if(item){
                     let props: any = {
                         ...item.props,
                         key: UUID.get()
                     };
+                    let callbackV:any = this.doEvent('render',item,index)!=null?this.doEvent('render',item.realDom,index)[0]:{}
+                    props = G.G$.extend({},props,callbackV);
+                    console.log(React.cloneElement(item, props,item.props.children))
                     reactChildren.push(React.cloneElement(item, props,item.props.children));
                 }
             });

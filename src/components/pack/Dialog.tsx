@@ -74,7 +74,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         if(className) {
             className = className + " ";
         }
-        let width;
+        let width,height;
         if(this.state.maximized){
             className = className +" ant-modal-dialog ant-modal-dialog-max";
         }else{
@@ -87,6 +87,13 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             }else{
                 width = 600;
             }       
+            if(this.state.height){
+                if(ObjectUtil.isInteger(this.state.height)==true)
+                    height = parseInt(this.state.height+"");
+                else
+                    height = this.state.height;
+            }
+            
             if(this.state.height){
                 // 如果有设置高度，则使用固定大小的样式
                 className = className +" ant-modal-dialog ant-modal-dialog-fixedsize";
@@ -106,6 +113,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             closable: this.state.closable,
             /** 窗口宽度 */
             width: width,
+            height:height,
             /** 点击确定回调*/
             onOk: (e: React.MouseEvent<any>) => {
                 if(this.haveEvent("confirm")) {
@@ -191,7 +199,9 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
     dragEvent = ()=>{//拖拽效果
             let dref = this.ref;
             let $dom = G.G$(document);
-            $dom.on('mousedown.dragable','.ant-modal',function(ev: any){
+            let warpId = this.state.id+"dialog-warp";
+            // console.log(G.$('#'+warpId+'  '+' .ant-modal'))//通过ID找  
+            $dom.on('mousedown.dragable','#'+warpId+'  '+' .ant-modal',function(ev: any){
                 dref.onselectstart=()=>{//禁止选中文字
                     return false
                 }
@@ -269,18 +279,35 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
     isOpen() {
         return this.state.visible;
     }
-
-    afterRender() {
+    
+    renderBody(){
         let url: any = this.state.url;
         let loadType = this.props.loadType;
-        let modalBody = this.find(".ant-modal-body");
+        let warpId = this.state.id+"dialog-warp";
+        // console.log(G.$('#'+warpId+'  '+' .ant-modal-body'))  
+        let modalBody = G.$('#'+warpId+'  '+' .ant-modal-body');
         if(url && modalBody[0]){
             if(loadType=="async"){
+                modalBody.html("")
                 modalBody.load(url);
             }else if(loadType=="iframe"){
+                modalBody.html("")
                 modalBody.html("<iframe src='"+url+"' frameBorder='0' width='100%' height='100%' data-dialog='"+this.props.id+"'></iframe>");
             }
         }
+       
+        //手动将高度分配给ant-modal-body 保持title和footer高度不变
+        if(this.props.height){
+            let height:any = this.props.height;
+            let modalWarp = G.$('#'+this.state.id+'dialog-warp')
+            let rHeight = parseInt(height)-(modalWarp.find('.ant-modal-header').outerHeight()||0)-(modalWarp.find('.ant-modal-footer').outerHeight()||0);
+            // console.log(modalWarp.find(".ant-modal-body"))
+            modalWarp.find(".ant-modal-body").height(rHeight)
+        }
+    }
+
+    afterRender() {
+        
     }    
     private oL:any;oT:any;oW:any;oH:any;bodyH:any;
     maxIconClick(){
@@ -353,7 +380,9 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                 if(this.haveEvent("loadSuccess")) {
                     this.doEvent("loadSuccess");
                 }
-            }
+                this.renderBody();//渲染modal-body内容
+                if(this.state.dragable) this.dragEvent();//绑定拖拽事件
+            },
         }
         let iconStyle:any = {
             cursor:"pointer",
@@ -376,10 +405,14 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             width:"16px",
         };
         delete props.dragable
-        return <AntdModal {...props} style={style} getContainer={()=>{
+        return <AntdModal  {...props} style={style} getContainer={()=>{
+            let node:any = document.querySelector('#'+this.state.id+'dialog-warp');
+            if(node){//由于每次显示隐藏都会创建新的节点，所以此处先清处
+               node.remove()
+            }
             this.ref = document.createElement("div");
+            this.ref.id = this.state.id+'dialog-warp'; 
             document.body.appendChild(this.ref);
-            if(this.state.dragable) this.dragEvent();
             return this.ref;
         }}>
             {this.state.maxable?<AntdIcon {...iconProps} onClick={props.maxIconClick}  style={iconStyle}/>:null}
@@ -438,7 +471,9 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
     static show(param: any):any{
         // 为对话框分配一个ID
         let id:string = param.id || UUID.get();
-        let props: any = param;
+        let props: any = G.G$.extend({},param,{
+            loadType:param.loadType || 'iframe'
+        });
         if(props.controlBar == false) {
             props.footer = props.controlBar;
         }
@@ -447,7 +482,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         }
         props.showIcon = true;
         props.visible = true;
-        let dialog = <Dialog {...props}></Dialog>;
+        let dialog = <Dialog  {...props} ></Dialog>;
         let span = document.createElement("span");
         span = document.body.appendChild(span);
         ReactDOM.render(dialog, span);
@@ -469,7 +504,8 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             this.dragEvent()
         }else{
             let $dom = G.G$(document);
-            $dom.off('mousedown.dragable','.ant-modal');
+            let warpId = this.state.id+"dialog-warp";
+            $dom.off('mousedown.dragable','#'+warpId+'  '+' .ant-modal' );
         }     
         this.setState({
             dragable: dragable

@@ -27,6 +27,7 @@ export default class DicUtil {
         if (url && url.length > 0) {
             return Http.ajax(method, url);
         } else {
+            console.log(dictype)
             if(dictype){
                 let dicNew;
                 if (typeof dictype == "object") {
@@ -40,6 +41,7 @@ export default class DicUtil {
                     //如果dic_url在当前代码之前被执行，就直接执行获取字典代码，否则就定义事件，等待自定义设置解析完成之后触发
                     if (DicUtil.url_global) {
                         let result = await DicUtil.getDicFromDependUrl(dictype, method);
+                        console.log(result)
                         if(result.success && result.data && result.data.status == 0) {
                             window[dictype] = result.data.data;
                         }else {

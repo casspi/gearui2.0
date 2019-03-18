@@ -86,6 +86,8 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
         }else {
             container = G.G$(this.realDom);
         }
+        console.log('--------------------------------------')
+        console.log(data)
         for(let key in data) {
             let value = data[key];
             try{
@@ -97,12 +99,24 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
             if(jdom.length>0){
                 jdom.each((index:any,dom:any)=>{
                     //排除group类型的子节点，group类型的子节点需要在group的setValue中设置值
-                    let parent = G.G$(dom).parents(".ajaxload-group:first");
-                    if(parent.length==0 || G.$(parent) instanceof Group == false){
+                    let parent = G.G$(jdom[index]).parents(".ajaxload-group:first");
+                    if(parent.length==0 || G.$(parent[0]) instanceof Group == false){
+                        // let children = G.$(parent).find('*');
+                        // console.log(jdom[index])
+
+                        //无法通过name找到组件???
                         let gele= G.$("[name='"+key+"']");
                         if(gele && gele.setValue) {
                             gele.setValue(value);
                         }
+                         // let children = G.$(parent).find('*');
+                        // for(let i=0;i<children.length;i++){
+                        //     if(G.$(children[i]).state&&G.$(children[i]).state.name ==key&&G.$(children[i]).setValue){
+                        //         G.$(children[i]).setValue(value)
+                        //     }
+                        // }
+                    }else if(G.$(parent[0]) instanceof Group){
+                        G.$(parent[0]).setValue(value)
                     }
                 });
             }

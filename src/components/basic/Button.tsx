@@ -38,7 +38,7 @@ export interface state extends Tag.state {
 export default class Button<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
     getInitialState(): state {
-        // console.log(this.props.url)
+        // console.log(this.props.children)
         return {
             onClick:this.clickEvent.bind(this),
             ghost: this.props.ghost,
@@ -52,10 +52,11 @@ export default class Button<P extends typeof props, S extends state> extends Tag
         };
     }
     getProps(){
-        return  
+        let state:any = G.G$.extend({}, this.state);
+        return  state
     }
     render() {
-        let state:any = G.G$.extend({}, this.state);
+        let state = this.getProps()
         delete state.actionType;// 当自己为clickAction时，删除不能被Button接受的属性
         //删除DialogAction中的属性
         delete state.dialogWidth;
@@ -64,11 +65,15 @@ export default class Button<P extends typeof props, S extends state> extends Tag
         delete state.cancelText;
         delete state.maskClosable;
         delete state.loadType;
+        delete state.dragable;
         //删除listAction中属性
         delete state.actionType;
         delete state.listId;
         delete state.actionName;
         delete state.refreshList;
+
+        // console.log(this.props.value)
+        // console.log(this.state.text)
         if(state.iconAlign == "right" && this.state.icon && this.state.text) {
             delete state.icon;
             let icon:any = this.state.icon;
@@ -116,7 +121,7 @@ export default class Button<P extends typeof props, S extends state> extends Tag
     }
 
     getText() {
-        return this.state["text"];
+        return this.state.text;
     }
 
     getValue() {

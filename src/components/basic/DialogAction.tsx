@@ -12,7 +12,8 @@ export var props = {
     confirmText: GearType.String,
     cancelText: GearType.String,
     maskClosable: GearType.Boolean,
-    dragable:GearType.Boolean
+    dragable:GearType.Boolean,
+    closable:GearType.Boolean
 }
 
 export interface state extends ClickAction.state {
@@ -75,20 +76,21 @@ export default class DialogAction<P extends typeof props, S extends state> exten
         let url = obj.state.url;
         if(url){
             Dialog.show({
-                id: DialogAction.getDialogId(obj),
+                "id": DialogAction.getDialogId(obj),
                 "title":obj.state.dialogTitle||obj.state.title,
                 "loadType":obj.state.loadType || "iframe",
                 "width":obj.state.dialogWidth,
                 "height":obj.state.dialogHeight,
                 "maximized":obj.state.dialogWidth || obj.state.dialogHeight ? false : obj.state.maximized,
                 "url": url,
-                "controlBar":obj.state.controlBar==true?true:false,
+                "controlBar":obj.props.controlBar==true?true:false,
                 "onConfirm":obj.props.onConfirm,
                 "onCancel":obj.props.onCancel,
-                "confirmText":obj.state.confirmText || '确定',
-                "cancelText":obj.state.cancelText || '取消',
+                "confirmText":obj.state.confirmText,
+                "cancelText":obj.state.cancelText,
                 "maskClosable": obj.state.maskClosable,
-                "dragable":obj.state.dragable
+                "dragable":obj.state.dragable,
+                'closable':obj.props.closable
             }); 
         } 
     };

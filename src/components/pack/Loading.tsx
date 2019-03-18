@@ -54,7 +54,7 @@ export default class Loading<P extends typeof props, S extends state> extends Ta
         if(!this.state.icon){
            delete props.indicator
         }
-        return <Spin {...props}><span style={{display:"none"}}></span></Spin>
+        return <Spin {...props}>{this.props.children}</Spin>
     }
 
     setLoading(loading:boolean){

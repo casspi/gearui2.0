@@ -458,7 +458,8 @@ table.resultTable .actiontd{
           <a href="www.baidu.com">百度</a>
         </g-breadcrumb-item>
       </g-breadcrumb> -->
-      <!-- <g-ajaxaction value="ajax" buttonstyle="primary" url="getUrl()" method="delete"></g-ajaxaction> -->
+      <g-button icon="file">buttonstyle="primary"</g-button>
+      <g-ajaxaction value="ajax"  buttonstyle="primary"   method="delete"></g-ajaxaction>
       <!-- <g-group name="aaa"></g-group> 
       <g-row id="aaa">
         <g-col span="12" id="bbb">
@@ -490,11 +491,32 @@ table.resultTable .actiontd{
    
     
     <!-- <g-button buttonStyle="danger" id="bbbttn">Danger</g-button> -->
-      <!-- <g-dialog id="dragDialog" title="0000"  dragable="true" footer="<g-button >关闭</g-button>">
+      <!-- <g-dialog id="dragDialog" title="0000" height="300" dragable="true">
         <g-button id='closeDrag'>关闭拖拽</g-button>
         <g-button id='openDrag' >打开拖拽</g-button>
-      </g-dialog> -->
-      
+      </g-dialog>
+      <script>
+        G(function(){
+          
+              //对话框
+                G("#dragDialog").onLoadSuccess(function() {
+                  G("#openDrag").click(function(){
+                    G("#dragDialog").setDragable(true)
+                  })
+                  G("#closeDrag").click(function(){
+                    G("#dragDialog").setDragable(false)
+                  })
+                });
+              //   G("#dragDialog").close()
+              //   G("#dragDialog").open()
+              //   document.onclick=function(){
+              //     G('#dragDialog').setDragable(false);
+              //     console.log(G('#dragDialog').find('.ant-modal'))
+              //     console.log(G('#dragDialog').find('#openDrag'))
+              //   }
+              //   G('#dragDialog').setDragable(true);
+        })
+      </script> -->
       <!-- <g-alert type='info' message="Info Text"></g-alert> -->
       <!-- <g-pagination  id="pagination_id" style="margin-left:750px" current="5" total="888" showSizeChanger="true" beforeChange="alert('before')" pageSize="10" showQuickJumper="true" pageSizeOptions="['10','20','30','40','50','60']"></g-pagination> -->
       <!-- <g-button>btn</g-button>
@@ -787,6 +809,8 @@ table.resultTable .actiontd{
             <g-button id="btn0" >btn00</g-button> -->
             <!-- <g-time value="08:02:25"></g-time> -->
             <!-- <g-date value="2017-08-08"></g-date>  -->
+            <g-tree url="http://10.10.10.6:81/example/Combotree/data"></g-tree>
+            <g-button buttonStyle='danger'>danger</g-button>  
             <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data"  ></g-combotree>
             <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data" multiple="true"  cascadeCheck="true" ></g-combotree>
             <!-- <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree> -->
@@ -839,11 +863,11 @@ table.resultTable .actiontd{
             </g-BreadcrumbItem>
         </g-Breadcrumb> -->
         <!-- horizontal-->
-        <script>
+        <!-- <script>
           let go = function(arg){
             console.log(arg)
           }
-        </script>
+        </script> -->
         <!-- <g-menu mode="inline"  id="gmenu" onDeselect="go" onOpenChange="go" onSelect="go" >
           <g-menuitem selected="true"><a >item 1</a></g-menuitem>
           <g-menuitem><g-icon type="pie-chart" ></g-icon><span> item 2</span></g-menuitem>
@@ -870,7 +894,7 @@ table.resultTable .actiontd{
           </g-submenu>
         </g-menu> -->
         <!-- <SelectedTag>222</SelectedTag> -->
-        <!-- <g-layout>
+        <!-- <g-layout height='500'>
           <g-header theme="light">Header11</g-header>
           <g-center>Center000</g-center>
           <g-sider>sider</g-sider>
@@ -1301,30 +1325,7 @@ function getExportParameters(){
       
       // console.log(G.messager);
       // console.log(text.isFormTag());
-    //   G('#closeDrag').click(function(){
-    //     G('#dragDialog').setDragable(false)
-    // })
-    // G('#openDrag').click(function(){
-    //   alert(111)
-    //     G('#dragDialog').setDragable(true)
-    // })
-    //对话框
-      // G("#dragDialog").onLoadSuccess(function() {
-      //   G("#openDrag").click(function(){
-      //     G("#dragDialog").setDragable(true)
-      //   })
-      //   G("#closeDrag").click(function(){
-      //     G("#dragDialog").setDragable(false)
-      //   })
-      // });
-      // G("#dragDialog").close()
-      // G("#dragDialog").open()
-      // document.onclick=function(){
-        // G('#dragDialog').setDragable(false);
-        // console.log(G('#dragDialog').find('.ant-modal'))
-        // console.log(G('#dragDialog').find('#openDrag'))
-      // }
-      // G('#dragDialog').setDragable(true);
+   
       // G('#pagination_id').onPageSizeChange(function(page,pageSize){
       //   alert('page:'+page+',pageSize:'+pageSize);
       // })

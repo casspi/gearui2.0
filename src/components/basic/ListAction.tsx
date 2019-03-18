@@ -25,6 +25,7 @@ export default class ListAction<P extends typeof props, S extends state> extends
 
     getInitialState():state {
         return {
+            actionType:this.props.actionType,
             method: this.props.method || "post",
             listId: this.props.listId,
             actionName: this.props.actionName,

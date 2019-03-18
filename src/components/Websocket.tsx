@@ -43,7 +43,7 @@ export default class Websocket<P extends typeof props, S extends state> extends 
 
     protected _initWebSocket() {
         //let url = this.props.url || 'ws://localhost:8080/web/realTimeMessageServer';
-        let url: any = this.state.url;
+        let url: any = this.props.url || Http.absoluteUrl("/realTimeMessageServer");
         let host = window.location.host;
         url = "ws://" + host + url;
         let ws;
@@ -53,14 +53,14 @@ export default class Websocket<P extends typeof props, S extends state> extends 
                 if (/^https?:\/\/.+$/.test(url)) {
                     url = url.replace(/^https?(.+)/, "ws$1");
                 }
-                url = url + "/websocket?type=" + (this.state.type || "");
-                ws = new WebSocket(url, this.state.protocol);
+                url = url + "/websocket?type=" + (this.props.type || "");
+                ws = new WebSocket(url, this.props.protocol);
             } else {
                 if (/^ws:\/\/.+$/.test(url)) {
                     url = url.replace(/^ws(.+)/, "http$1");
                 }
                 url = url + "/sockjs?type=" + (this.state.type || "");
-                ws = new G.SockJs(url, this.state.protocol);
+                ws = new G.SockJs(url, this.props.protocol);
                 // SockJs支持的协议
                 // var _all_protocols = [
                 //       'websocket',
@@ -178,7 +178,7 @@ export default class Websocket<P extends typeof props, S extends state> extends 
         }
     }
 
-    makeJsx() {
+    render() {
         return (
             <div></div>
         );

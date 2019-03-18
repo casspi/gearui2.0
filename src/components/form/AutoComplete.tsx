@@ -3,6 +3,7 @@ import * as Text from './Text';
 import { AutoComplete as AntdAutoComplete, Input as AntdInput } from 'antd';
 import { InputProps } from "antd/lib/input";
 import { ObjectUtil, Http } from '../../utils';
+import Parser from '../../core/Parser';
 const AntdOption = AntdAutoComplete.Option;
 const AntdOptGroup = AntdAutoComplete.OptGroup;
 const AntdTextArea = AntdInput.TextArea;
@@ -203,8 +204,9 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                         optionJsx = <AntdOption {...props}>{G.$(r[0])}</AntdOption>;
                     }
                 }else if(this._matchFormat && G.G$.isFunction(this._matchFormat)){
-                    console.log(this._matchFormat(props));
-                    optionJsx = <AntdOption {...props}>{this._matchFormat(props)}</AntdOption>;//{this._matchFormat(props)}
+                    let parser = new Parser;
+                    // console.log(parser.parseToReactInstance(this._matchFormat(props)));
+                    optionJsx = <AntdOption {...props}>{parser.parseToReactInstance(this._matchFormat(props))}</AntdOption>;
                 }else {
                     optionJsx = <AntdOption {...props}>{text}</AntdOption>;
                 }

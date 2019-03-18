@@ -30,6 +30,7 @@ export interface state extends Tree.state {
 }
 type TreeNode = Tree.TreeNode;
 export default class Combotree<P extends typeof props & AntdTreeProps, S extends state & Partial<AntdTreeProps>> extends Tree.default<P, S> {
+    
     pinyinData = {}
     getInitialState(): state & Partial<AntdTreeProps> {
         return {
@@ -38,14 +39,12 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         };
     }
     static newJsxInstance(props: any) {
-        console.log(props.refid)
         return <Combotree {...props}/>;
     }
 
     getProps() {
         let props = super.getProps();
         let propsNew = G.G$.extend({},props,{
-            // refid:this.props.refid,
             inputValue: null,
             showSearch: this.props.editable,
             value: this.state.value,
@@ -123,7 +122,6 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             labelInValue: false,
             treeCheckStrictly: this.props.multiple?(this.props.onlyLeafCheck?true:(this.props.cascadeCheck!=undefined?!this.props.cascadeCheck:false)):false,
             disabled: this.state.disabled || this.state.readOnly,
-            pinyinUrl:this.props.pinyinUrl,
             filterTreeNode: (input: string, node: any) =>{
                 if(node.props.title.toLowerCase().indexOf(input.trim().toLowerCase()) != -1) {
                     return true;
@@ -192,6 +190,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             return ele;
         });
         let props = this.getProps();
+        console.log(props.refid)
         return <TreeSelect {...props}>{childrenMap}</TreeSelect>;
     }
 
@@ -201,7 +200,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         if(this.props.multiple == true && this.props.editable == false) {
             this.find(".ant-select-selection").find("input").remove();
         }
-        if(this.getProps().pinyinUrl){
+        if(this.props.pinyinUrl){
             let p = Http.getMethod('get')(this.getProps().pinyinUrl,'json');
             if(p){
                 p.then((response)=>{
