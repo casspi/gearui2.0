@@ -38,7 +38,6 @@ export interface state extends Tag.state {
 export default class Button<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
     getInitialState(): state {
-        // console.log(this.props.children)
         return {
             onClick:this.clickEvent.bind(this),
             ghost: this.props.ghost,
@@ -107,6 +106,7 @@ export default class Button<P extends typeof props, S extends state> extends Tag
         }
         if(triggerLink==true){
             let url = this.state.url;
+            console.log(url)
             if(typeof url == "string" && url.length>0){
                 let target = this.props.target;
                 Http.triggerHyperlink(url,target);    

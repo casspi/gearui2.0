@@ -133,7 +133,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             expandedKeys: this.props.expandedKeys,
             defaultExpandedKeys: this.props.expandedKeys,
             cascadeCheck: this.props.cascadeCheck,
-            selected: this.props.selected,
+            selected: this.props.selected||[],
             defaultSelectedKeys: [],
             onlyLeafCheck: this.props.onlyLeafCheck,
             showLine: this.props.lines == true,
@@ -155,7 +155,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             defaultExpandAll: this.props.defaultExpandAll,
             dictype: this.props.dictype,
             url: this.props.url,
-            value:[]
+            value: this.getPropStringArrayValue(this.props.value)||[]
         }
     }
 
@@ -430,7 +430,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 expanded: boolean;
             }) => {
                 let node = info.node.props.nodeEle;
-                console.log(node);
                 this.doEvent("beforeExpand", node, expandedKeys);
                 this._onBeforeExpand(node);
                 Tree.onBeforeExpand.call(expandedKeys,info);
@@ -471,7 +470,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             },
             /** 点击树节点触发 */
             onSelect: (selected: Array<string>, e: any) => {
-                console.log(e)
                 let node = e.node.props.nodeEle;
                 this._triggerOnSelect(node,e);            
             },
@@ -603,7 +601,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             this.loadData(null,(dic: any,callback?: Function)=>{
                 let keyValue: any[] = [];
                 // 默认值
-                let defaultValue: any = this.props.value || this.state.selected;
+                let defaultValue: any = this.state.value || this.state.selected;
                 if(defaultValue){
                     // 如果默认值存在，则根据默认值获得相应的节点id，放到value中
                     this._findKeyByValue(defaultValue,dic,keyValue);
@@ -614,6 +612,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 }else{
                     value = this.getInitValue(dic);
                 }
+                console.log(value)
                 if(this.state.defaultExpandAll == true) {
                     let expandedKeys = this._expandAll(this.getRoots(),this.state.defaultExpandLevel);
                     this.setState({
@@ -634,6 +633,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 
             });
         }
+       
     }
 
     getParentTree() {
@@ -952,10 +952,12 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         }else {
             url = this.state.url;
             data = this.state.dictype;
-            this.reload(url,data,this.state.method,callback);
+            if(url||data){//先判断，防止当transfer组件时，右侧没有url和dictype会报错：‘无字典’
+                this.reload(url,data,this.state.method,callback);
+            }
         }
     }
-    // 通过指定的url或者data加载数据
+    // 通过指定的url或者data(dictype)加载数据
     reload(url: any,dictype: any,method: methods,callback?:Function) {
         let fn = async ()=> {
             let result = await DicUtil.getDic({url, method, dictype});
@@ -997,6 +999,8 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                     this.addDefaultExpand(dic,expanded);
                     let initValue = this.getInitValue(dic);
                     this.triggerChange(initValue);
+                    console.log(initValue)
+                    console.log(dic)
                     this.setState({
                         url: url,
                         dictype: dictype,
@@ -1058,7 +1062,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             }
             
         }
-        console.log(valueC)
         return valueC;
     }
     // 根据节点的值得到节点的key

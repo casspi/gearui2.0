@@ -190,7 +190,6 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             return ele;
         });
         let props = this.getProps();
-        console.log(props.refid)
         return <TreeSelect {...props}>{childrenMap}</TreeSelect>;
     }
 

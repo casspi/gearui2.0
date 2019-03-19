@@ -294,6 +294,9 @@ export default class GearUtil {
 
     // 解析属性值
     static parseAttributeValue(name:string,value:string, typeConstractor: any){
+        if(name=="url"){
+            console.log(value)
+        }
         // 解析value中的表达式 G{xxx} ，对表达式中的函数或变量进行解析处理
         value = value.replace(/\G\{([^\}]+)\}/g,function(match,m1){
             // 获得表达式，如果表达式是以“();”结尾的，去除之
@@ -375,6 +378,8 @@ export default class GearUtil {
                     for(let i = 0; i < values.length; i++) {
                         let valueInner = values[i];
                         let methodName = valueInner.replace(/\([\.|$|\w]{0,}\);?/,"");
+                        methodName = methodName.replace(/^javascript:/,"")//防止老版中，如：link属性也会有javascript:fun()写法
+                        console.log(methodName)
                         if(window[methodName] && window[methodName] instanceof Function) {
                             funs.push(window[methodName]);
                         }

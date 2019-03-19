@@ -40,7 +40,7 @@ export var props =  {
     onRightTreeCheck:GearType.Function,
     onLeftTreeMoved:GearType.Function,
     onRightTreeMoved:GearType.Function,
-    className:GearType.Any     
+    className:GearType.Any,
 }
 export interface state extends FormTag.state{
     readOnly:boolean,
@@ -53,7 +53,6 @@ export interface state extends FormTag.state{
 }
 // 穿梭框
 export default class Transfer<P extends (typeof props) & AntdTransferProps,S extends state & AntdTransferProps> extends FormTag.default<P,S>{
-
     // 是否首次初始化
     private _initiated:boolean = false;
     // 树节点的数据（在transfer中缓存一份）
@@ -80,7 +79,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         if(state.style && state.style.display){
             style = {display:state.style.display};
         }    
-        delete state.style;
+        // delete state.style;
         return G.G$.extend({}, state, {
             className:className,
             tabIndex: 0,
@@ -93,19 +92,19 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
 
         return {
             className:"transfer-list transfer-left-list",
-            style:this.state.style,
+            style: this.state.style,
         };        
     }
 
     getRightContainerProps() {
-
         return {
             className:"transfer-list transfer-right-list",
-            style:this.state.style,
+            style: this.state.style,
         };
     }
 
     getLeftTreeProps() {
+        console.log(this.getPropStringArrayValue(this.props.value)||[])
         return {
             checkbox:true,
             cascadeCheck:true,
@@ -115,7 +114,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             showIcon:this.props.showIcon,
             iconStyle:this.props.iconStyle,
             lines:this.props.lines,
-            // value:this.props.value,
+            // value:this.getPropStringArrayValue(this.props.value)||[],
             onCheck:(node:any)=>{
                 if(node.checked==false)
                     this._setLeftChecked(false);
@@ -140,11 +139,11 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                     // 获取树节点的数据，并将其缓存在本地变量中
                     var options = this._leftTree.getRoots();
                     if(options){
-                        this._options = new GearArray(options).clone().toArray();
+                        this._options = new GearArray(options).clone(true).toArray();
                     }else{
                         this._options = [];
                     }
-                    if(this.props.value){
+                    if(this._leftTree.state.value){
                         // 如果有默认值，将默认值移至左侧
                         this._transferCheckedItemToRight();
                     }
@@ -162,7 +161,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             showIcon:this.props.showIcon,
             iconStyle:this.props.iconStyle,
             lines:this.props.lines,
-            style:this.state.style,         
+            style:this.state.style,   
             onCheck:(node:any)=>{
                 if(node.checked==false)
                     this._setRightChecked(false);
@@ -238,8 +237,9 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     
     render() {
         let props:any = this.getProps();
-        let leftTreeProps:any = this.getLeftTreeProps();
+        let leftTreeProps:any = this.getLeftTreeProps(); 
         let rightTreeProps:any = this.getRightTreeProps();
+        console.log(leftTreeProps)
         return <Wrapper {...props}>
                 <div key={"left"} {...this.getLeftContainerProps()}>
                     <div key={"header"} className={"list-header"}>
@@ -261,7 +261,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                         <div key={"checkall"} className={"checkall"}>
                             <Checkbox {...this.getRightCheckProps()}>{"全选"}</Checkbox>
                         </div>
-                        <div key={"title"} className={"header-title"}>{this.state["rightTitle"]}</div>
+                        <div key={"title"} className={"header-title"}>{this.state.rightTitle}</div>
                     </div>
                     <div key={"body"} className={"list-body"}>
                         <Tree.default key={"rightTree"} {...rightTreeProps}/>
@@ -544,7 +544,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             if(typeof value == "string")
                 value = [value];
             if(this._leftTree){
-                var options = new GearArray(this._options).clone().toArray();
+                var options = new GearArray(this._options).clone(true).toArray();
                 this._leftTree.loadData(options,()=>{
                     this._leftTree.setValue(value,()=>{
                         this._rightTree.loadData([],()=>{
@@ -617,7 +617,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
 
     reset(){
         if(this._leftTree){
-            var options = new GearArray(this._options).clone().toArray();
+            var options = new GearArray(this._options).clone(true).toArray();
             this._leftTree.loadData(options,()=>{
                 this._leftTree.setValue([])
             });

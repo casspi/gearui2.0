@@ -1,22 +1,26 @@
 /* 用于处理标签页 */
 /* 对设置了样式gearui-tabs的标签页进行初始化、设置和操作 */
 /* 通过使用G(".gearui-tabs").tabs()来初始化布局 */
+import * as ReactDOM from 'react-dom';
 import Parser from '../../core/Parser';
 import {ObjectUtil,GearUtil,UUID} from '../../utils';
 import * as Tag from '../Tag';
+import * as JqueryTag from '../JqueryTag';
+import * as VoidTag from '../VoidTag';
 
 export default class Tabs<P,S> extends Tag.default<P,S> {   
 
     render() { 
-        this.initlizate();
-        this.resizeTab();
         return null;
     }
-
+    afterRender(){
+        this.initlizate();
+        this.resizeTab();
+    }
     private initlizate() {
+        console.log(this)
         let _this = this;
         let _real = G.G$(this.realDom);    
-        console.log(this.realDom)    
         if(!_real.data("initialized")){
             // 添加样式
             _real.addClass("gearui-tabs");

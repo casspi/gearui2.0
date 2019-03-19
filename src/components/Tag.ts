@@ -136,7 +136,6 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
 
     //父节点改变本节点的props的时候触发
     componentWillReceiveProps(nextProps: P) {
-        // console.log(nextProps);
         let state: any = {};
         if(nextProps.needUpdateToState) {
             for(let i in nextProps.needUpdateToState) {
@@ -148,7 +147,6 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
                 }
             }
         }
-        //console.log(nextProps)
         //返回将被更新至state中的属性
         let newState = this.afterReceiveProps(nextProps);
         // console.log(newState)

@@ -22,18 +22,17 @@ export default class DicUtil {
         let method = param.method || "get";
         let dictype = param.dictype;
         if (typeof dictype == "string" && window[dictype]) {
-            dictype = window[dictype];
+            dictype = window[dictype]
         }
         if (url && url.length > 0) {
             return Http.ajax(method, url);
         } else {
-            console.log(dictype)
             if(dictype){
                 let dicNew;
                 if (typeof dictype == "object") {
                     if (dictype instanceof Array) {
                         let arr = new GearArray<any>(dictype);
-                        dicNew = arr.clone().toArray();
+                        dicNew = arr.clone(true).toArray();
                     } else {
                         dicNew = G.G$.extend(true, {}, dictype);
                     }
@@ -41,7 +40,6 @@ export default class DicUtil {
                     //如果dic_url在当前代码之前被执行，就直接执行获取字典代码，否则就定义事件，等待自定义设置解析完成之后触发
                     if (DicUtil.url_global) {
                         let result = await DicUtil.getDicFromDependUrl(dictype, method);
-                        console.log(result)
                         if(result.success && result.data && result.data.status == 0) {
                             window[dictype] = result.data.data;
                         }else {
@@ -49,7 +47,7 @@ export default class DicUtil {
                         }
                         if (window[dictype] instanceof Array) {
                             let arr = new GearArray<any>(window[dictype]);
-                            dicNew = arr.clone().toArray()
+                            dicNew = arr.clone(true).toArray()
                         } else {
                             dicNew = G.G$.extend(true, {}, window[dictype]);
                         }
