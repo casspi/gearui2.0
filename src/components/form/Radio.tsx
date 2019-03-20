@@ -30,7 +30,7 @@ export interface state extends FormTag.state {
 export default class Radio<P extends typeof props &  RadioProps,S extends state & RadioProps> extends FormTag.default<P,S> {
 
     constructor(props: P, context: {}) {
-        super(props);
+        super(props, context);
     }
 
     //获取当前属性
@@ -94,7 +94,7 @@ export default class Radio<P extends typeof props &  RadioProps,S extends state 
     }
 
     //渲染
-    render() {
+    makeJsx() {
         let props = this.getProps();
         // if (this.props.url || this.props.dictype) {
             return <AntdRadioGroup {...props}></AntdRadioGroup>;

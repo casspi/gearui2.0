@@ -160,7 +160,7 @@ export default class Date<P extends typeof props, S extends state> extends FormT
         };
     }
     //渲染
-    render() {
+    makeJsx() {
         let props = this.getProps();
         let type = this.props.type;
         if (type == null || type == "date") {

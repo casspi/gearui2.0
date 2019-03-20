@@ -45,7 +45,7 @@ export default class RadioButton<P extends typeof props &  RadioProps,S extends 
     }
 
     //渲染
-    render() {
+    makeJsx() {
         let props = this.getProps();
         return <AntdRadioButton {...props}>{this.props.label}</AntdRadioButton >;
     }

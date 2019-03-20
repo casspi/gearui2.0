@@ -24,7 +24,6 @@ export var props = {
 };
 export interface state extends Tag.state {
     //控件是否开启验证，每一个控件都存储
-    formTagStates: {[idx: string]: FormTag.state},
     invalidType?: string;
     otherParams?: any;
     showProgress?: boolean;
@@ -40,9 +39,9 @@ export interface state extends Tag.state {
 
 export class Form<P extends (typeof props & FormComponentProps), S extends state> extends Tag.default<P, S> {
 
-    private values = {};
+    // private values = {};
 
-    private cacheItems: any = null;
+    // private cacheItems: any = null;
 
     constructor(props: P, context: {}) {
         super(props, context);
@@ -53,10 +52,8 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     getInitialState(): state {
-        this.values = {};
-        let initFormTagState = this.getInitFormTagStates();
+        // this.values = {};
         return {
-            formTagStates: initFormTagState,
             invalidType: this.props.invalidType,
             validateHidden: this.props.validateHidden,
             showProgress: this.props.showProgress,
@@ -82,10 +79,23 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         }
         return G.G$.extend({},this.state);
     }
+
+    private getChildren() {
+        let children = this.props.children;
+        let methodParam = this.getMethodParam();
+        if(methodParam != null) {
+            if(children instanceof Array) {
+                children.push(methodParam);
+            }else {
+                return [children, methodParam];
+            }
+        }
+        return children;
+    }
         
     render() {
         // console.log(this.props.value)
-        let items: any = this.getFormItems();
+        // let items: any = this.getFormItems();
         // console.log(items)
         // if(this.cacheItems != null) {
         //     items = this.cacheItems;
@@ -104,276 +114,38 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         delete props.validation;
         delete props.ajax;
         return (<AntdForm {...props}>
-            {items}
+            {this.getChildren()}
         </AntdForm>);
     }
 
-    private getInitFormTagStates(): {[idx: string]:FormTag.state} {
-        let children:any[] = this.props.children;
-        if(!(children instanceof Array)) {
-            children = [children];
-        }
-        let formTagStates:{[idx: string]:FormTag.state} = {};
-        let mapChildren = (children:any)=>{
-            if(children instanceof Array) {
-                children.map((child:any, index)=>{
-                    if(child && child.type && (ObjectUtil.isExtends(child.type, "FormTag")) ||  ObjectUtil.isExtends(child.type, "Validate")) {
-                        //如果是validate标签
-                        let childReactNode: any = child;
-                        let validateReactNode: any = child;
-                        if(ObjectUtil.isExtends(child.type, "Validate")) {
-                            childReactNode = child.props.children[0];
-                        }
-                        //解决输入框外部包裹div标签时bug
-                        if(child && child.props && child.props.children && child.props.children[0] && child.props.children[0].type && (ObjectUtil.isExtends(child.props.children[0].type, "FormTag"))){
-                            childReactNode = child.props.children[0];
-                            validateReactNode = child.props.children[0];
-                        }
-                        let tagName = childReactNode.props.name;
-                        let rules = this.getRules(tagName, validateReactNode);
-                        let validation = this.getValidation(tagName, validateReactNode);
-                        
-                        let invalidType = this.getInvalidType(tagName, validateReactNode);
-                        formTagStates[tagName] = {
-                            validation,
-                            invalidType,
-                            rules
-                        };
-                    }else if(child && child.props && child.props.children && child.props.children){
-                        mapChildren(child.props.children)
-                    }
-                });
-            }
-        }
-        mapChildren(children);
-        return formTagStates;
-    }
-
-    /**
-     * 获取所有的FormItem标签
-     */
-    private getFormItems(children?: any) {
-        let childrenItems: any = [];
-        children = children || this.props.children || [];
-        if(!(children instanceof Array)) {
-            children = [children];
-        }
-        children = children.filter((o:any) => o!=0)
-        children.map((child:any, index: number)=>{
-            let formItem = child;
-            if(child && child.type && ((ObjectUtil.isExtends(child.type, "FormTag")) || ObjectUtil.isExtends(child.type, "Validate"))) {
-                //如果是validate标签
-                let childReactNode: any = child;
-                let validateTag = null;
-                //如果是validate控件，需要特殊处理
-                if(ObjectUtil.isExtends(child.type, "Validate")) {
-                    childReactNode = child.props.children[0];
-                    let validateProps = G.G$.extend({},child.props,{
-                        children: [],
-                        form: this,
-                        key: this.props.id + "_validateTag_" + index
-                    });
-                    delete validateProps.value;
-                    validateTag = React.createElement(child.type, validateProps, validateProps.children);
-                }
-                let tagName = childReactNode.props.name;
-                let rules: any = this.getRules(tagName);
-                let props: any = this.getFormTagProps(index, tagName);
-                let validation = this.getValidation(tagName)?true:false;
-                /*-----------------
-                由于此处的child.props是readonly,
-                不能修改,所以需要将老的props合并成一个新的props,
-                然后在创建一个reactelement,传入这个新的props,以这种方式来变相修改老的props
-                -------------------*/
-                //合并新的信息，将当前存储的tagname对应state信息合并到props，并传递给formTag
-                // console.log(this.state.formTagStates[tagName])
-                props = G.G$.extend({}, childReactNode.props, props, this.state.formTagStates[tagName], {
-                    needUpdateToState: ["validation", "invalidType", "rules","data-__field", "data-__meta"]
-                });
-                delete props.value;
-                delete props.validation;
-                let formTag: any = React.createElement(childReactNode.type, props, props.children);
-                // console.log(childReactNode.type)
-                // console.log(childReactNode)
-                let initialValue = this.values[tagName] || childReactNode.props.value;
-                // console.log(initialValue)
-                formTag = this.props.form.getFieldDecorator(tagName,{
-                    initialValue: initialValue,
-                    rules: validation ? rules: []
-                })(formTag);
-                let formItemChildren = formTag;
-                //如果验证节点存在，将验证节点和formtag节点放一起
-                if(validateTag != null) {
-                    formItemChildren = [formTag, validateTag];
-                }
-                formItem = this.getFormItem(formItemChildren, index);
-            }else {
-                formItem = this.loopGetFormItems(child, index);
-            }
-            childrenItems.push(formItem);
-        });
-        this.addMethodParam(children.length);
-        return childrenItems;
-    }
-
-    //递归获取子节点中的formTag
-    private loopGetFormItems(child: any, index: number) {
-        if(child && child.props && child.props.children) {
-            let children = child.props.children;
-            let props: any = {};
-            if(child && child.type && ObjectUtil.isExtends(child.type, "EditTable")) {
-                props = {form: this};
-            }
-            return React.cloneElement(child, props, this.getFormItems(children));
-        }
-        return child;
-    }
-
-    private addMethodParam(index: number) {
+    private getMethodParam() {
         let method = this.state.method;
         if(method && method.toLowerCase() == "put") {
             let formTag: any = this.props.form.getFieldDecorator("_method",{
                 initialValue: "put",
                 rules: []
             })(<input type="hidden" name="_method"/>);
-            let formItem = this.getFormItem(formTag, index);
+            let formItem = <AntdForm.Item key={this.props.id + "_form_item__method"}>
+               {formTag}
+            </AntdForm.Item>;
             return formItem;
         }
         return null;
     }
-    /**
-     * 获取扩展的formTag的Props
-     * @param index 
-     */
-    private getFormTagProps(index: number, name: string) {
-        return {
-            form: this,
-            key: this.props.id + "_tag_" + index,
-            invalidType: this.getInvalidType(name)
-        };
-    }
 
-    /**
-     * 获取一个FormItem的标签
-     * @param formTag formTag标签
-     */
-    private getFormItem(formTag: React.SFCElement<typeof FormTag.props & {form: Form<typeof props & FormComponentProps, state> ,key: string}>, index: number) {
-        let props:any = formTag.props;
-        if(formTag instanceof Array) {
-            props = formTag[0].props;
-        }
-        let tagName = props.name;
-        let validateStatus:'success' | 'warning' | 'error' | 'validating' = "success";
-        let help = null;
-        let invalidType = this.getInvalidType(tagName);
-        if(props) {
-            let errors = this.props.form.getFieldError(tagName);
-            if(errors && errors.length > 0) {
-                validateStatus = "error";
-                help = errors[0];
-                // 表单验证方式，优先取控件本身的，如果控件本身无配置再获取form上的
-                if(invalidType == "fixed") {
-                    let ele = Tooltip.addInvalidTooltip(formTag,tagName,null,this.getFormTagState(tagName).titleAlign||props.titleAlign);
-                    return <AntdForm.Item
-                        validateStatus={validateStatus}
-                        help={help}
-                        key={this.props.id + "_form_item_" + index}
-                        label={props.labelText} 
-                    >{ele}</AntdForm.Item>;
-                }else {
-                    let ele = Tooltip.addInvalidTooltip(formTag,tagName,help,this.getFormTagState(tagName).titleAlign||props.titleAlign);
-                    return <AntdForm.Item required key={this.props.id + "_form_item_" + index} className={"ant-form-item-with-float-help"}
-                        validateStatus={validateStatus}
-                        label={props.labelText} 
-                        help={""}
-                    >{ele}</AntdForm.Item>;
-                }
-            }else {
-                let ele = Tooltip.addTooltip(formTag,this.getFormTagState(tagName).title||props.title,this.getFormTagState(tagName).titleAlign||props.titleAlign);
-                if(invalidType == "fixed") {
-                    return <AntdForm.Item label={props.labelText} key={this.props.id + "_form_item_" + index}>{ele}</AntdForm.Item>;
-                }else{
-                    return <AntdForm.Item label={props.labelText} key={this.props.id + "_form_item_" + index} className={"ant-form-item-with-float-help"}>{ele}</AntdForm.Item>;
-                }
-            }
-        }
-        return <AntdForm.Item {...props} key={this.props.id + "_form_item_" + index}>
-            {formTag}
-        </AntdForm.Item>;
-    }
-
-    //根据tag名称获取对应的校验器
-    public getRules(tagName: string, validateReactNode?: any) {
-        if(validateReactNode == null) {
-            if(this.state && this.state.formTagStates) {
-                return this.state.formTagStates[tagName].rules;
-            }
-            return [];
-        }else {
-            let props = validateReactNode.props;
-            let clazz = validateReactNode.type;
-            return Validator.getValidators(G.G$.extend({},props), clazz);
-        }
-    }
-
-    //是否开启验证
-    public getValidation(tagName: string, validateReactNode?: any): boolean | undefined {
-        if(validateReactNode == null) {
-            if(this.state && this.state.formTagStates) {
-                return this.state.formTagStates[tagName].validation;
-            }
-            return true;
-        }else {
-            let props = validateReactNode.props;
-            return props.validation != false;
-        }
-    } 
 
     //验证提示类型
-    public getInvalidType(tagName: string, validateReactNode?: any): string | undefined {
-        if(validateReactNode == null) {
-            if(this.state && this.state.formTagStates) {
-                return this.state.formTagStates[tagName].invalidType || this.state.invalidType;
-            }
-            return this.state.invalidType;
-        }else {
-            let props = validateReactNode.props;
-            return props.invalidType || this.props.invalidType;
-        }
+    public getInvalidType(): string | undefined {
+        return this.state.invalidType;
     } 
-
-    /**
-     * 获取指定控件的state
-     * @param tagName 
-     */
-    public getFormTagState(tagName: string): FormTag.state {
-        if(this.state && this.state.formTagStates) {
-            return this.state.formTagStates[tagName];
-        }
-        return {};
-    }
 
     public validateHidden() {
         return this.state.validateHidden;
     }
 
-    /**
-     * 修改指定控件的state
-     * @param tagName 控件名称
-     * @param state 控件state对象
-     */
-    public setFormTagState(tagName: string, state: FormTag.state, callback?: ()=>void) {
-        let stateClone = G.G$.extend({}, state);
-        let formTagStates = this.state.formTagStates;
-        formTagStates[tagName] = stateClone;
-        this.setState({
-            formTagStates
-        }, callback);
-    }
 
     //设置一个form控件的值
     public setFieldValue(name: string, value: any, callback?: Function) {
-        this.values[name] = value;
         let params = {};
         params[name] = value;
         this.props.form.setFieldsValue(params);
@@ -400,15 +172,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
      * @param rule 
      */
     addValidatorRule(name: string, rule: Validator) {
-        let formTagStates = this.state.formTagStates;
-        let formTagState = formTagStates[name];
-        let rules = formTagState.rules || [];
-        rules.push(rule);
-        formTagState.rules = rules;
-        formTagStates[name] = formTagState;
-        this.setState({
-            formTagStates
-        });
+        G.$("[name='"+name+"']").addValidatorRule(rule);
     }
 
     /**
@@ -824,16 +588,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         });
     }
 
-    getInitValidators(ele?: any) {
-        let formTagStates = this.state.formTagStates;
-        let validators: any = {};
-        for(let key in formTagStates) {
-            let rules = formTagStates[key].rules;
-            validators[key] = rules;
-        }
-        return validators;
-    }
-
     success(data: any) {
         if(typeof data == "string") {
             try{
@@ -1037,6 +791,10 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         }
         return Form;
     }
+    //是否开启验证
+    public isValidation(): boolean | undefined {
+        return this.state.validate;
+    } 
 
 }
 export default AntdForm.create({})(Form);

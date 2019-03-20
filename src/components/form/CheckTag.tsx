@@ -34,7 +34,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
             readOnly: this.props.readOnly,
         };
     }
-    render() {
+    makeJsx() {
         return <div {...this.getProps()}>
             {this.getTags()}
         </div>;

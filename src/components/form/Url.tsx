@@ -25,7 +25,7 @@ export default class Url<P extends (typeof props) & InputProps ,S extends state>
         });
     }
     
-    render() {
+    makeJsx() {
         let props = this.getProps();
         return <Input {...props}></Input>;
     }

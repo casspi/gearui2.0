@@ -2,9 +2,10 @@ import * as Tag from "../Tag";
 import * as Validate from './Validate';
 import { Form } from "./index";
 import { Validator } from "../../validator";
+import { ObjectUtil } from '../../utils';
+import {FormComponentProps, WrappedFormUtils} from 'antd/es/form/Form';
 export var props = {
     
-    form: GearType.VoidT<Form.Form<any, Form.state>>(),
     //配合 label 属性使用，表示是否显示 label 后面的冒号
     colon: GearType.Boolean,
     //额外的提示信息，和 help 类似，当需要错误信息和提示文案同时出现时，可以使用这个
@@ -50,19 +51,33 @@ export interface state extends Tag.state {
     //验证器
     rules?: Array<Validator>;
     readOnly?: boolean;
+    labelText?: string;
 };
 export default abstract class FormTag<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
     protected cannotUpdate:GearArray<keyof S> = new GearArray<keyof state>(["name","id"]);
-    private _propsValue:any;
+    protected form: Form.Form<typeof Form.props & FormComponentProps, Form.state>;
     constructor(props:any){
         super(props);
-        this._propsValue = this.props.value;
-    }    
+        // this._propsValue = this.props.value;
+        this.setForm(this.ast);
+    }
+
+    private setForm(ast: ASTElement) {
+        if(ast) {
+            let parent = ast.parent;
+            if(parent && ObjectUtil.isExtends(parent.vmdom, "Form")) {
+                this.form = parent.vmdom;
+            }else {
+                this.setForm(parent);
+            }
+        }
+    }
+
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
         let value:any = nextProps.value;
         //日期组件特殊处理
-        if(nextProps.ctype==="date"||nextProps.ctype=="datetime"||nextProps.ctype=="time"){
+        if(ObjectUtil.isExtends(this, "Date") || ObjectUtil.isExtends(this, "Datetime") || ObjectUtil.isExtends(this, "Time") ){
             value = this.state.value
         }
         return {
@@ -71,11 +86,11 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             // onChange: nextProps.onChange
         };
     }
-    needChange:any;
+    // needChange:any;
     triggerChange(changedValue: any, callback?: Function) {
-        if(this.props.form) {
-            this.props.form.setFieldValue(this.props.name, changedValue, callback);
-            this.needChange = true;
+        if(this.form) {
+            this.form.setFieldValue(this.props.name, changedValue, callback);
+            // this.needChange = true;
         }
     }
     protected getProps(){
@@ -90,7 +105,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             validation: this.props.validation,
             invalidType: this.props.invalidType,
             readOnly: this.props.readOnly,
-            value: this.props.value
+            value: this.props.value,
+            labelText: this.props.labelText
         };
     }
 
@@ -103,7 +119,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
 
     setValue(value: any, callback?: Function) {
-        if(this.props.form) {
+        if(this.form) {
             this.setState({
                 value
             }, () => {
@@ -125,35 +141,33 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     
     validate(fun?: Function): boolean {
-        if(this.props.form) {
-            return this.props.form.validateField(this.props.name, fun);
+        if(this.form) {
+            return this.form.validateField(this.props.name, fun);
         }
         return true;
     }
 
     enableValidation(params: any) {
-        if(this.props.form) {
+        if(this.form) {
             let state = this.state;
             let newState = G.G$.extend({},state, {
                 validation: true
-            }); 
+            });
             if(params){
                 let _validateProps = G.G$.extend(this.props,params);
                 newState = G.G$.extend({},newState, {
                     rules: Validator.getValidators(_validateProps, this.constructor)
                 });
             }
-            this.props.form.setFormTagState(this.props.name, newState);
+            this.setState(newState);
         }
     }
 
     disableValidation() {
-        if(this.props.form) {
-            let state = this.state;
-            let newState = G.G$.extend({},state, {
+        if(this.form) {
+            this.setState({
                 validation: false
-            }); 
-            this.props.form.setFormTagState(this.props.name, newState);
+            });
         }
     }
 
@@ -162,9 +176,15 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
      * @param rule 
      */
     addValidatorRule(rule: Validator) {
-        if(this.props.form) {
+        if(this.form) {
             if(rule instanceof Validator) {
-                this.props.form.addValidatorRule(this.props.name, rule);
+                let rules = this.state.rules;
+                if(rules) {
+                    rules.push(rule);
+                    this.setState({
+                        rules
+                    });
+                }
             }else {
                 console.error("不是一个正确的验证器类型，请使用G.validator.createValidator({name:'',})");
             }
@@ -175,7 +195,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
      * 清空控件数据
      */
     clear() {
-        if(this.props.form) {
+        if(this.form) {
             if(this.state.value instanceof Array) {
                 this.setValue([]);
             }else if(this.state.value instanceof Object) {
@@ -188,8 +208,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         }
     }
     reset(){
-        if(this.props.form) {
-            this.props.form.reset(this.props.name);
+        if(this.form) {
+            this.form.reset(this.props.name);
         }
     }
 
@@ -197,8 +217,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
      * 获取控件验证信息
      */
     getValidateMessage() {
-        if(this.props.form) {
-            return this.props.form.getError(this.props.name);
+        if(this.form) {
+            return this.form.getError(this.props.name);
         }
         return null;
     }
@@ -226,5 +246,87 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             this.bind("click", fun);
         }
     }
+
+    makeJsx():ReactNode {return null;}
+
+    render() {
+        let ele: ReactNode = this.makeJsx();
+        if(this.form) {
+            let formUtils: WrappedFormUtils = this.form.props.form;
+            let rules: any = this.state.rules;
+            let formTag = formUtils.getFieldDecorator(this.props.name, {
+                initialValue: this.state.value,
+                rules: this.isValidation() ? rules : []
+            })(ele);
+            return this.getFormItem(formTag);
+        }else {
+            return Tooltip.addTooltip(ele,this.state.title,this.state.titleAlign);
+        }
+    }
+
+    /**
+     * 获取一个FormItem的标签
+     * @param formTag formTag标签
+     */
+    private getFormItem(formTag: ReactNode) {
+        let formUtils: WrappedFormUtils = this.form.props.form;
+        let tagName = this.props.name;
+        let validateStatus:'success' | 'warning' | 'error' | 'validating' = "success";
+        let help = null;
+        let invalidType = this.getInvalidType();
+        let errors = formUtils.getFieldError(tagName);
+        if(errors && errors.length > 0) {
+            validateStatus = "error";
+            help = errors[0];
+            // 表单验证方式，优先取控件本身的，如果控件本身无配置再获取form上的
+            if(invalidType == "fixed") {
+                let ele = Tooltip.addInvalidTooltip(formTag,tagName,null,this.state.titleAlign);
+                
+                return <AntdFormItem
+                    validateStatus={validateStatus}
+                    help={help}
+                    key={this.props.id + "_form_item_"}
+                    label={this.state.labelText} 
+                >{ele}</AntdFormItem>;
+            }else {
+                let ele = Tooltip.addInvalidTooltip(formTag,tagName,help,this.state.titleAlign);
+                return <AntdFormItem required key={this.props.id + "_form_item_"} className={"ant-form-item-with-float-help"}
+                    validateStatus={validateStatus}
+                    label={this.state.labelText} 
+                    help={""}
+                >{ele}</AntdFormItem>;
+            }
+        }else {
+            let ele = Tooltip.addTooltip(formTag,this.state.title,this.state.titleAlign);
+            if(invalidType == "fixed") {
+                return <AntdFormItem label={this.state.labelText} key={this.props.id + "_form_item_"}>{ele}</AntdFormItem>;
+            }else{
+                return <AntdFormItem label={this.state.labelText} key={this.props.id + "_form_item_"} className={"ant-form-item-with-float-help"}>{ele}</AntdFormItem>;
+            }
+        }
+    }
+
+    public isValidation(): boolean | undefined {
+        if(this.state.validation != null) {
+            return this.state.validation;
+        }else {
+            if(this.form) {
+                return this.form.isValidation();
+            }
+        }
+        return true;
+    }
+
+    //验证提示类型
+    public getInvalidType(): string | undefined {
+        if(this.state.invalidType) {
+            return this.state.invalidType;
+        }else {
+            if(this.form) {
+                return this.form.getInvalidType();
+            }
+        }
+        return this.state.invalidType;
+    } 
     
 }

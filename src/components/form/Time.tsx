@@ -290,7 +290,7 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
         return dishr;
     }
     //渲染
-    render() {
+    makeJsx() {
         let props = this.getProps();
         return <AntdTimePicker {...props}></AntdTimePicker>;
     }

@@ -62,7 +62,7 @@ export default class Timepicker<P extends typeof props,S extends state> extends 
     }
 
     //渲染
-    render() {
+    makeJsx() {
         let props = this.getProps();
         return <AntdTimePicker {...props}></AntdTimePicker>;
     }

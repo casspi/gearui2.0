@@ -73,11 +73,11 @@ export interface state extends FormTag.state {
 }
 export default class Select<P extends typeof props & SelectProps, S extends state & SelectProps> extends FormTag.default<P, S> {
     //父级树
-    parentSelect: Select<typeof props,state>;
+    parentSelect: Select<P,state>;
     //子级树
-    childSelect: Select<typeof props,state>;
+    childSelect: Select<P,state>;
     constructor(props: P, context: {}) {
-        super(props);
+        super(props, context);
         this.onShowPanel(this.props.onShowPanel);
     }
     getProps() {
@@ -171,7 +171,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                         // 在其父级
                         if(this.realDom != null) {
                             let parent= G.$(this.realDom.parentElement);
-                            if(parent instanceof FormTag) {
+                            if(parent instanceof FormTag.default) {
                                 parent = parent.realDom;
                             }else {
                                 parent = parent[0];
@@ -207,7 +207,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             options: []
         }
     }
-    render() {
+    makeJsx() {
         let props = this.getProps();
         let options = this.getOptions();
         let optionsMap = options.map(function(ele) {
@@ -225,7 +225,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     // 取消选择
     unselect(value:any) {
         if(this.props.mode == "tags" || this.props.mode == "multiple" || this.props.multiple == true) {
-            let valued = this.getValue();
+            let valued: any = this.getValue();
             if(valued instanceof Array) {
                 let gvalued = new GearArray(valued);
                 gvalued.remove(value);
@@ -304,9 +304,9 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     getChildTree() {
         let lowerName = this.props.lower;
         if(!lowerName) {
-            return null;
+            return;
         }
-        let lower:Select<typeof props,state> = G.$("#"+lowerName);
+        let lower:Select<P,state> = G.$("#"+lowerName);
         if(lower instanceof Select) {
             this.childSelect = lower;
             lower.parentSelect = this;
@@ -344,13 +344,6 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                 });
             }
         }
-    }
-
-        /**
-         * 
-         * @param nextProps 父节点改变本节点的props的时候触发
-         */
-    afterReceiveProps(nextProps:any) {
     }
 
     // 获取文本
@@ -399,7 +392,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     }
     // 加载数据
     loadData(param?:any,callback?:Function) {
-        let url = null;
+        let url: any = null;
         let data = null;
         let method = this.state.method;
         if(param) {
@@ -413,7 +406,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             url = this.state.url;
             data = this.state.dictype;
         }
-        this.reload(url,data,this.state.method,callback);
+        this.reload(url,data,method,callback);
     }
     // 通过指定的url或者data加载数据
     reload(url:string,dictype:object,method:methods,callback?:Function) {
@@ -498,7 +491,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         }
         if(this.props.dictype != null) {
             let dic = null;
-            if(this.parentSelect && this.parentSelect instanceof Tag) {
+            if(this.parentSelect && this.parentSelect instanceof Tag.default) {
                 let value = this.parentSelect.getValue();
                 if(value.length > 0) {
                     let code = value[0];
@@ -517,7 +510,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                 }
             }
         }
-        let treeNodes:Array<LabeledValue> = null;
+        let treeNodes:Array<LabeledValue> = [];
         if(data != null) {
             if(data['data']) {
                 treeNodes = data.data;
@@ -709,39 +702,43 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     getValueByText(text:any,options?:Array<any>) {
         options = options||this.state.options||[];
         let value = null;
-        options.map((ele) => {
-            if(ele instanceof Array) {
-                value = this.getValueByText(text,ele);
-                if(value) {
-                    return value;
+        if(options) {
+            options.map((ele) => {
+                if(ele instanceof Array) {
+                    value = this.getValueByText(text,ele);
+                    if(value) {
+                        return value;
+                    }
+                }else {
+                    if(ele.label == text) {
+                        value = ele.value;
+                    }
                 }
-            }else {
-                if(ele.label == text) {
-                    value = ele.value;
-                }
-            }
-        });
+            });
+        }
         return value;
     }
     // 通过文本获取对应值
     getTextByValue(value:any,options?:Array<any>):any {
         options = options||this.state.options||[];
         let text = null;
-        for(let i = 0; i < options.length; i++) {
-            let ele = options[i];
-            if(ele instanceof Array) {
-                text = this.getTextByValue(value,ele);
-            }else {
-                if(ele.value == value) {
-                    text = ele.label;
+        if(options) {
+            for(let i = 0; i < options.length; i++) {
+                let ele = options[i];
+                if(ele instanceof Array) {
+                    text = this.getTextByValue(value,ele);
                 }else {
-                    if(ele.children instanceof Array) {
-                        text = this.getTextByValue(value,ele.children);
+                    if(ele.value == value) {
+                        text = ele.label;
+                    }else {
+                        if(ele.children instanceof Array) {
+                            text = this.getTextByValue(value,ele.children);
+                        }
                     }
                 }
-            }
-            if(text != null) {
-                break;
+                if(text != null) {
+                    break;
+                }
             }
         }
         return text;

@@ -55,7 +55,7 @@ export default class File<P extends typeof props, S extends state> extends FormT
             placeholder: this.props.prompt,
         };
     }
-    render() {
+    makeJsx() {
         let state:any = this.state;
         delete state.invalidType;
         return <div {...state}>

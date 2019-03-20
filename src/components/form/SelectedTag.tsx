@@ -48,7 +48,7 @@ export default class SelectedTag<P extends typeof props, S extends state> extend
         };
     }
     
-    render() {        
+    makeJsx() {        
         return <AntdTag key={UUID.get()} {...this.getProps()}>{this.getText()||this.getValue()}</AntdTag>;
     }
 

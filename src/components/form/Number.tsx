@@ -72,7 +72,7 @@ export default class Number<P extends typeof props, S extends state> extends For
         });
     }
 
-    render() {
+    makeJsx() {
         let props: any = this.getProps();
         return <AntdInputNumber {...props} />;
     }

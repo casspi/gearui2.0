@@ -582,7 +582,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         });
     }
 
-    render() {
+    makeJsx() {
         let children = this.getTreeNode();
         let props = this.getProps();
         return <AntdTree ref={ele=>this.ref=ele} {...props}>{children}</AntdTree>;

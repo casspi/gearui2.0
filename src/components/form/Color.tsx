@@ -109,7 +109,7 @@ export default class Color<P extends typeof props & InputProps, S extends state 
             
         }
     }
-    render() {
+    makeJsx() {
         let position1:any = "absolute";
         let position2:any = "fixed";
         const styles = {

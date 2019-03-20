@@ -358,7 +358,7 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
     // }
 
     //渲染
-    render() {
+    makeJsx() {
         let props: any = this.getProps();
         let type = this.props.type;
         if (type == null || type == "date") {
