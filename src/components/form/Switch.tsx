@@ -38,8 +38,8 @@ export default class Switch<P extends typeof props,S extends state> extends Form
 
     private _readonly:boolean;
 
-    constructor(props:any) {
-        super(props);     
+    constructor(props:any, context: {}) {
+        super(props, context);     
         if(this.state.readOnly && this.state.readOnly==true)
             this._readonly = true;
         else
@@ -112,7 +112,7 @@ export default class Switch<P extends typeof props,S extends state> extends Form
     }
 
     //渲染
-    render() {
+    makeJsx() {
         let props:any = this.getProps();
         delete props.showLabel;
         let checkedChildren:string|React.ReactNode;

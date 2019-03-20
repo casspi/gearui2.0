@@ -230,7 +230,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         };
     }
     
-    render() {  
+    makeJsx() {  
         // 输入框是否可见
         let inputControl;
         let props: any;
@@ -545,7 +545,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
 
     reset(){
         console.log(this.props.value)
-        if(this.props.form) {
+        if(this.form) {
             super.reset();
         }else {
             this._loadDefault();
@@ -555,7 +555,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
 
     // 清除选中值
     clear(){
-        if(this.props.form) {
+        if(this.form) {
             super.clear();
         }else {
             this.setValue([]);

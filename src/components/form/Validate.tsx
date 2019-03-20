@@ -1,5 +1,7 @@
 import * as VoidTag from "../VoidTag";
 import * as React from 'react';
+import { Form } from "./index";
+import {FormComponentProps} from 'antd/es/form/Form';
 export var props = {
     //相等验证
     equals: GearType.String,
@@ -22,8 +24,13 @@ export interface state extends VoidTag.state {
 };
 export default abstract class Validate<P extends typeof props, S extends (state)> extends VoidTag.default<P, S> {
 
+    protected form: Form.Form<typeof Form.props & FormComponentProps, Form.state>;
+
+    constructor(props: P, context: {}) {
+        super(props, context);
+    }
     render() {
-        return <span data-geartype="validate"></span>;
+        return this.props.children;
     }
 
 }

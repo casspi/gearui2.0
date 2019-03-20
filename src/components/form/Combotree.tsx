@@ -184,7 +184,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         return propsNew;
     }
 
-    render() {
+    makeJsx() {
         let children = this.getTreeNode();
         let childrenMap = children.map((ele) => {
             return ele;

@@ -63,7 +63,7 @@ export default class RadioGroup<P extends typeof props &  RadioProps,S extends s
     }
 
     //渲染
-    render() {
+    makeJsx() {
         let props = this.getProps();
         if (this.props.dictype || this.props.url) {
             return <AntdRadioGroup {...props}></AntdRadioGroup>;

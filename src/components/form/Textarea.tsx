@@ -32,8 +32,8 @@ export interface state extends FormTag.state {
 
 export default class Textarea<P extends typeof props,S extends state> extends FormTag.default<P,S> {
 
-    constructor(props:any) {
-        super(props);
+    constructor(props:any, context: {}) {
+        super(props, context);
     }
 
     getProps() {
@@ -79,7 +79,7 @@ export default class Textarea<P extends typeof props,S extends state> extends Fo
         });
     }
 
-    render() {
+    makeJsx() {
         let props = this.getProps();
         return <AntdTextArea {...props}></AntdTextArea>;
     }

@@ -75,7 +75,7 @@ export default class Check<P extends typeof props, S extends state> extends Form
             // indeterminate: this.props.indeterminate==true
         });
     }
-    render() {
+    makeJsx() {
         let props = this.getProps();
         return <AntdCheckboxGroup {...props}></AntdCheckboxGroup>;
     }

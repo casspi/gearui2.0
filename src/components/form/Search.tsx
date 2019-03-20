@@ -67,7 +67,7 @@ export default class Search<P extends typeof props & SearchProps,S extends (stat
             // autoFocus: this.props.autofocus,
         });
     }
-    render() {
+    makeJsx() {
         let props = this.getProps();
         return <AntdSearch {...props} ></AntdSearch>;
     }

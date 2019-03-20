@@ -5,8 +5,12 @@ import * as Table from '../data/Table';
 import * as Button from '../basic/Button';
 import * as FormTag from './FormTag';
 import { UUID } from '../../utils';
+import { ObjectUtil } from '../../utils';
 import * as Icon from '../basic/Icon';
 import * as EditTableCell from './EditTableCell';
+import {FormComponentProps} from 'antd/es/form/Form';
+import { Form } from "./index";
+import { default as Column } from '../data/Column';
 export var props = {
     ...Table.props,
     ...FormTag.props,
@@ -23,9 +27,6 @@ export interface state extends Table.state,FormTag.state {
     title?: any;
     controlLabel?: string;
     value?:any
-}
-export interface EditTableColumns extends Table.TableColumns {
-    editCType: string;
 }
 export interface Control {
     name: string;
@@ -184,6 +185,22 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     protected cacheData:any;
     //记录单元格是否已经渲染过了，防止在column["render"]中多次渲染----antd的bug
     protected cellRendered = {};
+    protected form: Form.Form<typeof Form.props & FormComponentProps, Form.state>;
+    constructor(props: P, context: {}) {
+        super(props, context);
+        this.setForm(this.ast);
+    }
+
+    private setForm(ast: ASTElement) {
+        if(ast) {
+            let parent = ast.parent;
+            if(parent && ObjectUtil.isExtends(parent.vmdom, "Form")) {
+                this.form = parent.vmdom;
+            }else {
+                this.setForm(parent);
+            }
+        }
+    }
     //获取控制按钮
     getControls() {
         let controls = new Array();
@@ -208,9 +225,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             }
         }
         return controls;
-    }
-    constructor(props:P){
-        super(props)
     }
     protected _loadSuccess() {
         let dataSource = this.getData();
@@ -330,8 +344,8 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
 
     validate():boolean {
-        if(this.props.form) {
-            return this.props.form.validate();
+        if(this.form) {
+            return this.form.validate();
         }
         return true;
     }
@@ -537,7 +551,9 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                     editable[row.key] = true;
                 }
             }
-            editable[this.copyRow.key] = true;
+            if(editable) {
+                editable[this.copyRow.key] = true;
+            }
             this.setState({
                 "dataSource":data.dataList,
                 "editable": editable
@@ -576,7 +592,9 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                     editable[row.key] = true;
                 }
             }
-            editable[key] = true;
+            if(editable) {
+                editable[key] = true;
+            }
             this.setState({
                 "dataSource": data.dataList,
                 "editable": editable
@@ -600,7 +618,9 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         }
         for(let i=0; i < dataSource.length; i++) {
             let row = dataSource[i];
-            editable[row.key] = true;
+            if(editable) {
+                editable[row.key] = true;
+            }
         }
         this.setState({
             editable
@@ -633,7 +653,9 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 editable[row.key] = true;
             }
         }
-        editable[nowRow.key] = true;
+        if(editable) {
+            editable[nowRow.key] = true;
+        }
         this.setState({
             editable
         });
@@ -726,20 +748,12 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         let columns = super._parseColumns(data);
         //只有非编辑状态下的表格可显示单行操作按钮
         if(this.props.rowControl == true && this.props.editable == false) {
-            columns.push({
-                key: UUID.get(),
-                name: "control",
-                width: 40,
-                dataIndex: "control",
-                title: this.state.controlLabel || "操作",
-                className: "ant-table-column-control",
-                render: this.parseControlColumnRender()
-            });
+            columns.push(Column.getControl(this));
         }
         return columns;
     }
 
-    protected parseControlColumnRender() {
+    public parseControlColumnRender() {
         
         return (text: any,record: any) => {
             let editProps: any = {
@@ -838,12 +852,12 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
 
     //解析表头
-    protected _parseColumn(index: any,props: typeof Table.ColumnPropsPlus) {
+    protected _parseColumn(child:any, index: number) {
+        let column = super._parseColumn(child, index);
         const children = props.children;
-        let column = super._parseColumn(index, props);
         ((column, props)=>{
             column.render = (text: any,record: any)=>{
-                let newProps = super.parseRegexColumnValue(props, record);
+                let newProps = ObjectUtil.parseDynamicProps(props, record);
                 // console.log(props);
                 // console.log(newProps);
                 let editCType: string = newProps.editCType || "";
@@ -869,7 +883,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                     upper: upper,
                     editCell: this.props.editCell,
                     name: name,
-                    form: this.props.form,
+                    form: this.form,
                     ref:(ele: any) => {
                         let cells = this.cells[record.key]||{};
                         if(ele != null) {
@@ -896,7 +910,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                         }
                     }
                 });
-                console.log(cellProps)
                 return <EditTableCell.default {...cellProps}>{children}</EditTableCell.default>;
             };
         })(column, props);

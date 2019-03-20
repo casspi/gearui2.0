@@ -436,7 +436,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         } 
     }
 
-    render() {
+    makeJsx() {
         let input;
         if(this.state.controlType == "textarea") {
             input = <AntdTextArea {...this.getTextareaProps()}></AntdTextArea>;

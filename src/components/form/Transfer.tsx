@@ -63,8 +63,8 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     // 右侧树对象
     private _rightTree:Tree.default<typeof Tree.props & AntdTreeProps,Tree.state & AntdTreeProps>;
 
-    constructor(props: P) {
-        super(props);
+    constructor(props: P, context: {}) {
+        super(props, context);
     }
     getProps() {
         let state: state = this.state;
@@ -235,7 +235,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         });
     }
     
-    render() {
+    makeJsx() {
         let props:any = this.getProps();
         let leftTreeProps:any = this.getLeftTreeProps(); 
         let rightTreeProps:any = this.getRightTreeProps();
@@ -479,7 +479,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     }
 
     // 将两个对象的数据根据唯一健值进行比较合并后返回
-    private dataMerge(options:Array<any>,newOptions:Array<any> | null,uniqueKey:string,childrenKey:string):Array<any>{
+    private dataMerge(options:Array<any>,newOptions:Array<any> | null,uniqueKey:string,childrenKey:string):Array<any>|null{
         if(options && options.length>0){
             if(newOptions && newOptions.length>0){
                 // 用于检查目标对象是否存在于当前列表中

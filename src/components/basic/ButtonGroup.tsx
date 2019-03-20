@@ -37,7 +37,7 @@ export default class ButtonGroup<P extends typeof props, S extends state> extend
 
     private getButtons() {
         let buttonJsxs: any[] = [];
-        let children = this.props.children;
+        let children:any = this.props.children;
         if(!(children instanceof Array)) {
             children = [children];
         }

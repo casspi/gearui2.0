@@ -19,7 +19,7 @@ export default class IdNumber<P extends typeof props & InputProps, S extends sta
             isStrict:this.props.isStrict
         });
     }
-    render() {
+    makeJsx() {
         let props:any = this.getProps();
         delete props.isStrict
         return <AntdInput {...props} ></AntdInput>;
