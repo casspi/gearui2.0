@@ -14,7 +14,7 @@ export interface state extends FormTag.state {
 export default class File<P extends typeof props, S extends state> extends FormTag.default<P, S>{
 
     getInputProps() {
-        return {
+        return G.G$.extend({},{
             key: "input",
             value: this.state.value,
             readOnly: true,
@@ -27,16 +27,16 @@ export default class File<P extends typeof props, S extends state> extends FormT
             suffix: <AntdButton key="button" icon={"folder-open"} disabled={this.state["disabled"]} onClick={()=>{
                 this.find("input[type='file']:hidden").click();
             }}>{"选择文件"}</AntdButton>,
-        };
+        });
     }
 
     getFileInputProps() {
-        return {
+        return G.G$.extend({},{
             key: "file",
             type: "file", 
             name: this.props.name,
             style: { display: "none" },
-            "value": this.state.value,
+            value: this.state.value,
             onChange: (e: any) => {
                 let oldValue = this.getValue();
                 let newValue = e.target.value;
@@ -44,7 +44,7 @@ export default class File<P extends typeof props, S extends state> extends FormT
                     this.doEvent("change", newValue, oldValue);
                 });
             },
-        };
+        });
     }    
 
     //插件初始化，状态发生变化重新进行渲染
@@ -52,22 +52,31 @@ export default class File<P extends typeof props, S extends state> extends FormT
         return {
             value: this.props.value,
             disabled: this.props.disabled,
-            placeholder: this.props.prompt,
+            prompt: this.props.prompt,
         };
     }
     makeJsx() {
         let state:any = this.state;
         delete state.invalidType;
+        delete state.labelText;
+        let inputProps:any = this.getInputProps();
+        let fileProps:any = this.getFileInputProps();
+        if(this.form){
+            delete inputProps.value;
+            delete fileProps.value;
+        }
+        console.log(inputProps.value)
+        console.log(fileProps.value)
         return <div {...state}>
-                <AntdInput {...this.getInputProps()}/>
-                <AntdInput {...this.getFileInputProps()}/>
+                <AntdInput {...inputProps}/>
+                <AntdInput {...fileProps}/>
             </div>;
     }
 
     afterRender() {
         this.find("button").attr("tabindex","-1");
         this.find("input:hidden").attr("tabindex","-1");
-        console.log(this.state.value)
+        
     }
 
     getValue(){

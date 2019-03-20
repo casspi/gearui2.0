@@ -13,15 +13,18 @@ export interface state extends Text.state {
 export default class IdNumber<P extends typeof props & InputProps, S extends state> extends Text.default<P, S>{
     //所有实现都是在父类中，这边只是提供一个jsx类型，校验器是在form中通过Validator增加的
     getProps() {
-        let state: state = this.state;
-        super.getProps()
-        return G.G$.extend({},state,{
+        return G.G$.extend({},this.state,{
             isStrict:this.props.isStrict
         });
     }
     makeJsx() {
         let props:any = this.getProps();
-        delete props.isStrict
+        delete props.isStrict;
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.value
+        }
         return <AntdInput {...props} ></AntdInput>;
     }
 }

@@ -98,9 +98,10 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         }
     }
     protected getProps(){
-        let state:any = this.state;
+        let state:any = G.G$.extend({},this.state);
         delete state.invalidType;
-        delete state.validation
+        delete state.labelText;
+        delete state.validation;
         return state
     }
     getInitialState(): state {
@@ -258,6 +259,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         if(this.form) {
             let formUtils: WrappedFormUtils = this.form.props.form;
             let rules: any = this.state.rules;
+            
             let formTag = formUtils.getFieldDecorator(this.props.name, {
                 initialValue: this.state.value,
                 rules: this.isValidation() ? rules : []

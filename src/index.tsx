@@ -16,7 +16,11 @@ window.G.registerCustomComponents();
 window.G.messager = Message;
 window.G.dialog = Dialog;
 window.G.utils = utils;
-window.G.http = utils.Http;//兼容老版的定义
+//兼容老版的写法--------------------
+window.G.http = utils.Http;
+window.G.util = utils.Http;
+
+
 window.onload = function() {
     window.G.render({
         el: this.document.body,

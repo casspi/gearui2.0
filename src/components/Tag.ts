@@ -82,7 +82,6 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
     }
 
     protected findRealDom() {
-        console.log(this.ref)
         return ReactDOM.findDOMNode(this.ref);
     }
 

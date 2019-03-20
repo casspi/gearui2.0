@@ -162,6 +162,9 @@ export default class Date<P extends typeof props, S extends state> extends FormT
     //渲染
     makeJsx() {
         let props = this.getProps();
+        if(this.form){
+            delete props.value;
+        }
         let type = this.props.type;
         if (type == null || type == "date") {
             return <LocaleProvider locale={zhCN}><DatePicker {...props}></DatePicker></LocaleProvider>;

@@ -55,6 +55,9 @@ export default class Check<P extends typeof props, S extends state> extends Form
     getProps() {
         let state:any = this.state;
         delete state.invalidType;
+        // delete state.value;//value通过 getFieldDecorator的initialValue传递
+        // delete state.indeterminate;
+        // delete state.labelText
         // 绑定的change事件
         let changeEvent = function(value:any){
             // 传入的就是选中的新值
@@ -69,7 +72,6 @@ export default class Check<P extends typeof props, S extends state> extends Form
         return G.G$.extend({},state, {
             options: this.state.options,
             defaultValue: this.state.defaultValue,
-            value: this.state.value,
             disabled: this.state.disabled || this.state.readOnly,
             onChange: changeEvent,
             // indeterminate: this.props.indeterminate==true
@@ -77,6 +79,11 @@ export default class Check<P extends typeof props, S extends state> extends Form
     }
     makeJsx() {
         let props = this.getProps();
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.value;
+        }
         return <AntdCheckboxGroup {...props}></AntdCheckboxGroup>;
     }
     

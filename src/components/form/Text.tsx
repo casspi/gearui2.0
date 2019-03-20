@@ -170,6 +170,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
 
     getInitialState():state & InputProps {
         return {
+            value:this.props.value,
             placeholder: this.props.placeholder || this.props.prompt,
             size: this.props.size,
             addonBefore: this.getAddonBefore(),
@@ -198,8 +199,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
 
     protected getProps() {
         let state: state = this.state;
-        super.getProps()
-        return state;
+        return G.G$.extend({},state);
     }
 
     afterRender() {
@@ -218,8 +218,13 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
     }
 
     makeJsx() {
-        let props = this.getProps();
-        return <AntdInput {...props} ref={ele=>this.ref=ele} ></AntdInput>;
+        let props:any = this.getProps();
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.value;
+        }
+        return <AntdInput {...props}  ref={ele=>this.ref=ele} ></AntdInput>;
     }
     
     blur(fun: Function){
