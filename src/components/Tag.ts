@@ -17,7 +17,7 @@ export var props = {
     class: GearType.String,
     needUpdateToState: GearType.Array<string>(),
     //gearui内部使用的children对象
-    children: GearType.Array<string>(),
+    children: GearType.Any,
     ...JqueryTagProps
 }
 
@@ -31,7 +31,8 @@ export interface state extends JqueryTagState {
     visible?: boolean,
     remove?:number,//删除该组件节点
     className?: string,
-    style?: React.CSSProperties
+    style?: React.CSSProperties,
+    children?: React.ReactNode
 }
 export default abstract class Tag<P extends typeof props, S extends state> extends JqueryTag<P, S> {
 
@@ -185,6 +186,7 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
             title: this.props.title,
             disabled: this.props.disabled,
             className: this.props.class,
+            children: this.props.children,
             ref: (ele: any)=>{
                 this.ref = ele;
             },

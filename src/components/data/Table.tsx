@@ -7,10 +7,6 @@ import Http, { methods } from '../../utils/http';
 import * as Content from './Content';
 import { Form } from '../form/Form';
 import { default as Column} from './Column';
-import * as Text from '../form/Text';
-import * as Date from '../form/Date';
-import * as Datetime from '../form/Datetime';
-import * as Combotree from '../form/Combotree';
 export var props = {
     ...Tag.props,
     url: GearType.Or(GearType.String, GearType.Function),
@@ -53,7 +49,8 @@ export interface state extends Tag.state, TableProps<any> {
     sequenceLabel?: string;//
     lazy?: boolean;//
     paginationId?: Array<string>;//
-    bordered?:boolean
+    bordered?:boolean;
+    children?: React.ReactNode
 }
 export var useName = 'ajaxlist';
 
@@ -431,7 +428,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                     let re = this.doEvent("expandedrow",record);
                     if(re && re.length > 0) {
                         let html = re[0];
-                        let ele = <Content.default {...containerProps}>{G.$(html, true)}</Content.default>;
+                        let ele = <Content.default {...containerProps}>{G.$(html,undefined, true)}</Content.default>;
                         this.expandedRowCached[record.key] = ele;
                         return ele;
                     }
@@ -678,14 +675,13 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(this.state.sequence != false) {
             columns.push(Column.getSequence(this));
         }
-        
-        let children:any[] = this.props.children;
+        let children:any = this.state.children;
         if(!(children instanceof Array)) {
             children = [children];
         }
         if(children instanceof Array) {
             children = children.filter(o=>o.$$typeof!=null)//过滤子集中空项        
-            children.map((child:any, index)=>{
+            children.map((child:any, index: number)=>{
                 let column = this._parseColumn(child, index);
                 if(this.state.sequence != false && (column.fixed == "left" || column.fixed == "right")) {
                     columns[0].fixed = "left";
@@ -795,7 +791,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
     render() {
         let props: any = this.getProps();
-        return <AntdTable  {...props} >{this.props.children}</AntdTable>;
+        return <AntdTable  {...props} >{this.state.children}</AntdTable>;
     }
     afterRender() {
         this.getForm();

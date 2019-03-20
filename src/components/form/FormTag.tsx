@@ -99,6 +99,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     protected getProps(){
         let state:any = this.state;
+        delete state.value;
         delete state.invalidType;
         delete state.validation
         return state

@@ -213,7 +213,19 @@ export default class HtmlCompiler {
             attrsMap: this.makeAttrsMap(attrs),
             parent,
             children: [],
-            index:[]
+            index:[],
+            html:function():JQuery<HTMLElement>|undefined {
+                let index = this.index;
+                let indexStr:string = "";
+                if(index) {
+                    indexStr = index.toString();
+                    let cacheHtml = G.G$(G.cacheHtml).find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+indexStr+"']");
+                    if(cacheHtml && cacheHtml.length > 0) {
+                        return cacheHtml;
+                    }
+                }
+                return undefined;
+            }
         };
     }
 

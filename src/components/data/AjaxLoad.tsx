@@ -82,9 +82,9 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
         let containerid = this.state.containerId;
         let container = null;
         if(containerid) {
-            container = G.G$("#" + containerid);
+            container = G.$("#" + containerid);
         }else {
-            container = G.G$(this.realDom);
+            container = G.$(this.realDom);
         }
         console.log('--------------------------------------')
         console.log(data)
