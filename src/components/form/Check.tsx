@@ -143,7 +143,6 @@ export default class Check<P extends typeof props, S extends state> extends Form
                         this.setState({
                             options: dic
                         },()=>{
-                            // console.log(this.state.options)
                             callback.call(this);
                         });
                     }

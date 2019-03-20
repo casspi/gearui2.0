@@ -71,8 +71,6 @@ export default class Button<P extends typeof props, S extends state> extends Tag
         delete state.actionName;
         delete state.refreshList;
 
-        // console.log(this.props.value)
-        // console.log(this.state.text)
         if(state.iconAlign == "right" && this.state.icon && this.state.text) {
             delete state.icon;
             let icon:any = this.state.icon;
@@ -106,7 +104,6 @@ export default class Button<P extends typeof props, S extends state> extends Tag
         }
         if(triggerLink==true){
             let url = this.state.url;
-            console.log(url)
             if(typeof url == "string" && url.length>0){
                 let target = this.props.target;
                 Http.triggerHyperlink(url,target);    

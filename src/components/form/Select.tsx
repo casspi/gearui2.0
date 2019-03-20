@@ -171,7 +171,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                         // 在其父级
                         if(this.realDom != null) {
                             let parent= G.$(this.realDom.parentElement);
-                            if(parent instanceof FormTag) {
+                            if(parent instanceof FormTag.default) {
                                 parent = parent.realDom;
                             }else {
                                 parent = parent[0];
@@ -225,7 +225,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     // 取消选择
     unselect(value:any) {
         if(this.props.mode == "tags" || this.props.mode == "multiple" || this.props.multiple == true) {
-            let valued = this.getValue();
+            let valued:any = this.getValue();
             if(valued instanceof Array) {
                 let gvalued = new GearArray(valued);
                 gvalued.remove(value);
@@ -306,7 +306,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         if(!lowerName) {
             return null;
         }
-        let lower:Select<typeof props,state> = G.$("#"+lowerName);
+        let lower:Select<P,state> = G.$("#"+lowerName);
         if(lower instanceof Select) {
             this.childSelect = lower;
             lower.parentSelect = this;

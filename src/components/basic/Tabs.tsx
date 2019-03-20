@@ -5,7 +5,7 @@ import * as ReactDOM from 'react-dom';
 import Parser from '../../core/Parser';
 import {ObjectUtil,GearUtil,UUID} from '../../utils';
 import * as Tag from '../Tag';
-import * as JqueryTag from '../JqueryTag';
+// import * as JqueryTag from '../JqueryTag';
 import * as VoidTag from '../VoidTag';
 
 export default class Tabs<P,S> extends Tag.default<P,S> {   
@@ -18,17 +18,18 @@ export default class Tabs<P,S> extends Tag.default<P,S> {
         this.resizeTab();
     }
     private initlizate() {
-        console.log(this)
+        this.doRender()
+        console.log(this.ref)
         let _this = this;
         let _real = G.G$(this.realDom);    
         if(!_real.data("initialized")){
             // 添加样式
             _real.addClass("gearui-tabs");
             // 定义content区块，将当前区块内容放在其中
-            var content = $("<div class='tab-content'></div>");
+            var content = G.G$("<div class='tab-content'></div>");
             content.append(_real.children());
             // 添加tab-header
-            var header = $("<ul class='tab-header'></ul>");
+            var header = G.G$("<ul class='tab-header'></ul>");
             _real.append(header);
             _real.append(content);
             
@@ -36,7 +37,7 @@ export default class Tabs<P,S> extends Tag.default<P,S> {
             var defaultSelectedTab:any = null;
             // 根据content中的内容，在header中添加tab的标题栏
             content.children().each(function(index){
-                var jdom = $(this);
+                var jdom = G.G$(this);
                 // 隐藏它
                 // jdom.hide();
                 // 获取id，如果没有id则自动生成一个
@@ -127,7 +128,7 @@ export default class Tabs<P,S> extends Tag.default<P,S> {
                             (closable==true?"<a class='anticon anticon-default anticon-close close-btn'></a>":"") + 
                         "</span>" + 
                     "</li>";
-        var tabHeader = $(html);
+        var tabHeader = G.G$(html);
         header.append(tabHeader);
         // 为tab注册点击事件
         tabHeader.click(function(event:any){

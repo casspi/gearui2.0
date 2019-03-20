@@ -612,7 +612,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 }else{
                     value = this.getInitValue(dic);
                 }
-                console.log(value)
                 if(this.state.defaultExpandAll == true) {
                     let expandedKeys = this._expandAll(this.getRoots(),this.state.defaultExpandLevel);
                     this.setState({
@@ -999,8 +998,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                     this.addDefaultExpand(dic,expanded);
                     let initValue = this.getInitValue(dic);
                     this.triggerChange(initValue);
-                    console.log(initValue)
-                    console.log(dic)
                     this.setState({
                         url: url,
                         dictype: dictype,
