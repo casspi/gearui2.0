@@ -62,9 +62,14 @@ export default class GearUtil {
                 props["__ast__"] = ast;
             }else {
                 //html节点
-                clazz = tag;
                 props = ast.attrsMap;
-                props = GearUtil.formatDomProperties(props);
+                let nprops = GearUtil.formatDomProperties(props);
+                clazz = G.components["htmltag"];
+                props = {
+                    class: tag,
+                    props: nprops,
+                    __ast__: ast
+                };
             }
             if(children && children.length > 0) {
                 reactChildren = [];

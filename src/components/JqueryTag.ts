@@ -1,6 +1,6 @@
 import * as React from 'react';
-import { Events } from '../core';
-import { ObjectUtil } from '../utils';
+import { Events, Parser } from '../core';
+import { ObjectUtil, GearUtil } from '../utils';
 const lowerFirst = require('lodash/lowerFirst');
 export var props = {
     __ast__: GearType.Any,
@@ -17,7 +17,8 @@ export interface state {
     onMouseOver?(e: any): void,
     onMouseDown?(e: any): void,
     onMouseUp?(e: any): void,
-    onMouseOut?(e: any): void,  
+    onMouseOut?(e: any): void, 
+    children?: React.ReactNode 
 }
 export default class JqueryTag<P extends typeof props, S extends state> extends React.Component<P, S> {
     realDom: Element;
@@ -159,8 +160,24 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         return jdom.animate.call(jdom,...args);
     }
     append(...args:any[]){
-        let jdom = G.G$(this.realDom);
-        return jdom.append.call(jdom,...args);
+        //通过append添加的元素要实现动态渲染，并且
+        let parser = new Parser();
+        let astMsg  = parser.parse.call(parser, ...args);
+        let asts = astMsg.ast.children;
+        let children: any = this.state.children;
+        if(!(children instanceof Array)) {
+            children = [children];
+        }
+        asts.forEach((ast: ASTElement)=>{
+            let reactEle = GearUtil.newReactInstance(ast);
+            children.push(reactEle);
+        });
+        this.setState({
+            children
+        });
+        return this;
+        //let jdom = G.G$(this.realDom);
+        //return jdom.append.call(jdom,...args);
     }
     appendTo(...args:any[]){
         let jdom = G.G$(this.realDom);
@@ -288,8 +305,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         return jdom.filter.call(jdom,...args);
     }
     find(...args:any[]):JQuery<HTMLElement>{
-        let jdom = G.G$(this.realDom);
-        return jdom.find.call(jdom,...args);
+        return G.$(...args, this.ast.html());
     }
     finish(...args:any[]){
         let jdom = G.G$(this.realDom);

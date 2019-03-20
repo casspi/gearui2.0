@@ -1441,6 +1441,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         }else {
             updateFn(data);
         }
+        return this;
     }
     // 插入节点
     insert(param: any) {

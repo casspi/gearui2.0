@@ -41,7 +41,6 @@ export default class G {
         this.cacheHtml = astMsg.cacheHtml;
         this.cacheAst = astMsg.ast;
         render.render(astMsg.ast, astMsg.parent, renderOptions.mounted);
-        this.G$.merge
     }
 
     //注册自定义组件
@@ -82,7 +81,7 @@ export default class G {
     }
 
     //查找页面中的元素
-    static $(selector?:string|Element|Function|null, react?: boolean) {
+    static $(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
         if(typeof selector == "string" || selector instanceof Element) {
             //如果是节点字符串(<a></a>),并且是要求返回react对象的，返回react对象
             if(typeof selector == "string" && react == true) {
@@ -93,7 +92,7 @@ export default class G {
                 }
             }
             let doms:JQuery<HTMLElement>|undefined = undefined;
-            let vmdoms = this.findVmDomFromCacheAst(selector);
+            let vmdoms = this.findVmDomFromCacheAst(selector, html);
             if(vmdoms.length > 0) {
                 for(let i = 0; i < vmdoms.length; i++) {
                     let vmdom = vmdoms[i];
@@ -224,9 +223,9 @@ export default class G {
         });
     }
 
-    private static findVmDomFromCacheAst(selector: string|Element) {
+    public static findVmDomFromCacheAst(selector: string|Element, cacheHtml?: JQuery<HTMLElement>) {
         let vmdoms: any[] = [];
-        let jEleFromCache = G.G$(this.cacheHtml).find(selector);
+        let jEleFromCache = G.G$(cacheHtml || this.cacheHtml).find(selector);
         if(jEleFromCache.length > 0 && this.cacheAst) {
             jEleFromCache.each((i, ele)=>{
                 let index = this.G$(ele).attr(Constants.HTML_PARSER_DOM_INDEX);
