@@ -442,257 +442,28 @@ table.resultTable .actiontd{
       You need to enable JavaScript to run this app.
     </noscript>
     <div id="root">
-        <!-- <g-text name="aaa" title="aaa" label="测试" value="123" onafterrender="testAfterRender()" onafterupdate="testOnAfterUpdate()">aaa</g-text> -->
-      <!-- <form ctype="form">
-          <g-text name="aaa" title="aaa" label="测试" value="123" onafterupdate="testOnAfterUpdate()" >aaa</g-text>
-        <g-validate id="vvv" required="true">
-          <g-text name="bbb" label="测试b" value="1233">bbb</g-text>
-        </g-validate>
-        <g-autocomplete id="e61"  width="400" height="60" controlType="textarea" value="非常抱歉您说的折扣真的很难申请到，要不您看***元可以吗？我可以再问下，否则我真的不好办。" async="false" url="getUrl()" mustMatch="true" prompt="从自定义URL加载数据"></g-autocomplete>
-      </form> -->
-      <!-- <g-breadcrumb separator=">">
-        <g-breadcrumb-item>
-          <a href="javascript:void(0)" onClick="alert(1)">百度</a>
-        </g-breadcrumb-item>
-        <g-breadcrumb-item>
-          <a href="www.baidu.com">百度</a>
-        </g-breadcrumb-item>
-      </g-breadcrumb> -->
-      <!-- <g-ajaxaction value="ajax"  buttonstyle="primary"   method="delete"></g-ajaxaction> -->
-      <!-- <g-group name="aaa"></g-group> 
-      <g-row id="aaa">
-        <g-col span="12" id="bbb">
-          <g-buttongroup>
-            <g-button buttonstyle="primary">aa</g-button>
-            <g-button buttonstyle="primary">bb</g-button>
-          </g-buttongroup>
-        </g-col>
-        <g-col span="12" id="bbbb">
-          <g-buttongroup>
-            <g-button buttonstyle="primary">aa</g-button>
-            <g-button buttonstyle="primary">bb</g-button>
-          </g-buttongroup>
-        </g-col>
-      </g-row> -->
-       
-      <!-- <g-combotree name="c31" id="aw" label="URL" url="getUrl()" width="300" multiple="true" prompt="请选择">
-
-      </g-combotree>
-      
-      <g-button buttonStyle="danger">rest</g-button> -->
-      
-      <!-- <div>
-        <g-button buttonStyle="primary">Primary</g-button>
-        <g-button>Default</g-button>
-        <g-button buttonStyle="dashed">Dashed</g-button>
-        <g-button buttonStyle="danger">Danger</g-button>
-      </div> -->
-   
-    
-    <!-- <g-button buttonStyle="danger" id="bbbttn">Danger</g-button> -->
-      <!-- <g-dialog id="dragDialog" title="0000" height="300" dragable="true">
-        <g-button id='closeDrag'>关闭拖拽</g-button>
-        <g-button id='openDrag' >打开拖拽</g-button>
-      </g-dialog>
-      <script>
-        G(function(){
-          
-              //对话框
-                G("#dragDialog").onLoadSuccess(function() {
-                  G("#openDrag").click(function(){
-                    G("#dragDialog").setDragable(true)
-                  })
-                  G("#closeDrag").click(function(){
-                    G("#dragDialog").setDragable(false)
-                  })
-                });
-              //   G("#dragDialog").close()
-              //   G("#dragDialog").open()
-              //   document.onclick=function(){
-              //     G('#dragDialog').setDragable(false);
-              //     console.log(G('#dragDialog').find('.ant-modal'))
-              //     console.log(G('#dragDialog').find('#openDrag'))
-              //   }
-              //   G('#dragDialog').setDragable(true);
-        })
-      </script> -->
-      <!-- <g-alert type='info' message="Info Text"></g-alert> -->
-      <!-- <g-pagination  id="pagination_id" style="margin-left:750px" current="5" total="888" showSizeChanger="true" beforeChange="alert('before')" pageSize="10" showQuickJumper="true" pageSizeOptions="['10','20','30','40','50','60']"></g-pagination> -->
-      <!-- <g-button>btn</g-button>
-  
-      <g-radio id="radiogroup" dictype="[
-      { label: 'Apple', value: 'Apple' },
-      { label: 'Pear', value: 'Pear' },
-      { label: 'Orange', value: 'Orange' },
-    ]"></g-radio>
-        <g-radio id="gRadio" name="r1" value="hehe" label="aaa">
-    
-        </g-radio> -->
-        <!-- <g-radiogroup value="2"  id="radiogroup2" buttonStyle="solid">
-          <g-radiobutton value="1" label="橘子1"></g-radiobutton>
-          <g-radiobutton value="2" label="橘子2"></g-radiobutton>
-          <g-radiobutton value="3" label="橘子3"></g-radiobutton>
-        </g-radiogroup> -->
-        <!-- <g-icon type='file'></g-icon> -->
-        <!-- <g-repeat size="5" onrender="alert('render')">
-          <h1>title<g-int></g-int></h1>
-          <g-radiogroup value="3" buttonStyle="solid" id="radiogroup2" >
-            <g-radiobutton value="1" label="橘子1"></g-radiobutton>
-            <g-radiobutton value="2" label="橘子2"></g-radiobutton>
-            <g-radiobutton value="3" label="橘子3"></g-radiobutton>
-          </g-radiogroup>
-          </g-radio>  
-        </g-repeat> -->
-        <!-- <g-search id="search-bar"  onSearch="" size="default" enterButton="查询"></g-search> -->
-        <!-- <g-mac></g-mac> -->
-       <!-- <gform action="" id='form1' invalidType="1"  method="post">
-         <input type="text" name="user" value="zhangsan">
-         <g-submit id="gsubmit"   label="submit" icon="save">提交</g-submit>
-       </gform>
-        <g-submit id="gsubmit" id="form1"  label="submit" icon="save">submit</g-submit> -->
-        <!-- <g-int>9999</g-int>
-        <g-url value="g-url"></g-url>
-        <form ctype="form">
-          <g-validate id="vvv" required="true">
-              <g-text id="gtext" validation='true' value="g-text"  max="5"  icon="search"></g-text>
-          </g-validate>
-          <button>BTN</button>
-        </form> -->
-        <!-- <g-spin label="000"></g-spin> -->
-        <!-- <g-switch id="gswitch" code="0,1" size="large" icon="check,file" id="idswitch" defaultChecked="true" checked="true" showLabel="true"></g-switch> -->
-        <!-- <g-form> -->
-          <!-- <gtextarea id='gtextarea'></gtextarea> -->
-          <!-- <g-button type="submit">提交</g-button> -->
-        <!-- </g-form> -->
-        <!-- <g-time id="gtime" inputReadOnly="true"  use12Hours="false" hideDisabled="false" width="300" size="1" placeholder="开始时间" disabledHours="5-9" disabledMinutes="20-60" disabled="false" format="HH:mm:ss"></g-time> -->
-        <!-- <g-timepicker fo></g-timepicker> -->
-
-        <!--<g-wrapper></g-wrapper>
-        <g-cancel>取消</g-cancel> -->
-        <!-- <g-upload id="gupload" width="300" value="测试.txt" URL="https://www.baidu.com"></g-upload> -->
-        <!-- <g-inputtag></g-inputtag> -->
-        <!-- <g-autocomplete id="gauto"  icon="file" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" buttonIcon="file" buttonText="btn" limit="20"></g-autocomplete> -->
-          <!-- <script>
-            G(function(){
-               console.log(G('[name="gauto"]'))
-               console.log(G("#gauto"))
-            })
-          </script> -->
-          <!-- <div>
-            <g-ajaxaction id="gajaxaction" value="删除" url="http://10.10.10.6:81/example/source?name=Ajaxaction&type=element&id=example1" method="delete" parameter="id" type="button" onSuccess="alert('成功')" onComplete="alert('完成')" onFailed="alert('失败')" icon="icon-cancel"  size="small" buttonStyle="danger" confirm="你确定要删除这条记录吗？"></g-ajaxaction>
-            <g-ajaxaction id="gajaxaction" value="删除" url="http://10.10.10.6:81/example/source?name=Ajaxaction&type=element&id=example1" method="delete"  type="button" ></g-ajaxaction>
-            <g-ajaxaction id="gajaxaction" value="删除" url="http://10.10.10.6:81/example/source?name=Ajaxaction&type=element&id=example1" method="delete" type="button"></g-ajaxaction>
-            <g-ajaxaction id="gajaxaction" value="删除" url="http://10.10.10.6:81/example/source?name=Ajaxaction&type=element&id=example1" method="delete" type="button" buttonStyle="dashed" size="large"></g-ajaxaction>
-          </div> -->
-          <!-- <div><g-radio id="er1" dictype="radioJson" value="0"/></div>
-          <div><g-cancel id="ec1" value="取消"/></div>
-          <script>
-            G(function(){			
-                G("#ec1").onBeforeCancel(function(){
-                  if(G("#er1").getValue()=="0")
-                    return true;
-                  else
-                    return false;
-                });
-                G("#ec1").onProcess(function(){
-                    alert("取消了");
-                  });				
-                })
-                var radioJson = [
-                  {
-                    label:"充许取消",
-                    value: "0",
-                  },{
-                    label:"不充许取消",
-                    value: "1"
-                  }
-                ];	
-          </script>
-          <g-row>
-          <g-col span="24">5555</g-col>
-          <g-col span="6">66666</g-col>
-          <g-col span="6">66666</g-col>
-          <g-col span="6">66666</g-col>
-          <g-col span="6">66666</g-col>
-          </g-row> -->
-          <!-- <g-color id="gcolor" value="AA2018" label="选择颜色" showpicker="true" width="300"></g-color> -->
-          <!-- <g-dialog id="dialog01" title="我是标题" visible="false">
-              <g-button id='close'>关闭</g-button>
-              <g-button id='open'>打开</g-button> 
-          </g-dialog>
-          <script>
-            
-          </script> -->
-          <!-- <g-dialogaction id="ela12" dragable="true" confirmText="就这么干"  maskclosable="true" value="打开一个小窗口对话框" url="http://10.10.10.6:81/example/Dialogaction/example" title="修改密码" loadType="async" onConfirm="onSavePassword(this)" onCancel="onCancel(this)" onClose="onDialogClose(this)" controlBar="true" dialogWidth="400"></g-dialogaction> -->
-          <!-- <g-icon id="gicon" onClick="clickEvent" type="qq" spin="true" style="color:blue;font-size:24px"></g-icon>
-          <g-button id="gbtn" onClick="clickEvent">btn</g-button>
-          <div><g-link value="弹出消息框" url="javascript:alert(1)"/></div>
-          <div><g-link url="javascript:alert(1)">弹出消息框</g-link></div>
-          <div><g-link url="http://www.baidu.com" target="_blank">在新页面打开一个链接</g-link></div>
-          <div><g-link url="javascript:void(0)" onClick="targetFun(this)">触发一个脚本</g-link></div> -->
-          <!-- <g-ajaxarea url="http://10.10.10.6:81/example/Ajaxarea/example1"  method="post"></g-ajaxarea> -->
-          <!-- <g-ajaxarea url="http://10.10.10.6:81/example/Ajaxarea/example1555555555555555"  method="post"></g-ajaxarea> -->
-          <!-- <g-ajaxarea url="http://10.10.10.6:81/example/Ajaxarea/inside" dataType="html" delay="1000" interval="2000"></g-ajaxarea> -->
-          
-          <!-- <g-ajaxload id="gajaxload" name="sex" url="http://10.10.10.6:81/example/Ajaxload/example1">
-            <g-text name="email"></g-text>
-            <g-radio name="sex" dictype="radioJson1"></g-radio>
-          </g-ajaxload> -->
-
-
-
-          <!-- <div style="margin:5px;">
-            <g-ajaxlist id="result1" url="http://10.10.10.6:81/example/Listaction/example1?pageSize=10&currentPage=1" checkType="checkbox">
-              <g-column label="用户名" width="100" name="id" />
-              <g-column label="姓名" width="100" name="name" />
-              <g-column label="电子邮箱" width="300" name="email" />
-              <g-column label="部门" name="department" />
-              <g-column label="状态" width="60" name="statusName" />
-            </g-ajaxlist>	
-          </div> -->
-          <!-- <div style="margin:5px;">		
-            <g-listaction url="http://10.10.10.6:81/example/Listaction/batchEnable" type="button" actionType="batchAction" icon="check-circle-o" listId="result1">启用</g-listaction>
-            <g-listaction url="http://10.10.10.6:81/example/Listaction/batchDisable" actionType="batchAction" icon="cross-circle-o" listId="result1">停用</g-listaction>
-            <g-listaction url="http://10.10.10.6:81/example/Listaction/export" actionType="exportAction" parameters="getExportParameters()" listId="result1" icon="file-excel" method="post">下载</g-listaction>
-          </div>		 -->
-          <!-- <g-Calendar fullScreen="false" onPanelChange="go" onChange="go" onSelect="go"></g-Calendar> -->
-          <!-- tabList="[{key: 'tab1',tab: 'tab1',}, {key: 'tab2',tab: 'tab2'}]" -->
-          <!-- <g-card style="width:300px" extra="#prop"  cover="0" hoverable="true" title="Card title" >
-            <g-cardmeta>
-              <p>Card content</p>
-              <img width="100%" src="https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png" alt="" />
-              <p>Card content</p>
-            </g-cardmeta>
-          </g-card> -->
-
-        <!-- <g-AutoComplete dictype="DIC_AREA" async="false"  mustMatch="true" ></g-AutoComplete> -->
-        <!-- <div><g-autocomplete id="e51"  width="400" onSearch=search mustMatch="true" prompt="通过自定义函数查询并获取数据，值必须在选项内"/></div> -->
-<!-- <div><g-autocomplete id="e52"  width="400" mustMatch="false" prompt="通过自定义函数查询并获取数据，值不一定在选项内"/></div> -->
-<!-- <div><g-check name="c1" label="单选框" value="1"></g-check></div>
-<div><g-check name="c2" label="默认选中单选框" checked="true"/></div>
-<div><g-check name="c3" label="禁用单选框" disabled="true"/></div>
-<div><g-check name="c4" dictype="radioJson1" disabled="false"/></div> -->
-<!-- <div><g-check name="c5" label="不明确状态" indeterMinate='true'></g-check></div> -->
-  <!-- <div>
-    <g-check id="ec3" dictype="checkboxJson1" indeterMinate='true'/>
+    <div id="aaaa">
+      <g-button id="test">aaa</g-button>
+    </div>
   </div>
-  <g-buttongroup>
+  <g-buttongroup id="ec3">
     <g-button id='ec3-btn1'>全选</g-button>
     <g-button id='ec3-btn2'>全不选</g-button>
     <g-button>999</g-button>
   </g-buttongroup>
   <script>
     G(function(){
-       G("#ec3").onChange(function(newValue,oldValue){
-      // console.log(newValue,oldValue)
-      var nv = "";
-      if(newValue)
-        nv = newValue+',';						
-      var ov = "";
-      if(oldValue)
-        ov = oldValue+",";						
-      console.log("原值："+ov+" 新值："+nv);
-	  });
+    //   console.log(G("#ec3"))
+    //    G("#ec3").onChange(function(newValue,oldValue){
+    //   // console.log(newValue,oldValue)
+    //   var nv = "";
+    //   if(newValue)
+    //     nv = newValue+',';						
+    //   var ov = "";
+    //   if(oldValue)
+    //     ov = oldValue+",";						
+    //   console.log("原值："+ov+" 新值："+nv);
+	  // });
       G('#ec3-btn1').onClick(function(){
         G('#ec3').checkAll()
       })
@@ -700,7 +471,7 @@ table.resultTable .actiontd{
         G('#ec3').unCheckAll()
       })
     })
-  </script> -->
+  </script>
   <!-- <div><g-check label="全选" target="ac1"/></div>
   <div><g-check id="ac1" dictype="checkboxJson1" /></div>
   <div><g-check id="ac2" label="全选" checked="true"/></div>
@@ -1261,38 +1032,9 @@ var combotreeJson = [{
 		}
 		return [];
 	}
-
-
-
-
-
-// function ajaxareaTest(ctl) {
-// 	console.log(ctl);
-// 	console.log(arguments);
-// 	console.log(this);
-//    	console.log("触发了回调");
-// }
-    // function getUrl() {
-    //   // return "http://localhost:8080/web/example/Ajaxaction/example1";
-    //   // return "http://localhost:8080/web/example/Autocomplete/data";
-    //   let root = "http://localhost:8080/web";
-    //   // return root + "/example/Tree/data";
-    //   return root + "/example/Combotree/data";
-    // }
-    // function testOnAfterUpdate() {
-      
-    // }
-
-    // function testAfterRender() {
-    //   console.log(this);
-    // }
-
     function clickEvent(){
       alert('属性点击事件')
     }
-  //   function targetFun(gobj){
-  //     console.log(gobj);
-  //   }
   var radioJson1 = [
 {
   label:"未知11111111111111",
@@ -1313,143 +1055,14 @@ function getExportParameters(){
       };
     }
   G(function() {
-   
-	// G("#e51").onSearch(search);	
-	// G("#e52").onSearch(search);	
-    // console.log(G("#gajaxload"))
-  // //   console.log(G('#gbtn'));
-  // //   console.log(G('#gicon'));
-  //   G('#gicon').click(function(){
-  //     alert('js click')
-  //     console.log('倒计时消失')
-  //     setTimeout(()=>{
-  //       G('#gicon').hide();
-  //     },2000)
-  //   })
-  //   G('#gbtn').onClick(function(){
-  //     alert(' js btn click')
-  //   })
+    var root = G("#root");
+    var bu = root.find("#aaaa");
+    bu.append("<g-button id='ccc'>append</g-button>");
+    var ccc = G("#ccc");
+    ccc.setLoading(true);
+    console.log(ccc);
     
-   
-      //let text = G("[name='c31']");
-      //console.log(G.utils.ObjectUtil.isExtends(text, "Tag"));
-      //G.messager.progress("open");
-      
-      // console.log(G.messager);
-      // console.log(text.isFormTag());
-   
-      // G('#pagination_id').onPageSizeChange(function(page,pageSize){
-      //   alert('page:'+page+',pageSize:'+pageSize);
-      // })
-      // G('#pagination_id').onBeforeChange(function(page,pageSize){
-      //   alert('beforeChange');
-      // })
-      // G('#pagination_id').onChange(function(page,pageSize){
-      //   alert('page:'+page+',pageSize:'+pageSize);
-      // })
-      // G('#idswitch').onChange(function(v){
-      // //  G(this).unChecked()
-      // G(this).readonly()
-      // })
-      // G.messager.error("错误","检查不通过，不能提交");
-      // G('#gRadio').onChange(function(n,o){
-      //   alert('new:'+n,'old:'+o);
-        
-      // });
-      // G('#radiogroup').onChange(function(){
-        // G('#radiogroup').disable()
-        // G('#radiogroup').setValue('Pear')
-        // G('#radiogroup').enable()
-        // alert(G('#radiogroup').getValue())
-        // G(this).unChecked()
-      // })
-      // G('#radiogroup2').disabled()
-      // console.log(G('#radiogroup2').findByValue('1'))
-      // G('#radiogroup2').choseByValue('3')
-      // G('#radiogroup2').enabled()
-      // G('#radiogroup2').disabled()
-      // G("#gtime").onChange(function(){
-      //   console.log('change time')
-      // })
-      function disabledHours(){
-        // 不充许选择晚上22点到早上7点
-        return [0,1,2,3,4,5,6,7,22,23];
-      }
-      function goSearch(){
-        alert(11111)
-      };
-    //  G('#gtext').enableValidation()
-      // G("#gsubmit").onBeforeSubmit(()=>{
-      //   alert(11111)
-      // })
-      // G("#gsubmit").select()
-        // G.tag.cancel.process = function(data) {
-        //     alert("点了取消按钮");
-        // }
-        // console.log(G('#gswitch').isChecked());
-        // G('#gsubmit').onBeforeSubmit(function(){
-        //   alert('提交之前')
-        // });
-        // setTimeout(()=>G('#gswitch').setValue('1'),2000);
-        // setTimeout(()=>G('#gswitch').unChecked(),2000);
-        // setTimeout(()=>G('#gswitch').disable(),2000);
-        // setTimeout(()=>G('#gswitch').enable(),3000);
-        // G('#gswitch').onChange((v)=>{
-        //     alert(v)
-        // })
-        // G('#gtextarea').readonly(true)
-        // G('#gtextarea').readonly(false)
-        // G('#gupload').onBeforeUpload(function(){
-        //   alert('上传前。。。')
-        // })
-        // G('#gupload').onChange(function(){
-        //   alert('change')
-        // })
-        //穿梭框
-        // G('#gtransfer').onRightTreeMoved(function(){
-        //   alert('右边移出')
-        // });
-        // G('#gtransfer').onLeftTreeMoved(function(){
-        //   alert('左边移出')
-        // });
-        // G('#gtransfer').onLeftTreeCheck(function(node){
-        //   console.log(node.previous());
-        //   console.log(node);
-        //   console.log(node.next());
-        // })
-        // G('#gtransfer').onRightTreeCheck(function(node){
-        //   console.log(node.previous());
-        //   console.log(node);
-        //   console.log(node.next());
-        // })
-        // G('#gtree').clear()
-       
-        // G('#gauto').onChange(function(){
-            // G(this).onSearch(function(){
-            //   return  [
-            //             {value:"001",label:"北京"},
-            //             {value:"002",label:"上海"},
-            //             {value:"003",label:"广州"},
-            //             {value:"004",label:"深圳"},
-            //           ]
-            // })
-        // });
-        // G('#gajaxaction').onProcess(function(){
-        //   console.log('点击了ajaxaction')
-        // })    
-        // G.tag.ajaxaction.success=function(data){
-        //   console.log(data);
-        //   G.messager.alert('消息',data.message,"info",function(){
-        //     // do something
-        //   });
-        // };
-        // G.tag.ajaxaction.failed=function(data){
-        //   console.log(data);
-        //   G.messager.alert('错误',data.message,"error",function(){
-        //     // do something
-        //   });					
-        // };	  
-    })
+  })
    
   </script>
 </html>

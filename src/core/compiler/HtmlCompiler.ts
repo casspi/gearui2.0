@@ -1,6 +1,7 @@
 
 import CompilerUtil from './CompilerUtil';
 import HtmlParser from "./HtmlParser";
+import { UUID } from '../../utils';
 
 const ieNSBug = /^xmlns:NS\d+/;
 const ieNSPrefix = /^NS\d+:/;
@@ -56,6 +57,7 @@ export default class HtmlCompiler {
                 }
 
                 let element: ASTElement = this.createASTElement(tag, attrs, this.currentParent);
+                G.cacheAstMap[element.id] = element;
                 if (ns) {
                     element.ns = ns;
                 }
@@ -93,7 +95,7 @@ export default class HtmlCompiler {
                 } else {
                     this.closeElement(element);
                 }
-                return element.index;
+                return element.id;
             },
             end: () => {
                 // remove trailing whitespace
@@ -147,6 +149,7 @@ export default class HtmlCompiler {
                         })
                     }
                 }
+                return text;
             },
             comment: (text: string) => {
                 const children: any = this.currentParent.children;
@@ -207,6 +210,7 @@ export default class HtmlCompiler {
         return {
             type: 1,
             tag,
+            id: UUID.get(),
             attrs: [],
             props: [],
             attrsList: attrs,
@@ -216,10 +220,8 @@ export default class HtmlCompiler {
             index:[],
             html:function():JQuery<HTMLElement>|undefined {
                 let index = this.index;
-                let indexStr:string = "";
                 if(index) {
-                    indexStr = index.toString();
-                    let cacheHtml = G.G$(G.cacheHtml).find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+indexStr+"']");
+                    let cacheHtml = G.G$(G.cacheHtml).find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+index+"']");
                     if(cacheHtml && cacheHtml.length > 0) {
                         return cacheHtml;
                     }

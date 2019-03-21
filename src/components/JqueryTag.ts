@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Events, Parser } from '../core';
-import { ObjectUtil, GearUtil } from '../utils';
+import { ObjectUtil, GearUtil, UUID } from '../utils';
 const lowerFirst = require('lodash/lowerFirst');
 export var props = {
     __ast__: GearType.Any,
@@ -28,6 +28,8 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     events:{} = {};
 
     ast: ASTElement;
+
+    _promise: Promise<any>;
 
     constructor(props?: P, context?: any) {
         super(props || <any>{}, context);
@@ -91,12 +93,18 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         state: any,
         callback?: () => void
     ) {
-        let _this = this;
-        super.setState(state, function(){
-            if(callback) {
-                callback.call(_this);
-            }
+        let promise = new Promise<boolean>((resolve, reject)=>{
+            let _this = this;
+            super.setState(state, function(){
+                if(callback) {
+                    callback.call(_this);
+                }
+                resolve(true);
+                G.removeUpdating(promise);
+            });
         });
+        G.addUpdating(promise);
+        
     }
 
     onAfterRender(fun: Function) {
@@ -160,9 +168,9 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         return jdom.animate.call(jdom,...args);
     }
     append(...args:any[]){
-        //通过append添加的元素要实现动态渲染，并且
+        //通过append添加的元素要实现动态渲染，并且将内容append到元素中
         let parser = new Parser();
-        let astMsg  = parser.parse.call(parser, ...args);
+        let astMsg: ParseResult  = parser.parse.call(parser, ...args);
         let asts = astMsg.ast.children;
         let children: any = this.state.children;
         if(!(children instanceof Array)) {
@@ -174,10 +182,14 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         });
         this.setState({
             children
+        },() => {
+            let html = G.G$(astMsg.cacheHtml).html();
+            let cacheHtmlElement = G.G$(G.cacheHtml);
+            let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.ast.id+"']");
+            cacheElement.append(html);
+            G.cacheHtml = cacheHtmlElement.prop("outerHTML");
         });
         return this;
-        //let jdom = G.G$(this.realDom);
-        //return jdom.append.call(jdom,...args);
     }
     appendTo(...args:any[]){
         let jdom = G.G$(this.realDom);

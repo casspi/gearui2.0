@@ -67,7 +67,7 @@ interface Message {
         success(content:string,duration?:number,onClose?:Function): void;
         loading(content:string,duration?:number,onClose?:Function): void;
     };
-    confirm({}): void;
+    confirm(title:string,message:string,...args: any[]): void;
 }
 declare var G: {
     SockJs:any;
@@ -76,7 +76,7 @@ declare var G: {
     waitFuns: Array<Function>;
     registerCustomComponents():void;
     registerComponents(clazz:Function): void;
-    $: (selector?:string|object|Function|null, react?: boolean)=>any;
+    $: (selector?:string|object|Function|null,html?: JQuery<HTMLElement>, react?: boolean)=>any;
     components: {};
     userComponents: {};
     doWaitFuns:()=>{};
@@ -87,6 +87,13 @@ declare var G: {
     tag: any;
     messager: Message;
     utils: any;
+    dialog: any;
+    cacheHtml: string;
+    findVmDomFromCacheAst:(selector: string|Element, cacheHtml?: JQuery<HTMLElement>)=>any[];
+    cacheAstMap: {[idx: string]: ASTElement};
+    addUpdating: (id: Promise<boolean>) => Array<string>;
+    removeUpdating: (id: Promise<boolean>) => Array<string>;
+    isUpdating: () => boolean;
 }
 interface Window extends EventTarget, WindowTimers, WindowSessionStorage, WindowLocalStorage, WindowConsole, GlobalEventHandlers, IDBEnvironment, WindowBase64, GlobalFetch {
     Blob: typeof Blob;
@@ -102,7 +109,7 @@ interface Window extends EventTarget, WindowTimers, WindowSessionStorage, Window
     readonly devicePixelRatio: number;
     readonly doNotTrack: string;
     readonly document: Document;
-    event: Event | undefined;
+    readonly event: Event | undefined;
     readonly external: External;
     readonly frameElement: Element;
     readonly frames: Window;
@@ -115,7 +122,7 @@ interface Window extends EventTarget, WindowTimers, WindowSessionStorage, Window
     readonly locationbar: BarProp;
     readonly menubar: BarProp;
     readonly msContentScript: ExtensionScriptApis;
-    readonly msCredentials: MSCredentials;
+    readonly msCredentials: any;
     name: string;
     readonly navigator: Navigator;
     offscreenBuffering: string | boolean;
@@ -164,7 +171,7 @@ interface Window extends EventTarget, WindowTimers, WindowSessionStorage, Window
     onmouseout: ((this: Window, ev: MouseEvent) => any) | null;
     onmouseover: ((this: Window, ev: MouseEvent) => any) | null;
     onmouseup: ((this: Window, ev: MouseEvent) => any) | null;
-    onmousewheel: ((this: Window, ev: WheelEvent) => any) | null;
+    onmousewheel: ((this: Window, ev: Event) => any) | null;
     onmsgesturechange: ((this: Window, ev: Event) => any) | null;
     onmsgesturedoubletap: ((this: Window, ev: Event) => any) | null;
     onmsgestureend: ((this: Window, ev: Event) => any) | null;
