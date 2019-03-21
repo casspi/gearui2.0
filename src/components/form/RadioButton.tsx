@@ -38,7 +38,7 @@ export default class RadioButton<P extends typeof props &  RadioProps,S extends 
         return G.G$.extend({}, state, {
             disabled: this.props.disabled,
             size: this.props.size,
-            value: this.props.value,
+            value: this.props.value||"",
             name: this.props.name,
             checked: this.props.checked
         });
@@ -46,7 +46,12 @@ export default class RadioButton<P extends typeof props &  RadioProps,S extends 
 
     //渲染
     makeJsx() {
-        let props = this.getProps();
+        let props:any = this.getProps();
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.value;
+        }
         return <AntdRadioButton {...props}>{this.props.label}</AntdRadioButton >;
     }
 

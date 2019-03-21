@@ -6,13 +6,13 @@ export default class LengthValidator extends Validator {
     validator = (rule:any,value:string,callback:any)=>{
         this.min = parseInt(this.props.min);
         this.max = parseInt(this.props.max);
-        if(this.props.judgestring===true){//判断字符串长度
+        if(this.props.judgeString===true){//判断字符串长度
             if(this.min >0 && this.max >0){
-                this.message = "长度必须大于：" + this.min + "且小于：" + this.max;
+                this.message = this.message||"长度必须大于：" + this.min + "且小于：" + this.max;
             }else if(this.min >0 && !(this.max >0)){
-                this.message = "长度必须大于：" + this.min;               
+                this.message = this.message ||"长度必须大于：" + this.min;               
             }else if(!(this.min >0) && this.max >0){
-                this.message = "长度必须小于：" + this.max;
+                this.message = this.message||"长度必须小于：" + this.max;
             }
             if(value && value.trim()){
                 let strLength = value.length;//字符串长度
@@ -32,7 +32,7 @@ export default class LengthValidator extends Validator {
             }
 
         }else{//判断字节数
-            this.message = "长度不符合限制";
+            this.message = this.message || "长度不符合限制";
             if(value && value.trim()){
                 let bytesLength = StringUtil.getBytesLength(value).length;//字节长度
                 if(this.max>0 && bytesLength>this.max){

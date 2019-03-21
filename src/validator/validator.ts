@@ -301,7 +301,6 @@ export default class Validator {
                     // 根据表单上的设置来处理，默认设置为不验证隐藏的控件
                     let validateHidden = form.validateHidden();
                     if(validateHidden!=true){
-                        //console.log(validateHidden);
                         v.validator = (rule: any,value: any,callback: any)=>{
                             var ctl = G.G$("#"+props.id);
                             if(ctl.is(":visible")==true){
@@ -314,7 +313,7 @@ export default class Validator {
                 }
             }
         }
-        console.log(validatorsArray)
+        // console.log(validatorsArray)
         return validatorsArray;
     }
 }

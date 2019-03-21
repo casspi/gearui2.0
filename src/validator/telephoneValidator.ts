@@ -11,7 +11,7 @@ export default class TelephoneValidator extends Validator {
             let message;
             let valueArray = value.split(",");
             if ((!this.props.multiple || this.props.multiple == false || this.props.multiple=="false") && valueArray.length > 1) {
-                message = "请输入一个有效的电话号码";
+                message = this.message ||"请输入一个有效的电话号码";
                 callback(message);
             } else {
                 let validatePass = true;

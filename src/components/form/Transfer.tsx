@@ -104,7 +104,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     }
 
     getLeftTreeProps() {
-        console.log(this.getPropStringArrayValue(this.props.value)||[])
         return {
             checkbox:true,
             cascadeCheck:true,
@@ -114,7 +113,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             showIcon:this.props.showIcon,
             iconStyle:this.props.iconStyle,
             lines:this.props.lines,
-            // value:this.getPropStringArrayValue(this.props.value)||[],
+            value:this.getPropStringArrayValue(this.props.value)||[],
             onCheck:(node:any)=>{
                 if(node.checked==false)
                     this._setLeftChecked(false);
@@ -138,12 +137,14 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                 if(this._initiated==false){
                     // 获取树节点的数据，并将其缓存在本地变量中
                     var options = this._leftTree.getRoots();
+                    console.log(options)
                     if(options){
                         this._options = new GearArray(options).clone(true).toArray();
                     }else{
                         this._options = [];
                     }
-                    if(this._leftTree.state.value){
+                    console.log(this._leftTree.props.value)
+                    if(this._leftTree.props.value.length>0){
                         // 如果有默认值，将默认值移至左侧
                         this._transferCheckedItemToRight();
                     }
@@ -239,7 +240,9 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         let props:any = this.getProps();
         let leftTreeProps:any = this.getLeftTreeProps(); 
         let rightTreeProps:any = this.getRightTreeProps();
-        console.log(leftTreeProps)
+        if(this.form){
+            delete props.value;
+        }
         return <Wrapper {...props}>
                 <div key={"left"} {...this.getLeftContainerProps()}>
                     <div key={"header"} className={"list-header"}>

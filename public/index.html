@@ -749,10 +749,16 @@ table.resultTable .actiontd{
     <!-- <g-date value="2017-08-08" disabled="2017/08/07"></g-date>
     <g-date type="range" start="2017/09/09" end="2017/09/19" format="YYYY/MM/DD" abledate="2017/09/03,2017/09/25"></g-date> -->
     <!-- <g-datetime name="dt6" value="2017-10-08 11:10:9" format="YYYY-MM-DD HH:mm:ss" abledate="2017-10-03,2017-10-22" abletime="8:15:30-17:30:45" hidetime="true"></g-datetime>
-    <g-datetime name="dt10" type="range" format="YYYY/MM/DD HH:mm:ss" value="2017/10/08 11:10:9,2017/10/14 15:10:2" abledate="2017/10/07,2017/10/22" abletime="8:30:00-17:00:00,12:00:00-17:00:00"></g-datetime> -->
-      <!-- 
-      <g-timepicker></g-timepicker> -->
-      <g-form  >
+    <g-datetime name="dt10" type="range" format="YYYY/MM/DD HH:mm:ss" value="2017/10/08 11:10:9,2017/10/14 15:10:2" abledate="2017/10/07,2017/10/22" abletime="8:30:00-17:00:00,12:00:00-17:00:00"></g-datetime>
+       -->
+       <!-- <g-autocomplete  width="300" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" async="true" mustMatch="true"></g-autocomplete> -->
+       <g-form  >
+        <!-- <g-timepicker></g-timepicker>
+        <g-time></g-time>
+        <g-switch value="1,2" size="small"></g-switch> -->
+        <!-- <g-url required="true"></g-url> -->
+        <g-text name="more" width="400" required="true" judgestring="true" min="3" max="10" invalidMessage="{regexp:'必须为数字111',length:'字符串长度不符sss！！！',required:'请输入!!!'}" regexp="^[0-9]+$" ></g-text>
+						
         <!-- <g-email required="true"></g-email>
         <g-file id="gfile" width="300" required="true"></g-file>
         <g-hidden></g-hidden> -->
@@ -808,11 +814,13 @@ table.resultTable .actiontd{
             <g-button id="btn0" >btn00</g-button> -->
             <!-- <g-time value="08:02:25"></g-time> -->
             <!-- <g-date value="2017-08-08"></g-date>  -->
-            <g-tree url="http://10.10.10.6:81/example/Combotree/data" value="1"></g-tree>
+            <!-- <g-tree url="http://10.10.10.6:81/example/Combotree/data" value="1"></g-tree> -->
+            <!-- <g-radiobutton value="2222" label="222"></g-radiobutton> -->
+            <!-- <g-search value="请输入搜索"></g-search> -->
             <!-- <g-button buttonStyle='danger'>danger</g-button>  
             <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data"  ></g-combotree>
-            <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data" multiple="true"  cascadeCheck="true" ></g-combotree> -->
-            <!-- <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree> -->
+            <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data" multiple="true"  cascadeCheck="true" ></g-combotree>
+            <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree> -->
             <!-- <g-tree multiple="true" url="http://10.10.10.6:81/example/Combotree/data"></g-tree> -->
             <g-submit>提交</g-submit> 
           </g-form>

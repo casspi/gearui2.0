@@ -198,8 +198,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
     }
 
     protected getProps() {
-        let state: state = this.state;
-        return G.G$.extend({},state);
+        return super.getProps();
     }
 
     afterRender() {

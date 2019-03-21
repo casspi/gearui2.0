@@ -438,10 +438,14 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
 
     makeJsx() {
         let input;
+        let textareaProps:any = this.getTextareaProps();
+        let inputProps:any = this.getInputProps();
+        delete textareaProps.labelText;
+        delete inputProps.labelText;
         if(this.state.controlType == "textarea") {
-            input = <AntdTextArea {...this.getTextareaProps()}></AntdTextArea>;
+            input = <AntdTextArea {...textareaProps}></AntdTextArea>;
         }else {
-            input= <AntdInput {...this.getInputProps()}></AntdInput>;
+            input= <AntdInput {...inputProps}></AntdInput>;
         }
         let acprops = this.getAutoCompleteProps();  
         if(this.state.mustMatch == true){

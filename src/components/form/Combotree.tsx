@@ -189,7 +189,13 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         let childrenMap = children.map((ele) => {
             return ele;
         });
-        let props = this.getProps();
+        let props:any = this.getProps();
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.value;
+            delete props.defaultValue;
+        }
         return <TreeSelect {...props}>{childrenMap}</TreeSelect>;
     }
 
@@ -200,7 +206,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             this.find(".ant-select-selection").find("input").remove();
         }
         if(this.props.pinyinUrl){
-            let p = Http.getMethod('get')(this.getProps().pinyinUrl,'json');
+            let p = Http.getMethod('get')(this.props.pinyinUrl,'json');
             if(p){
                 p.then((response)=>{
                     this.pinyinData = response.data;
@@ -211,9 +217,9 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         }
     }
 
-    afterUpdate() {
-        super.afterUpdate();
-    }
+    // afterUpdate() {
+    //     super.afterUpdate();
+    // }
 
     setValue(values: any, callback?: Function) {
         if(typeof values =="string")

@@ -81,7 +81,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     private getChildren() {
-        let children = this.props.children;
+        let children:any = this.props.children;
         let methodParam = this.getMethodParam();
         if(methodParam != null) {
             if(children instanceof Array) {
@@ -353,7 +353,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     validate():boolean {
         let result = false;
-        if(this.state['validate'] == true) {
+        if(this.state.validate == true) {
             this.props.form.validateFieldsAndScroll({force:true},(err, values) => {
                 if (!err) {
                     result = true; 

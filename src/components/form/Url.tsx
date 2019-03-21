@@ -12,10 +12,7 @@ export interface state extends Text.state {
 }
 export default class Url<P extends (typeof props) & InputProps ,S extends state> extends Text.default<P,S>{
     getProps() {
-        super.getProps()
-        let state = this.state;
-        return G.G$.extend({}, state, {
-        });
+        return super.getProps();
     }
 
     //插件初始化，状态发生变化重新进行渲染
@@ -26,7 +23,12 @@ export default class Url<P extends (typeof props) & InputProps ,S extends state>
     }
     
     makeJsx() {
-        let props = this.getProps();
+        let props:any = this.getProps();
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.value;
+        }
         return <Input {...props}></Input>;
     }
 

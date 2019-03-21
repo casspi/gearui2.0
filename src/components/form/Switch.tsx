@@ -115,6 +115,11 @@ export default class Switch<P extends typeof props,S extends state> extends Form
     makeJsx() {
         let props:any = this.getProps();
         delete props.showLabel;
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.value;
+        }
         let checkedChildren:string|React.ReactNode;
         let unCheckedChildren:string|React.ReactNode;
         // 选中状态时显示的文本

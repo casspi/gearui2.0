@@ -5,19 +5,25 @@ import * as React from 'react';
 import G from '../../Gear';
 // 推荐在入口文件全局设置 locale
 import '../../../node_modules/moment/locale/zh-cn';
+import * as FormTag  from '../form/FormTag';
 moment.locale('zh-cn');
 export var props =  {
-    ...Tag.props,
+    ...FormTag.props,
     value: GearType.Any,         //时间
     placeholder: GearType.String,	        //"请选择时间"
     format: GearType.String,	            //展示的时间格式"HH:mm:ss"
     disabled: GearType.Boolean,              //禁止
     size: GearType.String                   //尺寸
 }
-export interface state extends Tag.state {
-
+export interface state extends FormTag.state {
+    defaultValue?:any,
+    placeholder?: string,	        //"请选择时间"
+    format?: string,		            //展示的时间格式"HH:mm:ss"
+    disabled?: boolean,              //禁止
+    size?:any,     
+    value?:string
 }
-export default class Timepicker<P extends typeof props,S extends state> extends Tag.default<P,S> {
+export default class Timepicker<P extends typeof props,S extends state> extends FormTag.default<P,S> {
 
     // constructor(props) {
     //     super(props);
@@ -28,21 +34,21 @@ export default class Timepicker<P extends typeof props,S extends state> extends 
     //获取当前属性
     getProps() {
         let state = this.state;
-        if(this.state["value"]!=null){
+        if(this.state.value!=null){
             return G.G$.extend(state, {
-                defaultValue: moment(this.state["defaultValue"],this.state["format"]),
-                value: moment(this.state["value"],this.state["format"]),
-                placeholder:this.state["placeholder"],
-                format:this.state["format"],
-                disabled:this.state["disabled"],
-                size:this.state["size"],
+                defaultValue: moment(this.state.defaultValue,this.state.format),
+                value: moment(this.state.value,this.state.format),
+                placeholder:this.state.placeholder,
+                format:this.state.format,
+                disabled:this.state.disabled,
+                size:this.state.size,
             });
         }else{
             return G.G$.extend(state, {
-                placeholder:this.state["placeholder"],
-                format:this.state["format"],
-                disabled:this.state["disabled"],
-                size:this.state["size"],
+                placeholder:this.state.placeholder,
+                format:this.state.format,
+                disabled:this.state.disabled,
+                size:this.state.size,
             });
         }
         
@@ -63,7 +69,11 @@ export default class Timepicker<P extends typeof props,S extends state> extends 
 
     //渲染
     makeJsx() {
-        let props = this.getProps();
+        let props:any = this.getProps();
+        if(this.form){
+            delete props.value;
+            delete props.defaultValue
+        }
         return <AntdTimePicker {...props}></AntdTimePicker>;
     }
 
