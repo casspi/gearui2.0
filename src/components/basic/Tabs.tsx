@@ -9,16 +9,18 @@ import * as Tag from '../Tag';
 import * as VoidTag from '../VoidTag';
 
 export default class Tabs<P,S> extends Tag.default<P,S> {   
-
+    getInitialState(){
+        return {};
+    }
     render() { 
         return null;
     }
     afterRender(){
+        this.doRender()
         this.initlizate();
         this.resizeTab();
     }
     private initlizate() {
-        this.doRender()
         console.log(this.ref)
         let _this = this;
         let _real = G.G$(this.realDom);    
@@ -230,7 +232,6 @@ export default class Tabs<P,S> extends Tag.default<P,S> {
     }
     /* 得到当前选中的标签 */
     getSelectedTab(){
-        let _this = this;
         let _real = G.G$(this.realDom);
         let jdom = _real.find(".tab-header > li.selected");
         if(jdom.length>0)

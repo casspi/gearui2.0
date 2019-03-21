@@ -585,6 +585,9 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     makeJsx() {
         let children = this.getTreeNode();
         let props = this.getProps();
+        if(this.form){
+            delete props.value
+        }
         return <AntdTree ref={ele=>this.ref=ele} {...props}>{children}</AntdTree>;
     }
 

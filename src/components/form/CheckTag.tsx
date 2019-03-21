@@ -35,7 +35,13 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
         };
     }
     makeJsx() {
-        return <div {...this.getProps()}>
+        let props:any = this.getProps();
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.value;
+        }
+        return <div {...props}>
             {this.getTags()}
         </div>;
     }

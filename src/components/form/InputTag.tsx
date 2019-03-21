@@ -7,6 +7,7 @@ import { methods } from '../../utils/http';
 import * as SelectedTag from './SelectedTag';
 import DicUtil from '../../utils/DicUtil';
 import { UUID, ObjectUtil } from '../../utils';
+import { any } from 'prop-types';
 
 export var props = {
     ...FormTag.props,
@@ -233,7 +234,6 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     makeJsx() {  
         // 输入框是否可见
         let inputControl;
-        let props: any;
         let _props:any = this.getProps();
         delete _props.inputVisible;
         delete _props.loading;
@@ -241,11 +241,26 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         delete _props.mustMatch;
         delete _props.controlType;
         delete _props.dropdownWidth;
+        delete _props.invalidType;
+        delete _props.labelText;
+        if(this.form){
+            delete _props.value
+        }
         if(this.state.dictype || this.state.url){
-            props = this.getAutoCompleteProps();
+            let props:any = this.getAutoCompleteProps();
+            delete props.invalidType;
+            delete props.labelText;
+            if(this.form){
+                delete props.value
+            }
             inputControl = <span style={{display:this.state.inputVisible?'block':'none'}}><AutoComplete.default key={"input"} {...props}></AutoComplete.default></span>;
         }else{
-            props = this.getInputProps();
+            let props:any = this.getInputProps();
+            delete props.invalidType;
+            delete props.labelText;
+            if(this.form){
+                delete props.value
+            }
             inputControl = <span style={{display:this.state.inputVisible?'block':'none'}}><Text.default key={"input"} {...props}></Text.default></span>;
         }
         return <div {..._props}>
@@ -544,7 +559,6 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     }  
 
     reset(){
-        console.log(this.props.value)
         if(this.form) {
             super.reset();
         }else {

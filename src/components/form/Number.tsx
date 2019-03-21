@@ -74,6 +74,12 @@ export default class Number<P extends typeof props, S extends state> extends For
 
     makeJsx() {
         let props: any = this.getProps();
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.defaultValue;
+            delete props.value;
+        }
         return <AntdInputNumber {...props} />;
     }
 
