@@ -32,14 +32,13 @@ export interface state extends JqueryTagState {
     remove?:number,//删除该组件节点
     className?: string,
     style?: React.CSSProperties,
-    children?: React.ReactNode
 }
-export default abstract class Tag<P extends typeof props, S extends state> extends JqueryTag<P, S> {
+export default class Tag<P extends typeof props, S extends state> extends JqueryTag<P, S> {
 
     //发生改变时不能被更新的属性
     protected cannotUpdate:GearArray<keyof S> = new GearArray<keyof state>(["name","id"]);
     protected concatInitial: boolean = true;
-    constructor(props: P, context?: any) {
+    constructor(props?: P, context?: any) {
         super(props, context);
         this.state = <Readonly<S>>this.getInitState();
     }
@@ -54,7 +53,7 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
     }
 
     //子类按具体功能提供自己的state
-    abstract getInitialState(): state;
+    getInitialState(): state {return {};};
 
     protected getConcatInitialState() {
         let state = this.getInitialState ? this.getInitialState() : {};
@@ -83,7 +82,6 @@ export default abstract class Tag<P extends typeof props, S extends state> exten
     }
 
     protected findRealDom() {
-        console.log(this.ref)
         return ReactDOM.findDOMNode(this.ref);
     }
 

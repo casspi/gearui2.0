@@ -235,7 +235,10 @@ export default class Http {
 
     //获取主机地址之后的目录，如： uimcardprj/share/meun.jsp      
     static getPathName() {
-        return window.document.location.pathname;
+        if(window.document.location) {
+            return window.document.location.pathname;
+        }
+        return "";
     }
 
     //获取主机地址，如： http://localhost:8083
@@ -246,7 +249,10 @@ export default class Http {
 
     //获取当前网址，如： http://localhost:8083/uimcardprj/share/meun.jsp   
     static getPath() {
-        return window.document.location.href;
+        if(window.document.location) {
+            return window.document.location.href;
+        }
+        return "";
     }
 
     // 通过超链接的方式打开地址
@@ -412,13 +418,15 @@ export default class Http {
     }
     //跳转到一个指定页面
     static redirect(page: string) {
-        if(page.startsWith("http://")) {
-            document.location.href = page;
-        }else {
-            if(!page.startsWith("/")) {
-                document.location.href = Http.getRootPath() + "/" + page;
+        if(document.location) {
+            if(page.startsWith("http://")) {
+                document.location.href = page;
             }else {
-                document.location.href = Http.getRootPath() + page;
+                if(!page.startsWith("/")) {
+                    document.location.href = Http.getRootPath() + "/" + page;
+                }else {
+                    document.location.href = Http.getRootPath() + page;
+                }
             }
         }
     }

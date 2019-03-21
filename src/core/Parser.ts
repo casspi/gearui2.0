@@ -3,7 +3,7 @@ import { GearUtil, StringUtil } from "../utils";
 
 export default class Parser {
 
-    public parse(el: string|Element): {ast: ASTElement,cacheHtml: string, parent: Element} {
+    public parse(el: string|Element): ParseResult {
         let html:string = "";
         let parent:any = null;
         if(typeof el === "string") {

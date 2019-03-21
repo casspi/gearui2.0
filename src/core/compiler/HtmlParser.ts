@@ -111,10 +111,10 @@ export default class HtmlParser {
                         let cacheHtml = this.advance(endTagMatch[0].length);
                         let index = this.parseEndTag(endTagMatch[1], curIndex, this.index);
                         if(endTagMatch[1] === "br") {
-                            cacheHtml = cacheHtml.replace("</br", "</br "+ Constants.HTML_PARSER_DOM_INDEX +"=\"" + index.toString()+"\"");
+                            cacheHtml = cacheHtml.replace("</br", "</br "+ Constants.HTML_PARSER_DOM_INDEX +"=\"" + index+"\"");
                         }
                         if(endTagMatch[1] === "p") {
-                            cacheHtml = cacheHtml.replace("</p", "</p "+ Constants.HTML_PARSER_DOM_INDEX +"=\"" + index.toString()+"\"");
+                            cacheHtml = cacheHtml.replace("</p", "</p "+ Constants.HTML_PARSER_DOM_INDEX +"=\"" + index+"\"");
                         }
                         this.cacheHtml += cacheHtml;
                         continue;
@@ -124,7 +124,7 @@ export default class HtmlParser {
                     const startTagMatch = this.parseStartTag();
                     if (startTagMatch) {
                         let index = this.handleStartTag(startTagMatch);
-                        this.cacheHtml = this.cacheHtml.replace("{" + Constants.HTML_PARSER_DOM_INDEX + "}", index.toString());
+                        this.cacheHtml = this.cacheHtml.replace("{" + Constants.HTML_PARSER_DOM_INDEX + "}", index);
                         if (shouldIgnoreFirstNewline(this.lastTag, this.html)) {
                             this.cacheHtml += this.advance(1);
                         }
@@ -171,9 +171,10 @@ export default class HtmlParser {
                         text = text.slice(1);
                     }
                     if (this.options.chars) {
-                        this.options.chars(text);
+                        let charStr = this.options.chars(text);
+                        this.cacheHtml += charStr;
                     }
-                    return '';
+                    return endTag;
                 })
                 this.index += this.html.length - rest.length;
                 this.html = rest;
@@ -268,7 +269,7 @@ export default class HtmlParser {
             this.lastTag = tagName;
         }
 
-        let index: number[] = [];
+        let index: string = "";
 
         if (this.options.start) {
             index = this.options.start(tagName, attrs, unary, match.start, match.end);
@@ -296,7 +297,7 @@ export default class HtmlParser {
             // If no tag name is provided, clean shop
             pos = 0;
         }
-        let index:number[] = [];
+        let index:string = "";
         if (pos >= 0) {
             // Close all the open elements, up the stack
             for (let i = this.stack.length - 1; i >= pos; i--) {

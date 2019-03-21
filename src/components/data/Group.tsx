@@ -45,7 +45,7 @@ export default class Group<P extends typeof props, S extends state> extends Tag.
                 // console.log(jdom)
                 if(jdom.length>0){
                     jdom.each((index:number,dom:any)=>{
-                        let parent = G.G$(dom).parents(".ajaxload-group:first");
+                        let parent = G.$(dom).parents(".ajaxload-group:first");
                         // console.log(dom);
                         // console.log(jdom[index]);
                         // console.log(parent[0])

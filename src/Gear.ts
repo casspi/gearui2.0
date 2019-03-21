@@ -29,6 +29,13 @@ export default class G {
     static cacheHtml:string = "";
 
     static cacheAst: ASTElement;
+    //使用唯一id存储ast对象
+    static cacheAstMap: {[idx: string]: ASTElement} = {};
+    //正在渲染的操作
+    static updating: Promise<boolean>[] = [];
+
+    //一个包含所有的组件的方法的对象
+    static tagClass: any = function(){};
 
     //渲染
     static render(renderOptions: RenderOptions) {
@@ -51,8 +58,27 @@ export default class G {
         }
     }
 
+    //添加正在更新的操作
+    static addUpdating(id: Promise<boolean>): Array<Promise<boolean>> {
+        this.updating.push(id);
+        return this.updating;
+    }
+
+    //删除正在更新的操作
+    static removeUpdating(id: Promise<boolean>): Array<Promise<boolean>> {
+        let index = this.updating.indexOf(id);
+        if(index > -1) {
+            this.updating.splice(index, 1);
+        }
+        return this.updating;
+    }
+
     //注册组件
     static registerCustomComponents() {
+        //创建一个包含所有的组件方法的对象
+        for(let key in Tag) {
+            this.addMothedToTagObj(key);
+        }
         let requireComponent = require['context']('./components', true , /[A-Z]\w+\.(tsx)$/);
         requireComponent.keys().forEach((fileName: string) => {
             if(fileName.endsWith('index.ts')) {
@@ -71,6 +97,9 @@ export default class G {
             //componentName = 'g-' + componentName.toLowerCase();
             let component = componentConfig.default || componentConfig;
             if(component) {
+                for(let key in component.prototype) {
+                    this.addMothedToTagObj(key);
+                }
                 component.props = componentConfig.props;
                 component.state = componentConfig.state;
                 this.components[componentName] = component;
@@ -80,8 +109,63 @@ export default class G {
         });
     }
 
-    //查找页面中的元素
+    static addMothedToTagObj(key: string) {
+        //修改对象中的方法，需要先执行对象的promise之后再执行对应的操作。
+        this.tagClass.prototype[key] = function(...args: any[]) {
+            if(this._promise) {
+                this._promise.then((ele: any) => {
+                    if(ele && ele[key]) {
+                        ele[key].call(ele, ...args);
+                    }
+                });
+            }
+        };
+    }
+
+    static go(gen: IterableIterator<any>, value?: any): any {
+        let item = gen.next();
+        
+        if(item.done) {
+            if(item.value) {
+                return item.value;
+            }else {
+                return value;
+            }
+        }
+        if(item.value instanceof Promise){
+            return item.value.then((e) => {
+                let ele = this.go(gen);
+                return Promise.resolve(ele);
+            });
+        }else {
+            return this.go(gen, item.value);
+        }
+    }
+
     static $(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
+        if(this.isUpdating()) {
+            let $result = this.async$(selector, html, react);
+            let f = this.go($result);
+            let tag = new this.tagClass();
+            tag._promise = f;
+            //返回一个全能对象，执行任何方法的时候都先执行promise的then
+            return tag;
+        }
+        return this._$(selector, html, react);
+    }
+
+    //查找页面中的元素
+    static* async$(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
+        //如果有update正在进行，将等待
+        for(let i=0; i<this.updating.length; i++) {
+            let p = this.updating[i];
+            yield p;
+        }
+        yield this._$(selector, html, react);
+    }
+
+    //查找页面中的元素
+    static _$(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
         if(typeof selector == "string" || selector instanceof Element) {
             //如果是节点字符串(<a></a>),并且是要求返回react对象的，返回react对象
             if(typeof selector == "string" && react == true) {
@@ -214,6 +298,10 @@ export default class G {
         }
     }
 
+    static isUpdating() {
+        return this.updating.length > 0;
+    }
+
     /**
      * 执行排队的function
      */
@@ -230,16 +318,17 @@ export default class G {
             jEleFromCache.each((i, ele)=>{
                 let index = this.G$(ele).attr(Constants.HTML_PARSER_DOM_INDEX);
                 if(index) {
-                    let indexs: string[] = index.split(",");
-                    let ast = this.cacheAst;
-                    for(let i = 1; i < indexs.length; i++) {
-                        let idx = indexs[i] ? parseInt(indexs[i]) : -1;
-                        if(ast) {
-                            ast = ast.children[idx];
-                        }else {
-                            break;
-                        }
-                    }
+                    let ast = this.cacheAstMap[index];
+                    // let indexs: string[] = index.split(",");
+                    // let ast = this.cacheAst;
+                    // for(let i = 1; i < indexs.length; i++) {
+                    //     let idx = indexs[i] ? parseInt(indexs[i]) : -1;
+                    //     if(ast) {
+                    //         ast = ast.children[idx];
+                    //     }else {
+                    //         break;
+                    //     }
+                    // }
                     if(ast && ast != this.cacheAst) {
                         vmdoms.push(ast.vmdom);
                     }

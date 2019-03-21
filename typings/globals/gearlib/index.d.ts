@@ -59,6 +59,7 @@ interface ASTElement {
    * 3: 文本
    */
   type: number;
+  id: string;
   tag: string;
   attrsMap: {[idx: string]: string};
   plain?: boolean;
@@ -93,6 +94,11 @@ interface ASTElement {
   iterator2?: any;
   index: number[];
   vmdom?: any;
+  afterRender?:any;
+  componentDidMount?:any;
+  componentWillMount?:any;
+  componentDidUpdate?:any;
+  html: ()=>JQuery<HTMLElement>|undefined;
 }
 
 interface ASTIfCondition {
@@ -124,6 +130,8 @@ interface CompilerOptions {
   chars?: any;
   isNonPhrasingTag?: any;
 }
+
+interface ParseResult {ast: ASTElement,cacheHtml: string, parent: Element}
 
 interface Constants {
   EXPAND_NAME:string;
