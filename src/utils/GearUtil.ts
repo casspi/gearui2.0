@@ -68,20 +68,27 @@ export default class GearUtil {
                 props = {
                     class: tag,
                     props: nprops,
+                    // key: ast.id + "_" + ast.tag,
                     __ast__: ast
                 };
             }
             if(children && children.length > 0) {
                 reactChildren = [];
                 children.forEach((astInner)=>{
-                    reactChildren.push(GearUtil.newReactInstance(astInner));
+                    if(astInner.tag || (ast.tag != "table" && ast.tag != "thead" && ast.tag != "tr" && ast.tag != "th" && ast.tag != "tbody")) {
+                        reactChildren.push(GearUtil.newReactInstance(astInner));
+                    }
                 });
             }
             if(!props["key"]) {
                 if(props["id"]) {
                     props["key"] = props["id"];
                 }else {
-                    props["key"] = UUID.get();
+                    if(ast.id) {
+                        props["key"] = ast.id;
+                    }else {
+                        props["key"] = UUID.get();
+                    }
                 }
             }
             return React.createElement(clazz, props, reactChildren);

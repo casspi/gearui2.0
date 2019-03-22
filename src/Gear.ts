@@ -1,4 +1,4 @@
-import * as $ from 'jquery';
+import * as Jquery from 'jquery';
 import JqueryTag from './components/JqueryTag';
 import { Events, Parser } from './core';
 import { GearUtil, StringUtil } from './utils';
@@ -7,7 +7,7 @@ import Render from './core/Render';
 export default class G {
 
     static SockJs:any = null;
-    static G$:JQueryStatic = $;
+    static G$:JQueryStatic = Jquery;
     //是否渲染完成
     static parsed: boolean = false;
     //待执行的function
@@ -96,6 +96,9 @@ export default class G {
                 this.components[componentName] = component;
                 this.tag[componentNameReal] = component;
                 this.tag[componentName] = component;
+                if(componentName == "form") {
+                    this.components["gform"] = componentConfig.Form;
+                }
             }
         });
     }
@@ -105,7 +108,8 @@ export default class G {
         //修改对象中的方法，需要先执行对象的promise之后再执行对应的操作。
         clazz[key] = function(...args: any[]) {
             if(this._promise) {
-                _this.then(this._promise, key, ...args);
+                let promise = _this.then(this._promise, key, ...args);
+                return _this.getPromiseObject.call(_this, ...args, promise);
             }
         };
     }
@@ -115,13 +119,24 @@ export default class G {
         //修改对象中的方法，需要先执行对象的promise之后再执行对应的操作。
         clazz.prototype[key] = function(...args: any[]) {
             if(this._promise) {
-                _this.then(this._promise, key, ...args);
+                let promise = _this.then(this._promise, key, ...args);
+                return _this.getPromiseObject.call(_this, ...args, promise);
             }
         };
+        for(let key in Events) {
+            if(!clazz.prototype[key]) {
+                clazz.prototype[key] = function(...args: any[]) {
+                    if(this._promise) {
+                        let promise = _this.then(this._promise, key, ...args);
+                        return _this.getPromiseObject.call(_this, ...args, promise);
+                    }
+                };
+            }
+        }
     }
 
     static then(promise: Promise<any>, key: string, ...args: any[]) {
-        promise.then((ele: any) => {
+        return promise.then((ele: any) => {
             if(ele instanceof Promise) {
                 this.then(ele, key, ...args);
             }else {
@@ -163,6 +178,9 @@ export default class G {
                 let ast = this.cacheAstMap[astId];
                 if(ast) {
                     let clazz = GearUtil.getClass(ast);
+                    if(ast.tag == "form" || ast.tag == "g-form" || ast.tag == "gform") {
+                        clazz = this.components["gform"];
+                    }
                     if(clazz) {
                         let newClass = GearUtil.createClass(clazz);
                         if(newClass) {
@@ -210,7 +228,7 @@ export default class G {
             if(elements.length > 0) {
                 return elements[0];
             }
-            return null;
+            return this.G$([]);
         }
     }
 

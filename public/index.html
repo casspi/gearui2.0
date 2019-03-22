@@ -451,6 +451,7 @@ table.resultTable .actiontd{
     <g-button id='ec3-btn2'>全不选</g-button>
     <g-button>999</g-button>
   </g-buttongroup>
+<<<<<<< HEAD
   <script>
     G(function(){
     //   console.log(G("#ec3"))
@@ -961,114 +962,22 @@ table.resultTable .actiontd{
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+=======
+>>>>>>> 7da347d176cfdf158d3d61dd82cd5f59147467e1
   </body>
   <script>
-    var treeData = [{
-  label: '0-0',
-  value: '0-0',
-  children: [{
-    label: '0-0-0',
-    value: '0-0-0',
-    children: [
-      { label: '0-0-0-0', value: '0-0-0-0' },
-      { label: '0-0-0-1', value: '0-0-0-1' },
-      { label: '0-0-0-2', value: '0-0-0-2' },
-    ],
-  }, {
-    label: '0-0-1',
-    value: '0-0-1',
-    children: [
-      { label: '0-0-1-0', value: '0-0-1-0' },
-      { label: '0-0-1-1', value: '0-0-1-1' },
-      { label: '0-0-1-2', value: '0-0-1-2' },
-    ],
-  }, {
-    label: '0-0-2',
-    value: '0-0-2',
-  }],
-}, {
-  label: '0-1',
-  value: '0-1',
-  children: [
-    { label: '0-1-0-0', value: '0-1-0-0' },
-    { label: '0-1-0-1', value: '0-1-0-1' },
-    { label: '0-1-0-2', value: '0-1-0-2' },
-  ],
-}, {
-  label: '0-2',
-  value: '0-2',
-}];
-var selectData = [
-{"value":"0","label":"上海"},{"value":"1","label":"北京"},{"value":"2","label":"宁波"}
-]
-    var checkboxJson1 = [
-	{
-		label:"张三",
-		value: "zs",
-	},{
-		label:"王四",
-		value: "ws"
-	},{
-		label:"赵五",
-		value: "zw"
-	}
-];
-var combotreeJson = [{
-	value:"01",
-	label:"节点一"
-},{
-  id:'id001',
-	value:"02",
-	label:"节点二",
-	children:[{
-		value:"0201",
-		label:"子节点"
-	}]
-}];
-    var search = function(q){
-		if(q.length>0){
-			return [
-				{text:q+"@sina.com"},
-				{text:q+"@qq.com"},
-				{text:q+"@163.com"},
-				{text:q+"@gmail.com"},
-				{text:q+"@189.com"},
-			];
-		}
-		return [];
-	}
-    function clickEvent(){
-      alert('属性点击事件')
-    }
-  var radioJson1 = [
-{
-  label:"未知11111111111111",
-  value: "1",
-},{
-  label:"男2222222222222",
-  value: "0"
-},{
-  label:"女3333333333333",
-  value: "2"
-}
-];
-// 利用该方法在导出时追加传入至后台的参数
-function getExportParameters(){
-      return {
-        name:"呵呵",
-        info:["这是一个测试","这是一个数组"]
-      };
-    }
   G(function() {
     var root = G("#root");
     var bu = root.find("#aaaa");
     var test = G("#test");
     console.log(test);
     bu.append("<g-button id='ccc'>append</g-button>");
-    var ccc = G("#ccc");
+    var ccc = $("#ccc");
     ccc.setLoading(true);
-    console.log(ccc instanceof G.tag.button);
-    console.log(ccc);
+    root.doRender();
+    test.setLoading(true);
+    //console.log(ccc instanceof G.tag.button);
+    //console.log(ccc);
     
   })
    

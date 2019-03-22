@@ -290,4 +290,50 @@ export default class WindowUtil {
            } 
         }
     }
+
+    static domEventHandler(dom: Node) {
+        //dom节点变化的监听
+        // MutationObserver
+        //Event.
+        var MutationObserver:{
+            prototype: MutationObserver;
+            new(callback: MutationCallback): MutationObserver;
+        } = window["MutationObserver"] || window["WebKitMutationObserver"] || window["MozMutationObserver"];
+        var observer = new MutationObserver(function (mutations, instance) {
+            mutations.forEach(function (mutation) {
+                let target = mutation.target;
+                let gele = G.$(target);
+                if(gele.length > 0 && gele.ast != null) {
+                    let added = mutation.addedNodes;
+                    let removed = mutation.removedNodes;
+                    if(added != null && added.length > 0) {
+                        let next = mutation.nextSibling;
+                        let prev = mutation.previousSibling;
+                        if(next) {
+                            let nextObj = G.$(next);
+                            if(nextObj && nextObj.ast) {
+
+                            }else {
+                                
+                            }
+                            added.forEach((node: any)=>{
+                                gele.before(node);
+                            });
+                        }else if(prev) {
+                            added.forEach((node: any)=>{
+                                gele.prepend(node);
+                            });
+                        }
+                    }
+                }
+                
+                console.log(mutation);
+            });
+        });
+        observer.observe(dom, {
+            childList: true,
+            attributes: false,
+            subtree: false
+          });
+    }
 }

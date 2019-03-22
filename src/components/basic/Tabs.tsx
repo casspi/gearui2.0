@@ -2,14 +2,8 @@
 /* 对设置了样式gearui-tabs的标签页进行初始化、设置和操作 */
 /* 通过使用G(".gearui-tabs").tabs()来初始化布局 */
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import Parser from '../../core/Parser';
-import {ObjectUtil,GearUtil,UUID} from '../../utils';
 import * as Tag from '../Tag';
 import {Tabs as AntdTabs} from 'antd';
-const AntdTab = AntdTabs.TabPane;
-// import * as JqueryTag from '../JqueryTag';
-import * as VoidTag from '../VoidTag';
 const props={
     ...Tag.props
 }

@@ -19,6 +19,7 @@ window.G.utils = utils;
 //兼容老版的写法--------------------
 window.G.http = utils.Http;
 window.G.util = utils.Http;
+window["$"] = window.G;
 
 
 window.onload = function() {
