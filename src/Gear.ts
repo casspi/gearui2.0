@@ -1,4 +1,4 @@
-import * as $ from 'jquery';
+import * as Jquery from 'jquery';
 import JqueryTag from './components/JqueryTag';
 import { Events, Parser } from './core';
 import { GearUtil, StringUtil } from './utils';
@@ -7,7 +7,7 @@ import Render from './core/Render';
 export default class G {
 
     static SockJs:any = null;
-    static G$:JQueryStatic = $;
+    static G$:JQueryStatic = Jquery;
     //是否渲染完成
     static parsed: boolean = false;
     //待执行的function

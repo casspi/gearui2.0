@@ -187,6 +187,9 @@ export default class HtmlCompiler {
         for (i = 0, l = list.length; i < l; i++) {
             name = rawName = list[i].name;
             value = list[i].value;
+            if(name == Constants.HTML_PARSER_DOM_INDEX) {
+                el.id = value;
+            }
             CompilerUtil.addAttr(el, name, JSON.stringify(value));
             // #6887 firefox doesn't update muted state if set via attribute
             // even immediately after element creation
@@ -207,6 +210,13 @@ export default class HtmlCompiler {
     }
 
     private createASTElement(tag: string, attrs: Array<Attr>, parent: ASTElement): ASTElement {
+        // let id = null;
+        // for(let i=0;i < attrs.length;i++) {
+        //     let attr = attrs[i];
+        //     if(attr.name == Constants.HTML_PARSER_DOM_INDEX) {
+        //         id = attr.value;
+        //     }
+        // }
         return {
             type: 1,
             tag,
@@ -219,9 +229,9 @@ export default class HtmlCompiler {
             children: [],
             index:[],
             html:function():JQuery<HTMLElement>|undefined {
-                let index = this.index;
-                if(index) {
-                    let cacheHtml = G.G$(G.cacheHtml).find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+index+"']");
+                let id = this.id;
+                if(id) {
+                    let cacheHtml = G.G$(G.cacheHtml).find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+id+"']");
                     if(cacheHtml && cacheHtml.length > 0) {
                         return cacheHtml;
                     }

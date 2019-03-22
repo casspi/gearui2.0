@@ -68,6 +68,7 @@ export default class GearUtil {
                 props = {
                     class: tag,
                     props: nprops,
+                    // key: ast.id + "_" + ast.tag,
                     __ast__: ast
                 };
             }
@@ -81,7 +82,11 @@ export default class GearUtil {
                 if(props["id"]) {
                     props["key"] = props["id"];
                 }else {
-                    props["key"] = UUID.get();
+                    if(ast.id) {
+                        props["key"] = ast.id;
+                    }else {
+                        props["key"] = UUID.get();
+                    }
                 }
             }
             return React.createElement(clazz, props, reactChildren);

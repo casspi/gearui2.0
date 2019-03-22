@@ -31,6 +31,8 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
 
     _promise: Promise<any>;
 
+    length: 1;
+
     constructor(props?: P, context?: any) {
         super(props || <any>{}, context);
         this.ast = this.props.__ast__;
@@ -175,10 +177,8 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         let astMsg: ParseResult  = parser.parse.call(parser, ...args);
         let html = G.G$(astMsg.cacheHtml).html();
         let cacheHtmlElement = G.G$(G.cacheHtml);
-        let cacheElement = this.ast.html();
-        if(cacheElement) {
-            cacheElement.append(html);
-        }
+        let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.ast.id+"']");
+        cacheElement.append(html);
         G.cacheHtml = cacheHtmlElement.prop("outerHTML");
         let asts = astMsg.ast.children;
         let children: any = this.state.children;
@@ -853,28 +853,40 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     }
 
     doRender(callback?:Function) {
-        // if(this.ast) {
-        //     //当前的ast对象存在，需要更新对应的节点的父节点。
-        //     let html = this.ast.html();
-        //     if(html) {
-        //         let parser = new Parser();
-        //         let astMsg: ParseResult  = parser.parse(html.html());
-                
-        //     }
-            
-        // }else {
-        //     //如果ast对象不存在，则代表当前节点是新加入的节点，需要从父节点开始渲染
-        //     let parent = this.realDom.parentElement;
-        //     G.$(parent).doRender(callback);
-        // }
-        G.render({
-            el: this.realDom,
-            mounted: (...tags: any[])=>{
-                if(callback) {
-                    callback(tags);
-                }
+        if(this.ast) {
+            //当前的ast对象存在，需要更新对应的节点的父节点。
+            let html = this.ast.html();
+            if(html) {
+                let parser = new Parser();
+                let astMsg: ParseResult  = parser.parse(html.html());
+                let asts = astMsg.ast.children;
+                let children: any = [];
+                asts.forEach((ast: ASTElement)=>{
+                    let reactEle = GearUtil.newReactInstance(ast);
+                    children.push(reactEle);
+                });
+                this.setState({
+                    children
+                },() => {
+                });
             }
-        });
+        }else {
+            //如果ast对象不存在，则代表当前节点是新加入的节点，需要从父节点开始渲染
+            let parent = this.realDom.parentElement;
+            if(parent) {
+                G.$(parent).doRender(callback);
+            }else {
+                G.render({
+                    el: document.body,
+                    mounted: ()=>{
+                        window.G.parsed = true;
+                        //渲染结束后执行排队中的function
+                        window.G.doWaitFuns();
+                    }
+                });
+            }
+            
+        }
     }
 
     protected addGetterAndSetterInState(state: any) {

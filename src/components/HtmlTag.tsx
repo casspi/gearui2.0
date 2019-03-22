@@ -21,7 +21,8 @@ export default class HtmlTag<P extends typeof props, S extends (state)> extends 
 
     render(){
         let props = G.G$.extend({
-            ref: this.state.ref
+            ref: this.state.ref,
+            key: this.ast.id + "_" + this.ast.tag,
         }, this.state.props);
         return React.createElement(this.state.class, props, this.state.children);
     }
