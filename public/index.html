@@ -1061,9 +1061,12 @@ function getExportParameters(){
   G(function() {
     var root = G("#root");
     var bu = root.find("#aaaa");
+    var test = G("#test");
+    console.log(test);
     bu.append("<g-button id='ccc'>append</g-button>");
     var ccc = G("#ccc");
     ccc.setLoading(true);
+    console.log(ccc instanceof G.tag.button);
     console.log(ccc);
     
   })

@@ -93,6 +93,8 @@ declare var G: {
     addUpdating: (id: Promise<boolean>) => Array<string>;
     removeUpdating: (id: Promise<boolean>) => Array<string>;
     isUpdating: () => boolean;
+    http: any;
+    util: any;
 }
 interface Window extends EventTarget, WindowTimers, WindowSessionStorage, WindowLocalStorage, WindowConsole, GlobalEventHandlers, IDBEnvironment, WindowBase64, GlobalFetch {
     Blob: typeof Blob;
