@@ -1,6 +1,3 @@
-/* 用于处理标签页 */
-/* 对设置了样式gearui-tabs的标签页进行初始化、设置和操作 */
-/* 通过使用G(".gearui-tabs").tabs()来初始化布局 */
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import Parser from '../../core/Parser';
@@ -11,19 +8,27 @@ const AntdTab = AntdTabs.TabPane;
 // import * as JqueryTag from '../JqueryTag';
 import * as VoidTag from '../VoidTag';
 const props={
-    ...Tag.props
+    ...Tag.props,
+    closable:GearType.Boolean,
 }
 export interface state extends Tag.state{
-   children?:any
+   children?:any,
+   closable:boolean
 }
-export default class Tabs<P extends typeof props,S extends state> extends Tag.default<P,S> {  
+export default class Tab<P extends typeof props,S extends state> extends Tag.default<P,S> {  
     getInitialState(){
+        console.log(this.props)
         return G.G$.extend({},this.state,{
-            children:this.props.children
+            children:this.props.children,
+            tab:this.props.title,
+            closable:this.props.closable
         })
     }
     getProps(){
+        let state:any = this.state;
+        G.G$.extend({},state,{
 
+        })
     }
     getChildren(){
         // let children:any = this.state.children;
@@ -34,15 +39,13 @@ export default class Tabs<P extends typeof props,S extends state> extends Tag.de
         // console.log(children)
         // let tabs: any[] = [];
         // children.map((child:any)=>{
-        //     tabs.push(<AntdTab tab={child.props.props.title} key={child.key} closable={child.props.props.closable}>{child.props.children}</AntdTab>)
+        //     tabs.push()
         // })
         // return tabs;
     }
     render(){
-        console.log()
-        let children = this.getChildren();
-        return <AntdTabs  type="editable-card">
-            {this.state.children}
-        </AntdTabs>
+        let props:any = this.getProps();
+        delete props.children
+        return <AntdTab {...props}>{this.state.children}</AntdTab>
     }
 }

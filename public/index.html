@@ -455,7 +455,7 @@ table.resultTable .actiontd{
     G(function(){
     //   console.log(G("#ec3"))
     //    G("#ec3").onChange(function(newValue,oldValue){
-    //   // console.log(newValue,oldValue)
+    //   console.log(newValue,oldValue)
     //   var nv = "";
     //   if(newValue)
     //     nv = newValue+',';						
@@ -528,7 +528,7 @@ table.resultTable .actiontd{
         <g-time></g-time>
         <g-switch value="1,2" size="small"></g-switch> -->
         <!-- <g-url required="true"></g-url> -->
-        <g-text name="more" width="400" required="true" judgestring="true" min="3" max="10" invalidMessage="{regexp:'必须为数字111',length:'字符串长度不符sss！！！',required:'请输入!!!'}" regexp="^[0-9]+$" ></g-text>
+        <!-- <g-text name="more" width="400" required="true" judgestring="true" min="3" max="10" invalidMessage="{regexp:'必须为数字111',length:'字符串长度不符sss！！！',required:'请输入!!!'}" regexp="^[0-9]+$" ></g-text> -->
 						
         <!-- <g-email required="true"></g-email>
         <g-file id="gfile" width="300" required="true"></g-file>
@@ -595,11 +595,15 @@ table.resultTable .actiontd{
             <!-- <g-tree multiple="true" url="http://10.10.10.6:81/example/Combotree/data"></g-tree> -->
             <g-submit>提交</g-submit> 
           </g-form>
-          <g-tabs id="layout21">
-            <g-tab title="标签一">
-              这个示例演示标签页提供的一些方法，利用这些方法可以实现对标签页的动态控制。
-            </g-tab>
-          </g-tabs>
+          <!-- <g-tabs id="layout21">
+              <g-tab title="文本信息" closable="true">
+                内容一
+              </g-tab>
+              <g-tab title="文本信息" closable="true">
+                内容二
+              </g-tab>											
+              <g-tab title="密码修改" url="/system/password" selected="true"></g-tab>	
+          </g-tabs> -->
             <!-- <g-combotree width="300" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree> -->
             <!-- <g-label name="nowTime" format="yyyy-MM-dd HH:mm:ss.SSS"></g-label>  -->
           <!-- <g-icon icon="check-circle"></g-icon> -->

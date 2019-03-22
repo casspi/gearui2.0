@@ -51,7 +51,6 @@ export interface state extends Tag.state {
 export default class Card<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
     getInitialState(): state {
-        console.log(this.props.extra);
         return {
             activeTabKey: this.props.activeTabKey,
             defaultActiveTabKey: this.props.activeTabKey,
@@ -85,7 +84,6 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
     render() {
         let props = this.getProps();
         let children = this.getChildren();
-        console.log(props);
         return <AntdCard {...props}>{children}</AntdCard>;
     }
 
@@ -102,7 +100,6 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
 
     private getTabList() {
         let list = this.state.tabList;
-        console.log(list)
         let listJsxs: any[] = [];
         if(list) {
             for(let i = 0; i < list.length; i++) {
