@@ -167,6 +167,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         let jdom = G.G$(this.realDom);
         return jdom.animate.call(jdom,...args);
     }
+
     append(...args:any[]){
         //通过append添加的元素要实现动态渲染，并且将内容append到元素中
         
@@ -174,8 +175,10 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         let astMsg: ParseResult  = parser.parse.call(parser, ...args);
         let html = G.G$(astMsg.cacheHtml).html();
         let cacheHtmlElement = G.G$(G.cacheHtml);
-        let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.ast.id+"']");
-        cacheElement.append(html);
+        let cacheElement = this.ast.html();
+        if(cacheElement) {
+            cacheElement.append(html);
+        }
         G.cacheHtml = cacheHtmlElement.prop("outerHTML");
         let asts = astMsg.ast.children;
         let children: any = this.state.children;
@@ -850,16 +853,28 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     }
 
     doRender(callback?:Function) {
-        if(this.realDom) {
-            G.render({
-                el: this.realDom,
-                mounted: (...tags: any[])=>{
-                    if(callback) {
-                        callback(tags);
-                    }
+        // if(this.ast) {
+        //     //当前的ast对象存在，需要更新对应的节点的父节点。
+        //     let html = this.ast.html();
+        //     if(html) {
+        //         let parser = new Parser();
+        //         let astMsg: ParseResult  = parser.parse(html.html());
+                
+        //     }
+            
+        // }else {
+        //     //如果ast对象不存在，则代表当前节点是新加入的节点，需要从父节点开始渲染
+        //     let parent = this.realDom.parentElement;
+        //     G.$(parent).doRender(callback);
+        // }
+        G.render({
+            el: this.realDom,
+            mounted: (...tags: any[])=>{
+                if(callback) {
+                    callback(tags);
                 }
-            });
-        }
+            }
+        });
     }
 
     protected addGetterAndSetterInState(state: any) {

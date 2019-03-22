@@ -210,7 +210,7 @@ export default class G {
             if(elements.length > 0) {
                 return elements[0];
             }
-            return null;
+            return this.G$([]);
         }
     }
 
