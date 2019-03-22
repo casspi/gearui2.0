@@ -95,7 +95,11 @@ export default class Radio<P extends typeof props &  RadioProps,S extends state 
 
     //渲染
     makeJsx() {
-        let props = this.getProps();
+        let props:any = this.getProps();
+        if(this.form){
+            delete props.value;
+            delete props.defaultValue;
+        }
         // if (this.props.url || this.props.dictype) {
             return <AntdRadioGroup {...props}></AntdRadioGroup>;
         // }else{

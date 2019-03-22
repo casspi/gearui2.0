@@ -25,13 +25,23 @@ export default class Tabs<P extends typeof props,S extends state> extends Tag.de
     getProps(){
 
     }
-    getChildren(){
-        // let children:any = this.state.children;
-        // if(!(children instanceof Array)) {
-        //     children = [children];
-        // }
-        // children = children.filter((o:any)=>o.key);
-        // console.log(children)
+    getTab(){
+        let Tabs:any=[];
+        let children:any = this.state.children;
+        if(!(children instanceof Array)) {
+            children = [children];
+        }
+        children = children.filter((o:any)=>o.key);
+        console.log(children)
+        if(children instanceof Array) {
+            children.map((child: any, index)=>{
+                let tab = child;
+                if(tab && tab.type && ObjectUtil.isInstance(tab.type, "Tab")) {
+                    Tabs.push(tab);
+                }
+            });
+        }
+        return Tabs;
         // let tabs: any[] = [];
         // children.map((child:any)=>{
         //     tabs.push(<AntdTab tab={child.props.props.title} key={child.key} closable={child.props.props.closable}>{child.props.children}</AntdTab>)
@@ -39,10 +49,10 @@ export default class Tabs<P extends typeof props,S extends state> extends Tag.de
         // return tabs;
     }
     render(){
-        console.log()
-        let children = this.getChildren();
+        let tabs = this.getTab()
+        console.log(tabs[0]);
         return <AntdTabs  type="editable-card">
-            {this.state.children}
+            {...tabs}
         </AntdTabs>
     }
 }

@@ -20,9 +20,11 @@ export default class HtmlTag<P extends typeof props, S extends (state)> extends 
     }
 
     render(){
-        let props = G.G$.extend({
+        let props:any = G.G$.extend({
             ref: this.state.ref
         }, this.state.props);
+        delete props.focus;
+        delete props.control;
         return React.createElement(this.state.class, props, this.state.children);
     }
 

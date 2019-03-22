@@ -21,12 +21,13 @@ export default class Tab<P extends typeof props,S extends state> extends Tag.def
         return G.G$.extend({},this.state,{
             children:this.props.children,
             tab:this.props.title,
-            closable:this.props.closable
+            closable:this.props.closable==true?true:false,
+
         })
     }
     getProps(){
         let state:any = this.state;
-        G.G$.extend({},state,{
+        return G.G$.extend({},state,{
 
         })
     }
@@ -45,7 +46,8 @@ export default class Tab<P extends typeof props,S extends state> extends Tag.def
     }
     render(){
         let props:any = this.getProps();
-        delete props.children
+        // delete props.children;
+        console.log(props)
         return <AntdTab {...props}>{this.state.children}</AntdTab>
     }
 }
