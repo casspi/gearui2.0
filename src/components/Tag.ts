@@ -2,6 +2,7 @@ import * as ReactDOM from 'react-dom';
 import JqueryTag, { props as JqueryTagProps, state as JqueryTagState } from "./JqueryTag";
 import { ObjectUtil, UUID } from '../utils';
 import * as Date from './form/Date';
+import { Children } from 'react';
 export var props = {
     id: GearType.String,
     name: GearType.String,
@@ -32,6 +33,7 @@ export interface state extends JqueryTagState {
     remove?:number,//删除该组件节点
     className?: string,
     style?: React.CSSProperties,
+    children?:any
 }
 export default class Tag<P extends typeof props, S extends state> extends JqueryTag<P, S> {
 

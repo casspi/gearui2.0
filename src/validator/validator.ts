@@ -227,9 +227,8 @@ export default class Validator {
             ((props) => {
                 // let afterRender = props.__ast__.afterRender;
                 props.__ast__.afterRender = () => {//定义一个afterRender函数，在渲染后执行
-                    // afterRender();
                     let equalsSrc = props.equals;
-                    let srcEle: any = G.$(equalsSrc, true);
+                    let srcEle: any = G.$(equalsSrc);
                     if(srcEle && srcEle.props) {
                         let form: any = srcEle.props.form;
                         if(form) {

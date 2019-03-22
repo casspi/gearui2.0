@@ -675,6 +675,8 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             checked = this.getSelected();
         }
         let node = checked instanceof Array ? (checked.length > 0 ? checked[0] : null) : checked;
+        console.log(node)
+        console.log(this.childTree)
         if(this.childTree instanceof Tree) {
             if(this.state.options != null && this.state.options.length > 0) {
                 if(node) {
@@ -890,6 +892,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
 
     getNode(id?: any): TreeNode | undefined {
         if(id) {
+            console.log(this.nodes.get(id))
             return this.nodes.get(id);
         }
         return undefined;

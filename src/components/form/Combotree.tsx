@@ -346,7 +346,11 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
     protected _onSearch(value:string,node:TreeNode) {};
     //静态-全局的tree.onSelect
     static onSearch(value:string,node:TreeNode) {}
-
+    onSearch(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("search",fun);
+        }
+    }
     focus(...args: any[]) { 
         // this.find(".ant-select-selection").focus(...args); 
         this.find(".ant-select-selection").find("input").focus(...args);     
