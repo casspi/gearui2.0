@@ -34,9 +34,6 @@ export default class G {
     //正在渲染的操作
     static updating: Promise<boolean>[] = [];
 
-    //一个包含所有的组件的方法的对象
-    static tagClass: any = function(){};
-
     //渲染
     static render(renderOptions: RenderOptions) {
         //渲染指定节点下的控件
@@ -52,7 +49,7 @@ export default class G {
 
     //注册自定义组件
     static registerComponents(fun: Function) {
-        let clazz = GearUtil.createClass(fun, Tag);
+        let clazz = GearUtil.createClass(Tag, fun);
         if(clazz != null) {
             this.userComponents[clazz.name] = clazz.clazz;
         }
@@ -75,10 +72,6 @@ export default class G {
 
     //注册组件
     static registerCustomComponents() {
-        //创建一个包含所有的组件方法的对象
-        for(let key in Tag) {
-            this.addMothedToTagObj(key);
-        }
         let requireComponent = require['context']('./components', true , /[A-Z]\w+\.(tsx)$/);
         requireComponent.keys().forEach((fileName: string) => {
             if(fileName.endsWith('index.ts')) {
@@ -97,9 +90,7 @@ export default class G {
             //componentName = 'g-' + componentName.toLowerCase();
             let component = componentConfig.default || componentConfig;
             if(component) {
-                for(let key in component.prototype) {
-                    this.addMothedToTagObj(key);
-                }
+                //创建一个包含所有的组件方法的类
                 component.props = componentConfig.props;
                 component.state = componentConfig.state;
                 this.components[componentName] = component;
@@ -109,17 +100,36 @@ export default class G {
         });
     }
 
-    static addMothedToTagObj(key: string) {
+    static addMothedToTag(key: string, clazz: any) {
+        let _this = this;
         //修改对象中的方法，需要先执行对象的promise之后再执行对应的操作。
-        this.tagClass.prototype[key] = function(...args: any[]) {
+        clazz[key] = function(...args: any[]) {
             if(this._promise) {
-                this._promise.then((ele: any) => {
-                    if(ele && ele[key]) {
-                        ele[key].call(ele, ...args);
-                    }
-                });
+                _this.then(this._promise, key, ...args);
             }
         };
+    }
+
+    static addMothedToTagProto(key: string, clazz: any) {
+        let _this = this;
+        //修改对象中的方法，需要先执行对象的promise之后再执行对应的操作。
+        clazz.prototype[key] = function(...args: any[]) {
+            if(this._promise) {
+                _this.then(this._promise, key, ...args);
+            }
+        };
+    }
+
+    static then(promise: Promise<any>, key: string, ...args: any[]) {
+        promise.then((ele: any) => {
+            if(ele instanceof Promise) {
+                this.then(ele, key, ...args);
+            }else {
+                if(ele && ele[key]) {
+                    ele[key].call(ele, ...args);
+                }
+            }
+        });
     }
 
     static go(gen: IterableIterator<any>, value?: any): any {
@@ -142,14 +152,75 @@ export default class G {
         }
     }
 
+    static getPromiseObject(selector: string, promise: Promise<any>) {
+        let fnNames:string[] = [];
+        let elements: any[] = [];
+        let eles = G.G$(this.cacheHtml).find(selector);
+        for(let i = 0; i < eles.length; i ++) {
+            let ele = eles[i];
+            let astId = this.G$(ele).attr(Constants.HTML_PARSER_DOM_INDEX);
+            if(astId) {
+                let ast = this.cacheAstMap[astId];
+                if(ast) {
+                    let clazz = GearUtil.getClass(ast);
+                    if(clazz) {
+                        let newClass = GearUtil.createClass(clazz);
+                        if(newClass) {
+                            for(let key in newClass.clazz) {
+                                this.addMothedToTag(key, newClass.clazz);
+                                fnNames.push(key);
+                            }
+                            for(let key in newClass.clazz.prototype) {
+                                this.addMothedToTagProto(key, newClass.clazz);
+                                fnNames.push(key);
+                            }
+                            let obj = new newClass.clazz();
+                            obj._promise = promise;
+                            elements.push(obj);
+                        }
+                    }
+                }
+            }
+        }
+        let newElements = this.G$(elements);
+        if(elements.length > 1) {
+            //筛选器获取了多个元素的时候，将各自执行各自的方法
+            this.G$.each(fnNames,(i,name)=>{
+                let fn:any = (...args:any[])=>{
+                    let res = [];
+                    for(let j = 0; j < elements.length;j ++) {
+                        let ele = elements[j];
+                        if(ele[name] != null && this.G$.isFunction(ele[name])) {
+                            let re = ele[name].call(ele,...args);
+                            res.push(re);
+                        }
+                    }
+                    return res;
+                };
+                if(name.indexOf(Constants.EXPAND_NAME) != -1) {
+                    name = name.replace(Constants.EXPAND_NAME, '');
+                }
+                newElements[name] = fn;
+            });
+            newElements.eq = (index:number)=>{
+                return elements[index];
+            };
+            return newElements;
+        }else {
+            if(elements.length > 0) {
+                return elements[0];
+            }
+            return null;
+        }
+    }
+
     static $(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
-        if(this.isUpdating()) {
+        //如果是正确刷新，并且select是一个字符串筛选器，如果是其他对象的筛选器代表对象已经在文档中存在，就直接查找并返回。
+        if(this.isUpdating() && typeof selector == "string") {
             let $result = this.async$(selector, html, react);
             let f = this.go($result);
-            let tag = new this.tagClass();
-            tag._promise = f;
             //返回一个全能对象，执行任何方法的时候都先执行promise的then
-            return tag;
+            return this.getPromiseObject(selector, f);
         }
         return this._$(selector, html, react);
     }

@@ -162,7 +162,7 @@ export default class GearUtil {
      * @param fun 
      * @param parent 
      */
-    static createClass(fun: Function, parent: any):{name: any, clazz: any}|null {
+    static createClass(parent: any, fun?: Function):{name: any, clazz: any}|null {
         let clazz = GearUtil.Class(fun);
         if(clazz && clazz.prototype && clazz.prototype.name) {
             clazz = clazz.implements(parent);
@@ -175,9 +175,9 @@ export default class GearUtil {
         return null;
     }
 
-    private static Class(fun: Function) {
+    static Class(fun?: Function) {
         if(fun === undefined) {
-            return function(){};
+            fun = function(){};
         }
         var P:any = fun;
         var fn = P.fn || function(){};
@@ -185,20 +185,20 @@ export default class GearUtil {
         fn.prototype = P;
         //类的继承
         fn.implements = function(F: any) {
-            
             if(F && G.G$.isFunction(F)) {
-                
-                if(!this.prototype.supers) {
-                    this.prototype.supers = new Array();
-                }
-                var _this = G.G$.extend({},this);
-                G.G$.extend(this,F);
-                G.G$.extend(this,_this);
-                var _prototype = G.G$.extend({},F.prototype);
-                G.G$.extend(_prototype,this.prototype);
-                this.prototype = _prototype;
+                // var _F: any = function() {};
+                // if(typeof this.prototype == "function") {
+                //     _F.prototype = F.prototype;
+                // }else {
+                //     _F.prototype = this.prototype;
+                // }
+                // _F.prototype.constructor = F;
+                // this.prototype = new _F();
+                // this.prototype.constructor = this;
+                var _F: any = function() {};
+                _F.prototype = F.prototype;
+                this.prototype = new _F();
                 this.prototype.constructor = this;
-                this.prototype.supers.push(new F());
             }
             return this;
         };

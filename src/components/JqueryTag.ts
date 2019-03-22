@@ -169,8 +169,14 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     }
     append(...args:any[]){
         //通过append添加的元素要实现动态渲染，并且将内容append到元素中
+        
         let parser = new Parser();
         let astMsg: ParseResult  = parser.parse.call(parser, ...args);
+        let html = G.G$(astMsg.cacheHtml).html();
+        let cacheHtmlElement = G.G$(G.cacheHtml);
+        let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.ast.id+"']");
+        cacheElement.append(html);
+        G.cacheHtml = cacheHtmlElement.prop("outerHTML");
         let asts = astMsg.ast.children;
         let children: any = this.state.children;
         if(!(children instanceof Array)) {
@@ -183,11 +189,6 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         this.setState({
             children
         },() => {
-            let html = G.G$(astMsg.cacheHtml).html();
-            let cacheHtmlElement = G.G$(G.cacheHtml);
-            let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.ast.id+"']");
-            cacheElement.append(html);
-            G.cacheHtml = cacheHtmlElement.prop("outerHTML");
         });
         return this;
     }
