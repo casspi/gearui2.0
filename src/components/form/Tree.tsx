@@ -330,9 +330,11 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 select.push(ele.id);
                 this.setState({
                     selected: select
+                },()=>{
+                    ele.selected = true;
+                    this._triggerOnSelect(ele);
                 });
-                ele.selected = true;
-                this._triggerOnSelect(ele);
+               
             };
 
             ele.unSelect = () => {
@@ -666,13 +668,12 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             lower.parentTree = this;
         }
     }
-
-    afterUpdate() {
+  
+    treeUpdate() {//更新父子关联数据
         let checked: any = this.getChecked();
         if(checked.length <= 0) {
             checked = this.getSelected();
         }
-        
         let node = checked instanceof Array ? (checked.length > 0 ? checked[0] : null) : checked;
         if(this.childTree instanceof Tree) {
             if(this.state.options != null && this.state.options.length > 0) {
@@ -1000,7 +1001,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                     let expanded = this.state.expandedKeys||[];
                     this.addDefaultExpand(dic,expanded);
                     let initValue = this.getInitValue(dic);
-                    this.triggerChange(initValue);
+                    this.triggerChange(initValue);                                                      
                     this.setState({
                         url: url,
                         dictype: dictype,
@@ -1628,6 +1629,8 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         this._onSelect(node);
         this.doEvent("select",node);
         Tree.onSelect.call(this,node);
+        //根据关联关系，更新父子数据
+        this.treeUpdate()
     }
 
     // 在选中节点之前触发

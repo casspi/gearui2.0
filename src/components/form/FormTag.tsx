@@ -102,12 +102,13 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         delete state.invalidType;
         delete state.labelText;
         delete state.validation;
-        return state
+        return state;
     }
     getInitialState(): state {
+        let props = G.G$.extend({},this.props)
         return {
-            rules: this.props.rules,
-            validation: this.props.validation,
+            rules: Validator.getValidators(props,this),
+            validation: this.props.validation!=false,
             invalidType: this.props.invalidType,
             readOnly: this.props.readOnly,
             value: this.props.value,
@@ -196,6 +197,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         }
     }
 
+    // 
     /**
      * 清空控件数据
      */
@@ -259,10 +261,9 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         if(this.form) {
             let formUtils: WrappedFormUtils = this.form.props.form;
             let rules: any = this.state.rules;
-            
             let formTag = formUtils.getFieldDecorator(this.props.name, {
                 initialValue: this.state.value,
-                rules: this.isValidation() ? rules : []
+                rules: this.isValidation() ? rules : [],
             })(ele);
             return this.getFormItem(formTag);
         }else {

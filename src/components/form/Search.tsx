@@ -19,7 +19,6 @@ export interface state extends Text.state {
 }
 export default class Search<P extends typeof props & SearchProps,S extends (state & SearchProps)> extends Text.default<P ,S>{
     getProps() {
-        super.getProps();
         let state = this.state;
         return G.G$.extend({}, state, {
             placeholder: this.state.placeholder,
@@ -68,7 +67,13 @@ export default class Search<P extends typeof props & SearchProps,S extends (stat
         });
     }
     makeJsx() {
-        let props = this.getProps();
+        let props:any = this.getProps();
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.value;
+            delete props.defaultValue;
+        }
         return <AntdSearch {...props} ></AntdSearch>;
     }
 }

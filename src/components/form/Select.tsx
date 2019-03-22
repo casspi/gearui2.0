@@ -81,7 +81,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         this.onShowPanel(this.props.onShowPanel);
     }
     getProps() {
-        return G.G$.extend({},this.state,{
+        return G.G$.extend({},super.getProps(),{
             size: this.state.size,
             notFoundContent: this.state.notFoundContent||'无匹配结果',
             transitionName: this.props.transitionName,
@@ -213,6 +213,10 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         let optionsMap = options.map(function(ele) {
             return ele;
         });
+        if(this.props){
+            delete props.value;
+            delete props.defaultValue;
+        }
         return <AntdSelect {...props}>{optionsMap}</AntdSelect>;
     }
 

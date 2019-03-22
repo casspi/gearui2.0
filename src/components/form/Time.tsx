@@ -291,7 +291,13 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
     }
     //渲染
     makeJsx() {
-        let props = this.getProps();
+        let props:any = this.getProps();
+        delete props.invalidType;
+        delete props.labelText;
+        if(this.form){
+            delete props.value;
+            delete props.defaultValue
+        }
         return <AntdTimePicker {...props}></AntdTimePicker>;
     }
 

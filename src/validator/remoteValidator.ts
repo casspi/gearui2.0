@@ -25,7 +25,7 @@ export default class RemoteValidator extends Validator {
         }else {
             remote += "?" + remoteKey + "=" + value;
         }
-        let data = Http.post(false,remote);
+        let data =  Http.post(false,remote);
         if(data.message == null || G.G$.trim(data.message) == "") {
             callback();
             return;

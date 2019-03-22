@@ -3,7 +3,7 @@ export default class RequiredValidator extends validates.Validator {
 
     name:string = this.name || "required";
     // required = this.required || true;
-    message:string =  "值不能为空";
+    message:string =  this.message||"值不能为空";
 
     validator = (rule: any,value: any,callback: any) => {
         if(value != null && typeof value=="string"?value.trim()!="":value) {
