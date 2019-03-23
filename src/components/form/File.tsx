@@ -56,13 +56,14 @@ export default class File<P extends typeof props, S extends state> extends FormT
         };
     }
     makeJsx() {
-        let state:any = this.state;
+        let state:any = G.G$.extend({},this.state);
         delete state.invalidType;
         delete state.labelText;
         delete state.validation;
         let inputProps:any = this.getInputProps();
         let fileProps:any = this.getFileInputProps();
         if(this.form){
+            delete state.value;
             delete inputProps.value;
             delete fileProps.value;
         }

@@ -4,6 +4,7 @@
 import * as React from 'react';
 import * as Tag from '../Tag';
 import {Tabs as AntdTabs} from 'antd';
+import {ObjectUtil,GearUtil,UUID} from '../../utils';
 const props={
     ...Tag.props
 }
