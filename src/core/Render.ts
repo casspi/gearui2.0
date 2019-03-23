@@ -21,6 +21,7 @@ export default class Render {
                 children.each((index, ele)=>{
                     childrenTags.push(G.$(ele));
                 });
+                console.log(childrenTags)
                 callback.call(window, childrenTags);
             }
         });

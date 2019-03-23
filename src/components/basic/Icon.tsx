@@ -2,7 +2,8 @@ import * as ReactDOM from 'react-dom';
 import { Icon as AntdIcon } from 'antd';
 import * as React from 'react';
 import * as Tag from '../Tag';
-
+import { GearType } from 'src/core/GearType';
+export declare type IconTheme = 'filled' | 'outlined' | 'twoTone';
 export var props = {
     ...Tag.props,
     icon: GearType.String,

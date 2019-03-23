@@ -8,6 +8,7 @@ export default class Messager {
     static progress(type?: string) {
         if(type == "close") {
             if(this.spin) {
+                console.log(this.spin)
                 this.spin.close();
             }
         }else {
@@ -17,7 +18,7 @@ export default class Messager {
                 G.render({
                     el: "<g-spin spinning='true'></g-spin>",
                     mounted: (ele: any) => {
-                        this.spin = ele[0]
+                        this.spin = ele[0];
                     },
                 });
             }

@@ -239,6 +239,7 @@ export default class G {
     }
 
     static $(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
+        
         //如果是正确刷新，并且select是一个字符串筛选器，如果是其他对象的筛选器代表对象已经在文档中存在，就直接查找并返回。
         if(this.isUpdating() && (typeof selector == "string" || selector instanceof Element)) {
             let $result = this.async$(selector, html, react);
