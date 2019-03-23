@@ -37,9 +37,6 @@ export default class Textarea<P extends typeof props,S extends state> extends Fo
     }
 
     getProps() {
-        // console.log(this.state)
-        super.getProps()
-        // console.log(this.state)
         let state = this.state;
         return G.G$.extend({}, state, {
             placeholder: this.state.placeholder,
@@ -80,7 +77,14 @@ export default class Textarea<P extends typeof props,S extends state> extends Fo
     }
 
     makeJsx() {
-        let props = this.getProps();
+        let props:any = this.getProps();
+        delete props.invalidType;
+        delete props.labelText;
+        delete props.validation;
+        delete props.indeterminate;
+        if(this.form){
+            delete props.value;
+        }
         return <AntdTextArea {...props}></AntdTextArea>;
     }
     //改变事件

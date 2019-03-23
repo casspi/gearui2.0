@@ -38,6 +38,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
         let props:any = this.getProps();
         delete props.invalidType;
         delete props.labelText;
+        delete props.validation;
         if(this.form){
             delete props.value;
         }

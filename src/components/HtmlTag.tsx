@@ -21,6 +21,7 @@ export default class HtmlTag<P extends typeof props, S extends (state)> extends 
     }
 
     render(){
+
         let props = G.G$.extend({
             ref: (ele: any)=>{
                 this.ref = ele;
@@ -30,6 +31,8 @@ export default class HtmlTag<P extends typeof props, S extends (state)> extends 
             },
             key: this.ast.id + "_" + this.ast.tag,
         }, this.state.props);
+        delete props.focus;
+        delete props.control;
         return React.createElement(this.state.class, props, this.state.children);
     }
 

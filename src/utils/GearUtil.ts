@@ -75,7 +75,9 @@ export default class GearUtil {
             if(children && children.length > 0) {
                 reactChildren = [];
                 children.forEach((astInner)=>{
-                    reactChildren.push(GearUtil.newReactInstance(astInner));
+                    if(astInner.tag || (ast.tag != "table" && ast.tag != "thead" && ast.tag != "tr" && ast.tag != "th" && ast.tag != "tbody")) {
+                        reactChildren.push(GearUtil.newReactInstance(astInner));
+                    }
                 });
             }
             if(!props["key"]) {

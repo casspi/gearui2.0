@@ -448,6 +448,10 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             input= <AntdInput {...inputProps}></AntdInput>;
         }
         let acprops = this.getAutoCompleteProps();  
+        if(this.form){
+            delete acprops.value;
+            delete acprops.defaultValue;
+        }
         if(this.state.mustMatch == true){
             let hiddenProps = {
                 key: this.getKey(),

@@ -81,6 +81,8 @@ export default class Check<P extends typeof props, S extends state> extends Form
         let props = this.getProps();
         delete props.invalidType;
         delete props.labelText;
+        delete props.validation;
+        delete props.indeterminate;
         if(this.form){
             delete props.value;
         }

@@ -33,9 +33,6 @@ export default class G {
     static cacheAstMap: {[idx: string]: ASTElement} = {};
     //正在渲染的操作
     static updating: Promise<boolean>[] = [];
-    //对dom操作的target
-    static domEventTargets:Node[] = [];
-
     //渲染
     static render(renderOptions: RenderOptions) {
         //渲染指定节点下的控件
@@ -98,6 +95,9 @@ export default class G {
                 this.components[componentName] = component;
                 this.tag[componentNameReal] = component;
                 this.tag[componentName] = component;
+                if(componentName == "form") {
+                    this.components["gform"] = componentConfig.Form;
+                }
             }
         });
     }
@@ -107,7 +107,8 @@ export default class G {
         //修改对象中的方法，需要先执行对象的promise之后再执行对应的操作。
         clazz[key] = function(...args: any[]) {
             if(this._promise) {
-                _this.then(this._promise, key, ...args);
+                let promise = _this.then(this._promise, key, ...args);
+                return _this.getPromiseObject.call(_this, ...args, promise);
             }
         };
     }
@@ -117,13 +118,24 @@ export default class G {
         //修改对象中的方法，需要先执行对象的promise之后再执行对应的操作。
         clazz.prototype[key] = function(...args: any[]) {
             if(this._promise) {
-                _this.then(this._promise, key, ...args);
+                let promise = _this.then(this._promise, key, ...args);
+                return _this.getPromiseObject.call(_this, ...args, promise);
             }
         };
+        for(let key in Events) {
+            if(!clazz.prototype[key]) {
+                clazz.prototype[key] = function(...args: any[]) {
+                    if(this._promise) {
+                        let promise = _this.then(this._promise, key, ...args);
+                        return _this.getPromiseObject.call(_this, ...args, promise);
+                    }
+                };
+            }
+        }
     }
 
     static then(promise: Promise<any>, key: string, ...args: any[]) {
-        promise.then((ele: any) => {
+        return promise.then((ele: any) => {
             if(ele instanceof Promise) {
                 this.then(ele, key, ...args);
             }else {
@@ -169,6 +181,9 @@ export default class G {
                 let ast = this.cacheAstMap[astId];
                 if(ast) {
                     clazz = GearUtil.getClass(ast);
+                }
+                if(ast.tag == "form" || ast.tag == "g-form" || ast.tag == "gform") {
+                    clazz = this.components["gform"];
                 }
             }
             if(!clazz) {

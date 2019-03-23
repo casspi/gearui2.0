@@ -213,7 +213,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         let optionsMap = options.map(function(ele) {
             return ele;
         });
-        if(this.props){
+        if(this.form){
             delete props.value;
             delete props.defaultValue;
         }

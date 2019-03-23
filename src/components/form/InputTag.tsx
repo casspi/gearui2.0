@@ -243,6 +243,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         delete _props.dropdownWidth;
         delete _props.invalidType;
         delete _props.labelText;
+        delete _props.validation;
         if(this.form){
             delete _props.value
         }
