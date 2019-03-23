@@ -79,7 +79,9 @@ export default class Monitor<P extends typeof props, S extends state> extends Ta
                 protocol:"monitor",
                 reconnect:true,
                 onmessage:(data: any)=>{
-                    this._doHandle(JSON.parse(data));
+                    if(data) {
+                        this._doHandle(JSON.parse(data));
+                    }
                 },
                 onopen:()=>{
                 }
@@ -270,7 +272,9 @@ export default class Monitor<P extends typeof props, S extends state> extends Ta
         if(this.haveEvent("logout")){
             this.doEvent("logout");
         }else{
-            document.location.href = Http.getRootPath() + "/logout";
+            if(document.location) {
+                document.location.href = Http.getRootPath() + "/logout";
+            }
         }
     }
 

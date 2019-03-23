@@ -694,7 +694,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     protected _parseColumn(child: any, index: number) {
-        let props = child.props;
         if(this.state.sequence != false) {
             index = index+1;
         }
@@ -704,7 +703,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(this.haveEvent("expandedRow")) {
             index = index+1;
         }
-        return new Column(this, props, index);
+        return new Column(this, child, index);
     }
 
     /**
@@ -791,7 +790,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
     render() {
         let props: any = this.getProps();
-        return <AntdTable  {...props} >{this.state.children}</AntdTable>;
+        return <AntdTable  {...props} ></AntdTable>;
     }
     afterRender() {
         this.getForm();

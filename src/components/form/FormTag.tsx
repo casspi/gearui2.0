@@ -102,6 +102,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         delete state.invalidType;
         delete state.labelText;
         delete state.validation;
+        delete state.value;
         return state;
     }
     getInitialState(): state {
@@ -292,23 +293,19 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
                 return <AntdFormItem
                     validateStatus={validateStatus}
                     help={help}
-                    key={this.props.id + "_form_item_"}
-                    label={this.state.labelText} 
                 >{ele}</AntdFormItem>;
             }else {
                 let ele = Tooltip.addInvalidTooltip(formTag,tagName,help,this.state.titleAlign);
-                return <AntdFormItem required key={this.props.id + "_form_item_"} className={"ant-form-item-with-float-help"}
+                return <AntdFormItem className={"ant-form-item-with-float-help"}
                     validateStatus={validateStatus}
-                    label={this.state.labelText} 
-                    help={""}
                 >{ele}</AntdFormItem>;
             }
         }else {
             let ele = Tooltip.addTooltip(formTag,this.state.title,this.state.titleAlign);
             if(invalidType == "fixed") {
-                return <AntdFormItem label={this.state.labelText} key={this.props.id + "_form_item_"}>{ele}</AntdFormItem>;
+                return <AntdFormItem>{ele}</AntdFormItem>;
             }else{
-                return <AntdFormItem label={this.state.labelText} key={this.props.id + "_form_item_"} className={"ant-form-item-with-float-help"}>{ele}</AntdFormItem>;
+                return <AntdFormItem className={"ant-form-item-with-float-help"}>{ele}</AntdFormItem>;
             }
         }
     }

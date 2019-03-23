@@ -239,14 +239,15 @@ export default class G {
     }
 
     static $(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
+        let ele = this._$(selector, html, react);
         //如果是正确刷新，并且select是一个字符串筛选器，如果是其他对象的筛选器代表对象已经在文档中存在，就直接查找并返回。
-        if(this.isUpdating() && (typeof selector == "string" || selector instanceof Element)) {
+        if((ele.finded == false) && this.isUpdating() && (typeof selector == "string" || selector instanceof Element)) {
             let $result = this.async$(selector, html, react);
             let f = this.go($result);
             //返回一个全能对象，执行任何方法的时候都先执行promise的then
             return this.getPromiseObject(selector, f);
         }
-        return this._$(selector, html, react);
+        return ele.result;
     }
 
     //查找页面中的元素
@@ -260,14 +261,17 @@ export default class G {
     }
 
     //查找页面中的元素
-    static _$(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
+    static _$(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean): {finded: boolean, result: any} {
         if(typeof selector == "string" || selector instanceof Element) {
             //如果是节点字符串(<a></a>),并且是要求返回react对象的，返回react对象
             if(typeof selector == "string" && react == true) {
                 let isHtml = StringUtil.isHtmlString(selector);
                 if(isHtml){
                     let parser = new Parser();
-                    return parser.parseToReactInstance(selector);
+                    return {
+                        finded: true,
+                        result: parser.parseToReactInstance(selector)
+                    };
                 }
             }
             let doms:JQuery<HTMLElement>|undefined = undefined;
@@ -280,7 +284,9 @@ export default class G {
                             doms = this.G$(vmdom.realDom);
                         }
                     }else {
-                        doms = doms.add(vmdom.realDom);
+                        if(vmdom){
+                            doms = doms.add(vmdom.realDom);
+                        }
                     }
                 }
             }
@@ -290,6 +296,7 @@ export default class G {
             }
             let fnNames = [];
             let eles:any = [];
+            let finded = false;
             if(doms.length > 0) {
                 for(let i = 0; i < doms.length;i++) {
                     let dom = this.G$(doms[i]);
@@ -315,6 +322,7 @@ export default class G {
                             if(eles.indexOf(gObj) == -1) {
                                 eles.push(gObj);
                             }
+                            finded = true;
                         }else if(dom.length == 1) {
                             let jele = new JqueryTag();
                             jele.realDom = dom[0];
@@ -371,15 +379,27 @@ export default class G {
                 doms.eq = (index:number)=>{
                     return eles[index];
                 };
-                return doms;
+                return {
+                    finded,
+                    result: doms
+                };
             }else {
                 if(eles.length > 0) {
-                    return eles[0];
+                    return {
+                        finded,
+                        result: eles[0]
+                    };
                 }else {
                     if(react) {
-                        return vmdoms;
+                        return {
+                            finded,
+                            result: vmdoms
+                        };
                     }
-                    return this.G$([]);
+                    return {
+                        finded,
+                        result: this.G$([])
+                    };
                 }
             }
         }else if(typeof selector == "function") {
@@ -389,8 +409,15 @@ export default class G {
                 this.waitFuns.push(selector);
             }
         }else {
-            return selector;
+            return {
+                finded: true,
+                result: this.G$(<any>selector)
+            };
         }
+        return {
+            finded: false,
+            result: this.G$([])
+        };
     }
 
     static isUpdating() {

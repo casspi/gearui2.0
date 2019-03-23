@@ -53,18 +53,35 @@ export default class GearUtil {
             if(clazz) {
                 //控件
                 //如果是虚拟控件，需要在G对象中记录下来，方便在外部使用G(exp)方式查找
-                let voidEle = null;
-                if(ObjectUtil.isExtends(clazz, "VoidTag")) {
-                    voidEle = G.voidParent.appendChild(GearUtil.createVoidDomElement(tag, attrs));
+                if(ObjectUtil.isExtends(clazz, "Layout")) {
+                    //html节点
+                    props = ast.attrsMap;
+                    clazz = clazz || G.components["htmltag"];
+                    let nprops = GearUtil.formatDomProperties(props,clazz.props, true);
+                    props = {
+                        class: tag,
+                        props: nprops,
+                        // key: ast.id + "_" + ast.tag,
+                        __ast__: ast
+                    };
+                }else {
+                    let voidEle = null;
+                    if(ObjectUtil.isExtends(clazz, "VoidTag")) {
+                        voidEle = G.voidParent.appendChild(GearUtil.createVoidDomElement(tag, attrs));
+                    }
+                    props = GearUtil.attrsToProps(attrs, clazz.props, ast);
+                    props["voidElement"] = voidEle;
+                    props["__ast__"] = ast;
                 }
-                props = GearUtil.attrsToProps(attrs, clazz.props, ast);
-                props["voidElement"] = voidEle;
-                props["__ast__"] = ast;
             }else {
+                // let htmltag = G.components["htmltag"];
+                // clazz = tag;
+                // props = ast.attrsMap;
+                // props = GearUtil.formatDomProperties(props, htmltag.props, true);
                 //html节点
                 props = ast.attrsMap;
-                let nprops = GearUtil.formatDomProperties(props);
-                clazz = G.components["htmltag"];
+                clazz = clazz || G.components["htmltag"];
+                let nprops = GearUtil.formatDomProperties(props,clazz.props, true);
                 props = {
                     class: tag,
                     props: nprops,
@@ -101,17 +118,39 @@ export default class GearUtil {
         }
     }
 
-    static formatDomProperties(props: any) {
+    static formatDomProperties(props: any,propsTemplete?: any, htmlTag?: boolean) {
         let propsNew = {};
+        let _props = G.G$.extend({}, propsTemplete);
+        for(let key in _props) {
+            if(_props[key] == "" || G.G$.isEmptyObject(_props[key]) || GearUtil.isGearType(_props[key])) {
+                _props[key] = null;
+            }
+        }
         for(let name in props) {
             let value = props[name];
-            let type:string = name == 'style' ? "CssProperties" : GearUtil.getAttributeValueType(value);
+            let type:string = name == 'style' ? "CssProperties" : GearUtil.getTypeFromPropsTemplete(propsTemplete, name, value);
             if(type == undefined || value == undefined) {
                 continue;
             }
-            let standardName = DomPropertiesToReactProperties.getPossibleStandardName(name);
-            propsNew[standardName] = GearUtil.parseAttributeValue(name,value,type);
+            let standardName = name;
+            for(let key in propsTemplete) {
+                if(key.toLowerCase() == name.toLowerCase()) {
+                    standardName = key;
+                    break;
+                }
+            }
+            standardName = DomPropertiesToReactProperties.getPossibleStandardName(standardName);
+            propsNew[standardName] = GearUtil.parseAttributeValue(name,value,type,htmlTag);
+            // props[name] = GearUtil.parseAttributeValue(name,value,type);
         }
+        // for(let name in props) {
+        //     let value = props[name];
+        //     let type:string = name == 'style' ? "CssProperties" : GearUtil.getAttributeValueType(value);
+        //     if(type == undefined || value == undefined) {
+        //         continue;
+        //     }
+            
+        // }
         return propsNew;
     }
 
@@ -343,7 +382,7 @@ export default class GearUtil {
     }
 
     // 解析属性值
-    static parseAttributeValue(name:string,value:string, typeConstractor: any){
+    static parseAttributeValue(name:string,value:string, typeConstractor: any,htmlTag?: boolean){
         // 解析value中的表达式 G{xxx} ，对表达式中的函数或变量进行解析处理
         value = value.replace(/\G\{([^\}]+)\}/g,function(match,m1){
             // 获得表达式，如果表达式是以“();”结尾的，去除之
@@ -420,6 +459,9 @@ export default class GearUtil {
             //回调函数
             try {
                 if(type == 'function'){
+                    if(htmlTag == true) {
+                        return value;
+                    }
                     let values = value.split(";");
                     let funs = [];
                     for(let i = 0; i < values.length; i++) {
@@ -435,6 +477,9 @@ export default class GearUtil {
                     }
                     return funs;
                 }else if(type == "script") {
+                    if(htmlTag == true) {
+                        return value;
+                    }
                     let script = value.replace(/^javascript:/,"");
                     return function(...args: any[]){
                         try{
@@ -444,16 +489,28 @@ export default class GearUtil {
                         }
                     }
                 }else if(type == 'boolean') {
+                    if(htmlTag == true) {
+                        return value;
+                    }
                     if(value == "true") {
                         return true;
                     }else {
                         return false;
                     }
                 }else if(type == 'number' && value.indexOf('\\.') != -1) {
+                    if(htmlTag == true) {
+                        return value;
+                    }
                     return parseFloat(value);
                 }else if(type == 'number' && value.indexOf('\\.') == -1) {
+                    if(htmlTag == true) {
+                        return value;
+                    }
                     return parseInt(value);
                 }else if(type == 'object' || type == "array") {
+                    if(htmlTag == true) {
+                        return value;
+                    }
                     return eval("(" + value + ")");
                 }else if(type == 'CssProperties') {
                     return GearJson.fromStyle(value).toJson();

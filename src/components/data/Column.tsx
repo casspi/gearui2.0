@@ -111,7 +111,7 @@ export default class Column<T> {
         if(column && column.props) {
             let props = column.props;
             this.key = this.name = props.name || "";
-            this.dataIndex = props.dataIndex || "";
+            this.dataIndex = props.name || "";
             this.title = props.label || props.title || "";
             this.index = index;
             this.rowspan = props.rowspan;
