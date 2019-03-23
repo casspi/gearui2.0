@@ -1,12 +1,7 @@
 import * as React from 'react';
-import * as ReactDOM from 'react-dom';
-import Parser from '../../core/Parser';
-import {ObjectUtil,GearUtil,UUID} from '../../utils';
 import * as Tag from '../Tag';
 import {Tabs as AntdTabs} from 'antd';
 const AntdTab = AntdTabs.TabPane;
-// import * as JqueryTag from '../JqueryTag';
-import * as VoidTag from '../VoidTag';
 const props={
     ...Tag.props,
     closable:GearType.Boolean,

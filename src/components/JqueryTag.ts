@@ -24,7 +24,6 @@ export interface state {
 export default class JqueryTag<P extends typeof props, S extends state> extends React.Component<P, S> {
     realDom: Element;
     ref: any;
-    text: string = "";
     //所有的事件
     events:{} = {};
 
@@ -173,7 +172,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
 
     append(...args:any[]){
         //通过append添加的元素要实现动态渲染，并且将内容append到元素中
-        if(React.isValidElement(this)) {
+        // if(React.isValidElement(this)) {
             let parser = new Parser();
             let astMsg: ParseResult  = parser.parse.call(parser, ...args, true);
             let html = G.G$(astMsg.cacheHtml).html();
@@ -194,17 +193,17 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 children
             },() => {
             });
-        }
+        // }
         return this;
     }
     appendTo(...args:any[]){
-        if(React.isValidElement(this)) {
-            let cacheHtmlElement = G.G$(G.cacheHtml);
-            let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.ast.id+"']");
-            //cacheElement.append(html);
-        }else {
+        // if(React.isValidElement(this)) {
+        //     let cacheHtmlElement = G.G$(G.cacheHtml);
+        //     let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.ast.id+"']");
+        //     //cacheElement.append(html);
+        // }else {
 
-        }
+        // }
         let jdom = G.G$(this.realDom);
         return jdom.appendTo.call(jdom,...args);
     }
@@ -896,7 +895,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     }
 
     doRender(callback?:Function) {
-        if(this.ast && React.isValidElement(this)) {
+        if(this.ast) {
             //当前的ast对象存在，需要更新对应的节点的父节点。
             let html = this.ast.html();
             if(html) {

@@ -202,10 +202,10 @@ export default class Http {
 	static absoluteUrl(url: string){
         var root = Http.getRootContext();
         if(url){
-            if(/^\//.test(url))
-                return root + url;
-            else
+            if(url.startsWith("/"))
                 return url;
+            else
+                return root + url;
         }else{
             return root;
         }
