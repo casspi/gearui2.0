@@ -18,7 +18,7 @@ export default class WindowUtil {
         if(window.addEventListener) {
             document.addEventListener('DOMMouseScroll',this.mouseScroll.bind(this),false);
         }else {
-            window.onmousewheel = document.onmousewheel = this.mouseScroll.bind(this);
+            window.onmousewheel = document["onmousewheel"] = this.mouseScroll.bind(this);
         }
         window.onresize = this.resize.bind(this);
         window.onscroll = document.onscroll = this.scroll.bind(this);
@@ -204,7 +204,7 @@ export default class WindowUtil {
 
     static extendPrototype() {
         //扩展js原生方法
-        if (typeof String.prototype["startsWith"] != 'function') {  
+        if (typeof String.prototype["startsWith"] != 'function' || typeof String.prototype["startsWith"] == null) {  
             String.prototype["startsWith"] = function (prefix: any){  
                try {
                     var reg = new RegExp("^" + prefix);
@@ -216,7 +216,7 @@ export default class WindowUtil {
             };  
         }
         //扩展js原生方法
-        if (typeof String.prototype["endsWith"] != 'function') {  
+        if (typeof String.prototype["endsWith"] != 'function' || typeof String.prototype["startsWith"] == null) {  
             String.prototype["endsWith"] = function (prefix: any){  
                 try {
                     var reg = new RegExp(prefix + "$");
@@ -255,7 +255,7 @@ export default class WindowUtil {
 
         //为数组增加indexOf方法，用于判断数组中传入值的位置，返回-1则表示未的攻到
         if (!Array["indexOf"]){
-            if(typeof Array.prototype["indexOf"] != "function") {
+            if(typeof Array.prototype["indexOf"] != "function" || typeof Array.prototype["indexOf"] == null) {
                 Array.prototype["indexOf"] = function (val){
                     for (var i = 0; i < this.length; i++) {  
                         if (this[i] == val) {  
@@ -289,51 +289,154 @@ export default class WindowUtil {
                return fmt; 
            } 
         }
+
+        // (function() {
+        //     if (typeof Object.prototype["__uniqueId"] == "undefined" ) {
+        //         var id = 0;
+        //         Object.prototype["__uniqueId"] = function() {
+        //             if ( typeof this.__uniqueid == "undefined" ) {
+        //                 this.__uniqueid = ++id;
+        //             }
+        //             return this.__uniqueid;
+        //         };
+        //     }
+        // })();
     }
 
     static domEventHandler(dom: Node) {
         //dom节点变化的监听
         // MutationObserver
         //Event.
-        var MutationObserver:{
-            prototype: MutationObserver;
-            new(callback: MutationCallback): MutationObserver;
-        } = window["MutationObserver"] || window["WebKitMutationObserver"] || window["MozMutationObserver"];
-        var observer = new MutationObserver(function (mutations, instance) {
-            mutations.forEach(function (mutation) {
-                let target = mutation.target;
-                let gele = G.$(target);
-                if(gele.length > 0 && gele.ast != null) {
-                    let added = mutation.addedNodes;
-                    let removed = mutation.removedNodes;
-                    if(added != null && added.length > 0) {
-                        let next = mutation.nextSibling;
-                        let prev = mutation.previousSibling;
-                        if(next) {
-                            let nextObj = G.$(next);
-                            if(nextObj && nextObj.ast) {
-
-                            }else {
-                                
-                            }
-                            added.forEach((node: any)=>{
-                                gele.before(node);
-                            });
-                        }else if(prev) {
-                            added.forEach((node: any)=>{
-                                gele.prepend(node);
-                            });
+        (function(dom) {
+            // var MutationObserver:{
+            //     prototype: MutationObserver;
+            //     new(callback: MutationCallback): MutationObserver;
+            // } = window["MutationObserver"] || window["WebKitMutationObserver"] || window["MozMutationObserver"];
+            // var observer = new MutationObserver(function (mutations, instance) {
+            //     let targets: Array<Node> = [];
+            //     let changes: {[index: string]: {added: Node[]}} = {};
+            //     let handleTargets:Node[] = [];
+            //     mutations.forEach(function (mutation) {
+            //         let target = mutation.target;
+            //         let targetIndex = targets.indexOf(target);
+                    
+            //         let change:{added: Node[]} = targetIndex == -1 ? {added: []} : (changes[targetIndex+""] || {added: []});
+            //         change.added = change.added || [];
+            //         let added = mutation.addedNodes;
+            //         if(added != null && added.length > 0) {
+            //             added.forEach((node: any)=>{
+            //                 let gele = G.$(node);
+            //                 if(!gele || !(gele.ast)) {
+            //                     change.added.push(node);
+            //                 }
+            //                 handleTargets.push(node);
+            //             });
+            //         }
+            //         let removed = mutation.removedNodes;
+            //         if(removed != null && removed.length > 0) {
+            //             removed.forEach((node: any)=>{
+            //                 handleTargets.push(node);
+            //             });
+            //         }
+            //         if(change.added.length > 0 || (mutation.removedNodes && mutation.removedNodes.length > 0)) {
+            //             if(targetIndex == -1) {
+            //                 targets.push(target);
+            //                 targetIndex = targets.indexOf(target);
+            //             }
+            //             changes[targetIndex+""] = change;
+            //         }
+            //     });
+            //     targets.forEach(function(target, index) {
+            //         let gele = G.$(target);
+            //         let haveRemoved = false;
+            //         let haveAdded = false;
+            //         if(gele && gele.ast != null) {
+            //             let asts = gele.ast.children;
+            //             //先去除已经删除的元素
+            //             if(asts && asts instanceof Array) {
+            //                 for(let i = 0; i < asts.length; i++) {
+            //                     let ast = asts[i];
+            //                     if(ast.vmdom && ast.vmdom.realDom) {
+            //                         if(G.G$(target).find(ast.vmdom.realDom).length == 0) {
+            //                             asts.splice(i ,1);
+            //                             i--;
+            //                             let cacheHtmlElement = G.G$(G.cacheHtml);
+            //                             let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+ast.id+"']");
+            //                             cacheElement.remove();
+            //                             G.cacheHtml = cacheHtmlElement.prop("outerHTML");
+            //                             haveRemoved = true;
+            //                         }
+            //                     }
+            //                 }
+            //             }
+            //             let added = changes[index+""].added;
+            //             let children = G.G$(target).children();
+            //             children.each(function(index, ele) {
+            //                 if(added.indexOf(ele) != -1) {
+            //                     let prev = G.G$(ele).prev();
+            //                     let cacheHtmlElement = G.G$(G.cacheHtml);
+            //                     if(prev[0]) {
+            //                         let prevEle = G.$(prev[0]);
+            //                         if(prevEle && prevEle.ast) {
+            //                             let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+prevEle.ast.id+"']");
+            //                             cacheElement.after(ele);
+            //                             G.cacheHtml = cacheHtmlElement.prop("outerHTML");
+            //                         }
+            //                     }else {
+            //                         cacheHtmlElement.prepend(ele);
+            //                     }
+            //                     haveAdded = true;
+            //                 }
+            //             });
+            //             if(haveAdded || haveRemoved) {
+            //                 gele.doRender();
+            //             }
+            //         }
+            //     });
+            //     for(let i=0; i < handleTargets.length; i++) {
+            //         let ele = handleTargets[i];
+            //         let index = G.domEventTargets.indexOf(ele);
+            //         G.domEventTargets.splice(index, 1);
+            //     }
+            // });
+            // observer.observe(dom, {
+            //     childList: true,
+            //     attributes: false,
+            //     subtree: false
+            // });
+            G.G$(dom).on("DOMNodeInserted", function(e) {
+                let added = G.$(e.target);
+                if((!added || !(added.ast)) && dom == e.currentTarget) {
+                    let target = e.currentTarget;
+                    let gele = G.$(target);
+                    let next = G.G$(e.target).next();
+                    // let cacheHtmlElement = G.G$(G.cacheHtml);
+                    if(next[0]) {
+                        let nextEle = G.$(next[0]);
+                        if(nextEle && nextEle.ast) {
+                            nextEle.before(e.target);
+                            //let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+prevEle.ast.id+"']");
+                            //cacheElement.after(e.target);
                         }
+                    }else {
+                        gele.append(e.target);
+                    }
+                    //G.cacheHtml = cacheHtmlElement.prop("outerHTML");
+                    //gele.doRender();
+                }
+            });
+
+            G.G$(dom).on("DOMNodeRemoved", function(e) {
+                let removed = G.$(e.target);
+                let cacheHtmlElement = G.G$(G.cacheHtml);
+                if(removed && removed.ast && dom == e.currentTarget) {
+                    let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+removed.ast.id+"']");
+                    if(cacheElement[0]) {
+                        removed.remove();
                     }
                 }
-                
-                console.log(mutation);
-            });
-        });
-        observer.observe(dom, {
-            childList: true,
-            attributes: false,
-            subtree: false
-          });
+            })
+        })(dom)
+        
     }
 }

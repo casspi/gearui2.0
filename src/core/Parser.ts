@@ -3,7 +3,7 @@ import { GearUtil, StringUtil } from "../utils";
 
 export default class Parser {
 
-    public parse(el: string|Element): ParseResult {
+    public parse(el: string|Element, noParent?: boolean): ParseResult {
         let html:string = "";
         let parent:any = null;
         if(typeof el === "string") {
@@ -12,31 +12,38 @@ export default class Parser {
             // HANDLE: $(html) -> $(array)
             if ( isHtml ) {
                 html = el;
-                parent = document.body.appendChild(document.createElement("span"));
-
+                if(noParent != true) {
+                    parent = document.body.appendChild(document.createElement("span"));
+                }
             } else {
                 // HANDLE: $(#id)||$(exp)
                 let elJ = G.G$(el);
                 html = elJ.prop("outerHTML");
-                parent = G.G$("<span></span>");
-                parent.insertAfter(elJ);
-                parent = parent[0];
+                if(noParent != true) {
+                    parent = G.G$("<span></span>");
+                    parent.insertAfter(elJ);
+                    parent = parent[0];
+                }
                 elJ.remove();
             }
         }else {
             if(el != document.body) {
                 let elJ = G.G$(el);
                 html = elJ.prop("outerHTML");
-                parent = G.G$("<span></span>");
-                parent.insertAfter(el);
-                parent = parent[0];
+                if(noParent != true) {
+                    parent = G.G$("<span></span>");
+                    parent.insertAfter(el);
+                    parent = parent[0];
+                }
                 elJ.remove();
             }else {
                 let elJ = G.G$(el);
                 html = elJ[0].innerHTML;
-                parent = G.G$("<span></span>");
-                elJ.html(parent);
-                parent = parent[0];
+                if(noParent != true) {
+                    parent = G.G$("<span></span>");
+                    elJ.html(parent);
+                    parent = parent[0];
+                }
             }
         }
         let parserHtml = new ParseHtml();

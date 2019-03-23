@@ -458,11 +458,18 @@ table.resultTable .actiontd{
     var bu = root.find("#aaaa");
     var test = G("#test");
     console.log(test);
-    bu.append("<g-button id='ccc'>append</g-button>");
+    var ele = document.createElement("g-button");
+    ele.id = "ccc";
+    document.getElementById("aaaa").appendChild(ele);
+    // bu.append("<g-button id='ccc'>append</g-button>");
     var ccc = $("#ccc");
     ccc.setLoading(true);
     root.doRender();
     test.setLoading(true);
+    debugger;
+    // let a = document.getElementById("ccc");
+    // console.log(a);
+    // document.getElementById("aaaa").removeChild(a);
     //console.log(ccc instanceof G.tag.button);
     //console.log(ccc);
     

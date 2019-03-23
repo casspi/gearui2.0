@@ -163,6 +163,44 @@ export default class GearUtil {
     }
 
     /**
+     * 获取clazz
+     * @param ast 
+     */
+    static getClassFromTag(ele: Element) {
+        let attrs = ele.attributes;
+        let clazz = null;
+        if(attrs != null) {
+            for(let key in attrs) {
+                if(key == "ctype") {
+                    let ctype = attrs[key];
+                    if(ctype) {
+                        clazz = G.components[ctype.value];
+                    }
+                }
+            }
+        }
+        if(clazz == null) {
+            let tag = ele.tagName;
+            if(tag) {
+                if(tag.startsWith("g")) {
+                    if(tag.startsWith("g-")) {
+                        clazz = G.components[tag.substring(2, tag.length)];
+                    }else {
+                        clazz = G.components[tag.substring(1, tag.length)];
+                    }
+                }else if(tag == "input") {
+                    let type = attrs["type"];
+                    clazz = G.components[type.value];
+                    if(clazz == null) {
+                        clazz = G.components["text"];
+                    }
+                }
+            }
+        }
+        return clazz;
+    }
+
+    /**
      * 创建一个类型
      * @param fun 
      * @param parent 

@@ -33,6 +33,8 @@ export default class G {
     static cacheAstMap: {[idx: string]: ASTElement} = {};
     //正在渲染的操作
     static updating: Promise<boolean>[] = [];
+    //对dom操作的target
+    static domEventTargets:Node[] = [];
 
     //渲染
     static render(renderOptions: RenderOptions) {
@@ -152,33 +154,40 @@ export default class G {
         }
     }
 
-    static getPromiseObject(selector: string, promise: Promise<any>) {
+    static getPromiseObject(selector: string|Element, promise: Promise<any>) {
         let fnNames:string[] = [];
         let elements: any[] = [];
         let eles = G.G$(this.cacheHtml).find(selector);
+        if(eles.length == 0) {
+            eles = G.G$(document.body).find(selector);
+        }
         for(let i = 0; i < eles.length; i ++) {
             let ele = eles[i];
             let astId = this.G$(ele).attr(Constants.HTML_PARSER_DOM_INDEX);
+            let clazz = null;
             if(astId) {
                 let ast = this.cacheAstMap[astId];
                 if(ast) {
-                    let clazz = GearUtil.getClass(ast);
-                    if(clazz) {
-                        let newClass = GearUtil.createClass(clazz);
-                        if(newClass) {
-                            for(let key in newClass.clazz) {
-                                this.addMothedToTag(key, newClass.clazz);
-                                fnNames.push(key);
-                            }
-                            for(let key in newClass.clazz.prototype) {
-                                this.addMothedToTagProto(key, newClass.clazz);
-                                fnNames.push(key);
-                            }
-                            let obj = new newClass.clazz();
-                            obj._promise = promise;
-                            elements.push(obj);
-                        }
+                    clazz = GearUtil.getClass(ast);
+                }
+            }
+            if(!clazz) {
+                clazz = GearUtil.getClassFromTag(ele);
+            }
+            if(clazz) {
+                let newClass = GearUtil.createClass(clazz);
+                if(newClass) {
+                    for(let key in newClass.clazz) {
+                        this.addMothedToTag(key, newClass.clazz);
+                        fnNames.push(key);
                     }
+                    for(let key in newClass.clazz.prototype) {
+                        this.addMothedToTagProto(key, newClass.clazz);
+                        fnNames.push(key);
+                    }
+                    let obj = new newClass.clazz();
+                    obj._promise = promise;
+                    elements.push(obj);
                 }
             }
         }
@@ -216,7 +225,7 @@ export default class G {
 
     static $(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
         //如果是正确刷新，并且select是一个字符串筛选器，如果是其他对象的筛选器代表对象已经在文档中存在，就直接查找并返回。
-        if(this.isUpdating() && typeof selector == "string") {
+        if(this.isUpdating() && (typeof selector == "string" || selector instanceof Element)) {
             let $result = this.async$(selector, html, react);
             let f = this.go($result);
             //返回一个全能对象，执行任何方法的时候都先执行promise的then
