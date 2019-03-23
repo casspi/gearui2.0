@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Events, Parser } from '../core';
 import { ObjectUtil, GearUtil, UUID } from '../utils';
+import * as ReactDOM from 'react-dom';
 const lowerFirst = require('lodash/lowerFirst');
 export var props = {
     __ast__: GearType.Any,
@@ -857,6 +858,40 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
 
     haveEvent(eventName: string) {
         return this.events[eventName] && this.events[eventName].length > 0;
+    }
+
+    createControl(geartype:string,options:any,callback:Function) {
+        let container = this[0];
+        let props = GearUtil.toProps(options);
+        let events:any = null;
+        if(props["events"]){
+            events = props["events"];
+            delete props["events"];
+        }
+        if(container.tagName.toLowerCase()=="form"){
+            props["formEle"] = container;
+        }else{
+            let form = this.parents("form:first");
+            if(form[0]) {
+                props["formEle"] = form[0];
+            }
+        }
+        let ele = GearUtil.newInstanceByType(geartype,props);
+        ReactDOM.render(ele,container,function(){
+            if(events){
+                for(let name in events){
+                    let fun = events[name];
+                    if(typeof fun == "function"){
+                        if(this[name]){
+                            // 注册事件
+                            this[name].call(this,fun);
+                        }
+                    }
+                }
+            }
+            if(callback)
+                callback.call(this);
+        });
     }
 
     doRender(callback?:Function) {

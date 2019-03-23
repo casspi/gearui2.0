@@ -11,6 +11,420 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <style>
+      .checktag-control-wrapper.tag-disabled .ant-tag{
+	background-color:#666;
+	color:#555;
+}
+.checktag-control-wrapper.tag-disabled .ant-tag:hover{
+	background-color:#666;
+	color:#555;
+	opacity:1;
+}
+.checktag-control-wrapper.tag-disabled .ant-tag-checkable-checked{
+	background-color:#666;
+	color:#000;
+}
+.checktag-control-wrapper.tag-disabled .ant-tag-checkable-checked:hover{
+	background-color:#666;
+	color:#000;
+}
+
+      .transfer-control-wrapper{
+        position:relative;
+        display:block;
+      }
+
+      .transfer-control-wrapper .transfer-list{
+        position:relative;
+        display:inline-block;
+        width:200px;
+        height:300px;
+        overflow:hidden;
+        border:1px solid #e9e9e9;
+        border-radius:4px 4px 0 0;
+        padding-top:30px;
+        vertical-align:middle;
+      }
+
+      .transfer-control-wrapper .transfer-list .list-header{
+        border-bottom:1px solid #e9e9e9;
+        border-radius:4px 4px 0 0;
+        position:absolute;
+        left:0px;
+        top:0px;
+        width:100%;
+        overflow:hidden;
+        height:30px;
+        padding:5px 5px;
+        line-height:20px;
+      }
+
+      .transfer-control-wrapper .transfer-list .list-header .checkall{
+        float:left;
+      }
+
+      .transfer-control-wrapper .transfer-list .list-header .header-title{
+        float:right;
+        font-size:12px;
+        font-weight:normal;
+      }
+
+      .transfer-control-wrapper .transfer-list .list-body{
+        position:relative;
+        height:100%;
+        overflow:auto;
+        padding:5px 1px;
+      }
+
+      .transfer-control-wrapper .transfer-operation{
+        display:inline-block;
+        vertical-align:middle;
+        overflow:hidden;
+        margin:0 8px;
+      }
+
+      .transfer-control-wrapper .transfer-operation .ant-btn:first-child{
+        margin-bottom:4px
+      }
+
+      .transfer-control-wrapper .transfer-operation .ant-btn{
+        display:block;
+      }
+      /* 输入表单基础样式 */
+table.formTable,
+table.dataTable{
+  	width: 100%;
+  	background: #FFFFFF;
+  	border: 1px solid rgba(34, 36, 38, 0.15);
+  	box-shadow: none;
+  	border-radius: 0.28571429rem;
+  	text-align: left;
+  	color: rgba(0, 0, 0, 0.87);
+  	border-collapse: separate;
+  	border-spacing: 0px;
+}
+table.formTable .formRow,
+table.dataTable .formRow{
+	
+}
+table.formTable .formColumn,
+table.dataTable .formColumn{
+  	border-top: 1px solid rgba(34, 36, 38, 0.1);
+  	border-left: 1px solid rgba(34, 36, 38, 0.1);
+  	padding:5px;
+}
+table.formTable tr:first-child .formColumn,
+table.dataTable tr:first-child .formColumn{
+  	border-top: 0px;
+  	padding:5px;
+}
+table.formTable tr .formColumn:first-child,
+table.dataTable tr .formColumn:first-child{
+  	border-left: 0px;
+  	padding:5px;
+}
+table.formTable .formControl,
+table.dataTable .formControl{
+	width:100%;
+	word-wrap:break-word;
+	word-break:break-all;
+	line-height:25px;
+}
+table.formTable .controlLabel,
+table.dataTable .controlLabel{
+	float:left;
+	text-align:right;
+	padding-right:10px;
+  	_background: #F9FAFB;
+  	color: rgba(0, 0, 0, 0.87);
+  	font-weight: bold;
+}
+table.formTable .control,
+table.dataTable .control{
+	
+}
+
+/* 一行一列的输入表单 */
+table.cols1 .controlLabel{
+	float:left;
+	width:120px;
+}
+table.cols1 .control{
+	margin-left:135px;
+}
+table.cols1 .ant-input-affix-wrapper,
+table.cols1 .ant-calendar-picker,
+table.cols1 select,
+table.cols1 textarea,
+table.cols1 .ant-select-selection{
+	width:300px; 
+}
+
+/* 一行两列的输入表单 */
+table.cols2 .formColumn{
+	width:50%;
+}
+table.cols2 .controlLabel{
+	width:120px;
+}
+table.cols2 .control{
+	margin-left:135px;
+}
+table.cols2 .ant-input-affix-wrapper,
+table.cols2 .ant-calendar-picker,
+table.cols2 select,
+table.cols2 textarea,
+table.cols2 .ant-select-selection{
+	width:250px; 
+}
+
+/* 一行三列的输入表单 */
+table.cols3 .formColumn{
+	width:33%;
+}
+table.cols3 .controlLabel{
+	width:100px;
+}
+table.cols3 .control{
+	margin-left:115px;
+}
+table.cols3 .ant-input-affix-wrapper,
+table.cols3 .ant-calendar-picker,
+table.cols3 select,
+table.cols3 textarea,
+table.cols3 .ant-select-selection{
+	width:200px; 
+}
+
+/* 一行四列的输入表单 */
+table.cols4 .formColumn{
+	width:25%;
+}
+table.cols4 .controlLabel{
+	width:100px;
+}
+table.cols4 .control{
+	margin-left:115px;
+}
+table.cols4 .ant-input-affix-wrapper,
+table.cols4 .ant-calendar-picker,
+table.cols4 select,
+table.cols4 textarea,
+table.cols4 .ant-select-selection{
+	width:150px; 
+}
+
+
+/* 查询列表的样式 */
+table.resultTable {
+  width: 100%;
+  background: #FFFFFF;
+  margin: 1em 0em;
+  border: 1px solid rgba(34, 36, 38, 0.15);
+  box-shadow: none;
+  border-radius: 0.28571429rem;
+  text-align: left;
+  color: rgba(0, 0, 0, 0.87);
+  border-collapse: separate;
+  border-spacing: 0px;
+}
+table.resultTable:first-child {
+  margin-top: 0em;
+}
+table.resultTable:last-child {
+  margin-bottom: 0em;
+}
+
+table.resultTable th,
+table.resultTable td {
+  -webkit-transition: background 0.1s ease, color 0.1s ease;
+  transition: background 0.1s ease, color 0.1s ease;
+}
+
+table.resultTable thead {
+  box-shadow: none;
+}
+table.resultTable thead th {
+  cursor: auto;
+  background: #F9FAFB;
+  text-align: inherit;
+  color: rgba(0, 0, 0, 0.87);
+  padding:0.5em 0.3em;
+  line-height:25px;
+  vertical-align: inherit;
+  font-style: none;
+  font-weight: bold;
+  text-transform: none;
+  border-bottom: 1px solid rgba(34, 36, 38, 0.1);
+  border-left: 1px solid rgba(34, 36, 38, 0.1);
+}
+table.resultTable thead th.header{ 
+	background:url(../images/order.png) no-repeat;
+	background-position:center right;
+	CURSOR:pointer; 
+}
+table.resultTable thead th.headerSortUp{ 
+	background: url(../images/asc.png) no-repeat;
+	background-position:center right;
+	CURSOR:pointer;
+}
+table.resultTable thead th.headerSortDown{ 
+	background: url(../images/desc.png) no-repeat;
+	background-position:center right;
+	CURSOR:pointer; 
+}
+
+table.resultTable td {
+	line-height:25px;
+  	border-top: 1px solid rgba(34, 36, 38, 0.1);
+  	border-left: 1px solid rgba(34, 36, 38, 0.1);
+	word-wrap:break-word;
+	word-break:break-all;  	
+}
+table.resultTable tr:first-child td {
+  border-top: none;
+}
+
+table.resultTable td {
+  padding: 0.4em 0.3em;
+  text-align: inherit;
+}
+
+table.resultTable thead tr > th:first-child,
+table.resultTable tbody tr > td:first-child {
+  border-left: none;
+}
+table.resultTable .sequencetd{
+	text-align:right !important; 
+	width:4em;
+}
+table.resultTable .numbertd{ 
+	text-align:right !important; 
+	width:5em;
+}
+table.resultTable .actiontd{ 
+	text-align:center !important; 
+}
+.ant-table-tbody>tr>td, .ant-table-thead>tr>th {
+    padding: 16px 8px !important;
+    word-break: break-all;
+}
+.ant-table-editlist{
+
+}
+
+.ant-table-editlist .ant-table-title{
+	padding:2px 0;
+	text-align:right;
+}
+
+.ant-table-editlist .ant-table-title .list-header{
+	display:inline;
+}
+.ant-table-editlist .ant-table-title .list-control{
+	display:inline;margin-left:10px;
+}
+.ant-table-editlist .ant-table-tbody .edit-table-cell{
+	display:block;margin:0;
+}
+.ant-table-editlist .ant-table-tbody .edit-table-cell input{
+	border:1px solid #95B8E7;
+}
+.ant-table-editlist .ant-table-tbody .ant-select-selection{
+	border:1px solid #95B8E7;
+}
+.ant-table-editlist .ant-table-tbody .edit-table-cell .has-error input{
+	border:1px solid red;
+}
+.ant-table-editlist .ant-table-tbody .edit-table-cell .has-error .ant-select-selection{
+	border:1px solid red;
+}
+.ant-table-editlist .ant-table-tbody table{
+	width:100%;
+}
+.ant-table-editlist .list-row-selected{
+	background-color:#dddddd;
+}
+.ant-table-editlist .ant-table-tbody td{
+	height:28px;
+	padding:0;
+	border-bottom:none;
+}
+.ant-table-editlist .ant-table-sequence-column{
+	width:50px !important;
+	text-align:right !important;
+	padding-right:5px !important;
+}
+.ant-table-editlist .ant-table-column-control{
+	width:60px;
+	text-align:center;
+}
+.ant-table-editlist td.ant-table-column-control .list-conlum-control-edit,
+.ant-table-editlist td.ant-table-column-control .list-conlum-control-delete,
+.ant-table-editlist td.ant-table-column-control .list-conlum-control-save,
+.ant-table-editlist td.ant-table-column-control .list-conlum-control-rowback{
+	font-size:16px;	
+	margin-left:1px;
+	margin-right:1px;
+	cursor:pointer;
+}
+
+
+
+.ant-table-editlist .actiontd{
+	text-align:center;
+}
+.ant-table-editlist .actiontd > *{
+	margin-left:1px;
+	margin-right:1px;
+}
+
+.ant-table-editlist .cell-value{
+	display:block;
+	min-width:12px;	
+	min-height:12px;
+}
+
+ .ant-table-tbody > tr > td{
+	font-weight:bold;
+	padding:8px 5px;
+	border-bottom:none;
+}
+
+.ant-popover .ant-popover-inner-content{
+	padding:2px !important;
+}
+
+.ant-popover .editable-cell-control .editable-cell-icon-edit{
+	color:blue;
+	font-size:16px;	
+	margin:2px;
+}
+.ant-popover .editable-cell-control .editable-cell-icon-save{
+	color:blue;
+	font-size:16px;	
+	margin:2px;
+}
+.ant-popover .editable-cell-control .editable-cell-icon-reset{
+	color:red;
+	font-size:16px;	
+	margin:2px;
+}
+
+.ueditor {
+	cursor: text;
+	border: 1px solid;
+}
+
+.checkbox,
+.radio {
+	float:left;
+	padding-right:10px;
+}
+.richtext{
+  border: 1px solid #d1d1d1;
+    border-radius: 5px;
+}
     </style>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -32,7 +446,20 @@
       <g-button id="test">aaa</g-button>
     </div>
   </div>
-  
+  <g-buttongroup id="ec3">
+    <g-button id='ec3-btn1'>全选</g-button>
+    <g-button id='ec3-btn2'>全不选</g-button>
+    <g-button>999</g-button>
+  </g-buttongroup>
+  <g-tabs id="layout11">
+		<g-tab title="文本信息" closable="true">
+			内容一
+		</g-tab>
+		<g-tab title="文本信息" closable="true">
+			内容二
+		</g-tab>											
+		<g-tab title="密码修改" url="/system/password" selected="true"></g-tab>																	
+	</g-tabs>
   </body>
   <script>
   G(function() {
@@ -40,17 +467,11 @@
     var bu = root.find("#aaaa");
     var test = G("#test");
     console.log(test);
-    var ele = document.createElement("g-button");
-    ele.id = "ccc";
-    //document.getElementById("aaaa").appendChild(ele);
-     bu.append("<g-button id='ccc'>append</g-button>");
+    bu.append("<g-button id='ccc'>append</g-button>");
     var ccc = $("#ccc");
     ccc.setLoading(true);
     root.doRender();
     test.setLoading(true);
-    // let a = document.getElementById("ccc");
-    // console.log(a);
-    // document.getElementById("aaaa").removeChild(a);
     //console.log(ccc instanceof G.tag.button);
     //console.log(ccc);
     

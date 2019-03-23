@@ -251,6 +251,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             let props:any = this.getAutoCompleteProps();
             delete props.invalidType;
             delete props.labelText;
+            delete props.validation;
             if(this.form){
                 delete props.value
             }
@@ -259,6 +260,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             let props:any = this.getInputProps();
             delete props.invalidType;
             delete props.labelText;
+            delete props.validation;
             if(this.form){
                 delete props.value
             }
@@ -293,14 +295,11 @@ export default class InputTag<P extends typeof props, S extends state> extends F
 
     //渲染完成之后处理默认值
     afterRender() {
-        console.log(this.props.value)
         this._loadDefault();
-        console.log(this.props.value)
 
     }
    
     private _loadDefault(){
-        console.log(this.props.value)
         if(this.props.value){
             this.setState({
                 loading: true

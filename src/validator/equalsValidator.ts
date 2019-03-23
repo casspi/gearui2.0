@@ -17,6 +17,7 @@ export default class EqualsValidator extends Validator {
     validator = (rule: any,value: any,callback: any) => {
         let equalsSrc = this.props.equals;
         let srcEle = G.$(equalsSrc);
+        // console.log(srcEle)
         if(srcEle && srcEle.getValue) {
             //为对应的src元素增加校验规则
             let srcValue = srcEle.getValue();
