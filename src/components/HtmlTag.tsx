@@ -1,5 +1,6 @@
 import * as Tag from "./Tag";
 import * as React from 'react';
+import { WindowUtil } from '../utils';
 export var props = {
     class: GearType.String,
     props: GearType.Any,
@@ -22,7 +23,12 @@ export default class HtmlTag<P extends typeof props, S extends (state)> extends 
     render(){
 
         let props = G.G$.extend({
-            ref: this.state.ref,
+            ref: (ele: any)=>{
+                this.ref = ele;
+                if(ele instanceof Node) {
+                    WindowUtil.domEventHandler(ele);
+                }
+            },
             key: this.ast.id + "_" + this.ast.tag,
         }, this.state.props);
         delete props.focus;

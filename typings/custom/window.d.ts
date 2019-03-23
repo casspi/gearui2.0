@@ -95,6 +95,7 @@ declare var G: {
     isUpdating: () => boolean;
     http: any;
     util: any;
+    // domEventTargets:Node[];
 }
 interface Window extends EventTarget, WindowTimers, WindowSessionStorage, WindowLocalStorage, WindowConsole, GlobalEventHandlers, IDBEnvironment, WindowBase64, GlobalFetch {
     Blob: typeof Blob;
