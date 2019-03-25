@@ -22,6 +22,7 @@ export default class IdNumber<P extends typeof props & InputProps, S extends sta
         delete props.isStrict;
         delete props.invalidType;
         delete props.labelText;
+        delete props.validation;
         if(this.form){
             delete props.value
         }

@@ -198,7 +198,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
     }
 
     protected getProps() {
-        return super.getProps();
+        return G.G$.extend({},super.getProps(),this.state);
     }
 
     afterRender() {
@@ -220,8 +220,12 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         let props:any = this.getProps();
         delete props.invalidType;
         delete props.labelText;
+        delete props.validation;
         if(this.form){
             delete props.value;
+        }
+        if(props.id=='text4'){
+            console.log(props.value)
         }
         return <AntdInput {...props}  ref={ele=>this.ref=ele} ></AntdInput>;
     }

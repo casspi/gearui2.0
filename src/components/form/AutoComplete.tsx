@@ -389,7 +389,9 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 callback.call(this);
         });
     }
-
+    getValue() {
+        return this.state.value;
+    }
     //改变事件
     protected _change(value: any) {
         value = value || "";
@@ -523,7 +525,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             this.setDefaultOptions();
         }
     }
-
+   
     // // 根据自定义函数返回的格式对显示内容进行格式化
     // private _doMatchFormat(option){
     //     let props = {

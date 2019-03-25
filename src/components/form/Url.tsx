@@ -26,6 +26,7 @@ export default class Url<P extends (typeof props) & InputProps ,S extends state>
         let props:any = this.getProps();
         delete props.invalidType;
         delete props.labelText;
+        delete props.validation;
         if(this.form){
             delete props.value;
         }

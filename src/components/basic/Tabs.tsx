@@ -57,6 +57,9 @@ export default class Tabs<P extends typeof props,S extends state> extends Tag.de
         })
             
     }
+    selectTab(){
+
+    }
     renderTab(child:any,index:number){
         let props = child.props;
         let tabProps={
@@ -95,6 +98,7 @@ export default class Tabs<P extends typeof props,S extends state> extends Tag.de
     }
     /* 选中指定ID或序号的Tab */
     select(key:any){
+        console.log(key)
         this.setState({
             activeKey:key
         })

@@ -5,6 +5,8 @@ import {Upload,message,Modal,Button,Icon} from 'antd';
 import G from '../../Gear';
 import {Http,UUID,ObjectUtil} from '../../utils';
 import Wrapper from '../../components/Wrapper';
+import zhCN from 'antd/lib/locale-provider/zh_CN';
+import { LocaleProvider } from 'antd';
 export var props =  {
     ...FormTag.props,
     filelist:GearType.Array<Object>(),//已经上传的文件列表（受控），使用此参数时，如果遇到 onChange 只调用一次的问题，请参考 
@@ -176,19 +178,21 @@ export default class GUpload<P extends typeof props,S extends state> extends For
 
     handleCancel = () => this.setState({ previewVisible: false });
 
-    render () {
+    makeJsx () {
         let props = this.getUploadProps();
         let wProps:any = this.getProps();
-        return <Wrapper {...wProps}>
-            <Upload {...props}>
-                <Button disabled={props.disabled==true||props.readonly==true} style={props.style}>
-                    <Icon type={"upload"}></Icon>
-                </Button>
-            </Upload>
-            <Modal visible={this.state["previewVisible"]} footer={null} onCancel={this.handleCancel}>
-                <img alt="example" style={{ width: '100%' }} src={this.state["previewImage"]} />
-            </Modal>
-        </Wrapper>;
+        return<LocaleProvider locale={zhCN}>
+                <Wrapper {...wProps}>
+                        <Upload {...props}>
+                            <Button disabled={props.disabled==true||props.readonly==true} style={props.style}>
+                                <Icon type={"upload"}></Icon>
+                            </Button>
+                        </Upload>
+                        <Modal visible={this.state["previewVisible"]} footer={null} onCancel={this.handleCancel}>
+                            <img alt="example" style={{ width: '100%' }} src={this.state["previewImage"]} />
+                        </Modal>
+                    </Wrapper>
+            </LocaleProvider> ;
     }
 
     afterRender() {
@@ -199,11 +203,12 @@ export default class GUpload<P extends typeof props,S extends state> extends For
     private _change(newValue:any,oldValue:any){
         // 向后台传值时应传json值，所以这里将对象转为json
         this.triggerChange(ObjectUtil.isEmpty(newValue)?null:JSON.stringify(newValue));
-        this.setState({});
+        this.setState({},()=>{
+            this.doEvent("change",newValue,oldValue);            
+        });
         // if(this.props.onchange) {
         //     this.props.onchange.call(this,newValue,oldValue);
         // }
-        this.doEvent("change",newValue,oldValue);            
     }
 
     onChange(fun:any) {
@@ -253,7 +258,7 @@ export default class GUpload<P extends typeof props,S extends state> extends For
 
     getValue(){
         let value = [];
-        let fileList = this.state["fileList"];
+        let fileList = this.state.fileList;
         if(fileList){
             for(var i=0;i<fileList.length;i++){
                 if(fileList[i].value){

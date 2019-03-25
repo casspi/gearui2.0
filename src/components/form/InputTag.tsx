@@ -287,7 +287,8 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         if(values instanceof Array) {
             values.map((value: any)=>{
                 let props: any = this.getSelectedTagProps(value.key,value.value,value.text);
-                tags.push(<SelectedTag.default key={"tag_"+(value.key)+UUID.get()} {...props}/>);
+                console.log("tag_"+value.key)
+                tags.push(<SelectedTag.default key={"tag_"+value.key} {...props}/>);
             });
         }
         return tags;

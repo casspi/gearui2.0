@@ -3,7 +3,10 @@ import {StringUtil} from "../utils";
 export default class LengthValidator extends Validator {
 
     name:any = this.name || "len";
-    validator = (rule:any,value:string,callback:any)=>{
+    validator = (rule:any,value:any,callback:any)=>{
+        if(value && value.value!= undefined ){//textarea时：值为{value：xxx}
+            value = value.value
+        }
         this.min = parseInt(this.props.min);
         this.max = parseInt(this.props.max);
         if(this.props.judgeString===true){//判断字符串长度

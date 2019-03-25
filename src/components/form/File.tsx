@@ -21,11 +21,11 @@ export default class File<P extends typeof props, S extends state> extends FormT
             disabled: this.state.disabled == true || this.state.readOnly == true,
             placeholder: this.state.prompt,
             onClick: (e: any) => {
-                this.find("input[type='file']:hidden").click();
+                this.find("input[type='file']").click();
                 this.doEvent("click",e);
             },
             suffix: <AntdButton key="button" icon={"folder-open"} disabled={this.state["disabled"]} onClick={()=>{
-                this.find("input[type='file']:hidden").click();
+                this.find("input[type='file']").click();
             }}>{"选择文件"}</AntdButton>,
         });
     }
