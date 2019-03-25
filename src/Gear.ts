@@ -274,6 +274,17 @@ export default class G {
                     };
                 }
             }
+            //html且react为false
+            if(typeof selector == "string") {
+                if ( selector[ 0 ] === "<" &&
+				selector[ selector.length - 1 ] === ">" &&
+				selector.length >= 3 ) {
+                    return {
+                        finded: true,
+                        result: this.G$(selector)
+                    };
+                }
+            }
             let doms:JQuery<HTMLElement>|undefined = undefined;
             let vmdoms = this.findVmDomFromCacheAst(selector, html);
             if(vmdoms.length > 0) {
@@ -290,9 +301,17 @@ export default class G {
                     }
                 }
             }
-            doms = doms || this.G$(selector);
+            if(!doms) {
+                if(html) {
+                    doms = html.find(selector);
+                }else {
+                    doms = this.G$(selector);
+                }
+            }
+            let inVoid = false;
             if(doms.length == 0){
                 doms = this.G$(this.voidParent).find(selector);
+                inVoid = true;
             }
             let fnNames = [];
             let eles:any = [];
@@ -330,6 +349,14 @@ export default class G {
                             this.G$.extend(dom,jele);
                             dom.constructor = constructor;
                             eles.push(dom);
+                            if(html) {
+                                //html是真实已经渲染的节点
+                                if(this.G$(html).length > 0) {
+                                    finded = true;
+                                }
+                            }else {
+                                finded = !inVoid;
+                            }
                         }
                     }catch (e){
                         if(react == true) {

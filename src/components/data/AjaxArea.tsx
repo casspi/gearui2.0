@@ -185,7 +185,7 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
     }
 
     render() {
-        return <AntdSpin ref={this.state.ref} spinning={this.state.loading} style={{"minHeight":"21px"}}>{this.state.children}</AntdSpin>;
+        return <AntdSpin spinning={this.state.loading} style={{"minHeight":"21px"}}><div ref={this.state.ref}>{this.state.children}</div></AntdSpin>;
     }
 
     setLoading(loading?: boolean) {
