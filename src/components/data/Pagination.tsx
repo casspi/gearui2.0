@@ -107,7 +107,7 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
         let ret = this.doEvent("beforeChange",page,pageSize);
         if(this.props.showJumpertips!==false&&this.props.showQuickJumper!==false){
             let total:any=this.state.total;
-            let value = G.$(this.realDom).find('.ant-pagination-options-quick-jumper input').val();
+            let value:any = G.G$(this.realDom).find('.ant-pagination-options-quick-jumper input').val();
             if(value>Math.ceil(parseInt(total)/parseInt(pageSize))){
                 clearTimeout(this.timer);
                 this.setState({

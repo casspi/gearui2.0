@@ -110,28 +110,28 @@ export default class Color<P extends typeof props & InputProps, S extends state 
         }
     }
     makeJsx() {
-        let position1:any = "absolute";
-        let position2:any = "fixed";
-        const styles = {
-            "popover": {
-                "position": position1,
-                "zIndex": 2
-            },
-            cover: {
-                position: position2,
+        // let position1:any = "absolute";
+        // let position2:any = "fixed";
+      
+            const popoverStyles = {
+                position: "absolute",
+                zIndex: 2
+            };
+            const coverStyles = {
+                position: "fixed",
                 top: '0px',
                 right: '0px',
                 bottom: '0px',
                 left: '0px',
-            }
+            };
             
-        };
+
         let pickerProps: any = this.getPickerProps();
         return <span>
                 {super.render()}
                 {this.state.showPicker ? 
-                    <div style={ styles.popover }>
-                        <div style={ styles.cover } onClick={this.closePicker.bind(this)}/>
+                    <div style={popoverStyles}>
+                        <div style={coverStyles} onClick={this.closePicker.bind(this)}/>
                             <ColorPicker {...pickerProps}/>
                         </div> 
                     : null}
