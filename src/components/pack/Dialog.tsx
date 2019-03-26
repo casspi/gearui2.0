@@ -200,20 +200,20 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             let dref = this.ref;
             let $dom = G.G$(document);
             let warpId = this.state.id+"dialog-warp";
-            // console.log(G.$('#'+warpId+'  '+' .ant-modal'))//通过ID找  
+            // console.log(G.G$('#'+warpId+'  '+' .ant-modal'))//通过ID找  
             $dom.on('mousedown.dragable','#'+warpId+'  '+' .ant-modal',function(ev: any){
                 dref.onselectstart=()=>{//禁止选中文字
                     return false
                 }
-                let $modal =  G.$(this);
-                G.$(this).css({
-                    "left":G.$(this).offset().left-(document.documentElement.scrollLeft||document.body.scrollLeft)+"px",
+                let $modal:any =  G.G$(this);
+                G.G$(this).css({
+                    "left":$modal.offset().left-(document.documentElement.scrollLeft||document.body.scrollLeft)+"px",
                     "margin":0,
                     "padding-bottom":0,   
                 })
                 let e = ev || window.event;
-                let disX = e.clientX-G.$(this).offset().left+(document.documentElement.scrollLeft||document.body.scrollLeft);     //点击时鼠标X坐标与元素原点距离
-                let disY = e.clientY-G.$(this).offset().top+(document.documentElement.scrollTop||document.body.scrollTop);     //点击时鼠标Y坐标与元素原点距离
+                let disX = e.clientX-$modal.offset().left+(document.documentElement.scrollLeft||document.body.scrollLeft);     //点击时鼠标X坐标与元素原点距离
+                let disY = e.clientY-$modal.offset().top+(document.documentElement.scrollTop||document.body.scrollTop);     //点击时鼠标Y坐标与元素原点距离
                 let dw = window.innerWidth;
                 let dh = window.innerHeight;
                 $dom.on("mousemove.dragable" , (ev: any)=>{
@@ -285,7 +285,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         let loadType = this.props.loadType;
         let warpId = this.state.id+"dialog-warp";
         // console.log(G.$('#'+warpId+'  '+' .ant-modal-body'))  
-        let modalBody = G.$('#'+warpId+'  '+' .ant-modal-body');
+        let modalBody = G.G$('#'+warpId+'  '+' .ant-modal-body');
         if(url && modalBody[0]){
             if(loadType=="async"){
                 modalBody.html("")
@@ -299,7 +299,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         //手动将高度分配给ant-modal-body 保持title和footer高度不变
         if(this.props.height){
             let height:any = this.props.height;
-            let modalWarp = G.$('#'+this.state.id+'dialog-warp')
+            let modalWarp = G.G$('#'+this.state.id+'dialog-warp')
             let rHeight = parseInt(height)-(modalWarp.find('.ant-modal-header').outerHeight()||0)-(modalWarp.find('.ant-modal-footer').outerHeight()||0);
             // console.log(modalWarp.find(".ant-modal-body"))
             modalWarp.find(".ant-modal-body").height(rHeight)
@@ -361,6 +361,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         let props:any = this.getProps();
         let iconProps:any = this.getMaxIconProps();
         delete iconProps.maxable;
+        delete props.maximized;
         let children = this.getChildren() || "";//避免子节点为空时，VoidTag 报错
         if(this.state.destory) {
             return null;
@@ -427,7 +428,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
     private getChildren() {
         let content = this.state.content;
         if(content) {
-            return G.$(content, true);
+            return G.$(content);
         }
         return this.props.children;
     }

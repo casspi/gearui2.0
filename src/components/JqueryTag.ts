@@ -843,9 +843,9 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
             let eventArr:Array<Function> = this.events[eventName]||[];
             eventArr.map((ele) => {
                 if(ele != null && (typeof ele === "function")) {
-                    console.log(ele)
-                    console.log(...param)
-                    console.log(this)
+                    // console.log(ele)
+                    // console.log(...param)
+                    // console.log(this)
                     let result = ele.call(this,...param);
                     if(result != null) {
                         resultRe.push(result);

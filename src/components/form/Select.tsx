@@ -327,6 +327,8 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             if(this.state["options"] != null && this.state["options"].length > 0) {
                 let data = this.findByValue(value);
                 if(data) {
+                    console.log(this.childSelect.props)
+                    debugger
                     if(this.childSelect.props.dictype || this.childSelect.props.url) {
                         this.childSelect.loadData(Http.appendUrlParam(this.childSelect.props.url,{code:data.value}));
                     }else {

@@ -86,8 +86,7 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
         }else {
             container = G.$(this.realDom);
         }
-        console.log('--------------------------------------')
-        console.log(data)
+        // console.log(container.realDom)
         for(let key in data) {
             let value = data[key];
             try{
@@ -95,30 +94,21 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
                     value = value();
                 }
             }catch(e){}
-            let jdom = container.find("[name='"+key+"']");
-            if(jdom.length>0){
+            let jdom:any = container.find("[name='"+key+"']");
+            if(jdom.length>0){//处理name重复的组件
                 jdom.each((index:any,dom:any)=>{
                     //排除group类型的子节点，group类型的子节点需要在group的setValue中设置值
-                    let parent = G.G$(jdom[index]).parents(".ajaxload-group:first");
-                    if(parent.length==0 || G.$(parent[0]) instanceof Group == false){
-                        // let children = G.$(parent).find('*');
-                        // console.log(jdom[index])
-
-                        //无法通过name找到组件???
-                        let gele= G.$("[name='"+key+"']");
+                    let parent = G.G$(dom).parents(".ajaxload-group:first");
+                    // console.log(G.G$(dom).parents(".ajaxload-group:first"))
+                    if(parent.length==0 ){
+                        let gele= G.$(dom);
                         if(gele && gele.setValue) {
                             gele.setValue(value);
                         }
-                         // let children = G.$(parent).find('*');
-                        // for(let i=0;i<children.length;i++){
-                        //     if(G.$(children[i]).state&&G.$(children[i]).state.name ==key&&G.$(children[i]).setValue){
-                        //         G.$(children[i]).setValue(value)
-                        //     }
-                        // }
-                    }else if(G.$(parent[0]) instanceof Group){
-                        G.$(parent[0]).setValue(value)
                     }
                 });
+            }else{
+                jdom.setValue(value)
             }
         }
     }
@@ -132,15 +122,41 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
         let fn = (ele: any) => {
             ele.children_g_().each((index: any,dom: any)=>{
                 let parent = G.G$(dom).parents(".ajaxload-group:first");
-                if(parent.length==0 || G.$(parent) instanceof Group == false){
-                    let gele = G.$(dom);
-                    if(gele && gele.getValue && gele.props && gele.props.name) {
-                        value[gele.props.name] = gele.getValue();
+                // if(dom.children_g_){
+                //     fn(dom)
+                // };
+                let gele = G.$(dom);
+                let children = dom.children;
+                if(gele instanceof Group){
+                    value[gele.props.name] = gele.getValue();
+                }else{
+                    
+                    for(let i=0;i<children.length;i++){
+                        let gele = G.$(children[i]);
+                        if(gele && gele.getValue && gele.props && gele.props.name){
+                            value[gele.props.name] = gele.getValue();
+                        }
                     }
-                    if(gele.children_g_) {
-                        fn(gele);
-                    }
-                }       
+                }
+                // console.log(gele.children())
+                // // if(G.$(dom) instanceof Group){
+                //     value[gele.props.name] = gele.getValue();
+                // // }else{
+                    // value[gele.props.name]
+                // }
+                // if(parent.length==0 || G.$(parent[0]) instanceof Group == false){
+                //     let gele = G.$(dom);
+                //     if(gele && gele.getValue && gele.props && gele.props.name) {
+                //         value[gele.props.name] = gele.getValue();
+                //     }
+                //     if(gele.children_g_) {
+                //         fn(gele);
+                //     }
+                // }else if(G.$(parent[0]) instanceof Group){
+                //     let gele = G.$(dom);
+                //     console.log(gele)
+                //     // value[gele.props.name] = gele.getValue();
+                // }       
             });
         }
         fn(this);
