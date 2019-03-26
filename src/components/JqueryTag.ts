@@ -329,10 +329,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         return jdom.filter.call(jdom,...args);
     }
     find(...args:any[]):JQuery<HTMLElement>{
-        let result = G.$(...args, this.ast.html());
-        if(result == null || result.length == 0) {
-            result = G.$(...args, G.G$(this.realDom));
-        }
+        let result = G.$(...args, this);
         return result;
     }
     finish(...args:any[]){
@@ -847,9 +844,6 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
             let eventArr:Array<Function> = this.events[eventName]||[];
             eventArr.map((ele) => {
                 if(ele != null && (typeof ele === "function")) {
-                    // console.log(ele)
-                    // console.log(...param)
-                    // console.log(this)
                     let result = ele.call(this,...param);
                     if(result != null) {
                         resultRe.push(result);
