@@ -33,15 +33,15 @@ export default class ClickAction<P extends typeof props, S extends state> extend
         let state:any = G.G$.extend({}, this.state,{
             actionType: this.props.actionType,
         });
-        return state
+        return state;
     }
     render() {
         let state = this.getProps()
         let type = this.props.type;
         if(type && type == "link") {
-            return <a {...state}>{this.state.text}</a>; 
+            return <a style={state.style ? state.style : {}} onClick={state.onClick.bind(this)}>{this.state.text}</a>; 
         }else if(type && type == "icon") {
-            let state = this.getIconState();
+            let state: any = this.getIconState();
             return <AntdIcon {...state}/>;
         }else{
             return super.render();

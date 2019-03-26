@@ -3,6 +3,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Modal as AntdModal } from 'antd';
 import { ObjectUtil, UUID } from '../../utils';
+import { Http } from "../../utils";
 import VoidTag from '../VoidTag';
 import Footer from '../layout/Footer';
 import {Icon as AntdIcon} from 'antd';
@@ -85,7 +86,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                     width = this.props.width;
                 }
             }else{
-                width = 600;
+                width = 800;
             }       
             if(this.state.height){
                 if(ObjectUtil.isInteger(this.state.height)==true)
@@ -179,7 +180,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             zIndex: this.props.zIndex,
             keyboard: this.props.keyboard,
             content: this.props.content,
-            loadType: this.props.loadType,
+            loadType: this.props.loadType || "iframe",
             url: this.props.url,
             dragable: this.props.dragable != false,
             visible: this.props.visible != false,
@@ -196,7 +197,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             type:this.state.maxIconType
         }
     }
-    dragEvent = ()=>{//拖拽效果
+    dragEvent() {//拖拽效果
             let dref = this.ref;
             let $dom = G.G$(document);
             let warpId = this.state.id+"dialog-warp";
@@ -207,13 +208,13 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                 }
                 let $modal =  G.$(this);
                 G.$(this).css({
-                    "left":G.$(this).offset().left-(document.documentElement.scrollLeft||document.body.scrollLeft)+"px",
+                    "left":G.$(this).offset().left-(document.documentElement ? document.documentElement.scrollLeft:document.body.scrollLeft)+"px",
                     "margin":0,
                     "padding-bottom":0,   
                 })
                 let e = ev || window.event;
-                let disX = e.clientX-G.$(this).offset().left+(document.documentElement.scrollLeft||document.body.scrollLeft);     //点击时鼠标X坐标与元素原点距离
-                let disY = e.clientY-G.$(this).offset().top+(document.documentElement.scrollTop||document.body.scrollTop);     //点击时鼠标Y坐标与元素原点距离
+                let disX = e.clientX-G.$(this).offset().left+(document.documentElement ? document.documentElement.scrollLeft:document.body.scrollLeft);     //点击时鼠标X坐标与元素原点距离
+                let disY = e.clientY-G.$(this).offset().top+(document.documentElement ? document.documentElement.scrollTop : document.body.scrollTop);     //点击时鼠标Y坐标与元素原点距离
                 let dw = window.innerWidth;
                 let dh = window.innerHeight;
                 $dom.on("mousemove.dragable" , (ev: any)=>{
@@ -280,22 +281,29 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         return this.state.visible;
     }
     
-    renderBody(){
-        let url: any = this.state.url;
-        let loadType = this.props.loadType;
-        let warpId = this.state.id+"dialog-warp";
-        // console.log(G.$('#'+warpId+'  '+' .ant-modal-body'))  
-        let modalBody = G.$('#'+warpId+'  '+' .ant-modal-body');
-        if(url && modalBody[0]){
-            if(loadType=="async"){
-                modalBody.html("")
-                modalBody.load(url);
-            }else if(loadType=="iframe"){
-                modalBody.html("")
-                modalBody.html("<iframe src='"+url+"' frameBorder='0' width='100%' height='100%' data-dialog='"+this.props.id+"'></iframe>");
-            }
-        }
+    // renderBody(){
+    //     let url: any = this.state.url;
+    //     let loadType = this.state.loadType;
+    //     let warpId = this.state.id+"dialog-warp";
+    //     // console.log(G.$('#'+warpId+'  '+' .ant-modal-body'))  
+    //     let modalBody = G.$('#'+warpId+'  '+' .ant-modal-body');
+    //     if(url && modalBody[0]){
+    //         if(loadType=="async"){
+    //             modalBody.html("")
+    //             modalBody.load(url);
+    //         }else if(loadType=="iframe"){
+    //             modalBody.html("")
+    //             modalBody.html("<iframe src='"+url+"' frameBorder='0' width='100%' height='100%' data-dialog='"+this.props.id+"'></iframe>");
+    //         }
+    //     }
        
+    // }
+
+    afterRender() {
+        if(this.state.dragable) this.dragEvent();//绑定拖拽事件
+    }    
+
+    afterUpdate() {
         //手动将高度分配给ant-modal-body 保持title和footer高度不变
         if(this.props.height){
             let height:any = this.props.height;
@@ -305,18 +313,23 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             modalWarp.find(".ant-modal-body").height(rHeight)
         }
     }
-
-    afterRender() {
-        
-    }    
     private oL:any;oT:any;oW:any;oH:any;bodyH:any;
     maxIconClick(){
         if(!this.state.isMax){//最大化
+            let offset = G.G$('.ant-modal-dialog').offset();
+            let offsetTop = 0;
+            if(offset) {
+                offsetTop = offset.top;
+            }
+            let offsetLeft = 0;
+            if(offset) {
+                offsetLeft = offset.left;
+            }
             //记录原始大小
             this.oH = G.G$(document).find('.ant-modal-content').outerHeight();
             this.oW = G.G$(document).find('.ant-modal-content').outerWidth();
-            this.oT = G.G$('.ant-modal-dialog').offset().top-(document.documentElement.scrollTop||document.body.scrollTop);
-            this.oL = G.G$('.ant-modal-dialog').offset().left-(document.documentElement.scrollTop||document.body.scrollTop);
+            this.oT = offsetTop-(document.documentElement ? document.documentElement.scrollTop : document.body.scrollTop);
+            this.oL = offsetLeft-(document.documentElement ? document.documentElement.scrollTop : document.body.scrollTop);
             this.bodyH = G.G$('.ant-modal-body').outerHeight();
             this.setState({
                 isMax:true,
@@ -331,13 +344,18 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                     left:0,
                     top:0,
                     margin:0
-                })
+                });
+                
                 $dom.find('.ant-modal-content').outerHeight(window.innerHeight);
                 $dom.find('.ant-modal-content').outerWidth(window.innerWidth);
-                $dom.find('.ant-modal-body').outerHeight(window.innerHeight-G.G$('.ant-modal-footer').outerHeight()-G.G$('.ant-modal-header').outerHeight());
+                let outerHeight = G.G$('.ant-modal-footer').outerHeight();
+                let headerOuterHeight = G.G$('.ant-modal-header').outerHeight();
+                if(outerHeight && headerOuterHeight) {
+                    $dom.find('.ant-modal-body').outerHeight(window.innerHeight-outerHeight-headerOuterHeight);
+                }
+                
             })
         }else{//向下还原
-           
             this.setState({
                 isMax:false,
                 maxTitle:'最大化',
@@ -375,15 +393,18 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                 cursor:"default",
             };
         }
-        let voidTagProps:any = {
-            onLoadSuccess: ()=> {
-                if(this.haveEvent("loadSuccess")) {
-                    this.doEvent("loadSuccess");
-                }
-                this.renderBody();//渲染modal-body内容
-                if(this.state.dragable) this.dragEvent();//绑定拖拽事件
-            },
+        if(!this.state.footer){
+            style['paddingBottom']=0
         }
+        // let voidTagProps:any = {
+        //     onLoadSuccess: ()=> {
+        //         if(this.haveEvent("loadSuccess")) {
+        //             this.doEvent("loadSuccess");
+        //         }
+        //         this.renderBody();//渲染modal-body内容
+        //         if(this.state.dragable) this.dragEvent();//绑定拖拽事件
+        //     },
+        // }
         let iconStyle:any = {
             cursor:"pointer",
             border: 0,
@@ -415,22 +436,47 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             document.body.appendChild(this.ref);
             return this.ref;
         }}>
-            {this.state.maxable?<AntdIcon {...iconProps} onClick={props.maxIconClick}  style={iconStyle}/>:null}
-            <VoidTag {...voidTagProps}>{children}</VoidTag>
+            {this.state.maxable?<AntdIcon {...iconProps} onClick={props.maxIconClick} style={iconStyle}/>:null}
+            {/* <VoidTag {...voidTagProps}>{children}</VoidTag> */}
+            {children}
         </AntdModal>;
+    }
+
+    
+
+    private getChildren() {
+        let url: any = this.state.url;
+        let loadType = this.state.loadType;
+        let children: any[] = [];
+        if(url) {
+            if(loadType=="async"){
+                let fn = async ()=> {
+                    let result = await Http.get(url);
+                    if(result.success){
+                        let data = result.data;
+                        let r = G.$(data, undefined, true);
+                        children = [r.result];
+                    }
+                };
+                fn();
+            }else if(loadType=="iframe"){
+                children = [<iframe key={this.props.id + "_iframe"} src={url} frameBorder={0} width={"100%"} height={"100%"} data-dialog={this.props.id}></iframe>];
+            }
+        }else {
+            let content = this.state.content;
+            if(content) {
+                children = G.$(content, undefined, true);
+            }else {
+                children = this.props.children;
+            }
+        }
+        return children;
     }
 
     protected findRealDom() {
         return this.ref;
     }
    
-    private getChildren() {
-        let content = this.state.content;
-        if(content) {
-            return G.$(content, true);
-        }
-        return this.props.children;
-    }
     onConfirm(fun:Function) {
         if(fun && G.G$.isFunction(fun)) {
             this.bind("confirm",fun);

@@ -461,4 +461,29 @@ export default class Http {
         return url;
     }
 
+    // 当判断当前页面是否在一个Dialog的iframe中
+    static isInDialogiFrame(){
+        // 通过Dialog.show打开的对话框会在iframe上增加一个data-dialog属性
+        if(window.frameElement){
+            var id = window.frameElement.getAttribute("data-dialog");
+            if(id)
+                return true;
+            else
+                return false;
+        }else{
+            return false;
+        }
+    }
+
+    // 销毁当前对话框
+    static destoryCurrentDialog(){
+        var id = window.frameElement.getAttribute("data-dialog");
+        if(id){
+            var dialog = parent.window["_dialog"][id];
+            if(dialog){
+                dialog.destroy();
+            }
+        }
+    }
+
 }

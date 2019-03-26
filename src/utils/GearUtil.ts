@@ -65,12 +65,12 @@ export default class GearUtil {
                         __ast__: ast
                     };
                 }else {
-                    let voidEle = null;
-                    if(ObjectUtil.isExtends(clazz, "VoidTag")) {
-                        voidEle = G.voidParent.appendChild(GearUtil.createVoidDomElement(tag, attrs));
-                    }
+                    // let voidEle = null;
+                    // if(ObjectUtil.isExtends(clazz, "VoidTag")) {
+                    //     voidEle = G.voidParent.appendChild(GearUtil.createVoidDomElement(tag, attrs));
+                    // }
                     props = GearUtil.attrsToProps(attrs, clazz.props, ast);
-                    props["voidElement"] = voidEle;
+                    //props["voidElement"] = voidEle;
                     props["__ast__"] = ast;
                 }
             }else {
@@ -154,16 +154,16 @@ export default class GearUtil {
         return propsNew;
     }
 
-    //创建一个虚拟dom节点
-    static createVoidDomElement(tagName: string, attrs: any):Element {
-        let ele = document.createElement(tagName);
-        if(attrs) {
-            for(let key in attrs) {
-                ele.setAttribute(key, attrs[key]);
-            }
-        }
-        return ele;
-    }
+    // //创建一个虚拟dom节点
+    // static createVoidDomElement(tagName: string, attrs: any):Element {
+    //     let ele = document.createElement(tagName);
+    //     if(attrs) {
+    //         for(let key in attrs) {
+    //             ele.setAttribute(key, attrs[key]);
+    //         }
+    //     }
+    //     return ele;
+    // }
 
     /**
      * 获取clazz

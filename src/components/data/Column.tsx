@@ -182,7 +182,9 @@ export default class Column<T> {
                             childrenIsColumn = true;
                         }
                     });
-                    this.children = childrenJsx;
+                    if(childrenJsx.length > 0) {
+                        this.children = childrenJsx;
+                    }
                 }
                 //如果子节点是column的，就没有render方法
                 if(!childrenIsColumn) {
@@ -218,7 +220,7 @@ export default class Column<T> {
     //解析column的子节点
     private parseColumnChild(child: any, ellipsisSpanWidth: any, record: any, indexColumn: any, index: any) {
         if(!(ObjectUtil.isExtends(child.type, "Column"))) {
-            let childProps = child.props;
+            let childProps = child.props || {};
             childProps = this.parseRegexColumnValue(childProps,record);
             let style = childProps.style instanceof String ? GearJson.fromStyle(childProps.style || "") : new GearJson(childProps.style);
             if(ellipsisSpanWidth > 0) {
@@ -228,7 +230,12 @@ export default class Column<T> {
             childProps.id = record.key + indexColumn + index;
             childProps.__record__ = record;
             childProps.key =record.key + indexColumn + index;
-            let jsxEle = React.cloneElement(child, childProps, child.props.children);
+            let jsxEle = null;
+            if(child.type) {
+                jsxEle = React.cloneElement(child, childProps, childProps.children || []);
+            }else {
+                jsxEle = child;
+            }
             return jsxEle;
         }
         return null;

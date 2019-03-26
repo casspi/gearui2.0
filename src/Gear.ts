@@ -24,7 +24,7 @@ export default class G {
     static userComponents = {};
 
     //所有的虚拟dom节点都存放在这个div中，这个div只在内存中存在
-    static voidParent = document.createElement("div");
+    // static voidParent = document.createElement("div");
 
     static cacheHtml:string = "";
 
@@ -238,7 +238,7 @@ export default class G {
         }
     }
 
-    static $(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
+    static $(selector?:string|Element|Function|null, html?: JqueryTag<any, any>, react?: boolean) {
         let ele = this._$(selector, html, react);
         //如果是正确刷新，并且select是一个字符串筛选器，如果是其他对象的筛选器代表对象已经在文档中存在，就直接查找并返回。
         if((ele.finded == false) && this.isUpdating() && (typeof selector == "string" || selector instanceof Element)) {
@@ -251,7 +251,7 @@ export default class G {
     }
 
     //查找页面中的元素
-    static* async$(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean) {
+    static* async$(selector?:string|Element|Function|null, html?: JqueryTag<any, any>, react?: boolean) {
         //如果有update正在进行，将等待
         for(let i=0; i<this.updating.length; i++) {
             let p = this.updating[i];
@@ -261,7 +261,7 @@ export default class G {
     }
 
     //查找页面中的元素
-    static _$(selector?:string|Element|Function|null, html?: JQuery<HTMLElement>, react?: boolean): {finded: boolean, result: any} {
+    static _$(selector?:string|Element|Function|null, html?: JqueryTag<any, any>, react?: boolean): {finded: boolean, result: any} {
         if(typeof selector == "string" || selector instanceof Element) {
             //如果是节点字符串(<a></a>),并且是要求返回react对象的，返回react对象
             if(typeof selector == "string" && react == true) {
@@ -285,8 +285,9 @@ export default class G {
                     };
                 }
             }
+            let finded = false;
             let doms:JQuery<HTMLElement>|undefined = undefined;
-            let vmdoms = this.findVmDomFromCacheAst(selector, html);
+            let vmdoms = this.findVmDomFromCacheAst(selector, (html instanceof JqueryTag) ? html : undefined);
             if(vmdoms.length > 0) {
                 for(let i = 0; i < vmdoms.length; i++) {
                     let vmdom = vmdoms[i];
@@ -303,19 +304,22 @@ export default class G {
             }
             if(!doms) {
                 if(html) {
-                    doms = html.find(selector);
+                    if(html instanceof JqueryTag) {
+                        doms = this.G$(html.realDom).find(selector);
+                    }else {
+                        doms = this.G$(html).find(selector);
+                    }
                 }else {
                     doms = this.G$(selector);
                 }
             }
-            let inVoid = false;
-            if(doms.length == 0){
-                doms = this.G$(this.voidParent).find(selector);
-                inVoid = true;
-            }
+            // if(doms.length == 0){
+            //     doms = this.G$(this.voidParent).find(selector);
+            //     finded = false;
+            // }
             let fnNames = [];
             let eles:any = [];
-            let finded = false;
+            
             if(doms.length > 0) {
                 for(let i = 0; i < doms.length;i++) {
                     let dom = this.G$(doms[i]);
@@ -341,7 +345,6 @@ export default class G {
                             if(eles.indexOf(gObj) == -1) {
                                 eles.push(gObj);
                             }
-                            finded = true;
                         }else if(dom.length == 1) {
                             let jele = new JqueryTag();
                             jele.realDom = dom[0];
@@ -349,14 +352,6 @@ export default class G {
                             this.G$.extend(dom,jele);
                             dom.constructor = constructor;
                             eles.push(dom);
-                            if(html) {
-                                //html是真实已经渲染的节点
-                                if(this.G$(html).length > 0) {
-                                    finded = true;
-                                }
-                            }else {
-                                finded = !inVoid;
-                            }
                         }
                     }catch (e){
                         if(react == true) {
@@ -374,6 +369,7 @@ export default class G {
                         }
                     }
                 }
+                finded = true;
             }
             if(eles.length > 1) {
                 let domArrays = [];
@@ -460,9 +456,9 @@ export default class G {
         });
     }
 
-    public static findVmDomFromCacheAst(selector: string|Element, cacheHtml?: JQuery<HTMLElement>) {
+    public static findVmDomFromCacheAst(selector: string|Element, cacheHtml?: JqueryTag<any, any>) {
         let vmdoms: any[] = [];
-        let jEleFromCache = G.G$(cacheHtml || this.cacheHtml).find(selector);
+        let jEleFromCache = G.G$(cacheHtml ? cacheHtml.ast.html() : this.cacheHtml).find(selector);
         if(jEleFromCache.length > 0 && this.cacheAst) {
             jEleFromCache.each((i, ele)=>{
                 let index = this.G$(ele).attr(Constants.HTML_PARSER_DOM_INDEX);

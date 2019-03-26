@@ -588,7 +588,14 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         let children = this.getTreeNode();
         let props = this.getProps();
         if(this.form){
-            delete props.value
+            delete props.value;
+        }
+        if(!children || children.length == 0) {
+            delete props.checkedKeys;
+            delete props.defaultCheckedKeys;
+            delete props.value;
+            delete props.selectedKeys;
+            delete props.defaultSelectedKeys;
         }
         return <AntdTree ref={ele=>this.ref=ele} {...props}>{children}</AntdTree>;
     }

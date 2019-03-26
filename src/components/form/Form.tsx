@@ -94,16 +94,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
         
     render() {
-        // console.log(this.props.value)
-        // let items: any = this.getFormItems();
-        // console.log(items)
-        // if(this.cacheItems != null) {
-        //     items = this.cacheItems;
-        // }else {
-        //     items = this.getFormItems();
-        //     this.cacheItems = items;
-        // }
-        // let items = this.getFormItems();
         let props:any = this.getProps();
         delete props.otherParams;
         delete props.formTagStates;
@@ -113,19 +103,34 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         delete props.validate;
         delete props.validation;
         delete props.ajax;
+        let children = this.getChildren();
         return (<AntdForm {...props}>
-            {this.getChildren()}
+            {children}
         </AntdForm>);
     }
 
     private getMethodParam() {
+        let key = this.ast.id + "_form_item__method";
+        let children: any = this.props.children;
+        let have = false;
+        if(children instanceof Array) {
+            children.forEach((child)=>{
+                if(child.key == key) {
+                    have = true;
+                }
+            });
+        }else {
+            if(children && children.key == key) {
+                have = true;
+            }
+        }
         let method = this.state.method;
-        if(method && method.toLowerCase() == "put") {
+        if(method && method.toLowerCase() == "put" && !have) {
             let formTag: any = this.props.form.getFieldDecorator("_method",{
                 initialValue: "put",
                 rules: []
             })(<input type="hidden" name="_method"/>);
-            let formItem = <AntdForm.Item key={this.props.id + "_form_item__method"}>
+            let formItem = <AntdForm.Item key={this.ast.id + "_form_item__method"}>
                {formTag}
             </AntdForm.Item>;
             return formItem;

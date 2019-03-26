@@ -69,6 +69,10 @@ interface Message {
     };
     confirm(title:string,message:string,...args: any[]): void;
 }
+interface JqueryTag {
+    ast: ASTElement;
+    realDom: Element;
+}
 declare var G: {
     SockJs:any;
     G$:JQueryStatic;
@@ -76,14 +80,14 @@ declare var G: {
     waitFuns: Array<Function>;
     registerCustomComponents():void;
     registerComponents(clazz:Function): void;
-    $: (selector?:string|object|Function|null,html?: JQuery<HTMLElement>, react?: boolean)=>any;
+    $: (selector?:string|object|Function|null,html?: JqueryTag, react?: boolean)=>any;
     components: {};
     userComponents: {};
     doWaitFuns:()=>{};
     render:(renderOptions?:RenderOptions)=>{};
     events: GearArray<string>;
     cannotSetStateEvents: GearArray<string>;
-    voidParent: Element;
+    // voidParent: Element;
     tag: any;
     messager: Message;
     utils: any;

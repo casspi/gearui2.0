@@ -27,6 +27,11 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
         };
     }
 
+    getProps() {
+        let props: any = G.G$.extend({}, this.state);
+        delete props.children;
+        return props;
+    }
 
     render() {
        
@@ -41,14 +46,15 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
                 value = value.replace(/\s/g,"&nbsp;");
             }
         }
+        let props = this.getProps();
         if(this.state.icon){
             var iconProps: any = {
                 key:"icon",
                 icon: this.state.icon,
             };
-            return <span {...this.state}><Icon.default {...iconProps}/><span key="text" dangerouslySetInnerHTML={{__html:value}}></span></span>;
+            return <span {...props}><Icon.default {...iconProps}/><span key="text" dangerouslySetInnerHTML={{__html:value}}></span></span>;
         }else
-            return <span {...this.state} dangerouslySetInnerHTML={{__html:value}}></span>;
+            return <span {...props} dangerouslySetInnerHTML={{__html:value}}></span>;
     }
 
     getValue() {

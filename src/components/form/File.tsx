@@ -21,7 +21,6 @@ export default class File<P extends typeof props, S extends state> extends FormT
             disabled: this.state.disabled == true || this.state.readOnly == true,
             placeholder: this.state.prompt,
             onClick: (e: any) => {
-                console.log(this.find("input[type='file']"));
                 this.find("input[type='file']").click();
                 this.doEvent("click",e);
             },
@@ -65,8 +64,8 @@ export default class File<P extends typeof props, S extends state> extends FormT
         let fileProps:any = this.getFileInputProps();
         if(this.form){
             delete state.value;
-            delete inputProps.value;
-            delete fileProps.value;
+            //delete inputProps.value;
+            // delete fileProps.value;
         }
         return <div {...state}>
                 <AntdInput {...inputProps}/>

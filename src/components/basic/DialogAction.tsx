@@ -81,7 +81,7 @@ export default class DialogAction<P extends typeof props, S extends state> exten
                 "loadType":obj.state.loadType || "iframe",
                 "width":obj.state.dialogWidth,
                 "height":obj.state.dialogHeight,
-                "maximized":obj.state.dialogWidth || obj.state.dialogHeight ? false : obj.state.maximized,
+                "maximized":obj.state.dialogWidth || obj.state.dialogHeight ? false : obj.state.maximized != false,
                 "url": url,
                 "controlBar":obj.props.controlBar==true?true:false,
                 "onConfirm":obj.props.onConfirm,
