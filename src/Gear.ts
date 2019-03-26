@@ -41,7 +41,14 @@ export default class G {
         let parser = new Parser();
         let astMsg  = parser.parse(el);
         let render = new Render();
+        let time = new Date();
+        let cacheHtmlStartTime = time.getTime();
+        console.log('cacheHtmlStartTime:'+cacheHtmlStartTime)
         this.cacheHtml = astMsg.cacheHtml;
+        let time1 = new Date();
+        let cacheHtmlEndTime = time1.getTime();
+        console.log('cacheHtmlEndTime:'+cacheHtmlEndTime)
+        console.log('cacheHtml-count:'+(cacheHtmlEndTime-cacheHtmlStartTime)/1000)
         this.cacheAst = astMsg.ast;
         render.render(astMsg.ast, astMsg.parent, renderOptions.mounted);
     }

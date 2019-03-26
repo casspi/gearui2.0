@@ -50,6 +50,9 @@ export default class GearUtil {
             let reactChildren: any;
             let clazz = GearUtil.getClass(ast);
             let props = null;
+            let time1 = new Date();
+            let ast_step1 = time1.getTime();
+            console.log('ast_step2:'+ast_step1)
             if(clazz) {
                 //控件
                 //如果是虚拟控件，需要在G对象中记录下来，方便在外部使用G(exp)方式查找
@@ -108,6 +111,10 @@ export default class GearUtil {
                     }
                 }
             }
+            let time2 = new Date();
+            let ast_step2 = time2.getTime();
+            console.log('ast_step2:'+ast_step2)
+            console.log('ast_count1:'+(ast_step2-ast_step1)/1000)
             return React.createElement(clazz, props, reactChildren);
         }else if(type == 2){
             //表达式 -- 暂未处理
