@@ -21,6 +21,7 @@ export default class File<P extends typeof props, S extends state> extends FormT
             disabled: this.state.disabled == true || this.state.readOnly == true,
             placeholder: this.state.prompt,
             onClick: (e: any) => {
+                console.log(this.find("input[type='file']"));
                 this.find("input[type='file']").click();
                 this.doEvent("click",e);
             },

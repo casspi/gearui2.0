@@ -91,6 +91,12 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
         
     }
 
+    componentWillUpdate(nextProps?: any, nextState?: any, nextContext?: any) {
+        this.beforeUpdate(nextProps, nextState, nextContext);
+    }
+
+    beforeUpdate(nextProps?: any, nextState?: any, nextContext?: any) {}
+
     //渲染完成之后触发
     componentDidMount() {
         this.realDom = <Element>this.findRealDom();

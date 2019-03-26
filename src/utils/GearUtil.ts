@@ -53,7 +53,7 @@ export default class GearUtil {
             if(clazz) {
                 //控件
                 //如果是虚拟控件，需要在G对象中记录下来，方便在外部使用G(exp)方式查找
-                if(ObjectUtil.isExtends(clazz, "Layout")) {
+                if(ObjectUtil.isExtends(clazz, "Layout")||ObjectUtil.isExtends(clazz, "Tabs")) {
                     //html节点
                     props = ast.attrsMap;
                     clazz = clazz || G.components["htmltag"];
