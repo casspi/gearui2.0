@@ -186,6 +186,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 children = [children];
             }
             asts.forEach((ast: ASTElement)=>{
+                ast.parent = this.ast;
                 let reactEle = GearUtil.newReactInstance(ast);
                 children.push(reactEle);
             });
@@ -862,37 +863,39 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     }
 
     createControl(geartype:string,options:any,callback:Function) {
-        let container = this[0];
+        let container = this.realDom;
         let props = GearUtil.toProps(options);
         let events:any = null;
         if(props["events"]){
             events = props["events"];
             delete props["events"];
         }
-        if(container.tagName.toLowerCase()=="form"){
-            props["formEle"] = container;
-        }else{
-            let form = this.parents("form:first");
-            if(form[0]) {
-                props["formEle"] = form[0];
-            }
-        }
-        let ele = GearUtil.newInstanceByType(geartype,props);
-        ReactDOM.render(ele,container,function(){
-            if(events){
-                for(let name in events){
-                    let fun = events[name];
-                    if(typeof fun == "function"){
-                        if(this[name]){
-                            // 注册事件
-                            this[name].call(this,fun);
+        let ele: any = GearUtil.newInstanceByType(geartype, options, this);
+        // if(container.tagName.toLowerCase()=="form"){
+        //     props["form"] = container;
+        // }else{
+        //     let form = this.parents("form:first");
+        //     if(form[0]) {
+        //         props["formEle"] = form[0];
+        //     }
+        // }
+        if(ele) {
+            ReactDOM.render(ele,container,function(){
+                if(events){
+                    for(let name in events){
+                        let fun = events[name];
+                        if(typeof fun == "function"){
+                            if(this[name]){
+                                // 注册事件
+                                this[name].call(this,fun);
+                            }
                         }
                     }
                 }
-            }
-            if(callback)
-                callback.call(this);
-        });
+                if(callback)
+                    callback.call(this);
+            });
+        }
     }
 
     doRender(callback?:Function) {

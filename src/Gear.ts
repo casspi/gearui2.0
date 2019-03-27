@@ -37,13 +37,18 @@ export default class G {
     static render(renderOptions: RenderOptions) {
         //渲染指定节点下的控件
         //el: 指定节点
+        let time1 = new Date().getTime();
         let el = renderOptions.el;
         let parser = new Parser();
         let astMsg  = parser.parse(el);
+        let time2 = new Date().getTime();
         let render = new Render();
         this.cacheHtml = astMsg.cacheHtml;
         this.cacheAst = astMsg.ast;
         render.render(astMsg.ast, astMsg.parent, renderOptions.mounted);
+        let time3 = new Date().getTime();
+        console.log(time2 - time1);
+        console.log(time3 - time2);
     }
 
     //注册自定义组件
@@ -71,24 +76,33 @@ export default class G {
 
     //注册组件
     static registerCustomComponents() {
+        let time1 = new Date().getTime();
         let requireComponent = require['context']('./components', true , /[A-Z]\w+\.(tsx)$/);
+        console.log("注册的组件个数：" + requireComponent.keys().length);
         requireComponent.keys().forEach((fileName: string) => {
             if(fileName.endsWith('index.ts')) {
                 return;
             }
+            console.log("注册："+ (fileName));
             let fileNameArr = fileName.split('/');
             let fileNameReal = "./" + fileNameArr[fileNameArr.length - 1];
+            let time11 = new Date().getTime();
             const componentConfig = requireComponent(fileName);
+            let time121 = new Date().getTime();
+            console.log("注册单个时间1："+ (time121 - time11));
             let componentName:string = fileNameReal.replace(/^\.\/(.*)\.\w+$/, '$1');
             if(componentConfig.useName){
                 componentName = componentConfig.useName
             }
+            
             let componentNameReal = componentName;
             componentName = componentName.toLowerCase();
+            
             // componentName = componentName.toLowerCase();
             //componentName = 'g-' + componentName.toLowerCase();
             let component = componentConfig.default || componentConfig;
             if(component) {
+                
                 //创建一个包含所有的组件方法的类
                 component.props = componentConfig.props;
                 component.state = componentConfig.state;
@@ -99,7 +113,11 @@ export default class G {
                     this.components["gform"] = componentConfig.Form;
                 }
             }
+            let time12 = new Date().getTime();
+            console.log("注册单个时间6："+ (time12 - time121));
         });
+        let time111 = new Date().getTime();
+        console.log("注册总时间："+ (time111 - time1));
     }
 
     static addMothedToTag(key: string, clazz: any) {

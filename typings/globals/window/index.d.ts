@@ -67,12 +67,13 @@ interface Message {
         success(content:string,duration?:number,onClose?:Function): void;
         loading(content:string,duration?:number,onClose?:Function): void;
     };
-    confirm(title:string,message:string,...args: any[]): void;
+    confirm(args: any): void;
 }
 interface JqueryTag {
     ast: ASTElement;
     realDom: Element;
 }
+
 declare var G: {
     SockJs:any;
     G$:JQueryStatic;

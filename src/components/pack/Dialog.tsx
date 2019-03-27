@@ -4,8 +4,6 @@ import * as ReactDOM from 'react-dom';
 import { Modal as AntdModal } from 'antd';
 import { ObjectUtil, UUID } from '../../utils';
 import { Http } from "../../utils";
-import VoidTag from '../VoidTag';
-import Footer from '../layout/Footer';
 import {Icon as AntdIcon} from 'antd';
 export var props = {
     ...Tag.props,
