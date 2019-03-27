@@ -20,7 +20,7 @@ export default class Color<P extends typeof props & InputProps, S extends state 
 
     }
     getInitialState(): state & InputProps {
-        return G.G$.extend({},this.state,
+        return G.G$.extend({},
             {
                 onClick: (e: any)=>{
                     this.showPicker();
@@ -65,14 +65,15 @@ export default class Color<P extends typeof props & InputProps, S extends state 
     }
 
     getProps() {
-        super.getProps()
-        let style = G.G$.extend(props.style || {},{border:'none',background: "#" + this.state.color, color: this.state.color > "aaaaaa"?"#000000":"#FFFFFF",display:"block",disabled:false});
+      
+        let style = G.G$.extend( {},{border:'none',background: "#" + this.state.color, color: this.state.color > "aaaaaa"?"#000000":"#FFFFFF",display:"block",disabled:false});
         let propsl: any = G.G$.extend({},this.state,{
             style:style,
             value: this.getValue(),
 
         });
         delete propsl.showPicker;
+        delete propsl.onChange;
         return propsl;
     }
     afterRender() {
@@ -110,14 +111,12 @@ export default class Color<P extends typeof props & InputProps, S extends state 
         }
     }
     makeJsx() {
-        // let position1:any = "absolute";
-        // let position2:any = "fixed";
       
-            const popoverStyles = {
+            const popoverStyles:Object = {
                 position: "absolute",
                 zIndex: 2
             };
-            const coverStyles = {
+            const coverStyles:Object = {
                 position: "fixed",
                 top: '0px',
                 right: '0px',
@@ -125,10 +124,10 @@ export default class Color<P extends typeof props & InputProps, S extends state 
                 left: '0px',
             };
             
-
+        let props:any =  this.getProps()    
         let pickerProps: any = this.getPickerProps();
         return <span>
-                {super.render()}
+                <Text.default {...props}></Text.default>
                 {this.state.showPicker ? 
                     <div style={popoverStyles}>
                         <div style={coverStyles} onClick={this.closePicker.bind(this)}/>
