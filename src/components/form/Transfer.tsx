@@ -1,6 +1,6 @@
 import { Button,Checkbox} from 'antd';
 import { TransferProps as AntdTransferProps } from 'antd/lib/transfer';
-import  {FormTag} from '../form';
+import * as FormTag from '../form/FormTag';
 import * as React from 'react';
 import G from '../../Gear';
 import { TreeProps as AntdTreeProps } from 'antd/lib/tree';

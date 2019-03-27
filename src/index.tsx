@@ -16,11 +16,11 @@ GearWeb = G.G$.extend(true, GearWeb, GN);
 window.G = GearWeb;
 window.G.SockJs = SockJs;
 // window.G.registerCustomComponents();
-window.G.messager = Message;
+window.G.messager = Message.default;
 window.G.dialog = Dialog;
 window.G.utils = utils;
-console.log(Tags);
-window.G.tag = Tags;
+window.G.tag = Tags.tags;
+window.G.components = Tags.components;
 let time111 = new Date().getTime();
 console.log("加载前时间1："+ (time111 - time1));
 //兼容老版的写法--------------------

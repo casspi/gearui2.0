@@ -1,8 +1,6 @@
 import * as ReactDOM from 'react-dom';
 import JqueryTag, { props as JqueryTagProps, state as JqueryTagState } from "./JqueryTag";
 import { ObjectUtil, UUID } from '../utils';
-import * as Date from './form/Date';
-import { Children } from 'react';
 export var props = {
     id: GearType.String,
     name: GearType.String,
