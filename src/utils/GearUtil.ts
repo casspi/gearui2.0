@@ -1,5 +1,6 @@
 import * as React from 'react';
 import UUID from './uuid';
+import Parser from '../core/Parser';
 import { ObjectUtil } from '.';
 import DomPropertiesToReactProperties from '../utils/DomPropertiesToReactProperties';
 export default class GearUtil {
@@ -9,38 +10,59 @@ export default class GearUtil {
      * @param type 
      * @param props 
      */
-    static newInstanceByType(type: any, props?: any) {
-        let children;
-        if(props) {
-            if(!props["key"]) {
-                if(props["id"]) {
-                    props["key"] = props["id"];
-                }else {
-                    props["key"] = UUID.get();
-                }
-            }
-            children = props.children;
-            delete props.children;
+    static newInstanceByType(type: any, props?: any,parent?: JqueryTag) {
+        
+        let typeElement:Element = document.createElement(type);
+        for(let key in props) {
+            typeElement.setAttribute(key, props[key]);
         }
-        if(typeof type == "string") {
-            if(type.startsWith("g")) {
-                if(type.startsWith("g-")) {
-                    type = G.components[type.substring(2, type.length)];
-                }else {
-                    type = G.components[type.substring(1, type.length)];
-                }
-            }else {
-                type = G.components[type];
-            }
+        let parser = new Parser();
+        let astMsg: ParseResult = parser.parse(typeElement, false);
+        let html = G.G$(astMsg.cacheHtml).html();
+        let cacheHtmlElement = G.G$(G.cacheHtml);
+        let ast = astMsg.ast.children[0];
+        if(parent && parent.ast) {
+            let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+parent.ast.id+"']");
+            cacheElement.append(html);
+            G.cacheHtml = cacheHtmlElement.prop("outerHTML");
+            ast.parent = parent.ast;
         }
-        return React.createElement(type, props, children);
+        let _children = props.children;
+        props["__children__"] = _children;
+        delete props.children;
+        let reactEle = GearUtil.newReactInstance(ast, props);
+        return reactEle;
+        // if(props) {
+        //     if(!props["key"]) {
+        //         if(props["id"]) {
+        //             props["key"] = props["id"];
+        //         }else {
+        //             props["key"] = UUID.get();
+        //         }
+        //     }
+        //     let _children = props.children;
+        //     props["__children__"] = _children;
+        //     delete props.children;
+        // }
+        // if(typeof type == "string") {
+        //     if(type.startsWith("g")) {
+        //         if(type.startsWith("g-")) {
+        //             type = G.components[type.substring(2, type.length)];
+        //         }else {
+        //             type = G.components[type.substring(1, type.length)];
+        //         }
+        //     }else {
+        //         type = G.components[type];
+        //     }
+        // }
+        // return React.createElement(type, props, []);
     }
 
     /**
      * 根据ast树创建一个react对象
      * @param ast ast树
      */
-    static newReactInstance(ast: ASTElement) {
+    static newReactInstance(ast: ASTElement,paramProps?: any) {
         let attrs = ast.attrsMap;
         let type = ast.type;
         let tag = ast.tag;
@@ -50,9 +72,6 @@ export default class GearUtil {
             let reactChildren: any;
             let clazz = GearUtil.getClass(ast);
             let props = null;
-            let time1 = new Date();
-            let ast_step1 = time1.getTime();
-            console.log('ast_step2:'+ast_step1)
             if(clazz) {
                 //控件
                 //如果是虚拟控件，需要在G对象中记录下来，方便在外部使用G(exp)方式查找
@@ -111,10 +130,9 @@ export default class GearUtil {
                     }
                 }
             }
-            let time2 = new Date();
-            let ast_step2 = time2.getTime();
-            console.log('ast_step2:'+ast_step2)
-            console.log('ast_count1:'+(ast_step2-ast_step1)/1000)
+            if(paramProps) {
+                props = G.G$.extend(props, paramProps);
+            }
             return React.createElement(clazz, props, reactChildren);
         }else if(type == 2){
             //表达式 -- 暂未处理

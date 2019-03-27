@@ -19,6 +19,7 @@ export var props = {
     needUpdateToState: GearType.Array<string>(),
     //gearui内部使用的children对象
     children: GearType.Any,
+    __children__: GearType.Any,
     ...JqueryTagProps
 }
 

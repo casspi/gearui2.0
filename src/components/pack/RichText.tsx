@@ -170,13 +170,11 @@
 // }
 import * as Tag from '../Tag';
 import * as Dialog from './Dialog';
-import * as Dialogaction from '../basic/DialogAction';
 import * as React from 'react';
 import {Message} from '../pack';
 import  G from '../../Gear';
-import BraftEditor from 'braft-editor'
+// import BraftEditor from 'braft-editor'
 
-import 'braft-editor/dist/index.css'
 export var props = {
     ...Tag.props,
     ueTitle: GearType.String,
@@ -283,7 +281,8 @@ export default class Richtext<P extends typeof props,S extends state> extends Ta
     render() {
         // return <script id={this.props.id} type="text/plain"></script>;
         let props = this.getProps();
-        return <BraftEditor {...props}></BraftEditor>
+        // return <BraftEditor {...props}></BraftEditor>
+        return null;
         // <div style={{width:"100%"}}></div>
         //return <div ref={props.ref} className={props.className} style={{border: "1px solid","minHeight": "100px",padding: "15px",cursor:"text"}} onClick={props.onClick.bind(this)}></div>;
     }
