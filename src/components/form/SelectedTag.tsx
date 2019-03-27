@@ -8,6 +8,7 @@ export var props = {
     color: GearType.String,
     text: GearType.String,
     closable: GearType.Boolean,
+    key:GearType.Boolean
 };
 
 export interface state extends FormTag.state {
@@ -51,7 +52,7 @@ export default class SelectedTag<P extends typeof props, S extends state> extend
     makeJsx() {        
         let props:any = this.getProps();
         delete props.validation;
-        return <AntdTag {...props}>{this.getText()||this.getValue()}</AntdTag>;
+        return <AntdTag {...props} key={UUID.get()}>{this.getText()||this.getValue()}</AntdTag>;
     }
 
     getText(){

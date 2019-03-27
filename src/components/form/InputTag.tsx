@@ -118,6 +118,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                 }
             },
             ref:(ele: any)=>{
+                console.log(ele)
                 this._inputControl = ele;
             }        
         });
@@ -287,8 +288,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         if(values instanceof Array) {
             values.map((value: any)=>{
                 let props: any = this.getSelectedTagProps(value.key,value.value,value.text);
-                console.log("tag_"+value.key)
-                tags.push(<SelectedTag.default key={"tag_"+value.key} {...props}/>);
+                tags.push(<SelectedTag.default key={"tag_"+value.key+UUID.get()} {...props}/>);
             });
         }
         return tags;
@@ -352,6 +352,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             inputVisible: true,
         },()=>{
             if(this._inputControl){
+                console.log(this._inputControl)
                 this._inputControl.focus();
             }
         });

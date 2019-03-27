@@ -862,7 +862,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     }
 
     createControl(geartype:string,options:any,callback:Function) {
-        let container = this[0];
+        let container = this.realDom;
         let props = GearUtil.toProps(options);
         let events:any = null;
         if(props["events"]){

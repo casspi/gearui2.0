@@ -643,8 +643,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 }
                 
             });
-        }
-       
+        }       
     }
 
     getParentTree() {
@@ -676,18 +675,23 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         }
     }
   
-    treeUpdate() {//更新父子关联数据
+    updateReftree() {//更新父子关联数据
         let checked: any = this.getChecked();
         if(checked.length <= 0) {
             checked = this.getSelected();
         }
         let node = checked instanceof Array ? (checked.length > 0 ? checked[0] : null) : checked;
-        console.log(node)
-        console.log(this.childTree)
         if(this.childTree instanceof Tree) {
             if(this.state.options != null && this.state.options.length > 0) {
                 if(node) {
-                    this.childTree.loadData(Http.appendUrlParam(this.childTree.state.url,{code:(node.value || node.id)}));
+                    if(this.childTree._promise){
+                        this.childTree._promise.then((e)=>{
+                            let _childTree = e.result;
+                            _childTree.loadData(Http.appendUrlParam(_childTree.props.url,{code:(node.value || node.id)}))
+                        })
+                    }else{
+                        this.childTree.loadData(Http.appendUrlParam(this.childTree.props.url,{code:(node.value || node.id)}));
+                    }
                 }else {
                     this.childTree.setState({
                         options: []
@@ -899,7 +903,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
 
     getNode(id?: any): TreeNode | undefined {
         if(id) {
-            console.log(this.nodes.get(id))
             return this.nodes.get(id);
         }
         return undefined;
@@ -1640,7 +1643,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         this.doEvent("select",node);
         Tree.onSelect.call(this,node);
         //根据关联关系，更新父子数据
-        this.treeUpdate()
+        this.updateReftree()
     }
 
     // 在选中节点之前触发
