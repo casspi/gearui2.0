@@ -870,7 +870,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
             events = props["events"];
             delete props["events"];
         }
-        let ele: any = GearUtil.newInstanceByType(geartype, options, this);
+        let ele: any = GearUtil.newInstanceByType('g-'+geartype, options, this);
         // if(container.tagName.toLowerCase()=="form"){
         //     props["form"] = container;
         // }else{

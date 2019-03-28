@@ -234,7 +234,9 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         if (fun && G.G$.isFunction(fun)) {
             this.bind("blur", fun);
         }else{
-            this.find("input").blur();
+            if(this.find("input")){
+                this.find("input").blur();
+            }
         }
     }
 
@@ -280,8 +282,6 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         }
     }
     clear(){
-        this.setValue(null,()=>{
-            console.log(this.state.value)
-        })
+        this.setValue(null)
     }
 }

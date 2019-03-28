@@ -1,6 +1,6 @@
 import { Button,Checkbox} from 'antd';
 import { TransferProps as AntdTransferProps } from 'antd/lib/transfer';
-import  {FormTag} from '../form';
+import * as FormTag from '../form/FormTag';
 import * as React from 'react';
 import G from '../../Gear';
 import { TreeProps as AntdTreeProps } from 'antd/lib/tree';
@@ -113,7 +113,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             showIcon:this.props.showIcon,
             iconStyle:this.props.iconStyle,
             lines:this.props.lines,
-            value:this.getPropStringArrayValue(this.props.value)||[],
+            // value:this.getPropStringArrayValue(this.props.value)||[],
             onCheck:(node:any)=>{
                 if(node.checked==false)
                     this._setLeftChecked(false);
@@ -144,7 +144,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                         this._options = [];
                     }
                     console.log(this._leftTree.props.value)
-                    if(this._leftTree.props.value.length>0){
+                    if(this.props.value){
                         // 如果有默认值，将默认值移至左侧
                         this._transferCheckedItemToRight();
                     }

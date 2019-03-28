@@ -41,14 +41,7 @@ export default class G {
         let parser = new Parser();
         let astMsg  = parser.parse(el);
         let render = new Render();
-        let time = new Date();
-        let cacheHtmlStartTime = time.getTime();
-        console.log('cacheHtmlStartTime:'+cacheHtmlStartTime)
         this.cacheHtml = astMsg.cacheHtml;
-        let time1 = new Date();
-        let cacheHtmlEndTime = time1.getTime();
-        console.log('cacheHtmlEndTime:'+cacheHtmlEndTime)
-        console.log('cacheHtml-count:'+(cacheHtmlEndTime-cacheHtmlStartTime)/1000)
         this.cacheAst = astMsg.ast;
         render.render(astMsg.ast, astMsg.parent, renderOptions.mounted);
     }
@@ -76,51 +69,51 @@ export default class G {
         return this.updating;
     }
 
-    //注册组件
-    static registerCustomComponents() {
-        let time1 = new Date().getTime();
-        let requireComponent = require['context']('./components', true , /[A-Z]\w+\.(tsx)$/);
-        console.log("注册的组件个数：" + requireComponent.keys().length);
-        requireComponent.keys().forEach((fileName: string) => {
-            if(fileName.endsWith('index.ts')) {
-                return;
-            }
-            console.log("注册："+ (fileName));
-            let fileNameArr = fileName.split('/');
-            let fileNameReal = "./" + fileNameArr[fileNameArr.length - 1];
-            let time11 = new Date().getTime();
-            const componentConfig = requireComponent(fileName);
-            let time121 = new Date().getTime();
-            console.log("注册单个时间1："+ (time121 - time11));
-            let componentName:string = fileNameReal.replace(/^\.\/(.*)\.\w+$/, '$1');
-            if(componentConfig.useName){
-                componentName = componentConfig.useName
-            }
+    // //注册组件
+    // static registerCustomComponents() {
+    //     let time1 = new Date().getTime();
+    //     let requireComponent = require['context']('./components', true , /[A-Z]\w+\.(tsx)$/);
+    //     console.log("注册的组件个数：" + requireComponent.keys().length);
+    //     requireComponent.keys().forEach((fileName: string) => {
+    //         if(fileName.endsWith('index.ts')) {
+    //             return;
+    //         }
+    //         console.log("注册："+ (fileName));
+    //         let fileNameArr = fileName.split('/');
+    //         let fileNameReal = "./" + fileNameArr[fileNameArr.length - 1];
+    //         let time11 = new Date().getTime();
+    //         const componentConfig = requireComponent(fileName);
+    //         let time121 = new Date().getTime();
+    //         console.log("注册单个时间1："+ (time121 - time11));
+    //         let componentName:string = fileNameReal.replace(/^\.\/(.*)\.\w+$/, '$1');
+    //         if(componentConfig.useName){
+    //             componentName = componentConfig.useName
+    //         }
             
-            let componentNameReal = componentName;
-            componentName = componentName.toLowerCase();
+    //         let componentNameReal = componentName;
+    //         componentName = componentName.toLowerCase();
             
-            // componentName = componentName.toLowerCase();
-            //componentName = 'g-' + componentName.toLowerCase();
-            let component = componentConfig.default || componentConfig;
-            if(component) {
+    //         // componentName = componentName.toLowerCase();
+    //         //componentName = 'g-' + componentName.toLowerCase();
+    //         let component = componentConfig.default || componentConfig;
+    //         if(component) {
                 
-                //创建一个包含所有的组件方法的类
-                component.props = componentConfig.props;
-                component.state = componentConfig.state;
-                this.components[componentName] = component;
-                this.tag[componentNameReal] = component;
-                this.tag[componentName] = component;
-                if(componentName == "form") {
-                    this.components["gform"] = componentConfig.Form;
-                }
-            }
-            let time12 = new Date().getTime();
-            console.log("注册单个时间6："+ (time12 - time121));
-        });
-        let time111 = new Date().getTime();
-        console.log("注册总时间："+ (time111 - time1));
-    }
+    //             //创建一个包含所有的组件方法的类
+    //             component.props = componentConfig.props;
+    //             component.state = componentConfig.state;
+    //             this.components[componentName] = component;
+    //             this.tag[componentNameReal] = component;
+    //             this.tag[componentName] = component;
+    //             if(componentName == "form") {
+    //                 this.components["gform"] = componentConfig.Form;
+    //             }
+    //         }
+    //         let time12 = new Date().getTime();
+    //         console.log("注册单个时间6："+ (time12 - time121));
+    //     });
+    //     let time111 = new Date().getTime();
+    //     console.log("注册总时间："+ (time111 - time1));
+    // }
 
     static addMothedToTag(key: string, clazz: any) {
         let _this = this;

@@ -77,7 +77,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
 
     getInputProps() {
         let state: state = G.G$.extend({}, this.state);
-
+        
         let value = state.value || "";
         if(state.mustMatch == true){
             // 如果控件值必与是列表中存在的值，这里应使用隐藏字段传值，所以原控件不应有名称
@@ -96,6 +96,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         delete state.invalidType;
         delete state.options;
         return G.G$.extend({}, state, {
+            value:value,
             onFocus: (e: any) => {
                 // 获得焦点时，如果searchOptions为空，则加载一次
                 if(this.state.mustMatch == true && (!this.state.searchOptions || this.state.searchOptions.length == 0)) {
@@ -250,7 +251,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
     }
 
     getAutoCompleteProps(): any {
-        return {
+        return G.G$.extend({},this.state,{
             allowClear: false,
             className: "autocomplete-control" + (this.state.className ? " " + this.state.className : ""),
             style: { width: this.state.style ? this.state.style.width : null,height: this.state.style ? this.state.style.height : null},
@@ -295,7 +296,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 }
                 return container;                   
             },            
-        };
+        });
     }
 
     private search(value?: any, callback?: () => void) {
@@ -407,6 +408,13 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         }
     }
     
+    protected afterReceiveProps(nextProps: P):Partial<typeof props>{
+        let style:any = nextProps.style;
+        return{
+            style:style
+        }
+    }
+
     afterRender() {
         let callback = ()=>{
             // 加载完成后触发
@@ -435,7 +443,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         else{
             // 非异步查询第一次时载入所有数据放到内存，以后根据内存中数据进行过滤
             this.loadData(null, callback);
-        } 
+        }
     }
 
     makeJsx() {
@@ -451,7 +459,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         }
         let acprops = this.getAutoCompleteProps();  
         if(this.form){
-            delete acprops.value;
+            // delete acprops.value;
             delete acprops.defaultValue;
         }
         if(this.state.mustMatch == true){
@@ -485,18 +493,16 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
     // }
 
     reset(){
-        super.reset();
-        this.setState({
-            value:this.props.value || ""
-        },()=>{
-            this.loadData();
-        })
-        // this.setValue(
-        //     this.props.value || ""
-        // ,()=>{
-        //     console.log(this.state.value)
-        //     this.loadData();
-        // });
+        // if(this.form){
+        //     super.reset();
+        // }else{
+        // }
+            super.reset();
+            this.setState({
+                value:this.props.value || ""
+            },()=>{
+                this.loadData();
+            })
     }
 
     clear(){
@@ -525,20 +531,5 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             this.setDefaultOptions();
         }
     }
-   
-    // // 根据自定义函数返回的格式对显示内容进行格式化
-    // private _doMatchFormat(option){
-    //     let props = {
-    //         key : option.value || UUID.get(),
-    //         value : option.value || option.text,
-    //         text : option.text,
-    //         attributes: option.attributes
-    //     }
-    //     if(this._matchFormat){
-    //         return <Option {...props}>{HtmlToJsx.htmlToJsx(this._matchFormat.call(this,option))}</Option>;
-    //     }else{
-    //         return <Option {...props}>{option.text}</Option>;
-    //     }
-    // }
 
 }

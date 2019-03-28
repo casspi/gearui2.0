@@ -256,7 +256,6 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
 
     makeJsx(): React.ReactNode {return null;}
-
     render() {
         let ele: React.ReactNode = this.makeJsx();
         if(this.form) {

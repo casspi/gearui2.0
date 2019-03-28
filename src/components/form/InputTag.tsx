@@ -7,7 +7,7 @@ import { methods } from '../../utils/http';
 import * as SelectedTag from './SelectedTag';
 import DicUtil from '../../utils/DicUtil';
 import { UUID, ObjectUtil } from '../../utils';
-import { any } from 'prop-types';
+import {Parser} from '../../core'
 
 export var props = {
     ...FormTag.props,
@@ -91,7 +91,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     getInputProps() {
         return G.G$.extend({},{
             className: "inputtag-text-control",
-            style: { width: this.state.inputWidth || 150,},// display: this.state.inputVisible ? "" : "none" },
+            style: { width: this.state.inputWidth || 150},// display: this.state.inputVisible ? "" : "none" },
             onBlur:() => {
                 let value = this._inputControl.getValue();
                 let text = this._inputControl.getText();
@@ -114,11 +114,12 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             },
             onPressEnter: (e: any) => {
                 if(this.state.mustMatch==false || (this.state.dictype ==null && this.state.url == null)){
-                    this._inputControl.blur();
+                    // this._inputControl.blur()//Text组件的blur事件，
+                    //由于inputtag引用的text 没有 ast 对象无法正常使用find 所以特殊处理一些操作
+                    G.G$(this._inputControl.realDom).blur();
                 }
             },
             ref:(ele: any)=>{
-                console.log(ele)
                 this._inputControl = ele;
             }        
         });
@@ -134,6 +135,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             async: this.state.async,
             limit: this.props.limit,
             rows: this.state.rows,
+            style: { width: this.state.inputWidth || 150,display:this.state.inputVisible?"block":"none"},
             // onMatchFormat: (option: any) => {
             //     this.doEvent("matchFormat", option);
             // },
@@ -158,7 +160,6 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             },
             onBlur: (e: any) => {
                 this._hideInput();
-                
             },
             onSelect: (v:any) => {//根据antd api 将onchange改为onSelect
                 let vobj = this._inputControl.getOption(v);
@@ -256,7 +257,15 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             if(this.form){
                 delete props.value
             }
-            inputControl = <span style={{display:this.state.inputVisible?'block':'none'}}><AutoComplete.default key={"input"} {...props}></AutoComplete.default></span>;
+            inputControl = <AutoComplete.default key={"input"} {...props}></AutoComplete.default>
+            // if(this.state.inputVisible){
+            //     G.G$.extend(props.style,{display:"block"})
+            //     console.log(props.style)
+            //     inputControl = <AutoComplete.default key={"input"} {...props}></AutoComplete.default>//<span style={{display:this.state.inputVisible?'block':'none'}}></span>;
+            // }else{
+            //     G.G$.extend(props.style,{display:"none"})
+            //     inputControl = <AutoComplete.default key={"input"} {...props}></AutoComplete.default>//<span style={{display:this.state.inputVisible?'block':'none'}}></span>;
+            // }
         }else{
             let props:any = this.getInputProps();
             delete props.invalidType;
@@ -347,19 +356,23 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     }
 
     // 显示输入控件
-    private _showInput(){       
+    private _showInput(){  
         this.setState({
             inputVisible: true,
         },()=>{
             if(this._inputControl){
-                console.log(this._inputControl)
-                this._inputControl.focus();
+                // console.log(this._inputControl.realDom)
+                G.G$(this._inputControl.realDom).find('input').focus()
+                // this._inputControl.focus();
             }
         });
     }
 
     // 隐藏输入框
-    private _hideInput(){    
+    private _hideInput(){   
+        // if(this._inputControl.toggle){
+        //     this._inputControl.toggle(false)
+        // } 
         this.setState({
             inputVisible: false,
         },()=>{
@@ -561,11 +574,11 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     }  
 
     reset(){
-        if(this.form) {
-            super.reset();
-        }else {
-            this._loadDefault();
-        }
+        super.reset();
+        this._loadDefault();
+        // if(this.form) {
+        // }else {
+        // }
         
     }
 

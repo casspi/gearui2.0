@@ -5,13 +5,11 @@ export default class TelephoneValidator extends Validator {
     // message = this.message || "请输入一个正确的电话号码";
 
     validator = (rule: any, value: string, callback: any) => {
-        console.log(value)
         if (value != null && value.trim() != "") {
             let regMoblie = /^1[3|4|5|7|8]\d{9}$/;
             let regLandline = /^(0[0-9]{2,3}\-)?([2-9][0-9]{6,7})(\-[0-9]{1,4})?$/;
             let message;
             let valueArray = value.split(",");
-            console.log(valueArray)
             if ((!this.props.multiple || this.props.multiple == false || this.props.multiple=="false") && valueArray.length > 1) {
                 message = this.message ||"请输入一个有效的电话号码";
                 callback(message);

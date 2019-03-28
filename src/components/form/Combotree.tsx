@@ -365,6 +365,15 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         this.find(".ant-select-selection").find("input").blur(...args);
     }      
    
-
+    reset(){
+        super.reset();
+        // this.setValue(this.props.value || "")
+        // this.setValue(
+        //     this.props.value || ""
+        // ,()=>{
+        //     console.log(this.state.value)
+        //     this.loadData();
+        // });
+    }
     
 }

@@ -7,10 +7,10 @@ import * as Websocket from './Websocket';
 import * as Wrapper from './Wrapper';
 import * as basic from './basic';
 import * as data from './data';
-// import * as form from './form';
-// import * as layout from './layout';
-// import * as navigation from './navigation';
-// import * as pack from './pack';
+import * as form from './form';
+import * as layout from './layout';
+import * as navigation from './navigation';
+import * as pack from './pack';
 Component.default["props"] = Component.props;
 HtmlTag.default["props"] = HtmlTag.props;
 Websocket.default["props"] = Websocket.props;
@@ -19,9 +19,7 @@ var tags = {
     JqueryTag: JqueryTag.default,
     Tag: Tag.default,
     // FormTag,
-    component: Component.default,
     Component: Component.default,
-    htmltag: HtmlTag.default,
     HtmlTag: HtmlTag.default,
     VoidTag: VoidTag.default,
     websocket: Websocket.default,
@@ -30,26 +28,35 @@ var tags = {
     Wrapper: Wrapper.default,
 }
 var components = {};
-for(let key in basic) {
-    let keyLower = key.toLowerCase();
-    if(key && basic[key] && basic[key].default && basic[key].props) {
-        basic[key].default["props"] = basic[key].props;
-        tags[keyLower] = basic[key].default;
-        tags[key] = basic[key].default;
-        components[key] = basic[key].default;
+tags["component"] = Component.default;
+tags["Component"] = Component.default;
+components["component"] = Component.default;
+tags["htmltag"] = HtmlTag.default;
+tags["HtmlTag"] = HtmlTag.default;
+components["htmltag"] = HtmlTag.default;
+tags["websocket"] = Websocket.default;
+tags["Websocket"] = Websocket.default;
+components["websocket"] = Websocket.default;
+tags["wrapper"] = Wrapper.default;
+tags["Wrapper"] = Wrapper.default;
+components["wrapper"] = Wrapper.default;
+var addComponents = function(params:any) {
+    for(let key in params) {
+        let keyLower = key.toLowerCase();
+        if(key && params[key] && params[key].default && params[key].props) {
+            params[key].default["props"] = params[key].props;
+            tags[keyLower] = params[key].default;
+            tags[key] = params[key].default;
+            components[keyLower] = params[key].default;
+        }
     }
 }
-
-for(let key in data) {
-    let keyLower = key.toLowerCase();
-    if(key && data[key] && data[key].default && data[key].props) {
-        data[key].default["props"] = data[key].props;
-        tags[keyLower] = data[key].default;
-        tags[key] = data[key].default;
-        components[key] = data[key].default;
-    }
-}
-
+addComponents(basic);
+addComponents(data);
+addComponents(form);
+addComponents(layout);
+addComponents(navigation);
+addComponents(pack);
 export {
     tags,
     components,
