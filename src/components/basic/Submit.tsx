@@ -1,13 +1,8 @@
-import {Button as AntdButton } from 'antd';
-import * as gform from '../form/Form';
-import * as React from 'react';
-import  G from '../../Gear';
-import {Message} from '../pack';
-
-// import { Ajax } from '../core/cores';
-// import {Util} from '../util/utils';
+import { Form } from '../form/Form';
+import G from '../../Gear';
+import { default as Message} from '../pack/Message';
+import { ObjectUtil } from '../../utils';
 import * as Button from './Button';
-// import { Form } from '../form/Form';
 export var props = {
     ...Button.props,
     url: GearType.String,//表单提交的地址，不设置的话则使用form action属性上的路径
@@ -20,15 +15,37 @@ export interface state extends Button.state {
 
 }
 export default class Submit<P extends typeof props,S extends state> extends Button.default<P,S> {
+
+    protected form: Form<any, any>;
+    constructor(props:any, context: {}){
+        super(props);
+        // this._propsValue = this.props.value;
+        this.setForm(this.ast);
+    }
+
+    private setForm(ast: ASTElement) {
+        if(ast) {
+            let parent = ast.parent;
+            if(parent && ObjectUtil.isExtends(parent.vmdom, "Form")) {
+                this.form = parent.vmdom;
+            }else {
+                this.setForm(parent);
+            }
+        }
+    }
+
     // 定义一个click事件
     protected clickEvent(){
         // 先查找当前控件的上级form定义
-        let form = G.$("#"+this.props.form);
-        if(form == null || !(form instanceof gform.Form)){
-            // 先查找当前控件的上级form对象
-            form = this.getForm(G.G$(this.realDom).parents("form:first"));
+        let form = this.form;
+        if(this.props.form) {
+            form = G.$("#"+this.props.form);
         }
-        if(form == null || !(form instanceof gform.Form)){
+        if(form == null || !(form instanceof Form)){
+            // 先查找当前控件的上级form对象
+            form = this.form;
+        }
+        if(form == null || !(form instanceof Form)){
             // 还没有就找页面上第一个form
             form = this.getForm(G.G$("form:first"));
         }
@@ -39,7 +56,7 @@ export default class Submit<P extends typeof props,S extends state> extends Butt
         }
         if(form){
             // 表单存在
-            if(form instanceof gform.Form) {
+            if(form instanceof Form) {
                 // 是一个gear-form表单
                 if(this.props.url || this.props.method) {
                     form.setForm({
@@ -87,13 +104,7 @@ export default class Submit<P extends typeof props,S extends state> extends Butt
     // 根据jquery-form对象获得gear-form对象
     private getForm(jqform:any){
         if(jqform.length>0){
-            // form存在
-            if(jqform.attr("data-id")){
-                // 如果data-id存在，则应该对data-id指向的dom做初始化
-                return G.$("#"+jqform.attr("data-id"));
-            }else{
-                return G.$(jqform[0]);
-            }
+            return G.$(jqform[0]);
         } 
         return null;       
     }

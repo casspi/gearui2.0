@@ -45,7 +45,7 @@ export default class HtmlCompiler {
             shouldDecodeNewlinesForHref: this.options.shouldDecodeNewlinesForHref,
             shouldKeepComment: this.options.comments,
             isNonPhrasingTag: this.options.isNonPhrasingTag,
-            start: (tag: any, attrs: any, unary: any) => {
+            start: (tag: any,tagClass: any, attrs: any, unary: any) => {
                 // check namespace.
                 // inherit parent ns if there is one
                 const ns = (this.currentParent && this.currentParent.ns) || this.platformGetTagNamespace(tag);
@@ -57,6 +57,8 @@ export default class HtmlCompiler {
                 }
 
                 let element: ASTElement = this.createASTElement(tag, attrs, this.currentParent);
+                element.tagClass = tagClass || tag;
+                element.attrsMap["__ast__"] = element;
                 G.cacheAstMap[element.id] = element;
                 if (ns) {
                     element.ns = ns;
@@ -228,6 +230,7 @@ export default class HtmlCompiler {
             parent,
             children: [],
             index:[],
+            tagClass: tag,
             html:function():JQuery<HTMLElement>|undefined {
                 let id = this.id;
                 if(id) {

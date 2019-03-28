@@ -1,8 +1,7 @@
 import * as React from 'react';
 import UUID from './uuid';
 import Parser from '../core/Parser';
-import { ObjectUtil } from '.';
-import DomPropertiesToReactProperties from '../utils/DomPropertiesToReactProperties';
+import { Events } from '../core';
 export default class GearUtil {
 
     /**
@@ -63,54 +62,58 @@ export default class GearUtil {
      * @param ast ast树
      */
     static newReactInstance(ast: ASTElement,paramProps?: any) {
-        let attrs = ast.attrsMap;
+        // let time1 = new Date().getTime();
+        // let attrs = ast.attrsMap;
         let type = ast.type;
-        let tag = ast.tag;
         //节点
         if(type == 1) {
             let children = ast.children;
             let reactChildren: any;
-            let clazz = GearUtil.getClass(ast);
-            let props = null;
-            if(clazz) {
-                //控件
-                //如果是虚拟控件，需要在G对象中记录下来，方便在外部使用G(exp)方式查找
-                if(ObjectUtil.isExtends(clazz, "Layout")||ObjectUtil.isExtends(clazz, "Tabs")) {
-                    //html节点
-                    props = ast.attrsMap;
-                    clazz = clazz || G.components["htmltag"];
-                    let nprops = GearUtil.formatDomProperties(props,clazz.props, true);
-                    props = {
-                        class: tag,
-                        props: nprops,
-                        // key: ast.id + "_" + ast.tag,
-                        __ast__: ast
-                    };
-                }else {
-                    // let voidEle = null;
-                    // if(ObjectUtil.isExtends(clazz, "VoidTag")) {
-                    //     voidEle = G.voidParent.appendChild(GearUtil.createVoidDomElement(tag, attrs));
-                    // }
-                    props = GearUtil.attrsToProps(attrs, clazz.props, ast);
-                    //props["voidElement"] = voidEle;
-                    props["__ast__"] = ast;
-                }
-            }else {
+            // let clazz = GearUtil.getClass(ast);
+            // let props = null;
+            // let time2 = new Date().getTime();
+            // console.log("创建1：" + (time2 - time1));
+            // if(clazz) {
+            //     //控件
+            //     //如果是虚拟控件，需要在G对象中记录下来，方便在外部使用G(exp)方式查找
+            //     if(ObjectUtil.isExtends(clazz, "Layout")||ObjectUtil.isExtends(clazz, "Tabs")) {
+            //         //html节点
+            //         props = ast.attrsMap;
+            //         clazz = clazz || G.components["htmltag"];
+            //         // let nprops = GearUtil.formatDomProperties(props, true);
+            //         props = {
+            //             class: "div",
+            //             props: {},
+            //             // key: ast.id + "_" + ast.tag,
+            //             __ast__: ast
+            //         };
+            //     }else {
+            //         // let voidEle = null;
+            //         // if(ObjectUtil.isExtends(clazz, "VoidTag")) {
+            //         //     voidEle = G.voidParent.appendChild(GearUtil.createVoidDomElement(tag, attrs));
+            //         // }
+            //         props = {};
+            //         // props = GearUtil.attrsToProps(attrs, clazz.props, ast);
+            //         //props["voidElement"] = voidEle;
+            //         props["__ast__"] = ast;
+            //         let time3 = new Date().getTime();
+            //         console.log("创建12：" + (time3 - time2));
+            //     }
+                
+            // }else {
                 // let htmltag = G.components["htmltag"];
                 // clazz = tag;
                 // props = ast.attrsMap;
                 // props = GearUtil.formatDomProperties(props, htmltag.props, true);
                 //html节点
-                props = ast.attrsMap;
-                clazz = clazz || G.components["htmltag"];
-                let nprops = GearUtil.formatDomProperties(props,clazz.props, true);
-                props = {
-                    class: tag,
-                    props: nprops,
-                    // key: ast.id + "_" + ast.tag,
-                    __ast__: ast
-                };
-            }
+                // props = ast.attrsMap;
+                // let nprops = GearUtil.formatDomProperties(props, true);
+                let props = ast.attrsMap;
+                // console.log(ast);
+                // let time3 = new Date().getTime();
+                // console.log("创建22：" + (time3 - time2));
+            // }
+            
             if(children && children.length > 0) {
                 reactChildren = [];
                 children.forEach((astInner)=>{
@@ -119,21 +122,30 @@ export default class GearUtil {
                     }
                 });
             }
-            if(!props["key"]) {
-                if(props["id"]) {
-                    props["key"] = props["id"];
-                }else {
-                    if(ast.id) {
-                        props["key"] = ast.id;
-                    }else {
-                        props["key"] = UUID.get();
-                    }
-                }
-            }
+            // let time4 = new Date().getTime();
+            // console.log("创建3：" + (time4 - time3));
+            // if(!props["key"]) {
+            //     if(props["id"]) {
+            //         props["key"] = props["id"];
+            //     }else {
+            //         if(ast.id) {
+            //             props["key"] = ast.id;
+            //         }else {
+            //             props["key"] = UUID.get();
+            //         }
+            //     }
+            // }
             if(paramProps) {
                 props = G.G$.extend(props, paramProps);
             }
-            return React.createElement(clazz, props, reactChildren);
+            props["key"] = ast.id;
+            // let time5 = new Date().getTime();
+            // console.log("创建4：" + (time5 - time4));
+            let clazz = (typeof ast.tagClass == "string") ? G.components["htmltag"] : ast.tagClass;
+            let ele = React.createElement(clazz, props, reactChildren);
+            // let time6 = new Date().getTime();
+            // console.log("创建6：" + (time6 - time5));
+            return ele;
         }else if(type == 2){
             //表达式 -- 暂未处理
             return ast.text;
@@ -143,29 +155,33 @@ export default class GearUtil {
         }
     }
 
-    static formatDomProperties(props: any,propsTemplete?: any, htmlTag?: boolean) {
+    static formatDomProperties(props: any, htmlTag?: boolean) {
         let propsNew = {};
-        let _props = G.G$.extend({}, propsTemplete);
-        for(let key in _props) {
-            if(_props[key] == "" || G.G$.isEmptyObject(_props[key]) || GearUtil.isGearType(_props[key])) {
-                _props[key] = null;
-            }
-        }
+        // let _props = G.G$.extend({}, propsTemplete);
+        // for(let key in _props) {
+        //     if(_props[key] == "" || G.G$.isEmptyObject(_props[key]) || GearUtil.isGearType(_props[key])) {
+        //         _props[key] = null;
+        //     }
+        // }
         for(let name in props) {
             let value = props[name];
-            let type:string = name == 'style' ? "CssProperties" : GearUtil.getTypeFromPropsTemplete(propsTemplete, name, value);
-            if(type == undefined || value == undefined) {
-                continue;
+            let standardName = window.getPossibleStandardName(name);
+            // let type:string = name == 'style' ? "CssProperties" : (Events[standardName] ? "function" : "string");
+            if(name == "style") {
+                value = GearJson.fromStyle(value).toJson();
             }
-            let standardName = name;
-            for(let key in propsTemplete) {
-                if(key.toLowerCase() == name.toLowerCase()) {
-                    standardName = key;
-                    break;
-                }
+            if(Events[standardName]) {
+                value = (function(value) {
+                    return function(...args: any[]){
+                        try{
+                            return eval(value);
+                        }catch(err){
+                            console.error(err);
+                        }
+                    }
+                })(value);
             }
-            standardName = DomPropertiesToReactProperties.getPossibleStandardName(standardName);
-            propsNew[standardName] = GearUtil.parseAttributeValue(name,value,type,htmlTag);
+            propsNew[standardName] = value;
             // props[name] = GearUtil.parseAttributeValue(name,value,type);
         }
         // for(let name in props) {
@@ -198,13 +214,9 @@ export default class GearUtil {
         let attrs = ast.attrsMap;
         let clazz = null;
         if(attrs != null) {
-            for(let key in attrs) {
-                if(key == "ctype") {
-                    let ctype = attrs[key];
-                    if(ctype) {
-                        clazz = G.components[ctype];
-                    }
-                }
+            let ctype = attrs["ctype"];
+            if(ctype) {
+                clazz = G.components[ctype];
             }
         }
         if(clazz == null) {
@@ -236,13 +248,9 @@ export default class GearUtil {
         let attrs = ele.attributes;
         let clazz = null;
         if(attrs != null) {
-            for(let key in attrs) {
-                if(key == "ctype") {
-                    let ctype = attrs[key];
-                    if(ctype) {
-                        clazz = G.components[ctype.value];
-                    }
-                }
+            let ctype = attrs["ctype"];
+            if(ctype) {
+                clazz = G.components[ctype.value];
             }
         }
         if(clazz == null) {

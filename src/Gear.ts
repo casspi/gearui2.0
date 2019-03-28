@@ -37,18 +37,16 @@ export default class G {
     static render(renderOptions: RenderOptions) {
         //渲染指定节点下的控件
         //el: 指定节点
-        let time1 = new Date().getTime();
         let el = renderOptions.el;
+        let time1 = new Date().getTime();
         let parser = new Parser();
         let astMsg  = parser.parse(el);
         let time2 = new Date().getTime();
+        console.log("解析时间:" + (time2 - time1));
         let render = new Render();
         this.cacheHtml = astMsg.cacheHtml;
         this.cacheAst = astMsg.ast;
         render.render(astMsg.ast, astMsg.parent, renderOptions.mounted);
-        let time3 = new Date().getTime();
-        console.log(time2 - time1);
-        console.log(time3 - time2);
     }
 
     //注册自定义组件

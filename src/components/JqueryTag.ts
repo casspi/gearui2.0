@@ -4,7 +4,7 @@ import { ObjectUtil, GearUtil, UUID } from '../utils';
 import * as ReactDOM from 'react-dom';
 const lowerFirst = require('lodash/lowerFirst');
 export var props = {
-    __ast__: GearType.Any,
+    __ast__: GearType.AstElement,
     ...Events
 }
 export interface state {

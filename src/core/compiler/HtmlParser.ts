@@ -208,14 +208,23 @@ export default class HtmlParser {
     private parseStartTag() {
         const start = this.html.match(startTagOpen);
         if (start) {
+            let inputType = "";
             const match: any = {
                 tagName: start[1],
+                ctype: null,
+                tagClass: null,
                 attrs: [],
                 start: this.index
             }
             this.cacheHtml += this.advance(start[0].length)
             let end, attr;
             while (!(end = this.html.match(startTagClose)) && (attr = this.html.match(attribute))) {
+                if(attr[1] == "ctype") {
+                    match.ctype = attr[3];
+                }
+                if(match.tagName == "input" && attr[1] == "type") {
+                    inputType = attr[3];
+                }
                 this.cacheHtml += this.advance(attr[0].length);
                 match.attrs.push(attr);
             }
@@ -224,6 +233,25 @@ export default class HtmlParser {
                 match.unarySlash = end[1];
                 this.cacheHtml += this.advance(end[0].length);
                 match.end = this.index;
+                if(match.ctype) {
+                    match.tagClass = G.components[match.ctype];
+                }
+                if(match.tagClass == null) {
+                    if(match.tagName) {
+                        if(match.tagName.startsWith("g")) {
+                            if(match.tagName.startsWith("g-")) {
+                                match.tagClass = G.components[match.tagName.substring(2, match.tagName.length)];
+                            }else {
+                                match.tagClass = G.components[match.tagName.substring(1, match.tagName.length)];
+                            }
+                        }else if(match.tagName == "input") {
+                            match.tagClass = G.components[inputType];
+                            if(match.tagClass == null) {
+                                match.tagClass = G.components["text"];
+                            }
+                        }
+                    }
+                }
                 return match;
             }
         }
@@ -231,6 +259,7 @@ export default class HtmlParser {
 
     private handleStartTag(match: any) {
         const tagName = match.tagName;
+        const tagClass = match.tagClass;
         const unarySlash = match.unarySlash;
 
         if (this.expectHTML) {
@@ -258,9 +287,19 @@ export default class HtmlParser {
             const shouldDecodeNewlines = tagName === 'a' && args[1] === 'href'
                 ? this.options.shouldDecodeNewlinesForHref
                 : this.options.shouldDecodeNewlines;
+            let valueNew = this.decodeAttr(value, shouldDecodeNewlines);
+            let name = args[1];
+            if(tagClass) {
+                let type = this.getAttributeValueType(name, valueNew);
+                name = window.getPossibleStandardTagName(args[1]);
+                valueNew = this.parseAttributeValue(name, valueNew, type);
+            }else {
+                name = window.getPossibleStandardName(args[1]);
+                valueNew = this.formatDomProperties(name, valueNew);
+            }
             attrs[i] = {
-                name: args[1],
-                value: this.decodeAttr(value, shouldDecodeNewlines)
+                name: name,
+                value: valueNew
             };
         }
 
@@ -272,9 +311,220 @@ export default class HtmlParser {
         let index: string = "";
 
         if (this.options.start) {
-            index = this.options.start(tagName, attrs, unary, match.start, match.end);
+            index = this.options.start(tagName, tagClass, attrs, unary, match.start, match.end);
         }
         return index;
+    }
+
+    private formatDomProperties(name: string, value: any) {
+        if(name == "style") {
+            return GearJson.fromStyle(value).toJson();
+        }else {
+            if(G.events.contains(name.toLowerCase())) {
+                value = (function(value) {
+                    return function(...args: any[]){
+                        try{
+                            return eval(value);
+                        }catch(err){
+                            console.error(err);
+                        }
+                    }
+                })(value);
+            }
+        }
+        return value;
+    }
+
+    // 解析属性值
+    private parseAttributeValue(name:string,value:string, typeConstractor: any,htmlTag?: boolean){
+        // 解析value中的表达式 G{xxx} ，对表达式中的函数或变量进行解析处理
+        value = value.replace(/\G\{([^\}]+)\}/g,function(match,m1){
+            // 获得表达式，如果表达式是以“();”结尾的，去除之
+            var expression = m1.replace(/\([\.|$|\w]{0,}\);?$/,"");
+            // 先检查window作用域中是否存在该函数或变量
+            var v = window[expression];
+            if(v){
+                // 如果存在
+                if(typeof v =="function"){
+                    // 如果是个函数，则调用它（函数应返回一个字符串值，为防止函数返回其它值，这里对返回值作了判断）
+                    var r = v.call(window);
+                    if(r)
+                        return r;
+                    else
+                        return "";
+                }else{
+                    // 其它类型直接返回（这里应只有字符串类型，否则也会被转为字符串类型）
+                    return v;
+                }
+            }else{
+                // 如果不存在，则使用eval来解析函数
+                var fun = function(){
+                    try{
+                        return eval(expression);
+                    }catch(err){
+                        console.error(err);
+                        return "";
+                    }
+                }
+                var r = fun.call(window);
+                if(r)
+                    return r;
+                else
+                    return "";                    
+            }
+        });
+
+        if(G.events.contains(name.toLowerCase())){
+            let values = value.split(";");
+            let funs = [];
+            for(let i = 0; i < values.length; i++) {
+                let valueInner = values[i];
+                if(typeConstractor == "script" || typeConstractor == "function") {
+                    valueInner = valueInner.replace(/^javascript:/,"");
+                    return function(...args: any[]){
+                        try{
+                            return eval(valueInner);
+                        }catch(err){
+                            console.error(err);
+                        }
+                    }
+                }else {
+                    let methodName = valueInner.replace(/\([\.|$|\w]{0,}\);?/,"");
+                    if(G.cannotSetStateEvents.contains(name)) {
+                        this.removeSetStateFromCannotSetStateFunction(methodName, name);
+                    }
+                    let script = methodName + ".bind(this)(...arguments)";
+                    // 如果该属性名称在常用事件名称列表中，这里按照事件的规则处理
+                    funs.push(function(...args: any[]){
+                        try{
+                            return eval(script);
+                        }catch(err){
+                            console.error(err);
+                        }
+                    });
+                }
+            }
+            if(funs.length == 1) {
+                return funs[0];
+            }
+            return funs;
+        }else{
+            let type = typeConstractor;
+            //回调函数
+            try {
+                if(type == 'function'){
+                    if(htmlTag == true) {
+                        return value;
+                    }
+                    let values = value.split(";");
+                    let funs = [];
+                    for(let i = 0; i < values.length; i++) {
+                        let valueInner = values[i];
+                        let methodName = valueInner.replace(/\([\.|$|\w]{0,}\);?/,"");
+                        methodName = methodName.replace(/^javascript:/,"")//防止老版中，如：link属性也会有javascript:fun()写法
+                        if(window[methodName] && window[methodName] instanceof Function) {
+                            funs.push(window[methodName]);
+                        }
+                    }
+                    if(funs.length == 1) {
+                        return funs[0];
+                    }
+                    return funs;
+                }else if(type == "script") {
+                    if(htmlTag == true) {
+                        return value;
+                    }
+                    let script = value.replace(/^javascript:/,"");
+                    return function(...args: any[]){
+                        try{
+                            return eval(script);
+                        }catch(err){
+                            console.error(err);
+                        }
+                    }
+                }else if(type == 'boolean') {
+                    if(htmlTag == true) {
+                        return value;
+                    }
+                    if(value == "true") {
+                        return true;
+                    }else {
+                        return false;
+                    }
+                }else if(type == 'number' && value.indexOf('\\.') != -1) {
+                    if(htmlTag == true) {
+                        return value;
+                    }
+                    return parseFloat(value);
+                }else if(type == 'number' && value.indexOf('\\.') == -1) {
+                    if(htmlTag == true) {
+                        return value;
+                    }
+                    return parseInt(value);
+                }else if(type == 'object' || type == "array") {
+                    if(htmlTag == true) {
+                        return value;
+                    }
+                    return eval("(" + value + ")");
+                }else if(type == 'CssProperties') {
+                    return GearJson.fromStyle(value).toJson();
+                }else {
+                    return value;
+                } 
+            } catch (error) {
+                return value;
+            }
+            
+        }
+    }
+
+    private removeSetStateFromCannotSetStateFunction(methodName: string, eventName: string) {
+        let method = window[methodName];
+        if(method instanceof Function) {
+            let methodStr:string = method.toString();
+            let setStateReg = /[;|\n]{1,}[\t| ]{0,}[$|\w]{1,}\.setState[\t| |\n]{0,}\([ |\t|\n]{0,}/;
+            let s = methodStr.match(setStateReg);
+            if(s) {
+                throw eventName + " = " + methodName + " cannot invoke setState";
+            }
+        }
+    }
+
+    private getAttributeValueType(name: string, value:string) {
+        let type = window.getPossibleStandardType(name);
+        if(type != "any") {
+            return type;
+        }
+        value = value.trim();
+        type = "string";
+        let valueTypeArr = value.split("::");
+        if(valueTypeArr.length > 1) {
+            type = valueTypeArr[1];
+        }else {
+            if(value == "true" || value == "false") {
+                type = "boolean";
+            }else {
+                let methodReg = /[$|\w]{1,}\([\.|$|\w]{0,}\);?/;
+                let match = value.match(methodReg);
+                if(match && window[match[0].replace(/\([\.|$|\w]{0,}\);?/,"")]) {
+                    type = "function";
+                }else if(G.events.contains(name) && /^javascript:.+/.test(value)){
+                    // 如果以javascript开头，则认为是脚本
+                    type = "script";
+                }else {
+                    if(/^\{[\s\S]+\}$/.test(value) || /^\[[\s\S]+\]$/.test(value)) {
+                        try {
+                            type = typeof eval("(" + value + ")");
+                        }catch(e) {
+                            type = "string";
+                        }
+                    }else {
+                        type = "string";
+                    }
+                }
+            }
+        }
+        return type;
     }
 
     private parseEndTag(tagName?: string, start?: any, end?: any) {
@@ -314,11 +564,11 @@ export default class HtmlParser {
             this.lastTag = pos && this.stack[pos - 1].tag;
         } else if (lowerCasedTagName === 'br') {
             if (this.options.start) {
-                index = this.options.start(tagName, [], true, start, end);
+                index = this.options.start(tagName,"br", [], true, start, end);
             }
         } else if (lowerCasedTagName === 'p') {
             if (this.options.start) {
-                index = this.options.start(tagName, [], false, start, end);
+                index = this.options.start(tagName,"p", [], false, start, end);
             }
             if (this.options.end) {
                 this.options.end(tagName, start, end);

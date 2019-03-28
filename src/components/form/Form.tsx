@@ -1,12 +1,9 @@
 import * as Tag from "../Tag";
 import { Form as AntdForm } from 'antd';
-import * as moment from 'moment';
 import { FormComponentProps } from 'antd/es/form/Form';
-import { FormTag } from '.';
 import * as React from 'react';
 import { ObjectUtil, UUID } from "../../utils";
 import { Validator } from "../../validator";
-import Tooltip from "../pack/Tooltip";
 import Http, { methods } from '../../utils/http';
 export var props = {
     //是否验证隐藏控件，在validator中使用

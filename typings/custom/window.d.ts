@@ -305,5 +305,11 @@ interface Window extends EventTarget, WindowTimers, WindowSessionStorage, Window
     WXEnvironment: any;
     Constants: Constants;
     _dialog: any;
+    possibleStandardTypes: {[idx:string]: string};
+    getPossibleStandardType: (propName: string) => string;
+    possibleStandardNames: {[idx:string]: string};
+    getPossibleStandardName: (propName: string) => string;
+    possibleStandardTagNames: {[idx:string]: string};
+    getPossibleStandardTagName: (propName: string) => string;
 }
 declare var window: Window;

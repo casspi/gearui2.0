@@ -1,12 +1,10 @@
 import * as Tag from "./Tag";
 import * as React from 'react';
 export var props = {
-    class: GearType.String,
     props: GearType.Any,
     ...Tag.props,
 };
 export interface state extends Tag.state {
-    class: string;
     props: any;
 };
 //普通的html节点
@@ -14,8 +12,7 @@ export default class HtmlTag<P extends typeof props, S extends (state)> extends 
 
     getInitialState():state {
         return {
-            class: this.props.class,
-            props: this.props.props
+            props: this.props.__ast__.attrsMap
         };
     }
 
@@ -24,14 +21,13 @@ export default class HtmlTag<P extends typeof props, S extends (state)> extends 
             ref: (ele: any)=>{
                 this.ref = ele;
                 if(ele instanceof Node) {
-                    //WindowUtil.domEventHandler(ele);
                 }
             },
             key: this.ast.id + "_" + this.ast.tag,
         }, this.state.props);
         delete props.focus;
         delete props.control;
-        return React.createElement(this.state.class, props, this.state.children);
+        return React.createElement(this.props.__ast__.tag, props, this.state.children);
     }
 
     is(...args:any[]){
