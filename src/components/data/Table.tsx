@@ -426,7 +426,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 this._expandRecord = record;
                 if(this.expandedRowCached[record.key] == null){
                     let re = this.doEvent("expandedrow",record);
-                    if(re && re.length > 0) {
+                    if(re || re!=false) {
                         let html = re[0];
                         let ele = <Content.default {...containerProps}>{G.$(html,undefined, true)}</Content.default>;
                         this.expandedRowCached[record.key] = ele;
@@ -790,6 +790,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
     render() {
         let props: any = this.getProps();
+        console.log(props)
         return <AntdTable  {...props} ></AntdTable>;
     }
     afterRender() {

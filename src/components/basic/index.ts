@@ -11,7 +11,7 @@ import * as Link from './Link';
 import * as ListAction from './ListAction';
 import * as Row from './Row';
 import * as Submit from './Submit';
-import * as Tab from './Tab';
+import * as Tabs from './Tabs';
 export {
     AjaxAction,
     Button,
@@ -26,5 +26,5 @@ export {
     ListAction,
     Row,
     Submit,
-    Tab
+    Tabs
 }

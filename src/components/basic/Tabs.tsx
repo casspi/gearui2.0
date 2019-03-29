@@ -2,10 +2,12 @@
 /* 对设置了样式gearui-tabs的标签页进行初始化、设置和操作 */
 /* 通过使用G(".gearui-tabs").tabs()来初始化布局 */
 import * as React from 'react';
-import { Http} from '../../utils';
+import { Http, UUID} from '../../utils';
 import * as HtmlTag from '../HtmlTag';
 export var props = {
     ...HtmlTag.props,
+    onBeforeSelect: GearType.Function,
+    onBeforeRemove: GearType.Function,
 };
 export interface state extends HtmlTag.state {
     class: string;
@@ -28,7 +30,7 @@ export default class Tabs<P extends typeof props,S extends state> extends HtmlTa
         }
         return {
             class: this.props.class,
-            props: this.props.props,
+            props: this.props,
             selected: "",
             tabs: tabsNew
         };
@@ -71,16 +73,16 @@ export default class Tabs<P extends typeof props,S extends state> extends HtmlTa
         if(!(children instanceof Array)) {
             children = [children];
         }
+        children = children.filter((o:any)=>{return o.$$typeof!=null})
         let tabs = [];
         let haveSelected = false;
         for(let i=children.length - 1; i>=0; i--) {
             let child = children[i];
-            if(child && child.props && child.props.props) {
-                let props = child.props.props;
-                console.log(props);
-                let id = props.id || this.ast.id + "tabs" + i;
+            if(child && child.props) {
+                let props = child.props;
+                let id = props.id || this.ast.id + "tabs" + UUID.get();
                 let title = props.title || ("未设置 " + i);
-                let closable = props.closable != false;
+                let closable = (props.closable ===true||props.closable=='true')?true:false;
                 let selected = props.selected;
                 selected = (selected == true || (i == 0 && haveSelected != true));
                 let loadType = props.loadType || "iframe";
@@ -263,9 +265,11 @@ export default class Tabs<P extends typeof props,S extends state> extends HtmlTa
         if(this.state.selected != id && tab){
             if(this.doEvent("beforeSelect", tab)) {
                 this.doEvent("select", tab);
+                let currentIndex:number;
                 for(let i= 0; i < tabs.length; i++) {
                     if(tabs[i].key == tab.key) {
                         tabs[i].selected = true;
+                        currentIndex = i;
                     }else {
                         tabs[i].selected = false;
                     }
@@ -273,27 +277,44 @@ export default class Tabs<P extends typeof props,S extends state> extends HtmlTa
                 this.setState({
                     tabs: tabs
                 },() => {
+                    this.find('.tab-content .tab-panel').hide().eq(currentIndex).show()
                     this.doEvent("afterSelect", tab);
                 });
             }
+        }
+    }
+    onBeforeSelect(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("beforeSelect",fun);
+        }
+    }
+    onBeforeRemove(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("beforeRemove",fun);
         }
     }
     /* 添加一个Tab */
     addTab(param: any){
         let tabs = this.state.tabs || [];
         // 参数修正
-        let id = param.id || this.ast.id + "tabs" + tabs.length;
+        let id = param.id || this.ast.id + "tabs" + UUID.get();
         let title = param.title || "未设置";
-        let tab = new Tab(this, id, param.selected, title, param.closable, tabs.length, param.className, param.style, param.url, param.loadType, param, null);
-        // 如果新添加的设置为默认选中，则设置为选中
-        if(param.selected == true && tab) {
-            for(let i= 0; i < tabs.length; i++) {
-                tabs[i].selected = false;
-            }
-        }
+        let tab = new Tab(this, id, param.selected, title, param.closable, tabs.length, param.className, param.style, param.url, param.loadType,param, param.content||null);
+        // // 如果新添加的设置为默认选中，则设置为选中
+        // if(param.selected == true && tab) {
+        //     for(let i= 0; i < tabs.length; i++) {
+        //         tabs[i].selected = false;
+        //     }
+        // }
         tabs.push(tab);
         this.setState({
             tabs
+        },()=>{
+            if(param.selected){//新增的tab设置了选中
+                this.select(id)
+            }else{//默认选中第一个
+                this.select(this.state.tabs[0].key)
+            }
         });
         // 调整尺寸
         this.resizeTab();          
@@ -303,16 +324,19 @@ export default class Tabs<P extends typeof props,S extends state> extends HtmlTa
         let tabs = this.state.tabs || [];
         var tab = this.getTab(id);
         if(tab){
-            let result = this.doEvent("beforeRemove",tab);
-            if(result && result[0] != false){
+            let result:any = this.doEvent("beforeRemove",tab);
+            if(!(result instanceof Array && result[0] == false)){
                 // modify by hechao 2018-06-20 将删除操作的实现转到tabs中
                 //tab.remove();
                 tabs.splice(tabs.indexOf(tab), 1);
                 if(tab.selected == true) {
                     if(tabs[tabs.indexOf(tab) + 1]) {
-                        tabs[tabs.indexOf(tab) + 1].selected = true;
+                        // tabs[tabs.indexOf(tab) + 1].selected = true;
+                        this.select(tabs[tabs.indexOf(tab) + 1].key)
                     }else {
-                        tabs[0].selected = true;
+                        if(tabs[0]){
+                            this.select(tabs[0].key)
+                        }
                     }
                 }
                 this.doEvent("remove",tab);
@@ -363,8 +387,12 @@ class Tab {
         this.index = index;
         this.className = className;
         this.style = style;
+        this.url = url;
         this.loadType = loadType;
         this.props = props;
+        if(!(children instanceof Array)){
+            children = [children]
+        }
         this.children = children;
     }
 
@@ -421,8 +449,9 @@ class Tab {
             <span>
                 <a className='title-content' href='javascript:void(0);'>{title}</a>
                 {
-                    closable == true ? <a onClick={()=>{
+                    closable == true ? <a onClick={(e)=>{
                         this.tabs.removeTab(id);
+                        e.stopPropagation()
                     }} className='anticon anticon-default anticon-close close-btn'></a> : null
                 }
             </span>
@@ -438,7 +467,6 @@ class Tab {
         let className = this.className;
         let style = this.style;
         let url = this.url;
-        
         let propsNew = G.G$.extend({
             id,
             className,
@@ -453,6 +481,7 @@ class Tab {
         delete propsNew.selected;
         delete propsNew.url;
         delete propsNew.loadType;
+        delete propsNew.content;
         let children = [];
         if(url){
             if(this.loadType == "iframe"){
@@ -478,7 +507,7 @@ class Tab {
             children = [r];
         }
 
-        let content = <div {...propsNew}>{children}</div>;
+        let content = <div  class="tab-panel" {...propsNew}>{children}</div>;
         return content;
     }
 }

@@ -20,10 +20,14 @@ interface state extends Tag.state {
     value?: string;
     label?: string;
     oldValue?: string;
+    width?:any
 }
 //可编辑的单元格
 export default class EditTableCell<P extends typeof props, S extends state> extends Tag.default<P, S> {
-
+    constructor(props:any){
+        super(props)
+        console.log(props)
+    }
     private gearEle: any;
     //缓存数据
     private cacheValue: any;
@@ -163,7 +167,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         let props = G.G$.extend({},
             {
             // dictype:this.props['dictype'],
-            // width:this.props['width'],
+            width:this.props.width,
             url:this.props['url'],
             // required:this.props['required']
             }

@@ -10,13 +10,6 @@ export default class Render {
     public render(ast: ASTElement, parent: Element, callback?: Function) {
         let reactEles: any = [];
         let asts = ast.children;
-<<<<<<< HEAD
-        asts.forEach((ast)=>{
-            let reactEle = GearUtil.newReactInstance(ast);
-            reactEles.push(reactEle);
-        });
-        ReactDOM.render(reactEles, parent, ()=>{
-=======
         let time11 =new Date();
         let newReactInstancestart = time11.getTime();
         // let reactElesa:Array<{ele: any, ast:ASTElement}> = [];
@@ -62,7 +55,6 @@ export default class Render {
             let render_render_end = time44.getTime();
             console.log('render_renderstart:'+render_render_end)
             console.log('render_render-count:'+(render_render_end-render_render_start));
->>>>>>> 0de10ed22dea09d199b354224efe77bf058aadd9
             if(callback) {
                 let childrenTags: any = [];
                 let children = G.G$(parent).children();

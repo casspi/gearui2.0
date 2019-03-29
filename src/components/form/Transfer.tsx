@@ -113,7 +113,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             showIcon:this.props.showIcon,
             iconStyle:this.props.iconStyle,
             lines:this.props.lines,
-            // value:this.getPropStringArrayValue(this.props.value)||[],
+            value:this.getPropStringArrayValue(this.props.value)||[],
             onCheck:(node:any)=>{
                 if(node.checked==false)
                     this._setLeftChecked(false);
@@ -356,6 +356,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
 
     // 当左侧全选Check值改变时触发
     private _onLeftCheckChange(e:any){
+        debugger;
         if(this._leftTree){
             if(e.target.checked==true){
                 this._leftTree.checkAll(()=>{

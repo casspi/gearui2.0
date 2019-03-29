@@ -37,17 +37,20 @@
     <g-button id='ec3-btn2'>全不选</g-button>
     <g-button>999</g-button>
   </g-buttongroup>
-  <g-icon icon="caret-left" style="font-size:40px;color:rgb(230, 118, 245)"></g-icon>
-  <g-tabs id="layout11">
-		<g-tab title="文本信息" closable="true">
-			内容一
-		</g-tab>
-		<g-tab title="文本信息" closable="true">
-			内容二
-		</g-tab>											
-		<g-tab title="密码修改" url="/system/password" selected="true"></g-tab>																	
-  </g-tabs>
-  
+  <g-icon icon="close" style="font-size:40px;color:rgb(230, 118, 245)"></g-icon>
+  <div style="position:relative">
+
+    <g-tabs id="layout11">
+      <g-tab title="文本信息" closable="true">
+        内容一
+      </g-tab>
+      <g-tab title="文本信息" closable="true">
+        内容二
+      </g-tab>											
+      <g-tab title="密码修改" url="/system/password" selected="true"></g-tab>																	
+    </g-tabs>
+    
+  </div>
   </body>
   <script>
   G(function() {

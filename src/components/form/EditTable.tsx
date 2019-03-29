@@ -27,6 +27,7 @@ export interface state extends Table.state,FormTag.state {
     title?: any;
     controlLabel?: string;
     value?:any
+    children:any
 }
 export interface Control {
     name: string;
@@ -232,8 +233,9 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
 
     getInitialState(): state {
-        let state = super.getInitialState();
-        return G.G$.extend(state,{
+        let state:any = super.getInitialState();
+        console.log(this.props)
+        return G.G$.extend({},state,{
             editable: this.props.editable != false,
             control: this.props.control,
             controlLabel: this.props.controlLabel,
@@ -910,9 +912,10 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                         }
                     }
                 });
+                console.log(cellProps)
                 return <EditTableCell.default {...cellProps}>{children}</EditTableCell.default>;
             };
-        })(column, props);
+        })(column, this.props);
         return column;
     }
 

@@ -6,12 +6,7 @@ import * as Text from './Text';
 import { methods } from '../../utils/http';
 import * as SelectedTag from './SelectedTag';
 import DicUtil from '../../utils/DicUtil';
-<<<<<<< HEAD
-import { UUID, ObjectUtil } from '../../utils';
-import {Parser} from '../../core'
-=======
 import { UUID } from '../../utils';
->>>>>>> 0de10ed22dea09d199b354224efe77bf058aadd9
 
 export var props = {
     ...FormTag.props,
@@ -117,11 +112,28 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                 //     this._triggerButton.focus();
             },
             onPressEnter: (e: any) => {
-                if(this.state.mustMatch==false || (this.state.dictype ==null && this.state.url == null)){
-                    // this._inputControl.blur()//Text组件的blur事件，
-                    //由于inputtag引用的text 没有 ast 对象无法正常使用find 所以特殊处理一些操作
-                    G.G$(this._inputControl.realDom).blur();
+                let value = this._inputControl.getValue();
+                let text = this._inputControl.getText();
+                if(value && value.length>0) {
+                    // 如果设置为不允许重复，先检查是否和现有值重复
+                    if(this.state.repeatAble == false) {
+                        // 如果不允许重复，先检查值是否已经存在了
+                        if(this.existValue(value)==false){
+                            this._addValue(value, text);
+                        }else{
+                            G.messager.simple.info("输入值已存在于选中项中！");
+                        }
+                    }else {
+                        this._addValue(value, text);
+                    }
                 }
+                this._hideInput();
+                // if(this.state.mustMatch==false || (this.state.dictype ==null && this.state.url == null)){
+                //     // this._inputControl.blur()//Text组件的blur事件，
+                //     //由于inputtag引用的text 没有 ast 对象无法正常使用find 所以特殊处理一些操作
+                //     G.G$(this._inputControl.realDom).blur();
+                //     this._hideInput()
+                // }
             },
             ref:(ele: any)=>{
                 this._inputControl = ele;
@@ -262,14 +274,6 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                 delete props.value
             }
             inputControl = <AutoComplete.default key={"input"} {...props}></AutoComplete.default>
-            // if(this.state.inputVisible){
-            //     G.G$.extend(props.style,{display:"block"})
-            //     console.log(props.style)
-            //     inputControl = <AutoComplete.default key={"input"} {...props}></AutoComplete.default>//<span style={{display:this.state.inputVisible?'block':'none'}}></span>;
-            // }else{
-            //     G.G$.extend(props.style,{display:"none"})
-            //     inputControl = <AutoComplete.default key={"input"} {...props}></AutoComplete.default>//<span style={{display:this.state.inputVisible?'block':'none'}}></span>;
-            // }
         }else{
             let props:any = this.getInputProps();
             delete props.invalidType;
@@ -405,8 +409,6 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     private _removeValue(key: string){
         let oldValues = this.getValue();
         let values = this.state.value;
-        // console.log(oldValues);
-        // console.log(values);
         if(values){
             let newValues:any = [];
             for(var i=0;i<values.length;i++){

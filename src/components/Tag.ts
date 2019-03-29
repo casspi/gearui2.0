@@ -45,8 +45,8 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
     }
 
     private getInitState(): state {
-        let commonState = this.getCommonsState();
         let initState = this.getConcatInitialState();
+        let commonState = this.getCommonsState();
         initState = G.G$.extend(commonState, initState);
         this.deleteFromInitState(initState);
         this.addGetterAndSetterInState(initState);

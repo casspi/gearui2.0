@@ -855,7 +855,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 return resultRe;
             }
         }
-        return null;
+        return true;
     }
 
     haveEvent(eventName: string) {
