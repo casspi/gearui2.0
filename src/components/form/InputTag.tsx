@@ -1,4 +1,4 @@
-import { Button as AntdButton, Tag as AntdTag, Spin as AntdSpin } from 'antd';
+import { Button as AntdButton, Spin as AntdSpin } from 'antd';
 import * as React from 'react';
 import * as FormTag from './FormTag';
 import * as AutoComplete from './AutoComplete';
@@ -6,8 +6,12 @@ import * as Text from './Text';
 import { methods } from '../../utils/http';
 import * as SelectedTag from './SelectedTag';
 import DicUtil from '../../utils/DicUtil';
+<<<<<<< HEAD
 import { UUID, ObjectUtil } from '../../utils';
 import {Parser} from '../../core'
+=======
+import { UUID } from '../../utils';
+>>>>>>> 0de10ed22dea09d199b354224efe77bf058aadd9
 
 export var props = {
     ...FormTag.props,

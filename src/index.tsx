@@ -5,7 +5,6 @@ import { WindowUtil } from './utils';
 import { Message } from './components/pack';
 import { Dialog } from './components/pack';
 import * as utils from './utils';
-
 WindowUtil.extendPrototype();
 const SockJs = require('sockjs-client');
 let GearWeb:any = function(selector: string|object|Function) {

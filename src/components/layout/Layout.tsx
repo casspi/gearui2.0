@@ -1,17 +1,16 @@
 import * as HtmlTag from '../HtmlTag';
+import * as React from 'react';
 export var props = {
     ...HtmlTag.props,
 };
 export interface state extends HtmlTag.state {
-    class: string;
     props: any;
 };
 export default class Layout<P extends typeof props, S extends state> extends HtmlTag.default<P, S> {
 
     getInitialState() : state {
         return {
-            class: this.props.class,
-            props: this.props.props
+            props: this.props.__ast__.attrsMap
         };
     }
 
@@ -76,8 +75,18 @@ export default class Layout<P extends typeof props, S extends state> extends Htm
     //     }
     //     return childrenNew;
     // }
-    render() {
-        return super.render();
+    render(): any {
+        let props = G.G$.extend({
+            ref: (ele: any)=>{
+                this.ref = ele;
+                if(ele instanceof Node) {
+                }
+            },
+            key: this.ast.id + "_" + this.ast.tag,
+        }, this.state.props);
+        delete props.focus;
+        delete props.control;
+        return React.createElement("div", props, this.state.children);
     }
 
     afterRender() {

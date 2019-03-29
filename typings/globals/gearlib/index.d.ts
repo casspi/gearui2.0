@@ -21,6 +21,7 @@ interface GearType {
   VoidT<T>(): T;
   Enum<T>(): T;
   Any: any;
+  AstElement: ASTElement;
 }
 
 declare var GearType: GearType;
@@ -61,7 +62,7 @@ interface ASTElement {
   type: number;
   id: string;
   tag: string;
-  attrsMap: {[idx: string]: string};
+  attrsMap: {[idx: string]: any};
   plain?: boolean;
   parent: ASTElement;
   children: Array<ASTElement>;
@@ -99,6 +100,8 @@ interface ASTElement {
   componentWillMount?:any;
   componentDidUpdate?:any;
   html: ()=>JQuery<HTMLElement>|undefined;
+  tagClass: any;
+  // dom: Element;
 }
 
 interface ASTIfCondition {

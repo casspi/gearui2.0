@@ -314,16 +314,39 @@ export default class ObjectUtil {
     }
 
     static isExtends(clazz: any, parent: string):boolean {
-        if(clazz && !(clazz instanceof Function) && clazz.__proto__ && clazz.__proto__ != Object && clazz.__proto__.constructor) {
-            clazz = clazz.__proto__.constructor;
+        let fparent = null;
+        if(parent && parent.toLowerCase() == "form") {
+            fparent = "gform";
         }
-        if(clazz && clazz.toString() && clazz.name != "Object") {
-            if(ObjectUtil.isInstance(clazz, parent)) {
+        let parentClass = G.tag[parent] || window[parent];
+        let fparentClass = null;
+        if(fparent) {
+            fparentClass = G.components[fparent] || window[fparent];
+        }
+        // if(clazz && !(clazz instanceof Function) && clazz.__proto__ && clazz.__proto__ != Object && clazz.__proto__.constructor) {
+        //     clazz = clazz.__proto__.constructor;
+        // }
+        if(clazz instanceof Function) {
+            if(clazz == parentClass) {
                 return true;
             }
-            return ObjectUtil.isExtends(clazz.__proto__, parent);
+            clazz = clazz.prototype;
+        }
+        // if(clazz && clazz.toString() && clazz.name != "Object") {
+        //     if(ObjectUtil.isInstance(clazz, parent)) {
+        //         return true;
+        //     }
+        //     return ObjectUtil.isExtends(clazz.__proto__, parent);
+        // }
+        if(parentClass) {
+            let r = clazz instanceof parentClass;
+            if(!r && fparentClass) {
+                r = clazz instanceof fparentClass;
+            }
+            return r;
         }
         return false;
+        
     }
 
     static isInstance(clazz: any, name: string) {
