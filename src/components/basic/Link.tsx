@@ -36,7 +36,7 @@ export default class Link<P extends typeof props, S extends state> extends Tag.d
         return {
             url:this.props.url,
             target:this.props.target,
-            value: this.props.value
+            value: this.props.value || this.props.children
         };       
     }
 

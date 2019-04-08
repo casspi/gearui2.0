@@ -14,6 +14,7 @@ export var props = {
     visible: GearType.Boolean,
     remove: GearType.Boolean,//删除该组件节点
     class: GearType.String,
+    className: GearType.String,
     needUpdateToState: GearType.Array<string>(),
     //gearui内部使用的children对象
     children: GearType.Any,
@@ -190,7 +191,7 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
             name: this.props.name,
             title: this.props.title,
             disabled: this.props.disabled,
-            className: this.props.class,
+            className: this.props.class || this.props.className,
             children: this.props.children,
             ref: (ele: any)=>{
                 this.ref = ele;

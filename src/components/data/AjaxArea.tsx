@@ -103,7 +103,6 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
                 if(obj.haveEvent("complete")) {
                     obj.doEvent("complete", data);
                 }else {
-                    // console.log(data)
                     AjaxArea.complete.bind(obj)(obj, data);
                 }
             }else {

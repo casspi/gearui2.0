@@ -7,7 +7,8 @@ export var props = {
     icon: GearType.String,
     prompt: GearType.String,
     format: GearType.String,
-    value: GearType.String
+    value: GearType.String,
+    isvisible: GearType.Any
 };
 
 export interface state extends Tag.state {
@@ -15,15 +16,19 @@ export interface state extends Tag.state {
     prompt?: string;
     format?: string;
     value?: string;
+    isvisible?:any
 }
 export default class Label<P extends typeof props, S extends state> extends Tag.default<P, S> {
-
+    constructor(props:any){
+        super(props);
+    }
     getInitialState(): state {
         return {
-            value: this.props.value,
+            value: this.props.value || this.props.children,
             format: this.props.format,
             prompt: this.props.prompt,
-            icon: this.props.icon
+            icon: this.props.icon,
+            isvisible:this.props.isvisible
         };
     }
 
@@ -40,21 +45,23 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
             if(value){
                 // react不支持br，为防止其它地方有问题，这里替换成p
                 var array = (value+"").split("\n");
+                value = ""
                 for(var i=0;i<array.length;i++){
-                    value = (value || "") +"<p>"+array[i]+"</p>";
+                    value+= "<p>"+array[i]+"</p>";
                 }
                 value = value.replace(/\s/g,"&nbsp;");
             }
         }
-        let props = this.getProps();
+        let props:any = this.getProps();
+        delete props.value;
         if(this.state.icon){
             var iconProps: any = {
                 key:"icon",
-                icon: this.state.icon,
+                type: this.state.icon,
             };
             return <span {...props}><Icon.default {...iconProps}/><span key="text" dangerouslySetInnerHTML={{__html:value}}></span></span>;
         }else
-            return <span {...props} dangerouslySetInnerHTML={{__html:value}}></span>;
+            return <span key="text" {...props} dangerouslySetInnerHTML={{__html:value}}></span>;
     }
 
     getValue() {

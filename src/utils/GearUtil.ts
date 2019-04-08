@@ -9,8 +9,8 @@ export default class GearUtil {
      * @param type 
      * @param props 
      */
-    static newInstanceByType(type: any, props?: any,parent?: JqueryTag) {
-        
+    static newInstanceByType(argtype: any, props?: any,parent?: JqueryTag) {
+        let type = 'g-'+argtype
         let typeElement:Element = document.createElement(type);
         for(let key in props) {
             typeElement.setAttribute(key, props[key]);

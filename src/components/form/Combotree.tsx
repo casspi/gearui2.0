@@ -46,7 +46,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         let props = super.getProps();
         let propsNew = G.G$.extend({},props,{
             inputValue: null,
-            showSearch: this.props.editable,
+            showSearch: this.props.editable===false?false:true,
             value: this.state.value,
             defaultValue: this.state.value,
             multiple: this.props.multiple,
@@ -200,7 +200,9 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
     }
 
     afterRender() {
-        this.find(".ant-select-selection").attr("tabindex","0");
+        if(this.ast){
+            this.find(".ant-select-selection").attr("tabindex","0");
+        }
         super.afterRender();
         if(this.props.multiple == true && this.props.editable == false) {
             this.find(".ant-select-selection").find("input").remove();
@@ -353,7 +355,11 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
     }
     focus(...args: any[]) { 
         // this.find(".ant-select-selection").focus(...args); 
-        this.find(".ant-select-selection").find("input").focus(...args);     
+        if(this.ast){
+            this.find(".ant-select-selection").find("input").focus(...args);     
+        }else{
+            G.G$(this.realDom).find(".ant-select-selection").find("input").focus(...args);
+        }
     }
 
     getInput() {

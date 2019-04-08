@@ -23,7 +23,9 @@ export var props = {
     sequenceLabel: GearType.String,
     lazy: GearType.Boolean,
     paginationId: GearType.String,
-    bordered:GearType.Boolean
+    bordered:GearType.Boolean,
+    defaultExpandAllRows:GearType.Boolean,
+    sequenceWidth:GearType.Any//排序列宽度
 };
 
 export interface state extends Tag.state, TableProps<any> {
@@ -50,7 +52,8 @@ export interface state extends Tag.state, TableProps<any> {
     lazy?: boolean;//
     paginationId?: Array<string>;//
     bordered?:boolean;
-    children?: React.ReactNode
+    children?: React.ReactNode,
+    defaultExpandAllRows?:boolean
 }
 export var useName = 'ajaxlist';
 
@@ -386,7 +389,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             sequenceLabel: this.props.sequenceLabel,
             lazy: this.props.lazy,
             paginationId: this.props.paginationId ? this.props.paginationId.split(",") : [],
-            formId: this.props.formId
+            formId: this.props.formId,
+            defaultExpandAllRows:this.props.defaultExpandAllRows==true?true:false
         };
     }
     getProps() {  
@@ -419,6 +423,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 emptyText: this.state.emptyText,
                 sortTitle:'排序'
             },
+            defaultExpandAllRows:this.state.defaultExpandAllRows,
             dataSource: this.state.dataSource,
             columns: this.getColumnsFromState(),
             pagination: this.state.pagination,
@@ -487,15 +492,15 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 });
                 this.doEvent("change",filter,sorter);
             },
-            onRow:()=>{
+            onRow:(record:any,index:number)=>{
                 return {
-                    onClick: (record: any,index: any,event: any) => {
+                    onClick: (event: any) => {
                         this._onRowClick(record,index,event);
                     },
-                    onMouseEnter:(record: any,index: any,event: any) => {
+                    onMouseEnter:(event: any) => {
                         this._onMouseEnter(record,index,event);
                     },
-                    onMouseLeave:(record: any,index: any,event: any) =>{
+                    onMouseLeave:(event: any) =>{
                         this._onMouseLeave(record,index,event);
                     },
                 }
@@ -516,7 +521,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     protected getColumnsFromState() {
-        let columns: any = this.state.columns;
+        let columns: any = this._parseColumns();
         let columnsNew = [];
         if(columns) {
             for(let i=0; i<columns.length;i++) {
@@ -577,7 +582,11 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             this.bind("afterExpand",fun);
         }
     }    
-
+    onAfterUpdate(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("afterUpdate",fun);
+        }
+    }  
     //当展开某一行的时候触发
     onExpandRow(fun:Function) {
         if(fun && G.G$.isFunction(fun)) {
@@ -587,7 +596,13 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             });
         }
     }
-
+    //当点击行时触发 
+    onRowClick(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("rowClick",fun);
+        }
+    }
+    
     // 当展开后触发
     onExpandedRowsChange(fun:Function) {
         if(fun && G.G$.isFunction(fun)) {
@@ -619,6 +634,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         }
     }
 
+   
     //设置多选框的下拉选择项
     setSelections(selections: any,callback?: Function) {
         this.setState({selections},()=>{
@@ -645,7 +661,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
      *  address: '三里屯'
      * }]
      */
-    protected _loadFilter(data:Data<any>) {
+    protected _loadFilter(data:Data<any>,children?:boolean) {
         let dataInner = data.dataList;
         let indexStart = this.getPageSize() * (this.getCurrent() - 1);
         indexStart = indexStart < 0 ? 0 : indexStart;
@@ -654,9 +670,21 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             if(item.key == null) {
                 item.key = UUID.get();
             }
-            
+            if(dataInner[i].children && G.G$.isArray(dataInner[i].children)){
+                this._loadFilter({dataList:dataInner[i].children},true)
+             }
+            // let sequence:any = this.state.sequence;
+            // item.sequence = sequence || (indexStart + i + 1);
             let sequence:any = this.state.sequence;
-            item.sequence = sequence || (indexStart + i + 1);
+            if(sequence != null && typeof sequence == "function") {
+                item["sequence"] = sequence.call(this) || (indexStart + i + 1);
+            }
+            else if(children===true){//带子行的树形结构
+                item["sequence"] = null//(indexStart + "-" + i + 1)//子行暂定不设置序号
+            }
+            else {
+                item["sequence"] = (indexStart + i + 1);
+            }
         }
         return data;
     }
@@ -702,6 +730,10 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         }
         if(this.haveEvent("expandedRow")) {
             index = index+1;
+        }
+        if(child.props.children){
+            child = child.props.children
+            console.log(child)
         }
         return new Column(this, child, index);
     }
@@ -790,7 +822,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
     render() {
         let props: any = this.getProps();
-        console.log(props)
         return <AntdTable  {...props} ></AntdTable>;
     }
     afterRender() {
@@ -898,7 +929,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 if(className != null) {
                     className = className.trim();
                 }
-                let th:JQuery<HTMLElement> = this.find(".ant-table-thead").find("tr").find("th." + className);
+                let th:JQuery<HTMLElement> = this.find(".ant-table-thead tr th."+ className);
                 th.addClass("ant-table-column-sort");
                 if(info.order == "descend") {
                     th.find(".ant-table-column-sorter-up").removeClass("on");
@@ -1182,7 +1213,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             let columns = this._parseColumns();
             for(let i=0;i<columns.length;i++){
                 let column = columns[i];
-                if(column && column.rowspan=="auto"){
+                if(column && column.rowSpan=="auto"){
                     this.find(".ant-table-body,.ant-table-body-outer").each(function(){
                         let preData: any = null;
                         let preJdom: any = null;
@@ -1242,7 +1273,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             this.bind("afterLoad",fun);
         }
     }
-
+   
     getFilterVisible() {
         return this.state.filterVisible;
     }

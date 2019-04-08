@@ -229,12 +229,12 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
     protected _loadSuccess() {
         let dataSource = this.getData();
+        console.log(dataSource)
         this.cacheData = new GearArray(dataSource).clone().toArray();
     }
 
     getInitialState(): state {
         let state:any = super.getInitialState();
-        console.log(this.props)
         return G.G$.extend({},state,{
             editable: this.props.editable != false,
             control: this.props.control,
@@ -768,7 +768,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 },
                 key: UUID.get(),
                 title: "编辑",
-                "className": "list-conlum-control list-conlum-control-edit",
+                class: "list-conlum-control list-conlum-control-edit",
                 onclick: ()=>{
                     let recordControls = this.controls[record.key]||{};
                     let editControl = recordControls["editControl"];
@@ -785,7 +785,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 },
                 key: UUID.get(),
                 title: "保存",
-                "className": "list-conlum-control list-conlum-control-save",
+                class: "list-conlum-control list-conlum-control-save",
                 onclick: ()=>{
                     let recordControls = this.controls[record.key]||{};
                     let saveControl = recordControls["saveControl"];
@@ -802,7 +802,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 },
                 key: UUID.get(),
                 title: "撤销",
-                "className": "list-conlum-control list-conlum-control-rowback",
+                class: "list-conlum-control list-conlum-control-rowback",
                 onclick: ()=>{
                     let recordControls = this.controls[record.key]||{};
                     let rowbackControl = recordControls["rowbackControl"];
@@ -819,7 +819,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 },
                 key: UUID.get(),
                 title: "删除",
-                "className": "list-conlum-control list-conlum-control-delete",
+                class: "list-conlum-control list-conlum-control-delete",
                 onclick: ()=>{
                     let recordControls = this.controls[record.key]||{};
                     let deleteControl = recordControls["deleteControl"];
@@ -856,13 +856,12 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     //解析表头
     protected _parseColumn(child:any, index: number) {
         let column = super._parseColumn(child, index);
-        const children = props.children;
+        const children = child.props.children;
+        let props = child.props;
         ((column, props)=>{
             column.render = (text: any,record: any)=>{
                 let newProps = ObjectUtil.parseDynamicProps(props, record);
-                // console.log(props);
-                // console.log(newProps);
-                let editCType: string = newProps.editCType || "";
+                let editCType: string = newProps.editctype||  newProps.editCType  ||"";
                 let lower: string = newProps.lower ? newProps.lower + record.key : "";
                 let upper: string = newProps.upper ? newProps.upper + record.key : "";
                 let id: string = newProps.id ? newProps.id + record.key : record.key + "_" + index;
@@ -912,10 +911,10 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                         }
                     }
                 });
-                console.log(cellProps)
+                
                 return <EditTableCell.default {...cellProps}>{children}</EditTableCell.default>;
             };
-        })(column, this.props);
+        })(column,props);
         return column;
     }
 

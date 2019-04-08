@@ -10,7 +10,7 @@ export var props = {
     onBeforeRemove: GearType.Function,
 };
 export interface state extends HtmlTag.state {
-    class: string;
+    className: string;
     props: any;
     selected: string;
     tabs: Array<Tab>;
@@ -29,7 +29,7 @@ export default class Tabs<P extends typeof props,S extends state> extends HtmlTa
             tabsNew.push(tab);
         }
         return {
-            class: this.props.class,
+            className: this.props.class || this.props.className,
             props: this.props,
             selected: "",
             tabs: tabsNew
@@ -469,7 +469,7 @@ class Tab {
         let url = this.url;
         let propsNew = G.G$.extend({
             id,
-            className,
+            className:'tab-panel  '+className,
             style,
             key: id,
             ref: (e: any) => {
@@ -485,7 +485,7 @@ class Tab {
         let children = [];
         if(url){
             if(this.loadType == "iframe"){
-            children = [<iframe src={url} frameBorder='0' style={{
+            children = [<iframe src={url} key={'iframe'} frameBorder='0' style={{
                         width:'100%',
                         height:'100%'
                     }
@@ -507,7 +507,7 @@ class Tab {
             children = [r];
         }
 
-        let content = <div  class="tab-panel" {...propsNew}>{children}</div>;
+        let content = <div  {...propsNew}>{children}</div>;
         return content;
     }
 }

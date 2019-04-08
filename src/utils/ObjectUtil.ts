@@ -477,10 +477,14 @@ export default class ObjectUtil {
     // {name:defaultValue} 可以在变量名称后指定默认值，当变量值取不到时使用默认值
     // {!name:"defaultValue"} 可以为默认值加引号括起来，表示这个默认值是未转码过的，如果变量前有!，则应对默认值同样转码
     // {!(age>34?'老了':'有点老了'):"defaultValue"} 也可以使用表达式
-    static parseDynamicValue(text:string,data: any){
+    static parseDynamicValue(text:any,data: any){
         try {
-            if(text && typeof text == "string"){
+            if(text && typeof text == "string"|| text instanceof Array&&text.length>0){
+                text = text instanceof Array?text[0]:text
                 // 原始值在后台会被转义，因此这里需做一次反转义
+                if(!text.replace){
+                    return null
+                }
                 text = text.replace(/&amp;/g,"&")
                             .replace(/&lt;/g,"<")
                             .replace(/&gt;/g,">")
@@ -488,9 +492,8 @@ export default class ObjectUtil {
                             .replace(/&#39;/g,"\'")
                             .replace(/&quot;/g,"\"");                   
                 //正则表达式中使用{}两个符号作为判断边界，因此如果表达式中如果使用这两个字符需转义   
-                //console.log(text);           
             	text = text.replace(/\\\{/g,"&#7B;").replace(/\\\}/g,"&#7D;");
-                text = text.replace(/\{([\!\#]?)((?:[a-zA-Z0-9_\-]+)|(?:\([^{}]+\)))(\:([^{}]*?))?\}/g,function(match,m0,m1,m2,m3){
+                text = text.replace(/\{([\!\#]?)((?:[a-zA-Z0-9_\-]+)|(?:\([^{}]+\)))(\:([^{}]*?))?\}/g,function(match:any,m0:any,m1:any,m2:any,m3:any){
 					// m0：感叹号，如果有值表示值需要做编码处理
 					// m1：变量名
 					// m2：默认值段，不存在则表示无默认值
@@ -585,7 +588,11 @@ export default class ObjectUtil {
         for(let key in props) {
             key = ObjectUtil.parseDynamicValue(key, value);
             let valueInProps = ObjectUtil.parseDynamicValue(props[key], value);
-            propsNew[key] = valueInProps;
+            if(key=='isvisible'){
+                propsNew['visible'] = valueInProps=='false'?false:true;
+            }else{
+                propsNew[key] = valueInProps;
+            }
         }
         return propsNew;
     }

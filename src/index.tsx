@@ -16,7 +16,7 @@ window.G = GearWeb;
 window.G.SockJs = SockJs;
 // window.G.registerCustomComponents();
 window.G.messager = Message.default;
-window.G.dialog = Dialog;
+window.G.dialog = Dialog.default;
 window.G.utils = utils;
 window.G.tag = Tags.tags;
 window.G.components = Tags.components;

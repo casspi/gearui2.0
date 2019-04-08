@@ -54,7 +54,6 @@ export default class Icon<P extends typeof props, S extends state> extends Tag.d
         let state:state = this.getProps();
         let ref = state.ref;
         delete state.ref;
-        console.log(state)
         return <span ref={ref} style={{"display":"inline-block"}}><AntdIcon {...state}></AntdIcon></span>;
     }
 

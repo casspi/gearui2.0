@@ -46,7 +46,7 @@ export default class Button<P extends typeof props, S extends state> extends Tag
             size: this.props.size,
             loading: this.props.loading,
             icon: this.props.icon,
-            text: this.props.value || this.props.text,
+            text: this.props.value || this.props.text ||this.props.children,
             url: this.props.url,
         };
     }
@@ -75,9 +75,9 @@ export default class Button<P extends typeof props, S extends state> extends Tag
         if(state.iconAlign == "right" && this.state.icon && this.state.text) {
             delete state.icon;
             let icon:any = this.state.icon;
-            return <AntdButton {...state}>{this.props.children || this.state.text || ''}<AntdIcon type={icon}></AntdIcon></AntdButton>;
+            return <AntdButton {...state}>{this.state.text || ''}<AntdIcon type={icon}></AntdIcon></AntdButton>;
         }else {
-            return <AntdButton {...state}>{this.props.children || this.state.text || ''}</AntdButton>;
+            return <AntdButton {...state}>{this.state.text || ''}</AntdButton>;
         }
     }
 

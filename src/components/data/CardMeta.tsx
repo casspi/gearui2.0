@@ -16,9 +16,7 @@ export default class CardMeta<P extends typeof props, S extends state> extends T
     }
 
     render() {
-        console.log(this.props.children)
         return this.props.children
-        // this.props.children;
     }
 
 }

@@ -327,27 +327,53 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             if(this.state["options"] != null && this.state["options"].length > 0) {
                 let data = this.findByValue(value);
                 if(data) {
-                    console.log(this.childSelect.props)
-                    debugger
-                    if(this.childSelect.props.dictype || this.childSelect.props.url) {
-                        this.childSelect.loadData(Http.appendUrlParam(this.childSelect.props.url,{code:data.value}));
-                    }else {
-                        this.childSelect.loadData(data.children);
+                    if(this.childSelect._promise){
+                        this.childSelect._promise.then((e)=>{
+                            let _childSelect = e.result;
+                            if(_childSelect.props.dictype || _childSelect.props.url) {
+                                _childSelect.loadData(Http.appendUrlParam(_childSelect.props.url,{code:data.value}));
+                            }else {
+                                _childSelect.loadData(data.children);
+                            }
+                        })
                     }
                 }else {
+                    if(this.childSelect._promise){
+                        this.childSelect._promise.then((e)=>{
+                            let _childSelect = e.result;
+                            _childSelect.setState({
+                                options: []
+                            },()=>{
+                                _childSelect.clear();
+                            });
+    
+                        })
+                    }else{
+                        this.childSelect.setState({
+                            options: []
+                        },()=>{
+                            this.childSelect.clear();
+                        });
+                    }
+                }
+            }else {
+                if(this.childSelect._promise){
+                    this.childSelect._promise.then((e)=>{
+                        let _childSelect = e.result;
+                        _childSelect.setState({
+                            options: []
+                        },()=>{
+                            _childSelect.clear();
+                        });
+
+                    })
+                }else{
                     this.childSelect.setState({
                         options: []
                     },()=>{
                         this.childSelect.clear();
                     });
-                    
                 }
-            }else {
-                this.childSelect.setState({
-                    options: []
-                },()=>{
-                    this.childSelect.clear();
-                });
             }
         }
     }

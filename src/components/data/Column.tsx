@@ -20,15 +20,16 @@ export interface TableColumns {
     fixed?: "left"|"right";
     render?: any;
     ellipsisSpanWidth?: number;
-    orderColumn?: any;
-    sortOrder?: boolean;
+    ordercolumn?: any;
+    sortorder?: boolean;
     sorter?: Function;
-    filterDropdown?: any;
-    filterDropdownVisible?: any;
+    filterdropdown?: any;
+    filterdropdownvisible?: any;
     onFilterDropdownVisibleChange?: Function;
     filterIcon?: any;
+    filterid?:string,
     children?: any[];
-    rowspan?: any;
+    rowSpan?: any;
     index?: any;
 }
 export declare type ColumnFilterItem = {
@@ -36,7 +37,7 @@ export declare type ColumnFilterItem = {
     value: string;
     children?: ColumnFilterItem[];
 };
-export declare type CompareFn<T> = ((a: T, b: T, sortOrder?: 'ascend' | 'descend') => number);
+export declare type CompareFn<T> = ((a: T, b: T, sortorder?: 'ascend' | 'descend') => number);
 export default class Column<T> {
 
     name: string;
@@ -44,7 +45,7 @@ export default class Column<T> {
     className: string;
     colSpan: number;
     dataIndex: string;
-    defaultSortOrder: 'ascend' | 'descend';
+    defaultsortorder: 'ascend' | 'descend';
     filterDropdown?: React.ReactNode | ((props: Object) => React.ReactNode);
     filterDropdownVisible?: boolean;
     filtered: boolean;
@@ -57,10 +58,10 @@ export default class Column<T> {
     key?: React.Key;
     render?: (text: any, record: T, index: number) => React.ReactNode;
     sorter?: boolean | CompareFn<T>;
-    sortOrder?: 'ascend' | 'descend' | boolean;
+    sortorder?: 'ascend' | 'descend' | boolean;
     title?: React.ReactNode;
     label?: string;
-    width?: string | number;
+    width?: any;
     ellipsisSpanWidth?: string | number;
     onCell?: (record: T) => any;
     onFilter?: (value: any, record: T) => boolean;
@@ -69,23 +70,23 @@ export default class Column<T> {
     onHeaderCell?: (props: Column<T>) => any;
     children?: Column<T>[];
     index: number;
-    rowspan: any;
+    rowSpan: any;
     ref: any;
     table: Table<any, any>;
     display: string;
     ellipsis: boolean;
     class: string;
-    orderColumn: string;
-    filterId: string;
-    filterType: string;
-    filtersUrl: string;
+    ordercolumn: string;
+    filterid: string;
+    filtertype: string;
+    filtersurl: string;
     filtersMethod: string;
 
     static getSequence(table: Table<any, any>) {
         let sequence = new Column(table, null, 0);
         sequence.key = table.props.id + "_sequence";
         sequence.name = "sequence";
-        sequence.width = 40;
+        sequence.width = table.props.sequenceWidth+'px' || 40;
         sequence.dataIndex = "sequence";
         sequence.title = table.state.sequenceLabel || "序号";
         sequence.className = "ant-table-sequence-column";
@@ -104,9 +105,10 @@ export default class Column<T> {
         return control;
     }
 
-    private filterContainerId = UUID.get();
-
+    private filterContainerId:any = UUID.get();
+    
     constructor(table: Table<any, any>,column: React.ReactElement<Column<T>>|null, index: number) {
+        // this.filterContainerId = 'column_'+index;
         this.table = table;
         if(column && column.props) {
             let props = column.props;
@@ -114,13 +116,13 @@ export default class Column<T> {
             this.dataIndex = props.name || "";
             this.title = props.label || props.title || "";
             this.index = index;
-            this.rowspan = props.rowspan;
+            this.rowSpan = props.rowSpan;
             this.ref = props.name;
             if(props.fixed) {
                 this.fixed = props.fixed;
             }
             if(props.width && props.width > 0) {
-                this.width = props.width;
+                this.width = (props.width)*1;
             }
             let className = props.class || props.className;
             let classNameArr = GearArray.fromString(className," ")||new GearArray();
@@ -134,38 +136,39 @@ export default class Column<T> {
                 this.ellipsisSpanWidth = ellipsisSpanWidth;
             }
             //获取排序信息
-            let orderColumn:string = props.orderColumn;
-            if(classNameArr.length() > 0) {
-                if(orderColumn != null && orderColumn != "") {
-                    classNameArr.add(orderColumn);
-                }
-                this.className = classNameArr.toString(" ");
+            let ordercolumn:string = props.ordercolumn;
+            // if(classNameArr.length() > 0) {
+            // }
+            if(ordercolumn != null && ordercolumn != "") {
+                classNameArr.add(ordercolumn);
             }
-            if(orderColumn != null && orderColumn != "") {
-                this.orderColumn = orderColumn;
+            this.className = classNameArr.toString(" ");
+            if(ordercolumn != null && ordercolumn != "") {
+                this.ordercolumn = ordercolumn;
                 //打开该字段的排序
                 this.sorter = (a: any,b: any): number => {return 0};
                 //禁用排序图标的自动控制，使用自定义控制setSortClass方法
-                this.sortOrder = false;
+                this.sortorder = false;
             }
-            let filter:boolean = props.filter;
-            let filterId:string = props.filterId;
-            let filterType:any = props.filterType;
-            if(filterId && filter && filterType) {
+            // let filter:boolean = props.filter;
+            let filterid:string = props.filterid;
+            let filtertype:any = props.filtertype;
+            if(filterid  && filtertype) {
                 this.filterDropdown = this.getFilter(props);
-                this.filterDropdownVisible = this.table.getFilterVisible()[filterId];
+                this.filterDropdownVisible = this.table.getFilterVisible()[filterid]==true?true:false;
                 this.onFilterDropdownVisibleChange = (visible: any) => {
-                    let filterVisible = this.table.getFilterVisible()||{};
-                    filterVisible[filterId] = visible;
+                    let filterVisible = G.G$.extend({},this.table.getFilterVisible(),{});
+                    filterVisible[filterid] = visible;
                     this.table.setFilterVisible(filterVisible, ()=>{
                         if(visible == true) {
-                            this.table.getSearchNodes(filterId).focus();
+                            // this.table.getSearchNodes(filterid).ast=this.table.ast;
+                            this.table.getSearchNodes(filterid).focus();
                         }else {
                             this.table._search.bind(this.table)();
                         }
                     });
                 };
-                this.filterIcon = <Icon type="filter" style={{ color: this.table.getFiltered()[filterId] ? '#108ee9' : '#aaa' }} />;
+                this.filterIcon = <Icon type="filter" style={{ color: this.table.getFiltered()[filterid] ? '#108ee9' : '#aaa' }} />;
             }
             let childrenInProps = props.children;
             if(childrenInProps) {
@@ -205,6 +208,7 @@ export default class Column<T> {
                     children = [children];
                 }
                 if(children instanceof Array) {
+                    children = children.filter(o=>o.$$typeof!=null)
                     children.map((child:any, index: any)=>{
                         jsxEles.push(this.parseColumnChild(child, ellipsisSpanWidth, record, indexColumn, index));
                     });
@@ -220,7 +224,7 @@ export default class Column<T> {
     //解析column的子节点
     private parseColumnChild(child: any, ellipsisSpanWidth: any, record: any, indexColumn: any, index: any) {
         if(!(ObjectUtil.isExtends(child.type, "Column"))) {
-            let childProps = child.props || {};
+            let childProps =G.G$.extend({},child.props);
             childProps = this.parseRegexColumnValue(childProps,record);
             let style = childProps.style instanceof String ? GearJson.fromStyle(childProps.style || "") : new GearJson(childProps.style);
             if(ellipsisSpanWidth > 0) {
@@ -278,25 +282,26 @@ export default class Column<T> {
 
     // 文本过滤器
     protected getFilter(props: Column<T>) {
-        let filterId = props.filterId;
+        let filterid = props.filterid;
         let filterProps: any = {
             getCalendarContainer: ()=> {
                 return G.G$("#" + this.filterContainerId)[0];
             }
         };
         let filterJsx: any;
-        let filterType:any = props.filterType;
-        if(filterType == "text") {
+        let filtertype:any = props.filtertype;
+        if(filtertype == "text") {
             let textProps: any = {
                 prompt: "请输入查询条件...",
                 buttonIcon: "search",
                 width: 200,
-                onClickButton: this.table._search.bind(this.table)
+                onClickButton: this.table._search.bind(this.table),
+                onPressEnter:this.table._search.bind(this.table)
             };
-            filterJsx = <Text.default ref={(ele:any) => this.table.setSearchNode(filterId, ele)} {...textProps}/>;
+            filterJsx = <Text.default key={'text'} ref={(ele:any) => this.table.setSearchNode(filterid, ele)} {...textProps}/>;
         }else {
             let elseProps: any;
-            if(filterType == "date" || filterType == "datetime") {
+            if(filtertype == "date" || filtertype == "datetime") {
                 elseProps = {
                     ...filterProps,
                     type: "range",
@@ -304,7 +309,7 @@ export default class Column<T> {
             }else {
                 let filterMultiple:any = props.filterMultiple || props["filterMutiple"];
                 let filters:any = props.filters;
-                let filtersUrl:any = props.filtersUrl;
+                let filtersurl:any = props.filtersurl;
                 let filtersMethod:any = props.filtersMethod;
                 elseProps = {
                     ...filterProps,
@@ -312,20 +317,20 @@ export default class Column<T> {
                     treeCheckable: filterMultiple == true? true : false,
                     cascadeCheck: false,
                     dictype: filters,
-                    url: filtersUrl,
+                    url: filtersurl,
                     method: filtersMethod,
                     width: 300,
                 }
             }
             filterJsx = [];
-            if(filterType == "date") {
-                filterJsx.push(<Date.default ref={(ele:any) => this.table.setSearchNode(filterId, ele)} {...elseProps}/>);
-            }else if(filterType == "datetime") {
-                filterJsx.push(<Datetime.default ref={(ele:any) => this.table.setSearchNode(filterId, ele)} {...elseProps}/>);
+            if(filtertype == "date") {
+                filterJsx.push(<Date.default key={"date"} ref={(ele:any) => this.table.setSearchNode(filterid, ele)} {...elseProps}/>);
+            }else if(filtertype == "datetime") {
+                filterJsx.push(<Datetime.default key={"datetime"} ref={(ele:any) => this.table.setSearchNode(filterid, ele)} {...elseProps}/>);
             }else {
-                filterJsx.push(<Combotree.default ref={(ele:any) => this.table.setSearchNode(filterId, ele)} {...elseProps}/>);
+                filterJsx.push(<Combotree.default key={"combotree"} ref={(ele:any) => this.table.setSearchNode(filterid, ele)} {...elseProps}/>);
             }
-            filterJsx.push(<Button type="primary" onClick={this.table._search.bind(this.table)}>查询</Button>);
+            filterJsx.push(<Button key={"botton"} type="primary" onClick={this.table._search.bind(this.table)}>查询</Button>);
         }
         return <div className="list-custom-filter-dropdown">
             {filterJsx}

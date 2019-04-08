@@ -236,6 +236,8 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         }else{
             if(this.find("input")){
                 this.find("input").blur();
+            }else{
+                G.G$(this.realDom).find('input').blur()
             }
         }
     }
@@ -245,7 +247,11 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         if (fun && G.G$.isFunction(fun)) {
             this.bind("focus", fun);
         }else{
-            this.find("input").focus();
+            if(this.ast){//通过其他方式渲染没有ast时
+                this.find("input").focus();
+            }else{
+                G.G$(this.realDom).find('input').focus()
+            }
         }        
     }
     //鼠标点击事件

@@ -73,13 +73,13 @@ export default class RadioGroup<P extends typeof props &  RadioProps,S extends s
             return <AntdRadioGroup {...props}></AntdRadioGroup>;
         } else {
             let childrenMap:any[] = [];
-            if (this.props.children instanceof Array) {
+            let _props:any = this.props.children;
+            if (_props instanceof Array) {
                 childrenMap = this.props.children;
                 childrenMap = childrenMap.filter(o=>o.key);//过滤空的
                 childrenMap = childrenMap.map((child: any, index)=> {
                     let item = child;
                     return (item)
-                    // console.log(child)
                     // if(item && item.type && ObjectUtil.isExtends(item.type, "RadioButton")) {
                     //     console.log(item.props)
                     //     let itemJsx = <AntdRadioButton {...item.props} key={this.props.id ? this.props.id + "_item_" + index :UUID.get()}>{item.props.label}</AntdRadioButton>;
@@ -96,7 +96,6 @@ export default class RadioGroup<P extends typeof props &  RadioProps,S extends s
 
     //onchange函数
     onChange(e:any) {
-        console.log('radio checked', e.target.value);
         this.setState({
             value: e.target.value,
         });

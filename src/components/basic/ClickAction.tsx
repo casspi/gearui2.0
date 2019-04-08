@@ -1,6 +1,6 @@
 import * as Button from "./Button";
 import * as React from 'react';
-import { Icon as AntdIcon } from 'antd';
+import * as Icon from './Icon';
 
 export var props = {
     // 按钮或链接，link、icon、button，默认为link
@@ -20,13 +20,13 @@ export default class ClickAction<P extends typeof props, S extends state> extend
    
 
     getIconState() {
-        let style = this.state.style;
-        if(style) {
-            style.cursor = "pointer";
-        }
         let state = G.G$.extend({},this.state, {
-            icon: this.state.icon
-        });
+            visible: this.props.visible,
+            type: this.state.icon,
+            style:{
+                cursor:'pointer'
+            }
+        },true);
         return state;
     }
     getProps(){
@@ -42,7 +42,7 @@ export default class ClickAction<P extends typeof props, S extends state> extend
             return <a style={state.style ? state.style : {}} onClick={state.onClick.bind(this)}>{this.state.text}</a>; 
         }else if(type && type == "icon") {
             let state: any = this.getIconState();
-            return <AntdIcon {...state}/>;
+            return <Icon.default  {...state}></Icon.default>;
         }else{
             return super.render();
         }

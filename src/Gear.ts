@@ -38,11 +38,11 @@ export default class G {
         //渲染指定节点下的控件
         //el: 指定节点
         let el = renderOptions.el;
-        let time1 = new Date().getTime();
+        // let time1 = new Date().getTime();
         let parser = new Parser();
         let astMsg  = parser.parse(el);
-        let time2 = new Date().getTime();
-        console.log("解析时间:" + (time2 - time1));
+        // let time2 = new Date().getTime();
+        // console.log("解析时间:" + (time2 - time1));
         let render = new Render();
         this.cacheHtml = astMsg.cacheHtml;
         this.cacheAst = astMsg.ast;

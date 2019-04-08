@@ -57,7 +57,6 @@ export default class RadioButton<P extends typeof props &  RadioProps,S extends 
 
     //onchange函数
     onChange(e:any) {
-        console.log('radio checked', e.target.value);
         this.setState({
             value: e.target.value,
         });

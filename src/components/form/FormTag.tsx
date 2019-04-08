@@ -16,6 +16,8 @@ export var props = {
     extra: GearType.String,
     //配合 validateStatus 属性使用，展示校验状态图标，建议只配合 Input 组件使用
     hasFeedback: GearType.Boolean,
+    //是否显示提示信息
+    showHelp:GearType.Boolean,
     //提示信息，如不设置，则会根据校验规则自动生成
     help: GearType.String,
     //label 标签的文本
@@ -284,27 +286,38 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         let errors = formUtils.getFieldError(tagName);
         if(errors && errors.length > 0) {
             validateStatus = "error";
-            help = errors[0];
+            help = this.props.showHelp===true?errors[0]:null;
             // 表单验证方式，优先取控件本身的，如果控件本身无配置再获取form上的
             if(invalidType == "fixed") {
                 let ele = Tooltip.addInvalidTooltip(formTag,tagName,null,this.state.titleAlign);
                 
                 return <AntdFormItem
+                    hasFeedback={false}
                     validateStatus={validateStatus}
                     help={help}
                 >{ele}</AntdFormItem>;
             }else {
-                let ele = Tooltip.addInvalidTooltip(formTag,tagName,help,this.state.titleAlign);
+                let ele = Tooltip.addInvalidTooltip(formTag,tagName,errors[0],this.state.titleAlign);
                 return <AntdFormItem className={"ant-form-item-with-float-help"}
+                    hasFeedback={false}
                     validateStatus={validateStatus}
+                    help={help}
                 >{ele}</AntdFormItem>;
             }
         }else {
             let ele = Tooltip.addTooltip(formTag,this.state.title,this.state.titleAlign);
             if(invalidType == "fixed") {
-                return <AntdFormItem>{ele}</AntdFormItem>;
+                return <AntdFormItem
+                hasFeedback={false}
+                    validateStatus={validateStatus}
+                    help={help}
+                >{ele}</AntdFormItem>;
             }else{
-                return <AntdFormItem className={"ant-form-item-with-float-help"}>{ele}</AntdFormItem>;
+                return <AntdFormItem className={"ant-form-item-with-float-help"}
+                hasFeedback={false}
+                    validateStatus={validateStatus}
+                    help={help}
+                >{ele}</AntdFormItem>;
             }
         }
     }
