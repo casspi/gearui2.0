@@ -108,7 +108,6 @@ export default class Column<T> {
     private filterContainerId:any = UUID.get();
     
     constructor(table: Table<any, any>,column: React.ReactElement<Column<T>>|null, index: number) {
-        // this.filterContainerId = 'column_'+index;
         this.table = table;
         if(column && column.props) {
             let props = column.props;
@@ -161,7 +160,7 @@ export default class Column<T> {
                     filterVisible[filterid] = visible;
                     this.table.setFilterVisible(filterVisible, ()=>{
                         if(visible == true) {
-                            // this.table.getSearchNodes(filterid).ast=this.table.ast;
+                            //this.table.getSearchNodes(filterid).ast = this.table.ast;
                             this.table.getSearchNodes(filterid).focus();
                         }else {
                             this.table._search.bind(this.table)();

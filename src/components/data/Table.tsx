@@ -68,7 +68,6 @@ export interface Data<T> {
 
 export default class Table<P extends typeof props & TableProps<any>, S extends state> extends Tag.default<P, S> {
 
-    
     protected paginations: Array<any> = [];
     protected formEle: Form<any, any>;
     protected ctrl = false;
@@ -581,7 +580,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(fun && G.G$.isFunction(fun)) {
             this.bind("afterExpand",fun);
         }
-    }    
+    }  
+ 
     onAfterUpdate(fun:Function){
         if(fun && G.G$.isFunction(fun)) {
             this.bind("afterUpdate",fun);
@@ -708,7 +708,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             children = [children];
         }
         if(children instanceof Array) {
-            children = children.filter(o=>o.$$typeof!=null)//过滤子集中空项        
+            children = children.filter(o=>o.$$typeof!=null)//过滤子集中空项   
             children.map((child:any, index: number)=>{
                 let column = this._parseColumn(child, index);
                 if(this.state.sequence != false && (column.fixed == "left" || column.fixed == "right")) {
@@ -721,7 +721,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         return columns;
     }
 
-    protected _parseColumn(child: any, index: number) {
+    protected _parseColumn(child: any, index: number):any {
         if(this.state.sequence != false) {
             index = index+1;
         }
@@ -731,10 +731,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(this.haveEvent("expandedRow")) {
             index = index+1;
         }
-        if(child.props.children){
-            child = child.props.children
-            console.log(child)
-        }
+     
         return new Column(this, child, index);
     }
 
@@ -838,7 +835,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(this.props.id){
             G.$("#"+this.props.id).data("vmdom", this)
         }
-        
     }
 
     // 得到默认的样式名称

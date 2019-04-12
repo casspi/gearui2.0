@@ -141,7 +141,6 @@ class EdittableControl {
             this.down();
         }
     };
-
     static save:Control = {
         name: "save",
         props: {
@@ -155,7 +154,6 @@ class EdittableControl {
             this.save();
         }
     };
-
     static reset:Control = {
         name: "reset",
         props: {
@@ -756,7 +754,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
 
     public parseControlColumnRender() {
-        
         return (text: any,record: any) => {
             let editProps: any = {
                 icon: "edit",
@@ -911,7 +908,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                         }
                     }
                 });
-                
                 return <EditTableCell.default {...cellProps}>{children}</EditTableCell.default>;
             };
         })(column,props);

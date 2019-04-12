@@ -159,8 +159,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
 
     afterRender() {  
-
-        let editable = this.state["editable"];
+        let editable = this.state.editable;
         if(editable != true) {
             let label = this.getLabel();
             this.setState({
@@ -169,7 +168,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         }
     }
 
-    getEditGearEle() {
+    getEditGearEle() { 
         console.log(this)
         let editCType = this.props.editCType;
         let lower = this.props.lower;

@@ -456,7 +456,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                         });
                         return;
                     }
-                    let result = this.doEvent("loadFilter",dic);
+                    let result:any = this.doEvent("loadFilter",dic);
                     if(result && result.length > 0) {
                         dic = result[result.length - 1];
                     }

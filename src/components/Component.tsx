@@ -99,7 +99,6 @@ export default class Component<P extends typeof props, S extends state> extends 
 
     getText(){
         let components = this.getComponents();
-        console.log(components)
         if(components){
             if(components instanceof Array){
                 let texts = [];

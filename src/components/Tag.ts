@@ -253,7 +253,7 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
         state: ((prevState: Readonly<S>, props: Readonly<P>) => (Pick<S, K> | S | null)) | (Pick<S, K> | S | null),
         callback?: () => void
     ) {
-        super.setState(state, callback);
+        super.setState(state,callback);
     }
 
     /**

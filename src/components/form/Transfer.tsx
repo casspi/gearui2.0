@@ -104,6 +104,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
     }
 
     getLeftTreeProps() {
+        console.log(this.getPropStringArrayValue(this.props.value)||[])
         return {
             checkbox:true,
             cascadeCheck:true,
@@ -143,8 +144,8 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                     }else{
                         this._options = [];
                     }
-                    console.log(this._leftTree.props.value)
                     if(this.props.value){
+                        // this._leftTree.setValue(this.getPropStringArrayValue(this.props.value))
                         // 如果有默认值，将默认值移至左侧
                         this._transferCheckedItemToRight();
                     }
@@ -329,6 +330,8 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             // 得到左侧树节点的数据
             let options = this._leftTree.getRoots();
             let destOptions = this._rightTree.getRoots();
+            console.log(options)
+            console.log(destOptions)
             let newOptions = this.getOptionsAfterTransfer(options,destOptions);
             let oldValue:any;
             if(newOptions.changed==true){

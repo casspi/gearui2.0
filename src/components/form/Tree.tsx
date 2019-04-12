@@ -614,6 +614,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 let keyValue: any[] = [];
                 // 默认值
                 let defaultValue: any = this.state.value || this.state.selected;
+                console.log(this.state.value)
                 if(defaultValue){
                     // 如果默认值存在，则根据默认值获得相应的节点id，放到value中
                     this._findKeyByValue(defaultValue,dic,keyValue);

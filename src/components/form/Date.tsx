@@ -98,7 +98,7 @@ export default class Date<P extends typeof props, S extends state> extends FormT
             },
             getCalendarContainer: ()=>{
                 let container = document.body;
-                let containerr = this.doEvent("getCalendarContainer");
+                let containerr:any = this.doEvent("getCalendarContainer");
                 if(containerr && containerr.length > 0) {
                     container = containerr[0];
                 }else {

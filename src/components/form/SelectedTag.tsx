@@ -18,6 +18,7 @@ export interface state extends FormTag.state {
     color?: string;
     // 文本值
     text?: string;
+    key?:string
 }
 
 // 穿梭框
@@ -46,13 +47,14 @@ export default class SelectedTag<P extends typeof props, S extends state> extend
             value: this.props.value,
             text: this.props.text,
             closable:this.props.closable,
+            
         };
     }
     
     makeJsx() {        
         let props:any = this.getProps();
         delete props.validation;
-        return <AntdTag {...props} key={UUID.get()}>{this.getText()||this.getValue()}</AntdTag>;
+        return <AntdTag {...props}>{this.getText()||this.getValue()}</AntdTag>;
     }
 
     getText(){

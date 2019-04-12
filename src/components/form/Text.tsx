@@ -224,9 +224,6 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         if(this.form){
             delete props.value;
         }
-        if(props.id=='text4'){
-            console.log(props.value)
-        }
         return <AntdInput {...props}  ref={ele=>this.ref=ele} ></AntdInput>;
     }
     

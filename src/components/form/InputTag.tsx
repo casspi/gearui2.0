@@ -279,10 +279,10 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             delete props.invalidType;
             delete props.labelText;
             delete props.validation;
-            if(this.form){
-                delete props.value
-            }
-            inputControl = <span style={{display:this.state.inputVisible?'block':'none'}}><Text.default key={"input"} {...props}></Text.default></span>;
+            // if(this.form){
+            //     delete props.value
+            // }
+            inputControl = <span style={{display:this.state.inputVisible?'block':'none'}}><Text.default key={"input"}  {...props} ></Text.default></span>;
         }
         return <div {..._props}>
                 <AntdSpin size={"default"} spinning={this.state.loading}  delay={100}>
@@ -303,9 +303,9 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         let values: any = this.state.value;
         let tags: any[] = [];
         if(values instanceof Array) {
-            values.map((value: any)=>{
+            values.map((value: any,index:number)=>{
                 let props: any = this.getSelectedTagProps(value.key,value.value,value.text);
-                tags.push(<SelectedTag.default key={"tag_"+value.key+UUID.get()} {...props}/>);
+                tags.push(<SelectedTag.default  {...props} key={"tag_"+value.key+index}/>);
             });
         }
         return tags;
