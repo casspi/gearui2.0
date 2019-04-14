@@ -120,7 +120,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                             </div>}>
                                 <span className={"cell-element"}>{reactEle}</span>
                             </Popover>
-                            :<span className={"cell-element"}>{}</span>
+                            :<span className={"cell-element"}>{reactEle}</span>
                         }
                 </div>
                 <div className="editable-cell-text-wrapper" style={{display: props.editable?"none":"block"}}>
@@ -169,7 +169,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
 
     getEditGearEle() { 
-        console.log(this)
         let editCType = this.props.editCType;
         let lower = this.props.lower;
         let upper = this.props.upper;

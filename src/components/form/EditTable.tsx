@@ -227,7 +227,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
     protected _loadSuccess() {
         let dataSource = this.getData();
-        console.log(dataSource)
+        // console.log(dataSource)
         this.cacheData = new GearArray(dataSource).clone().toArray();
     }
 
