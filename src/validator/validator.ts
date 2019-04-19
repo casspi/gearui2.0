@@ -173,7 +173,7 @@ export default class Validator {
             validatorsArray.push(new validators.NumberValidator(props));
         }
         //长度及最大最小值校验
-        if (props.min || props.max) {
+        if (props.min || props.max || props.mins || props.maxs) {
             if ((ObjectUtil.isExtends(clazz, "Textarea")) 
                 || ObjectUtil.isExtends(clazz, "Password")
                 || ObjectUtil.isExtends(clazz, "Email")) {
@@ -225,12 +225,12 @@ export default class Validator {
         }
         if (props.equals) {
             ((props) => {
-                // let afterRender = props.__ast__.afterRender;
                 props.__ast__.afterRender = () => {//定义一个afterRender函数，在渲染后执行
+                    //用来处理被依赖的组件值发生变化是，触发组件验证
                     let equalsSrc = props.equals;
                     let srcEle: any = G.$(equalsSrc);
-                    if(srcEle && srcEle.props) {
-                        let form: any = srcEle.props.form;
+                    if(srcEle) {
+                        let form: any = srcEle.form;
                         if(form) {
                             srcEle.onChange(function(newValue: any, oldValue: any){
                                 form.validateField(props.name||props.id);

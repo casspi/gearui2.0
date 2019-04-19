@@ -11,6 +11,7 @@ import * as EditTableCell from './EditTableCell';
 import {FormComponentProps} from 'antd/es/form/Form';
 import { Form } from "./index";
 import { default as Column } from '../data/Column';
+import RequiredValidator from '../../validator/requiredValidator';
 export var props = {
     ...Table.props,
     ...FormTag.props,
@@ -151,6 +152,7 @@ class EdittableControl {
             this.controlBtns.put("save",ele);
         },
         onclick: function(){
+            debugger
             this.save();
         }
     };
@@ -227,7 +229,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
     protected _loadSuccess() {
         let dataSource = this.getData();
-        // console.log(dataSource)
         this.cacheData = new GearArray(dataSource).clone().toArray();
     }
 
@@ -293,6 +294,8 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
 
     reset() {
+        alert('reset');
+        console.log(this.cacheData)
         if(this.doJudgementEvent("beforeReset")==false)
             return;
         if(this.cacheData != null && this.cacheData.length > 0) {
@@ -855,62 +858,71 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         let column = super._parseColumn(child, index);
         const children = child.props.children;
         let props = child.props;
-        ((column, props)=>{
-            column.render = (text: any,record: any)=>{
-                let newProps = ObjectUtil.parseDynamicProps(props, record);
-                let editCType: string = newProps.editctype||  newProps.editCType  ||"";
-                let lower: string = newProps.lower ? newProps.lower + record.key : "";
-                let upper: string = newProps.upper ? newProps.upper + record.key : "";
-                let id: string = newProps.id ? newProps.id + record.key : record.key + "_" + index;
-                let name: string = newProps.name ? newProps.name + record.key : record.key + "_" + index;
-                //获取本字段的编辑状态
-                let editable: any = this.state.editable;
-                if((typeof editable == "boolean") == false) {
-                    if(editable[record.key] != null) {
-                        editable = editable[record.key];
-                    }else {
-                        editable = this.props.editable == null ? true : this.props.editable;
-                    }
-                }
-                let cellProps: any = G.G$.extend(newProps,{
-                    id: id,
-                    value: text,
-                    editCType,
-                    editable: editable,
-                    lower: lower,
-                    upper: upper,
-                    editCell: this.props.editCell,
-                    name: name,
-                    form: this.form,
-                    ref:(ele: any) => {
-                        let cells = this.cells[record.key]||{};
-                        if(ele != null) {
-                            cells[column.name] = ele;
-                        }
-                        this.cells[record.key] = cells;
-                    },
-                    onBeforeSave: (name: any,record: any)=>{
-                        return this.doJudgementEvent("beforeCellSave",name,record);
-                    },
-                    onSave: (name: any,record: any)=>{
-                        return this.doJudgementEvent("cellSave",name,record);
-                    },
-                    onBeforeEdit: (name: any,record: any)=>{
-                        return this.doJudgementEvent("beforeCellEdit",name,record);
-                    },
-                    onBeforeReset:(name: any,record: any) => {
-                        return this.doJudgementEvent("beforeCellReset",name,record);
-                    },
-                    onChange: (value: any, oldValue: any, label: any) => {
-                        //处理值变动的逻辑
-                        if(props.onChange) {
-                            props.onChange(value, oldValue);
+        if(props.editctype){
+            ((column, props)=>{
+                column.render = (text: any,record: any)=>{
+                    console.log(props)
+                    let newProps = ObjectUtil.parseDynamicProps(props, record);
+                    let editCType: string = newProps.editctype||  newProps.editCType  ||"";
+                    let lower: string = newProps.lower ? newProps.lower + record.key : "";
+                    let upper: string = newProps.upper ? newProps.upper + record.key : "";
+                    let id: string = newProps.id ? newProps.id + record.key : record.key + "_" + index;
+                    let name: string = newProps.name;
+                    //获取本字段的编辑状态
+                    let editable: any = this.state.editable;
+                    if((typeof editable == "boolean") == false) {
+                        if(editable[record.key] != null) {
+                            editable = editable[record.key];
+                        }else {
+                            editable = this.props.editable == null ? true : this.props.editable;
                         }
                     }
-                });
-                return <EditTableCell.default {...cellProps}>{children}</EditTableCell.default>;
-            };
-        })(column,props);
+                    // console.log(record)
+                    let cellProps: any = G.G$.extend(newProps,{
+                        dictype:newProps.dictype,
+                        id: id,
+                        value: text,
+                        editCType,
+                        editable: editable,
+                        lower: lower,
+                        upper: upper,
+                        record:record,
+                        editCell: this.props.editCell,
+                        name: name,
+                        form: this.form,
+                        required: newProps.required=="true"?true:false,
+                        // ref:(ele: any) => {
+                        //     let cells = this.cells[record.key]||{};
+                        //     if(ele != null) {
+                        //         cells[column.name] = ele;
+                        //     }
+                        //     this.cells[record.key] = cells;
+                        // },
+                        onBeforeSave: (name: any,record: any)=>{
+                            return this.doJudgementEvent("beforeCellSave",name,record);
+                        },
+                        onSave: (name: any,record: any)=>{
+                            return this.doJudgementEvent("cellSave",name,record);
+                        },
+                        onBeforeEdit: (name: any,record: any)=>{
+                            return this.doJudgementEvent("beforeCellEdit",name,record);
+                        },
+                        onBeforeReset:(name: any,record: any) => {
+                            return this.doJudgementEvent("beforeCellReset",name,record);
+                        },
+                        onChange: (value: any, oldValue: any, label: any) => {
+                            //处理值变动的逻辑
+                            if(props.onChange) {
+                                props.onChange(value, oldValue);
+                            }
+                        }
+                    });
+
+                    return <EditTableCell.default {...cellProps}>{children}</EditTableCell.default>;
+                };
+            })(column,props);
+        }
+        
         return column;
     }
 

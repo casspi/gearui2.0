@@ -348,4 +348,8 @@ export default class Check<P extends typeof props, S extends state> extends Form
         }else
             return false;
     } 
+    focus(...args:any) { 
+        this.attr("tabindex","0");
+        super.focus(...args);      
+    }
 }

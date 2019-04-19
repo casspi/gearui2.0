@@ -32,5 +32,7 @@ export default class Url<P extends (typeof props) & InputProps ,S extends state>
         }
         return <Input {...props}></Input>;
     }
-
+    getText(){
+        return this.state.value
+    }
 }

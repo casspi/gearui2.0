@@ -86,7 +86,6 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
         }else {
             container = G.$(this.realDom);
         }
-        // console.log(container.realDom)
         for(let key in data) {
             let value = data[key];
             try{
@@ -138,25 +137,6 @@ export default class AjaxLoad<P extends typeof props, S extends state> extends T
                         }
                     }
                 }
-                // console.log(gele.children())
-                // // if(G.$(dom) instanceof Group){
-                //     value[gele.props.name] = gele.getValue();
-                // // }else{
-                    // value[gele.props.name]
-                // }
-                // if(parent.length==0 || G.$(parent[0]) instanceof Group == false){
-                //     let gele = G.$(dom);
-                //     if(gele && gele.getValue && gele.props && gele.props.name) {
-                //         value[gele.props.name] = gele.getValue();
-                //     }
-                //     if(gele.children_g_) {
-                //         fn(gele);
-                //     }
-                // }else if(G.$(parent[0]) instanceof Group){
-                //     let gele = G.$(dom);
-                //     console.log(gele)
-                //     // value[gele.props.name] = gele.getValue();
-                // }       
             });
         }
         fn(this);

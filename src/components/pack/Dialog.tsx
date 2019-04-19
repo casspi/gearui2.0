@@ -299,17 +299,20 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
 
     afterRender() {
         if(this.state.dragable) this.dragEvent();//绑定拖拽事件
+        // if(this.props.height){
+        //     let height:any = this.props.height;
+        //     let modalWarp = G.$('#'+this.state.id+'dialog-warp')
+        //     let rHeight = parseInt(height)-(modalWarp.find('.ant-modal-header').outerHeight()||0)-(modalWarp.find('.ant-modal-footer').outerHeight()||0);
+        //     let pt = modalWarp.find(".ant-modal-body").css('padding-top');
+        //     let pb = modalWarp.find(".ant-modal-body").css('padding-bottom');
+        //     alert(pt+'--'+pb);
+        //     modalWarp.find(".ant-modal-body").height(rHeight)
+        // }
     }    
 
     afterUpdate() {
-        //手动将高度分配给ant-modal-body 保持title和footer高度不变
-        if(this.props.height){
-            let height:any = this.props.height;
-            let modalWarp = G.$('#'+this.state.id+'dialog-warp')
-            let rHeight = parseInt(height)-(modalWarp.find('.ant-modal-header').outerHeight()||0)-(modalWarp.find('.ant-modal-footer').outerHeight()||0);
-            // console.log(modalWarp.find(".ant-modal-body"))
-            modalWarp.find(".ant-modal-body").height(rHeight)
-        }
+        
+        
     }
     private oL:any;oT:any;oW:any;oH:any;bodyH:any;
     maxIconClick(){

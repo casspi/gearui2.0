@@ -24,7 +24,7 @@ export default class DicUtil {
         if (typeof dictype == "string" && window[dictype]) {
             dictype = window[dictype]
         }
-        if (url && url.length > 0) {
+        if (url!="undefined"&&url && url.length > 0) {
             return Http.ajax(method, url);
         } else {
             if(dictype){

@@ -51,7 +51,6 @@ export default class Repeat<P extends  typeof props, S extends state> extends Ta
                     };
                     let callbackV:any = this.doEvent('render',item,index)!=null?this.doEvent('render',item,index):{}
                     props = G.G$.extend({},props,callbackV[0]);
-                    // console.log(React.cloneElement(item, props,item.props.children))
                     reactChildren.push(React.cloneElement(item, props,item.props.children));
                 }
             });
@@ -74,7 +73,6 @@ export default class Repeat<P extends  typeof props, S extends state> extends Ta
     }
 
     onRender(fun:Function) {
-        console.log(fun)
         if (fun && G.G$.isFunction(fun)) {
             this.bind("render", fun);
         }

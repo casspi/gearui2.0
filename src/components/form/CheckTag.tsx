@@ -222,11 +222,13 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
 
 
     focus(...args: any[]) { 
-        this.find(".gearui-control-wrapper").attr("tabindex","0");
+        this.attr("tabindex","0");
+        super.focus(...args); 
         this.find(".gearui-control-wrapper").focus(...args);      
     }
 
     blur(...args: any[]){
+        this.attr("tabindex","-1");
         this.find(".gearui-control-wrapper").blur(...args);
     }  
 }

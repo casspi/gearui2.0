@@ -69,7 +69,6 @@ export default class Submit<P extends typeof props,S extends state> extends Butt
                     this.setLoading(true);
                 }
                 form.submit((data:any)=>{
-                    console.log(data)
                     this.setLoading(false);
                 });
             }else{

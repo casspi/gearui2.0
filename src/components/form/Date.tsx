@@ -7,6 +7,7 @@ import 'moment/locale/zh-cn';
 import Tag from '../Tag';
 moment.locale('zh-cn');
 import zhCN from 'antd/lib/locale-provider/zh_CN';
+import Content from '../data/Content';
 const { MonthPicker, RangePicker } = DatePicker;
 
 export var props = {
@@ -21,6 +22,8 @@ export var props = {
     ableDate: GearType.String, //日期可选区间
     ok: GearType.Function,
     getCalendarContainer: GearType.Function,
+    maxs:GearType.String,
+    mins:GearType.String,
 };
 
 export interface state extends FormTag.state {
@@ -35,7 +38,6 @@ export interface state extends FormTag.state {
 }
 
 export default class Date<P extends typeof props, S extends state> extends FormTag.default<P, S> {
-
     //获取当前属性
     getProps() {
         let type = this.props.type || "date";
@@ -161,7 +163,7 @@ export default class Date<P extends typeof props, S extends state> extends FormT
     }
     //渲染
     makeJsx() {
-        let props = this.getProps();
+        let props:any = this.getProps();
         if(this.form){
             delete props.value;
         }
@@ -248,7 +250,6 @@ export default class Date<P extends typeof props, S extends state> extends FormT
     }
     afterRender(){
         super.afterRender()
-        // console.log(this.state.value)
     }
     setEnd(val: any,callback?: Function) {
         if(this.props.type == "range") {

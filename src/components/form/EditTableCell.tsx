@@ -3,8 +3,6 @@ import { Icon as AntdIcon,Popover } from 'antd';
 import * as React from 'react';
 import { Form } from "./index";
 import { GearUtil } from '../../utils';
-import * as Combotree from '../form/Combotree';
-import { UUID, ObjectUtil } from '../../utils';
 var props = {
     ...Tag.props,
     editable: GearType.Boolean,
@@ -56,7 +54,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 if(error != true) {
                     return;
                 }
-                this.doEvent("change", this.state.value, this.state.oldValue, this.state.label);
+                this.doEvent("change", this.state.value, this.state.oldValue, this.state.value);
                 this.editDisable(()=>{
                     //返回false保持编辑状态
                     if(this.doJudgementEvent("save",this.props.name,this.state.value)==false) {
@@ -94,10 +92,13 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     render() {
         let props = this.getProps();
-        let reactEle = this.getEditGearEle();
-        // console.log(reactEle)
-        let cellText = (reactEle && reactEle['props'] && reactEle['props'].ctype=="file" && props.showLink)?<a download href={props.label || " "}  className={"cell-value"}>{props.label || " "}</a>:<span className={"cell-value"}>{props.label || " "}</span>;
-        // return <span className={"cell-element"}>{reactEle}</span>;
+        let reactEle:any = this.getEditGearEle();
+        let cellText:any = (reactEle && reactEle['props'] && reactEle['props'].ctype=="file" && props.showLink)?<a key="fileLink" download href={props.label || " "}  className={"cell-value"}>{props.label || " "}</a>:<span key="cellText" className={"cell-value"}>{props.label || " "}</span>;
+        if(!(cellText instanceof Array)){
+            cellText = [cellText]
+        }
+        cellText = cellText.filter((o:any)=>o!="")
+        // console.log(cellText)
         return <div className="edit-table-cell">
                 <div className="editable-cell-input-wrapper" style={{display: props.editable?"block":"none"}}>
                         {
@@ -120,7 +121,8 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                             </div>}>
                                 <span className={"cell-element"}>{reactEle}</span>
                             </Popover>
-                            :<span className={"cell-element"}>{reactEle}</span>
+                            :
+                            <span className={"cell-element"}>{reactEle}</span>
                         }
                 </div>
                 <div className="editable-cell-text-wrapper" style={{display: props.editable?"none":"block"}}>
@@ -145,17 +147,17 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
 
     getLabel() {
-        // console.log(this.gearEle && this.gearEle.getValue())
         let label;
         if(this.gearEle != null && this.gearEle.getText) {
             label = this.gearEle.getText();
         }
         if(label) {
             return label;
-        }else {
-            label = G.$(this.props.columnEle).attr("text");
-            return ObjectUtil.parseDynamicValue(label,this.props.record);
         }
+        // else {
+        //     label = G.$(this.props.columnEle).attr("text");
+        //     return ObjectUtil.parseDynamicValue(label,this.props.record);
+        // }
     }
 
     afterRender() {  
@@ -167,21 +169,31 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
             });
         }
     }
-
+    
     getEditGearEle() { 
+        let _props:any =G.G$.extend({},this.props,true);
         let editCType = this.props.editCType;
         let lower = this.props.lower;
         let upper = this.props.upper;
+        delete _props.ctype;
+        delete _props.editCell;
+        delete _props.editable;
+        delete _props.label;
+        delete _props.__ast__;
+        delete _props.children;
+        let onchangebak = _props.onChange;
         let props:any = G.G$.extend(
+            // {
+                
+            //     width:this.props.width,
+            //     url:this.props['url'],
+            //     form:this.props['form']
+            // },
+            _props,
             {
-                dictype:this.props['dictype'],
-                width:this.props.width,
-                url:this.props['url'],
-                required:this.props['required']
-            },
-            // this.props,
-            {
+                required:this.props['required'],
                 id: this.props.id,
+                dictype:this.props['dictype'],
                 key: this.props.id,
                 name: this.props.name,
                 ref: (ele: any)=>{
@@ -193,23 +205,44 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 upper: upper,
                 "data-cellId": this.props.id,
                 onChange: (value: any,oldValue: any) => {
-                    console.log('change')
-                    console.log(value)
-                    console.log(oldValue)
                     let label = this.getLabel();
-                    console.log(label)
+                    let record = _props.record;
+                    record[this.props.name] = value;
+                    console.log(this.gearEle)
                     this.setState({
-                        oldValue,
                         value,
+                        oldValue,
                         label
+                    },()=>{
+                        console.log(this.gearEle)
+                        if(this.props.form){
+                            this.gearEle.triggerChange()
+                        }
+                        this.gearEle.focus()
                     })
+                    if(onchangebak && G.G$.isFunction(onchangebak)) {
+                        onchangebak.call(this.gearEle,value,oldValue);
+                    }
+                    
+                },
+                onLoadSuccess:()=>{//涉及到需要加载数据的组件
+                    let editable = this.state.editable;
+                    if(editable != true) {
+                        let label = this.getLabel();
+                        if(this.state['label']!=label){
+                            this.setState({
+                                label: label
+                            });
+                        }
+                    };
+                    return
                 },
                 value: this.state.value
         });
-        // console.log(props)
         delete props.editCell
-        // console.log(this.props.children)
-        return editCType?GearUtil.newInstanceByType(editCType, props):this.props.children; 
+        console.log(props)
+        return GearUtil.newInstanceByType(editCType, props);
+        // return editCType?GearUtil.newInstanceByType(editCType, props):this.props.children; 
     }
 
     setValue(value: any,callback?: Function) {

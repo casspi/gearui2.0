@@ -207,16 +207,18 @@ export default class Column<T> {
                     children = [children];
                 }
                 if(children instanceof Array) {
-                    children = children.filter(o=>o.$$typeof!=null)
+                    children = children.filter((o:any)=>o.$$typeof!=null)
                     children.map((child:any, index: any)=>{
                         jsxEles.push(this.parseColumnChild(child, ellipsisSpanWidth, record, indexColumn, index));
                     });
                 }else {
                     jsxEles.push(this.parseColumnChild(children, ellipsisSpanWidth, record, indexColumn, 0));
                 }
+                children = []//手动解除
                 return jsxEles;
             };
         })(children, ellipsisSpanWidth || 0);
+        
         return render;
     }
 
@@ -233,6 +235,7 @@ export default class Column<T> {
             childProps.id = record.key + indexColumn + index;
             childProps.__record__ = record;
             childProps.key =record.key + indexColumn + index;
+            childProps.name = record.key + indexColumn + index;
             let jsxEle = null;
             if(child.type) {
                 jsxEle = React.cloneElement(child, childProps, childProps.children || []);
@@ -245,7 +248,7 @@ export default class Column<T> {
     }
 
     protected parseRegexColumnValue(props: any,record: any) {
-        let newProps: any = ObjectUtil.parseDynamicProps(props, record);
+        let newProps: any = ObjectUtil.parseDynamicProps(props, record,true);
         return newProps;
     }
 

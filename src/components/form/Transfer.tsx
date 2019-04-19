@@ -143,8 +143,9 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                         this._options = [];
                     }
                     if(this.props.value){
-s                        // 如果有默认值，将默认值移至左侧
-                        this._transferCheckedItemToRight();
+                    // 如果有默认值，将默认值移至左侧
+                        // this._transferCheckedItemToRight();
+                        this._leftTree.setValue([])
                     }
                     this._initiated = true;
                 }
@@ -202,6 +203,9 @@ s                        // 如果有默认值，将默认值移至左侧
     getLeftButtonProps() {
         
         return {
+            style:{
+                fontFamily:'SimSum'
+            },
             tabIndex: -1,
             disabled:this.state.disabled==true || this.state.readOnly==true,       
             onClick:()=>{           
@@ -213,6 +217,9 @@ s                        // 如果有默认值，将默认值移至左侧
     getRightButtonProps() {
         
         return {
+            style:{
+                fontFamily:'SimSum'
+            },
             tabIndex: -1,
             disabled:this.state.disabled==true || this.state.readOnly==true, 
             onClick:()=>{
@@ -634,10 +641,14 @@ s                        // 如果有默认值，将默认值移至左侧
     }   
 
     focus(...args:any[]) { 
+        this.attr("tabindex","0");
+        super.focus(...args);      
         this.find(".gearui-control-wrapper").focus(...args);      
     }
 
     blur(...args:any[]){
+        this.attr("tabindex","-1");
+        super.focus(...args);  
         this.find(".gearui-control-wrapper").blur(...args);
     }  
     

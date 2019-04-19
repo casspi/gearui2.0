@@ -119,7 +119,6 @@ export default class Component<P extends typeof props, S extends state> extends 
     }
 
     validate():boolean {
-        debugger;
         let components = this.getComponents();
         if(components){
             if(components instanceof Array){

@@ -8,7 +8,8 @@ export var props = {
     color: GearType.String,
     text: GearType.String,
     closable: GearType.Boolean,
-    key:GearType.Boolean
+    key:GearType.Boolean,
+    closeHandle:GearType.Function
 };
 
 export interface state extends FormTag.state {
@@ -32,6 +33,7 @@ export default class SelectedTag<P extends typeof props, S extends state> extend
             value: this.state.value,
             text: this.state.text,
             onClose: (e: any) => {
+                this.props.closeHandle(this.state.value);//提供给inputTag删除数据
                 this.doEvent("close");
             },
             afterClose: () => {

@@ -106,9 +106,9 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             onChange: (value:any) => {
                 value = value||[];
                 let oldValue = this.getValue();
-                this.setState({
+                this.setValue(
                     value
-                });
+                );
                 // if(this.props.onchange) {
                 //     this.props.onchange.call(this);
                 // }
@@ -461,7 +461,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                         dic = result[result.length - 1];
                     }
                     let initValue = this.getInitValue(dic);
-                    this.triggerChange(initValue);
+                    // this.triggerChange(initValue);
                     this.setState({
                         value: initValue||[],
                         options: dic

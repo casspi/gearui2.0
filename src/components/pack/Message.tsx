@@ -8,7 +8,6 @@ export default class Messager {
     static progress(type?: string) {
         if(type == "close") {
             if(this.spin) {
-                console.log(this.spin)
                 this.spin.close();
             }
         }else {

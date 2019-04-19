@@ -117,7 +117,7 @@ export default class GearUtil {
             if(children && children.length > 0) {
                 reactChildren = [];
                 children.forEach((astInner)=>{
-                    if(astInner.tag || (ast.tag != "table" && ast.tag != "thead" && ast.tag != "tr" && ast.tag != "th" && ast.tag != "tbody")) {
+                    if(astInner.tag || (ast.tag != "table" && ast.tag != "thead" && ast.tag != "tr"  && ast.tag != "tbody")) {
                         reactChildren.push(GearUtil.newReactInstance(astInner));
                     }
                 });

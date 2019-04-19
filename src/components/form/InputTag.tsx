@@ -57,7 +57,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     private _triggerButton: any;
 
     getProps() {
-        super.getProps();
+        let props = super.getProps();
         let state = this.state;
         let className = state.className ? "inputtag-control-wrapper " + state.className : "inputtag-control-wrapper";
         if((this.state.disabled)){
@@ -66,12 +66,11 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             else
                 className = "tag-disabled";
         }
-
-        return G.G$.extend({},state, {
-            className: className
+        return G.G$.extend({},props, {
+            className: className,
         });        
     }
-
+    
     getSelectedTagProps(key:string,value:string,text:string){
         return {
             key: key,
@@ -297,7 +296,18 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                 </AntdSpin>
             </div>;
     }
-
+    closeHandle(value:any){//标签关闭时，删除inputtag的数据
+        let values = this.state.value.filter((o:any)=>o.value!=value);
+        this.setValue(
+            values,
+            ()=>{
+                console.log(this.props)
+                // if(this.props.form){
+                //     this.props.form.setFieldsValue({this.state.name:this.state.value})
+                // }
+            }
+        )
+    }
     //获取所有的标签
     private getTags() {
         let values: any = this.state.value;
@@ -305,7 +315,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         if(values instanceof Array) {
             values.map((value: any,index:number)=>{
                 let props: any = this.getSelectedTagProps(value.key,value.value,value.text);
-                tags.push(<SelectedTag.default  {...props} key={"tag_"+value.key+index}/>);
+                tags.push(<SelectedTag.default closeHandle={this.closeHandle.bind(this)} {...props} key={"tag_"+value.key+index}/>);
             });
         }
         return tags;
@@ -399,9 +409,9 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             value: value,
             text: text
         });
-        this.setState({
-            value: values
-        },()=>{
+        this.setValue(
+            values
+        ,()=>{
             this._change(this.getValue(),oldValues);
         });
     }
@@ -416,9 +426,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                     newValues.push(values[i]);
                 }
             }
-            this.setState({
-                value: newValues
-            },()=>{
+            this.setValue(newValues,()=>{
                 this._change(this.getValue(),oldValues);
             });
             
@@ -604,4 +612,10 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     blur(...args: any[]){
         this.find(".ant-btn").blur(...args);
     }     
+
+    onChange(fun:any){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("change",fun);
+        }
+    }
 }

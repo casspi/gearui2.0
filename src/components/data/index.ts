@@ -14,6 +14,7 @@ import * as Pagination from './Pagination';
 import * as Repeat from './Repeat';
 import * as Table from './Table';
 import * as Upload from './Upload';
+import * as PlumbList from './PlumbList';
 export {
     AjaxArea,
     AjaxLoad,
@@ -30,5 +31,6 @@ export {
     Pagination,
     Repeat,
     Table,
-    Upload
+    Upload,
+    PlumbList
 }

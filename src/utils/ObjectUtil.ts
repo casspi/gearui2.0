@@ -477,7 +477,7 @@ export default class ObjectUtil {
     // {name:defaultValue} 可以在变量名称后指定默认值，当变量值取不到时使用默认值
     // {!name:"defaultValue"} 可以为默认值加引号括起来，表示这个默认值是未转码过的，如果变量前有!，则应对默认值同样转码
     // {!(age>34?'老了':'有点老了'):"defaultValue"} 也可以使用表达式
-    static parseDynamicValue(text:any,data: any){
+    static parseDynamicValue(text:any,data: any,isValue?:boolean){//isValue:是否是取属性值
         try {
             if(text && typeof text == "string"|| text instanceof Array&&text.length>0){
                 text = text instanceof Array?text[0]:text
@@ -504,7 +504,7 @@ export default class ObjectUtil {
                         value = data[propertyName];
                         if(value && typeof value == "object"){
                             value = JSON.stringify(value);
-                        }                   
+                        }
                     }else if(/^\(.+\)$/.test(propertyName)){
                         // 用括号括起的，认为可能是表达式，下面去除括号
                         propertyName = propertyName.substring(1,propertyName.length-1);
@@ -583,15 +583,35 @@ export default class ObjectUtil {
     }
 
     //解析props中的动态值
-    public static parseDynamicProps(props: any, value: any) {
+    public static parseDynamicProps(props: any, value: any,isChild?:true) {//isChild是否是column 的子节点
         let propsNew: any = {};
         for(let key in props) {
+            let valueInProps:any;
             key = ObjectUtil.parseDynamicValue(key, value);
-            let valueInProps = ObjectUtil.parseDynamicValue(props[key], value);
-            if(key=='isvisible'){
+            valueInProps = ObjectUtil.parseDynamicValue(props[key], value);
+            if(key=='isvisible'){//visible需特殊处理
                 propsNew['visible'] = valueInProps=='false'?false:true;
             }else{
-                propsNew[key] = valueInProps;
+                if(typeof valueInProps == 'string'){
+                    if(key=="dictype"&& isChild){
+                        valueInProps = valueInProps.replace(/&amp;/g, '\&')
+                        .replace(/&quot;/g, '\"')
+                        .replace(/&#39;/g, '\'')
+                        .replace(/&lt;/g, '\<')
+                        .replace(/&gt;/g, '\>')
+                        .replace(/&#10;/g, '\n');
+                        propsNew[key] = JSON.parse(valueInProps);
+                    }else{
+                        propsNew[key] = valueInProps.replace(/&amp;/g, '\&')
+                        .replace(/&quot;/g, '\"')
+                        .replace(/&#39;/g, '\'')
+                        .replace(/&lt;/g, '\<')
+                        .replace(/&gt;/g, '\>')
+                        .replace(/&#10;/g, '\n');
+                    }
+                }else{
+                    propsNew[key] = valueInProps
+                }
             }
         }
         return propsNew;

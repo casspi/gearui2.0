@@ -87,30 +87,29 @@ export default class RangeValidator extends Validator {
                     callback();
                     return;
                 } 
-                let min = this.props.min;
-                let max = this.props.max;
+                let min = this.props.mins;
+                let max = this.props.maxs;
                 let valueFormat = typeof value=="string"?value:value.format(this.props.format || "YYYY-MM-DD");
-                // console.log(valueFormat)
                 if ((min == undefined || min == null) && (max != undefined && max != null)) {
                     if (valueFormat <= max) {
                         callback();
                         return;
                     } else {
-                        callback("日期必须小于" + this.props.max);
+                        callback("日期必须小于" + this.props.maxs);
                     }
                 } else if ((min != undefined && min != null) && (max == undefined || max == null)) {
                     if (valueFormat >= min) {
                         callback();
                         return;
                     } else {
-                        callback("日期必须大于" + this.props.min);
+                        callback("日期必须大于" + this.props.mins);
                     }
                 } else if ((min != undefined && min != null) && (max != undefined && max != null)) {
                     if (valueFormat <= max && valueFormat >= min) {
                         callback();
                         return;
                     } else {
-                        callback("日期必须在" + this.props.min + "和" + this.props.max + "之间");
+                        callback("日期必须在" + this.props.mins + "和" + this.props.maxs + "之间");
                     }
                 } else{
                     callback();
@@ -121,29 +120,29 @@ export default class RangeValidator extends Validator {
                     callback();
                     return;
                 }            
-                let min = this.props.min;
-                let max = this.props.max;
+                let min = this.props.mins;
+                let max = this.props.maxs;
                 let valueFormat = value.format(this.props.format || "YYYY-MM-DD HH:mm:ss");
                 if ((min == undefined || min == null) && (max != undefined && max != null)) {
                     if (valueFormat <= max) {
                         callback();
                         return;
                     } else {
-                        callback("日期时间必须小于" + this.props.max);
+                        callback("日期时间必须小于" + this.props.maxs);
                     }
                 } else if ((min != undefined && min != null) && (max == undefined || max == null)) {
                     if (valueFormat >= min) {
                         callback();
                         return;
                     } else {
-                        callback("日期时间必须大于" + this.props.min);
+                        callback("日期时间必须大于" + this.props.mins);
                     }
                 } else if ((min != undefined && min != null) && (max != undefined && max != null)) {
                     if (valueFormat <= max && valueFormat >= min) {
                         callback();
                         return;
                     } else {
-                        callback("日期时间必须在" + this.props.min + "和" + this.props.max + "之间");
+                        callback("日期时间必须在" + this.props.mins + "和" + this.props.maxs + "之间");
                     }
                 }else{
                     callback();
@@ -154,29 +153,29 @@ export default class RangeValidator extends Validator {
                     callback();
                     return;
                 }            
-                let min = this.props.min;
-                let max = this.props.max;
+                let min = this.props.mins;
+                let max = this.props.maxs;
                 let valueFormat = value.format(this.props.format || "HH:mm:ss");
                 if ((min == undefined || min == null) && (max != undefined && max != null)) {
                     if (valueFormat <= max) {
                         callback();
                         return;
                     } else {
-                        callback("时间必须小于" + this.props.max);
+                        callback("时间必须小于" + this.props.maxs);
                     }
                 } else if ((min != undefined && min != null) && (max == undefined || max == null)) {
                     if (valueFormat >= min) {
                         callback();
                         return;
                     } else {
-                        callback("时间必须大于" + this.props.min);
+                        callback("时间必须大于" + this.props.mins);
                     }
                 } else if ((min != undefined && min != null) && (max != undefined && max != null)) {
                     if (valueFormat <= max && valueFormat >= min) {
                         callback();
                         return;
                     } else {
-                        callback("时间必须在" + this.props.min + "和" + this.props.max + "之间");
+                        callback("时间必须在" + this.props.mins + "和" + this.props.maxs + "之间");
                     }
                 } {
                     callback();

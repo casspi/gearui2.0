@@ -70,7 +70,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
     }
 
     //根据传入的参数动态创建控件
-    protected createControl(options?:Array<any>){
+    createControl(options?:any){
         let controls = [];
         if(options && options instanceof Array){
             

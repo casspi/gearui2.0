@@ -197,7 +197,8 @@ export default class GUpload<P extends typeof props,S extends state> extends For
 
     afterRender() {
         let value = this.getValue();
-        this.triggerChange(ObjectUtil.isEmpty(value)?null:JSON.stringify(value));        
+        //？？？初始化时候不触发验证
+        // this.triggerChange(ObjectUtil.isEmpty(value)?null:JSON.stringify(value));        
     }    
 
     private _change(newValue:any,oldValue:any){
@@ -242,8 +243,11 @@ export default class GUpload<P extends typeof props,S extends state> extends For
 
     protected _beforeUpload(file:any, fileList:any){
         let re = this.doEvent("beforeUpload");
-        if(re && re.length > 0) {
+        if(re instanceof Array && re.length > 0) {
             return re[0];
+        }
+        if(re){
+            return re
         }
         if(this.props.beforeupload) {
             return this.props.beforeupload.call(this);

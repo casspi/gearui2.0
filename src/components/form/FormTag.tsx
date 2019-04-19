@@ -260,6 +260,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     makeJsx(): React.ReactNode {return null;}
     render() {
         let ele: React.ReactNode = this.makeJsx();
+        // console.log(this.state.rules)
+        // console.log(ele)
         if(this.form) {
             let formUtils: WrappedFormUtils = this.form.props.form;
             let rules: any = this.state.rules;
@@ -286,22 +288,21 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         let errors = formUtils.getFieldError(tagName);
         if(errors && errors.length > 0) {
             validateStatus = "error";
-            help = this.props.showHelp===true?errors[0]:null;
+            help = errors[0] || null;
             // 表单验证方式，优先取控件本身的，如果控件本身无配置再获取form上的
             if(invalidType == "fixed") {
                 let ele = Tooltip.addInvalidTooltip(formTag,tagName,null,this.state.titleAlign);
-                
                 return <AntdFormItem
-                    hasFeedback={false}
-                    validateStatus={validateStatus}
-                    help={help}
+                hasFeedback={false}
+                validateStatus={validateStatus}
+                help={help}
                 >{ele}</AntdFormItem>;
             }else {
                 let ele = Tooltip.addInvalidTooltip(formTag,tagName,errors[0],this.state.titleAlign);
                 return <AntdFormItem className={"ant-form-item-with-float-help"}
                     hasFeedback={false}
                     validateStatus={validateStatus}
-                    help={help}
+                    help={null}
                 >{ele}</AntdFormItem>;
             }
         }else {

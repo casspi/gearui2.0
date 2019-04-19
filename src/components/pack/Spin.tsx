@@ -1,7 +1,6 @@
 import * as Tag from "../Tag";
 import * as React from 'react';
 import { Spin as AntdSpin } from 'antd'; 
-console.log(Tag);
 export var props = {
     delay: GearType.Number,
     indicator: GearType.Object,

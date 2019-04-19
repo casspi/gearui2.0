@@ -60,8 +60,6 @@ export default class Icon<P extends typeof props, S extends state> extends Tag.d
     protected findRealDom() {
         let span: any = ReactDOM.findDOMNode(this.ref);
         return G.G$(span).find("i")[0];
-        // console.log(this.ref)
-        // return this.ref
     }
 
     hide() {

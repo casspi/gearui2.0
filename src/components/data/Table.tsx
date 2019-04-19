@@ -718,6 +718,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 columns.push(column);
             });
         }
+        // console.log(columns)
         return columns;
     }
 
