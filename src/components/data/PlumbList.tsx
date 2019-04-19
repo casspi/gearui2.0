@@ -1,5 +1,6 @@
 import * as Tag from "../Tag";
 import * as React from 'react';
+import {Popover,Icon as AntdIcon} from 'antd'
 import Parser from '../../core/Parser';
 import Link from '../basic/Link';
 // import * as Jsplumb from 'jsplumb
@@ -29,7 +30,8 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 {
                     key:'l01',
                     text:'item01',
-                    target:1
+                    target:2,
+                    targetArr:['r01','r02']
                 },{
                     key:'l02',
                     text:'item02',
@@ -115,11 +117,22 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             className:"plumblist-warp"
         })
     }
-    parserList(data:any[]){
+    parserList(data:any[],p:'left'|'right'='right'){
         let list:any[]=[];
         data.map((item:any)=>{
             list.push(
-                <li className="item" onClick={this.clickEvent.bind(this,item.key)} key={item.key} id={item.key}>{item.text}</li>
+                <Popover key={'pop'+item.key} placement={p}
+                    content={<div className="editable-cell-control">
+                        <AntdIcon
+                            style={{ cursor:'pointer'}}
+                            type="close"
+                            title="保存"
+                            className={"editable-cell-icon-save"}
+                            onClick={this.clickEvent.bind(this,item.key)}
+                        />
+                </div>}>    
+                    <li className="item" onClick={this.clickEvent.bind(this,item.key)} key={item.key} id={item.key}>{item.text}</li>
+                </Popover>
             )
         })
         return list;
@@ -147,10 +160,10 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             <h3 onClick={this.clickEvent.bind(this)}>关系图</h3>
             <div className="list-warp">
                 <ul id="item-left" key="left" className="list" style={{width:this.props.listWidth}}>
-                    {this.parserList(data)}
+                    {this.parserList(data,'left')}
                 </ul>
                 <ul id="item-right" key="right" className="list" style={{marginLeft:"200px",width:this.props.listWidth}}>
-                    {this.parserList(data1)}
+                    {this.parserList(data1,'right')}
                 </ul>
             </div>  
         </div>
@@ -199,8 +212,12 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 },common)
             });
              
-            _this.state.links.map((item:any,i:number)=>{
-                _this.linkNode(item.s,item.t,common)
+            _this.state.datal.map((item:any,i:number)=>{
+                if(item.targetArr){
+                    item.targetArr.map((t:any)=>{   
+                        _this.linkNode(item.key,t,common)
+                    })
+                }
             })
             // jsPlumb.addEndpoint(['l01','l02','l03','l04','l05','l06','l07','l08'], {
             //     anchors: ['Right'],
@@ -225,23 +242,30 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             // //可以拖动的节点
             // jsPlumb.draggable('r02')
             // jsPlumb.draggable(['l01','l02'])
+            let timer:any = null;
             jsPlumb.bind('click', function (conn:any, originalEvent:any) {
-                G.messager.confirm({message:'确定解除所点击的链接吗？',callback:(key:any)=>{
-                    if(key){
-                        console.log('点击了ok')    
-                        let links = _this.state.links.filter(o=>{o.id===(conn.sourceId+conn.targetId)})
-                        _this.setState({
-                            links
-                        },()=>{
-                            console.log(_this.state.links)
-                        })
-                        console.log(conn)
-                        jsPlumb.deleteConnection(conn)
-                    }else{
-                        console.log('点击了cancel')    
+                let linkId = conn.sourceId+conn.targetId;
+                _this.state.links.map((l,i)=>{
+                    if(l.id===linkId){//先判断数据中有没有，防止重复点击报错
+                        G.messager.confirm({message:'确定解除所点击的链接吗？',callback:(key:any)=>{
+                            if(key){
+                                console.log('点击了ok')
+                                console.log(_this.state.links)    
+                                let links = _this.state.links.filter(o=>{o.id===linkId});
+                                console.log(links)
+                                debugger;
+                                _this.setState({
+                                    links
+                                },()=>{
+                                    console.log(_this.state.links)
+                                    jsPlumb.deleteConnection(conn)
+                                })
+                            }else{
+                                console.log('点击了cancel')    
+                            }
+                        }});
                     }
-                }})
-               
+                })
             });
             // 当链接建立前
             jsPlumb.bind('beforeDrop', function (info:any) {

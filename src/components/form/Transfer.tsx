@@ -145,7 +145,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                     if(this.props.value){
                     // 如果有默认值，将默认值移至左侧
                         // this._transferCheckedItemToRight();
-                        this._leftTree.setValue([])
                     }
                     this._initiated = true;
                 }
