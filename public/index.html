@@ -39,7 +39,12 @@
   </g-buttongroup>
   <g-icon icon="close"></g-icon>
   <g-dialogaction type="icon" icon="close"></g-dialogaction>
-  <g-plumblist width="700" listWidth="200"></g-plumblist>
+  <g-plumblist id="plumb" width="700" listWidth="200" connector="Bezier"></g-plumblist>
+  <g-buttongroup id="bg">
+    <g-button id='bg-btn1'>获取数据</g-button>
+    <g-button id='bg-btn2'>更新</g-button>
+    <g-button id="bg-btn3">创建连接</g-button>
+  </g-buttongroup>
   <!-- <div style="position:relative">
 
     <g-tabs id="layout11">
@@ -56,6 +61,10 @@
   </body>
   <script>
   G(function() {
+    G('#bg-btn1').onClick(function(){
+      debugger
+      console.log(G("#plumb"))
+    })
     // var root = G("#root");
     // var bu = root.find("#aaaa");
     // var test = G("#test");
