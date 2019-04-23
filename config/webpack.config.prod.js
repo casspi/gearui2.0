@@ -59,7 +59,7 @@ module.exports = {
   // In production, we only want to load the polyfills and the app code.
   entry: [require.resolve('./polyfills'), paths.polyfills,paths.appIndexJs],
   externals: {
-    jquery: "window.jquery",
+    jquery: "window.jQuery",
     lodash: {
       commonjs: 'lodash',
       commonjs2: 'lodash',
