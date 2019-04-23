@@ -152,7 +152,6 @@ class EdittableControl {
             this.controlBtns.put("save",ele);
         },
         onclick: function(){
-            debugger
             this.save();
         }
     };
@@ -295,7 +294,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
 
     reset() {
         alert('reset');
-        console.log(this.cacheData)
+        // console.log(this.cacheData)
         if(this.doJudgementEvent("beforeReset")==false)
             return;
         if(this.cacheData != null && this.cacheData.length > 0) {
@@ -861,7 +860,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         if(props.editctype){
             ((column, props)=>{
                 column.render = (text: any,record: any)=>{
-                    console.log(props)
+                    // console.log(props)
                     let newProps = ObjectUtil.parseDynamicProps(props, record);
                     let editCType: string = newProps.editctype||  newProps.editCType  ||"";
                     let lower: string = newProps.lower ? newProps.lower + record.key : "";

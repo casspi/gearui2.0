@@ -117,6 +117,12 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     //子级树
     childTree: Tree<P, S>;
 
+    protected afterReceiveProps(nextProps: P):Partial<typeof props>{
+        return{
+            disabled:nextProps.disabled
+        }
+    }
+
     getInitialState():state & AntdTreeProps {
         // 是否显示图标
         let showIcon = (this.props.showIcon==null || this.props.showIcon==true);
@@ -587,7 +593,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
 
     makeJsx() {
         let children = this.getTreeNode();
-        // debugger;
         let props = this.getProps();
         // if(this.form){
         //     delete props.value;
@@ -616,7 +621,6 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 let keyValue: any[] = [];
                 // 默认值
                 let defaultValue: any = this.state.value || this.state.selected;
-                // console.log(this.state.value)
                 if(defaultValue){
                     // 如果默认值存在，则根据默认值获得相应的节点id，放到value中
                     this._findKeyByValue(defaultValue,dic,keyValue);
@@ -1010,18 +1014,13 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                         });
                         return;
                     }
-                    // console.log(dic)
                     let result = this.doEvent("loadFilter",dic);
-                    // console.log(result)
                     if(result instanceof Array && result.length > 0) {
                         dic = result[result.length - 1];
                     }
-                    // console.log(dic)
                     let expanded = this.state.expandedKeys||[];
                     this.addDefaultExpand(dic,expanded);
                     let initValue = this.getInitValue(dic);
-                    // console.log(initValue)
-                    // this.triggerChange(initValue);                                                      
                     this.setState({
                         url: url,
                         dictype: dictype,
@@ -1322,13 +1321,10 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         var options:any[] = this.state.options;
         if(options){
             this._checkAll(value,options);
-            console.log(options)
             this.setState({
                 value,
                 options
             },function(){
-                console.log(this.state.value)
-                console.log(this.state.options)
                 if(callback){
                     callback();
                 }

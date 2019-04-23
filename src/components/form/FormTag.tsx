@@ -261,7 +261,6 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     render() {
         let ele: React.ReactNode = this.makeJsx();
         // console.log(this.state.rules)
-        // console.log(ele)
         if(this.form) {
             let formUtils: WrappedFormUtils = this.form.props.form;
             let rules: any = this.state.rules;

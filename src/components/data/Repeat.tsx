@@ -4,7 +4,7 @@ import { ObjectUtil, UUID, } from '../../utils';
 export var props = {
     ...Tag.props,
     size: GearType.Number,
-    onRender: GearType.VoidT<void>()
+    onRender: GearType.Function
 }
 export interface state extends Tag.state {
     size: number,

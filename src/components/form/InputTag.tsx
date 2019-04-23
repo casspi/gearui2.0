@@ -301,7 +301,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         this.setValue(
             values,
             ()=>{
-                console.log(this.props)
+                // console.log(this.props)
                 // if(this.props.form){
                 //     this.props.form.setFieldsValue({this.state.name:this.state.value})
                 // }

@@ -438,7 +438,6 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             return this.ref;
         }}>
             {this.state.maxable?<AntdIcon {...iconProps} onClick={props.maxIconClick} style={iconStyle}/>:null}
-            {/* <VoidTag {...voidTagProps}>{children}</VoidTag> */}
             {children}
         </AntdModal>;
     }

@@ -6,6 +6,7 @@ import G from '../../Gear';
 import { TreeProps as AntdTreeProps } from 'antd/lib/tree';
 import * as Tree from './Tree';
 import Wrapper from '../Wrapper';
+import { TreeNode } from 'antd/lib/tree-select';
 export var props =  {
     ...FormTag.props,
     //左侧标题
@@ -113,7 +114,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             showIcon:this.props.showIcon,
             iconStyle:this.props.iconStyle,
             lines:this.props.lines,
-            value:this.getPropStringArrayValue(this.props.value)||[],
+            // value:this.getPropStringArrayValue(this.props.value)||[],
             onCheck:(node:any)=>{
                 if(node.checked==false)
                     this._setLeftChecked(false);
@@ -132,7 +133,7 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                 disabled:false,
                 readonly:false,
             },
-            // 当加载成功后触发
+            // // 当加载成功后触发
             onLoadSuccess:()=>{
                 if(this._initiated==false){
                     // 获取树节点的数据，并将其缓存在本地变量中
@@ -143,8 +144,15 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
                         this._options = [];
                     }
                     if(this.props.value){
-                    // 如果有默认值，将默认值移至左侧
-                        // this._transferCheckedItemToRight();
+                        // 如果有默认值，将默认值移至左侧
+                        let options = new GearArray(this._options).clone(true).toArray();
+                        this._leftTree.loadData(options,()=>{
+                            this._leftTree.setValue(this.getPropStringArrayValue(this.props.value)||[],()=>{
+                                this._rightTree.loadData([],()=>{
+                                    this._transferCheckedItemToRight();
+                                });
+                            })
+                        });
                     }
                     this._initiated = true;
                 }
@@ -333,8 +341,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
             // 得到左侧树节点的数据
             let options = this._leftTree.getRoots();
             let destOptions = this._rightTree.getRoots();
-            // console.log(options)
-            // console.log(destOptions)
             let newOptions = this.getOptionsAfterTransfer(options,destOptions);
             let oldValue:any;
             if(newOptions.changed==true){
