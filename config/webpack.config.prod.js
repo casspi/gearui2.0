@@ -59,7 +59,7 @@ module.exports = {
   // In production, we only want to load the polyfills and the app code.
   entry: [require.resolve('./polyfills'), paths.polyfills,paths.appIndexJs],
   externals: {
-    jquery: "window.jquery",
+    jquery: "window.jQuery",
     lodash: {
       commonjs: 'lodash',
       commonjs2: 'lodash',
@@ -259,7 +259,7 @@ module.exports = {
     new InterpolateHtmlPlugin(env.raw),
     // Generates an `index.html` file with the <script> injected.
     new HtmlWebpackPlugin({
-      inject: true,
+      inject: "head",
       template: paths.appHtml,
       minify: {
         removeComments: true,

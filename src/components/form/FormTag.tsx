@@ -8,6 +8,7 @@ import {FormComponentProps, WrappedFormUtils} from 'antd/es/form/Form';
 import { Form as AntdForm } from 'antd';
 const AntdFormItem = AntdForm.Item;
 import Tooltip from "../pack/Tooltip";
+import UUID from '../../utils/uuid';
 export var props = {
     
     //配合 label 属性使用，表示是否显示 label 后面的冒号
@@ -264,7 +265,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         if(this.form) {
             let formUtils: WrappedFormUtils = this.form.props.form;
             let rules: any = this.state.rules;
-            let formTag = formUtils.getFieldDecorator(this.props.name, {
+            let formTag = formUtils.getFieldDecorator(this.props.name||UUID.get(), {
                 initialValue: this.state.value,
                 rules: this.isValidation() ? rules : [],
             })(ele);

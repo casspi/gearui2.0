@@ -350,12 +350,13 @@ export default class ObjectUtil {
     }
 
     static isInstance(clazz: any, name: string) {
-        let clazzStr = clazz.toString();
-        let clazzRegExp = new RegExp("function[ ]{1,}" + name + "[ ]?\\(");
-        if(clazzRegExp.test(clazzStr)) {
-            return true;
-        }
-        return false;
+        // let clazzStr = clazz.toString();
+        // let clazzRegExp = new RegExp("function[ ]{1,}" + name + "[ ]?\\(");
+        // if(clazzRegExp.test(clazzStr)) {
+        //     return true;
+        // }
+        // return false;
+        return ObjectUtil.isExtends(clazz,name);
     }
 
     static newVoidInstance<T>(): T {
