@@ -62,7 +62,6 @@ export default class GearUtil {
      * @param ast ast树
      */
     static newReactInstance(ast: ASTElement,paramProps?: any) {
-        // let time1 = new Date().getTime();
         // let attrs = ast.attrsMap;
         let type = ast.type;
         //节点
@@ -117,13 +116,15 @@ export default class GearUtil {
             if(children && children.length > 0) {
                 reactChildren = [];
                 children.forEach((astInner)=>{
-                    if(astInner.tag || (ast.tag != "table" && ast.tag != "thead" && ast.tag != "tr"  && ast.tag != "tbody")) {
+                    if(astInner.tag || (ast.tag != "table" && ast.tag != "thead" && ast.tag != "tr"  && ast.tag != "tbody" && ast.tag != "br")) {
                         reactChildren.push(GearUtil.newReactInstance(astInner));
                     }
                 });
+                if(ast.attrsMap.ctype == 'text' || ast.tag == "g-text"){
+                    reactChildren = null
+                }
             }
-            // let time4 = new Date().getTime();
-            // console.log("创建3：" + (time4 - time3));
+            
             // if(!props["key"]) {
             //     if(props["id"]) {
             //         props["key"] = props["id"];
@@ -139,15 +140,10 @@ export default class GearUtil {
                 props = G.G$.extend(props, paramProps);
             }
             props["key"] = ast.id;
-            if(!props["name"]) {
-                props["name"] = props["id"];
-            }
-            // let time5 = new Date().getTime();
-            // console.log("创建4：" + (time5 - time4));
+            
             let clazz = (typeof ast.tagClass == "string") ? G.components["htmltag"] : ast.tagClass;
             let ele = React.createElement(clazz, props, reactChildren);
-            // let time6 = new Date().getTime();
-            // console.log("创建6：" + (time6 - time5));
+            
             return ele;
         }else if(type == 2){
             //表达式 -- 暂未处理

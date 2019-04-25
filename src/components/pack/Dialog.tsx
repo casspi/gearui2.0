@@ -2,9 +2,10 @@ import * as Tag from '../Tag';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Modal as AntdModal } from 'antd';
-import { ObjectUtil, UUID } from '../../utils';
+import { ObjectUtil, UUID ,GearUtil} from '../../utils';
 import { Http } from "../../utils";
 import {Icon as AntdIcon} from 'antd';
+
 export var props = {
     ...Tag.props,
     footer: GearType.Or<boolean, string>(GearType.Boolean, GearType.String),
@@ -180,7 +181,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             content: this.props.content,
             loadType: this.props.loadType || "iframe",
             url: this.props.url,
-            dragable: this.props.dragable != false,
+            dragable: this.props.dragable ===true?true:false,
             visible: this.props.visible != false,
             maxable: this.props.maxable||false,
             maxTitle: "最大化",
@@ -380,7 +381,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         let props:any = this.getProps();
         let iconProps:any = this.getMaxIconProps();
         delete iconProps.maxable;
-        let children = this.getChildren() || "";//避免子节点为空时，VoidTag 报错
+        let children = this.getChildren()||"";//避免子节点为空时，VoidTag 报错
         if(this.state.destory) {
             return null;
         }
@@ -427,6 +428,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             width:"16px",
         };
         delete props.dragable
+        console.log(children)
         return <AntdModal  {...props} style={style} getContainer={()=>{
             let node:any = document.querySelector('#'+this.state.id+'dialog-warp');
             if(node){//由于每次显示隐藏都会创建新的节点，所以此处先清处
@@ -470,6 +472,8 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                 children = this.props.children;
             }
         }
+        console.log(children)
+        debugger
         return children;
     }
 
@@ -528,7 +532,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         }
         props.showIcon = true;
         props.visible = true;
-        let dialog = <Dialog  {...props} ></Dialog>;
+        let dialog =  <Dialog  {...props} ></Dialog>;
         let span = document.createElement("span");
         span = document.body.appendChild(span);
         ReactDOM.render(dialog, span);

@@ -355,7 +355,8 @@ export default class ObjectUtil {
         // if(clazzRegExp.test(clazzStr)) {
         //     return true;
         // }
-        return ObjectUtil.isExtends(clazz, name);
+        // return false;
+        return ObjectUtil.isExtends(clazz,name);
     }
 
     static newVoidInstance<T>(): T {

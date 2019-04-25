@@ -4,14 +4,15 @@ import {Popover,Icon as AntdIcon} from 'antd';
 import { default as Http} from '../../utils/http';
 import Parser from '../../core/Parser';
 import Link from '../basic/Link';
-import { any } from "prop-types";
+import { any, number } from "prop-types";
 import ButtonGroup from "../basic/ButtonGroup";
 import Button from "../basic/Button";
 import * as Jsplumb from 'jsplumb'
 // import { jsPlumb } from 'public/jsplumb1';
+import { debug } from 'util';
 // import { jsPlumb } from 'public/jsplumb1';
 export declare type connector = 'Bezier' | 'Straight' | 'Flowchart';//贝塞尔曲线、直线、90度折线
-export declare type targetType = 1 | 2 | 3 | 4;//1:一对一、2:一对多、3：多对一、4：多对多
+export declare type linkType = 1 | 2 | 3 | 4;//1:一对一、2:一对多、3：多对一、4：多对多
 export var props = {
     ...Tag.props,
     connector:GearType.Enum<connector>(),
@@ -21,7 +22,10 @@ export var props = {
     title: GearType.String,
     class: GearType.String,
     url:GearType.String,
-    targetType:GearType.Enum<targetType>()
+    linkType:GearType.Enum<linkType>(),
+    leftTitle:GearType.String,
+    rightTitle:GearType.String,
+    pointRadius:GearType.Number
 }
 export interface state extends Tag.state {
     leftData:any[];
@@ -29,7 +33,8 @@ export interface state extends Tag.state {
     connector:connector,
     width?:number,
     listWidth?:string,
-    targetType?:targetType
+    linkType?:linkType,
+    pointRadius?:number
 }
 
 export default class PlumbList<P extends typeof props, S extends state> extends Tag.default<P, S> {
@@ -45,7 +50,8 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             connector:this.props.connector|| 'Straight',
             width:this.props.width,
             listWidth:(this.props.listWidth || 200)+'px',
-            targetType:this.props.targetType||1
+            linkType:this.props.linkType||1,
+            pointRadius:this.props.pointRadius || 5
         }
     }
     getProps(){
@@ -100,7 +106,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         let children:any[]=[];
         arr.map((item:any,index:number)=>{
             children.push(
-                <span key={'item_span'+index}>{item}</span>
+                <span className="cell-span" key={'item_span'+index}>{item}</span>
             )
         })
         return children;
@@ -118,14 +124,18 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         delete props.listWidth;
         delete props.leftData;
         delete props.rightData;
+        delete props.linkType;
+        delete props.pointRadius;
         return <div  ref={(ele:any)=>this.ref = ele} {...props}>
             <h3>{this.props.title||'映射关系图'}</h3>
             {/*   */}
             <div className="list-warp">
                 <ul id="item-left" key="left" className="list" style={{width:this.state.listWidth}}>
+                    <li><h4 className="left-list-title">{this.props.leftTitle||'左侧列表'}</h4></li>
                     {leftData.length>0?this.parserList(leftData,'left'):null}
                 </ul>
                 <ul id="item-right" key="right" className="list" style={{width:this.state.listWidth}}>
+                    <li><h4 className="right-list-title">{this.props.rightTitle||'左侧列表'}</h4></li>
                     {rightData.length>0?this.parserList(rightData,'right'):null}
                 </ul>
             </div>  
@@ -153,7 +163,8 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         //初始化画点、连线
         this.loadData();
         console.log('mount');
-        console.log(this.state.leftData)
+        console.log(this.state.leftData);
+       
     }
 
     protected loadData(){
@@ -172,7 +183,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     }
 
     dragLinks(){
-        console.log('建立连接关系');
         let jsPlumb:any = window.jsPlumb;
         let _this = this;
         jsPlumb.ready(function () {
@@ -184,20 +194,33 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             // console.log(_this.state.leftData);
             // console.log(_this.state.rightData);
             // let myJsPlumb = jsPlumb.getInstance()
+           
             var common = {
                 connector: [_this.state.connector],
                 maxConnections: -1,
-                endpointStyle: { radius : 6, fill : "#1890ff" },
+                endpointStyle: { radius : _this.state.pointRadius, fill : "#1890ff" },
                 connectorStyle: {
                     outlineStroke: '#1890ff',
                     strokeWidth:1
                 },
                 EndpointHoverStyle:{opacity: 0.8},
                 // ConnectionOverlays:[],//这个是鼠标拉出来的线的属性
-                overlays: [['Arrow', { width: 12, length: 12, location: .95 ,stroke: "#1890ff"}] ]     
+                overlays: [
+                    ['Arrow', { width: 12, length: 12, location: .95 ,paintStyle: {stroke:"#1890ff"}}],
+                    // ["Label", {  //标签参数设置 
+                    //     id: "label",
+                    //     cssClass: "activeLabel", //hover时label的样式名
+                    //     events: {
+                    //         tap: function () {
+                    //         }
+                    //     },
+                    //     visible: false
+                    // }]
+                ],
+                // ReattachConnections: false,      
             };
             let sTargetMax:number,tTargetMax:number;
-            switch (_this.state.targetType) {
+            switch (_this.state.linkType) {
                 case 1://一对一
                     sTargetMax = 1,tTargetMax = 1
                     break;
@@ -259,8 +282,12 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             })
             _this.state.leftData.map((item:any,i:number)=>{
                 if(item.targetArr){
-                    item.targetArr.map((t:any)=>{  
-                        _this.linkNode(item.id,t,common)
+                    item.targetArr.map((t:any,i:number)=>{  
+                        if(sTargetMax==1 && tTargetMax==1 && i==1){//如果只能1队1
+                            _this.linkNode(item.id,t,common)
+                        }else{
+                            _this.linkNode(item.id,t,common)
+                        }
                     })
                 }
             })
@@ -288,15 +315,30 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             });
 
             // //取消连接
-            jsPlumb.bind("connectionDetached", function (conn:any, originalEvent:any) {     
-                if (conn.sourceId == conn.targetId) {      
-                    //自己连接自己时会自动取消连接      
-                }else{      
-                    // _this.setState({
-                    //     leftData: _this.deleteLinks(conn.sourceId,conn.targetId)
-                    // })     
-                }      
-            });
+            // jsPlumb.bind("connectionDetached", function (conn:any, originalEvent:any) {   
+            //     // return false  
+            //     console.log('取消了')
+            //     debugger
+            //     if (conn.sourceId == conn.targetId) {      
+            //         //自己连接自己时会自动取消连接      
+            //     }else{      
+            //         _this.setState({
+            //             leftData: _this.deleteLinks(conn.sourceId,conn.targetId)
+            //         })     
+            //     }      
+            // });
+            // G.G$(document).on('mouseenter.link','.jtk-connector',function(){
+            //     console.log(G.G$(this).index());
+            //     console.log( G.G$(document).find('.jtk-overlay'))
+            //     G.G$(document).find('.jtk-overlay').show()
+            // }).on('mouseleave.link','.jtk-connector',function(){
+            //     console.log(G.G$(this).index());
+            //     console.log( G.G$(document).find('.jtk-overlay'))
+            //     G.G$(document).find('.jtk-overlay').hide(2000)
+            // })
+            G.G$(document).find('.jtk-endpoint').bind('onmousedown',function(){
+                return false
+            })
             jsPlumb.fire();
         })
     }
@@ -348,6 +390,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 return item
             });
         }
+        console.log(leftData)
         return leftData;
     }
 

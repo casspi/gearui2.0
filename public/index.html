@@ -11,6 +11,7 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <link href="gearui.css" rel="stylesheet" type="text/css">
+    <script src="./jquery.min.js"></script>
     <script src="./jsplumb.js"></script>
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -29,7 +30,7 @@
     </noscript>
     <div id="root">
     <div id="aaaa">
-      <g-button id="test">aaa</g-button>
+      <g-button width="90%" id="test">aaa</g-button>
     </div>
   </div>
   <g-buttongroup id="ec3">
@@ -38,13 +39,16 @@
     <g-button>999</g-button>
   </g-buttongroup>
   <g-icon icon="close"></g-icon>
-  <g-dialogaction type="icon" icon="close"></g-dialogaction>
-  <g-plumblist id="plumb" width="700" class="my-plumb" url="./plumbData.json" listWidth="200" showLabel="true" connector="Straight"></g-plumblist>
+  <g-plumblist id="plumb" width="700" linkType="1" class="my-plumb" url="./plumbData.json" listWidth="200" showLabel="true" connector="Straight"></g-plumblist>
   <g-buttongroup id="bg">
     <g-button id='bg-btn1'>获取数据</g-button>
     <g-button id='bg-btn2'>更新</g-button>
     <g-button id="bg-btn3">创建连接</g-button>
   </g-buttongroup>
+  <!-- <g-dialog loadType="iframe" controlbar='false' width="600"  title="查看详情" url="./test.html"></g-dialog> -->
+  
+  <!-- <a ctype="text" id="span" width="50%">22222</a>
+  <g-text id="span" width="50%">22222</g-text> -->
   <!-- <div style="position:relative">
 
     <g-tabs id="layout11">
@@ -65,6 +69,7 @@
       debugger
       console.log(G("#plumb"))
     })
+    console.log($('#span'))
     // var root = G("#root");
     // var bu = root.find("#aaaa");
     // var test = G("#test");

@@ -15,7 +15,7 @@ export interface TableColumns {
     //字段数据key
     dataIndex?: string;
     className?: string;
-    width?: number;
+    width?: any;
     key?: string;
     fixed?: "left"|"right";
     render?: any;

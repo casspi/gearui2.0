@@ -8,7 +8,7 @@ export var props = {
     value:GearType.Any,
     titleAlign: GearType.String,
     style: GearType.CssProperties,
-    width: GearType.Number,
+    width: GearType.Any,
     height: GearType.Number,
     disabled: GearType.Boolean,
     visible: GearType.Boolean,
@@ -178,7 +178,15 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
     private getCommonsState(): state {
         let style = this.props.style || {};
         if(this.props.width != undefined) {
-            style.width = this.props.width || "none";
+            if(typeof this.props.width === 'string'){
+                if(this.props.width.indexOf("%")>-1){
+                    style.width = this.props.width || "none";
+                }else{
+                    style.width = parseInt(this.props.width) || "none";
+                }
+            }else{
+                style.width = this.props.width || "none";
+            }
         }
         if(this.props.height != undefined) {
             style.height = this.props.height || "none";

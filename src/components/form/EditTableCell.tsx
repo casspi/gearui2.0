@@ -98,7 +98,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
             cellText = [cellText]
         }
         cellText = cellText.filter((o:any)=>o!="")
-        // console.log(cellText)
+        console.log(cellText)
         return <div className="edit-table-cell">
                 <div className="editable-cell-input-wrapper" style={{display: props.editable?"block":"none"}}>
                         {
@@ -214,8 +214,10 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                         oldValue,
                         label
                     },()=>{
-                        // console.log(this.gearEle)
+                        debugger;
+                        console.log(this.gearEle)
                         if(this.props.form){
+
                             this.gearEle.triggerChange()
                         }
                         this.gearEle.focus()

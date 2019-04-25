@@ -708,7 +708,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             children = [children];
         }
         if(children instanceof Array) {
-            children = children.filter(o=>o.$$typeof!=null)//过滤子集中空项   
+            children = children.filter(o=>o&&o.$$typeof!=null)//过滤子集中空项   
+            console.log(children)
             children.map((child:any, index: number)=>{
                 let column = this._parseColumn(child, index);
                 if(this.state.sequence != false && (column.fixed == "left" || column.fixed == "right")) {

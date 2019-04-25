@@ -5,7 +5,7 @@ export var props = {
     ...ClickAction.props,
     dialogTitle: GearType.String,
     loadType: GearType.Enum<'async' | 'iframe'>(),
-    dialogWidth: GearType.Number,
+    dialogWidth: GearType.Any,
     dialogHeight: GearType.Number,
     maximized: GearType.Boolean,
     controlBar: GearType.Boolean,
@@ -19,7 +19,7 @@ export var props = {
 export interface state extends ClickAction.state {
     dialogTitle?: string;
     loadType?: 'async' | 'iframe';
-    dialogWidth?: number;
+    dialogWidth?: any;
     dialogHeight?: number;
     maximized?: boolean;
     controlBar?: boolean;
