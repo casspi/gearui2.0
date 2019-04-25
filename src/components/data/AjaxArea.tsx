@@ -146,10 +146,16 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
         let jsStr = "";
         let jsReg = new RegExp(/<script.*?>([\s\S]+?)<\/script>/img);
         let htmlStr:any;
-        if(data.status !=null && data.data){
-            obj.setState({
-                children: data.data
-            });
+        if(data.status !=null){
+            if(data.data) {
+                obj.setState({
+                    children: data.data
+                });
+            }else {
+                obj.setState({
+                    children: []
+                });
+            }
         }else if(obj.props.dataType == "html"){
             G.G$(obj.realDom).find('script').remove();           
             data=data.data?data.data:data;

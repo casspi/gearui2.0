@@ -1,3 +1,4 @@
+let time1 = new Date().getTime();
 import G from './Gear';
 import * as Tags from './components';
 import { WindowUtil } from './utils';

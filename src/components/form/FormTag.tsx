@@ -2,13 +2,12 @@ import * as Tag from "../Tag";
 import * as Validate from './Validate';
 import { Form } from "./index";
 import { Validator } from "../../validator";
-import { ObjectUtil } from '../../utils';
+import { ObjectUtil, UUID } from '../../utils';
 import * as React from 'react';
 import {FormComponentProps, WrappedFormUtils} from 'antd/es/form/Form';
 import { Form as AntdForm } from 'antd';
 const AntdFormItem = AntdForm.Item;
 import Tooltip from "../pack/Tooltip";
-import UUID from '../../utils/uuid';
 export var props = {
     
     //配合 label 属性使用，表示是否显示 label 后面的冒号
@@ -95,8 +94,9 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     // needChange:any;
     triggerChange(changedValue: any, callback?: Function) {
+        let name: any = this.state.name;
         if(this.form) {
-            this.form.setFieldValue(this.props.name, changedValue, callback);
+            this.form.setFieldValue(name, changedValue, callback);
             // this.needChange = true;
         }
     }
@@ -116,7 +116,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             invalidType: this.props.invalidType,
             readOnly: this.props.readOnly,
             value: this.props.value,
-            labelText: this.props.labelText
+            labelText: this.props.labelText,
+            name: this.props.name || UUID.get()
         };
     }
 
@@ -151,8 +152,9 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     
     validate(fun?: Function): boolean {
-        if(this.form) {
-            return this.form.validateField(this.props.name, fun);
+        let name: any = this.state.name;
+        if(this.form && name) {
+            return this.form.validateField(name, fun);
         }
         return true;
     }
@@ -220,7 +222,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     reset(){
         if(this.form) {
-            this.form.reset(this.props.name);
+            this.form.reset(this.state.name);
         }
     }
 
@@ -228,8 +230,9 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
      * 获取控件验证信息
      */
     getValidateMessage() {
+        let name: any = this.state.name;
         if(this.form) {
-            return this.form.getError(this.props.name);
+            return this.form.getError(name);
         }
         return null;
     }
@@ -260,12 +263,13 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     makeJsx(): React.ReactNode {return null;}
     render() {
+        let name: any = this.state.name;
         let ele: React.ReactNode = this.makeJsx();
         // console.log(this.state.rules)
         if(this.form) {
             let formUtils: WrappedFormUtils = this.form.props.form;
             let rules: any = this.state.rules;
-            let formTag = formUtils.getFieldDecorator(this.props.name||UUID.get(), {
+            let formTag = formUtils.getFieldDecorator(name, {
                 initialValue: this.state.value,
                 rules: this.isValidation() ? rules : [],
             })(ele);
@@ -281,7 +285,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
      */
     private getFormItem(formTag: React.ReactNode) {
         let formUtils: WrappedFormUtils = this.form.props.form;
-        let tagName = this.props.name;
+        let tagName: any = this.state.name;
         let validateStatus:'success' | 'warning' | 'error' | 'validating' = "success";
         let help = null;
         let invalidType = this.getInvalidType();
