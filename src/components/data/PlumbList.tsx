@@ -4,11 +4,11 @@ import {Popover,Icon as AntdIcon} from 'antd';
 import { default as Http} from '../../utils/http';
 import Parser from '../../core/Parser';
 import Link from '../basic/Link';
-import { any, number } from "prop-types";
 import ButtonGroup from "../basic/ButtonGroup";
 import Button from "../basic/Button";
 import * as Jsplumb from 'jsplumb'
 // import { jsPlumb } from 'public/jsplumb1';
+import { Control } from '../form/EditTable';
 import { debug } from 'util';
 // import { jsPlumb } from 'public/jsplumb1';
 export declare type connector = 'Bezier' | 'Straight' | 'Flowchart';//贝塞尔曲线、直线、90度折线
@@ -25,7 +25,11 @@ export var props = {
     linkType:GearType.Enum<linkType>(),
     leftTitle:GearType.String,
     rightTitle:GearType.String,
-    pointRadius:GearType.Number
+    pointRadius:GearType.Number,//短点半径
+    pointColor:GearType.Any,//端点颜色
+    lineColor:GearType.Any,//连接线的颜色
+    lineWidth: GearType.Number,//连接线的宽的
+    control:GearType.Any,
 }
 export interface state extends Tag.state {
     leftData:any[];
@@ -34,7 +38,10 @@ export interface state extends Tag.state {
     width?:number,
     listWidth?:string,
     linkType?:linkType,
-    pointRadius?:number
+    pointRadius?:number,
+    pointColor?:any,
+    lineColor?:any,
+    control?:any[]
 }
 
 export default class PlumbList<P extends typeof props, S extends state> extends Tag.default<P, S> {
@@ -51,20 +58,24 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             width:this.props.width,
             listWidth:(this.props.listWidth || 200)+'px',
             linkType:this.props.linkType||1,
-            pointRadius:this.props.pointRadius || 5
+            pointRadius:this.props.pointRadius || 5,
+            pointColor:this.props.pointColor || "#1890ff",
+            lineColor:this.props.lineColor || "#1890ff",
+            control : this.props.control.split(',').length>0? this.props.control.split(','):['up','down','move','edit','delete']
         }
     }
     getProps(){
         return G.G$.extend({},this.state,{
             className:"plumblist-warp "+this.state.className
         })
-    }
-    parserList(data:any[],side:'left'|'right'){
-        let list:any[]=[];
-        data.map((item:any,index:number)=>{
-            list.push(
-                <Popover key={'pop'+item.id} placement={side}
-                    content={<div className="plumb-cell-control">
+    } 
+
+    parseControl(controls:any[]){
+        let controlIcons = [];
+        for(let c in controls){
+            switch (c) {
+                case 'delete':
+                    controlIcons.push(
                         <AntdIcon
                             style={{ cursor:'pointer'}}
                             type="close"
@@ -72,27 +83,72 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                             className={"plumb-cell-icon-delete"}
                             onClick={this.deleteItem.bind(this,item.id,side)}
                         />
-                        <AntdIcon
+                    )
+                    break;
+            
+                default:
+                    break;
+            }
+        }
+    }
+
+    parserList(data:any[],side:'left'|'right'){
+        let list:any[]=[];
+        let controlArray:any = this.state.control;
+        data.map((item:any,index:number)=>{
+            list.push(
+                <Popover key={'pop'+item.id} placement={side}
+                    content={<div className="plumb-cell-control">
+                    
+                        {controlArray.includes('delete')?<AntdIcon
+                            style={{ cursor:'pointer'}}
+                            type="close"
+                            title="删除"
+                            className={"plumb-cell-icon-delete"}
+                            onClick={this.deleteItem.bind(this,item.id,side)}
+                        />:null}
+                        {controlArray.includes('delete')?<AntdIcon
                             style={{ cursor:'pointer',display:index!=0?'inline-block':'none'}}
                             type="arrow-up"
                             title="上移"
                             className={"plumb-cell-icon-up"}
                             onClick={this.upData.bind(this,item,side)}
-                        />
-                        <AntdIcon
+                        />:null}
+                        {controlArray.includes('down')?<AntdIcon
                             style={{ cursor:'pointer',display:index+1<data.length?'inline-block':'none'}}
                             type="arrow-down"
                             title="下移"
                             className={"plumb-cell-icon-down"}
                             onClick={this.downData.bind(this,item,side)}
-                        />
-                        <AntdIcon
+                        />:null}
+                        {controlArray.includes('move')?<AntdIcon
                             style={{ cursor:'pointer'}}
                             type={side=='left'?"arrow-right":'arrow-left'}
                             title={side=='left'?"右移":'左移'}
                             className={"plumb-cell-icon-rollback"}
                             onClick={this.moveData.bind(this,item,side)}
-                        />
+                        />:null}
+                        {controlArray.includes('moveLeft') && side=='right'?<AntdIcon//只允许左移
+                            style={{ cursor:'pointer'}}
+                            type={'arrow-left'}
+                            title={'左移'}
+                            className={"plumb-cell-icon-rollback"}
+                            onClick={this.moveData.bind(this,item,side)}
+                        />:null}
+                        {controlArray.includes('moveRight') && side=='left'?<AntdIcon//只允许右移
+                            style={{ cursor:'pointer'}}
+                            type={'arrow-right'}
+                            title={'右移'}
+                            className={"plumb-cell-icon-rollback"}
+                            onClick={this.moveData.bind(this,item,side)}
+                        />:null}
+                        {controlArray.includes('edit')?<AntdIcon//编辑
+                            style={{ cursor:'pointer'}}
+                            type={'edit'}
+                            title={'编辑'}
+                            className={"plumb-cell-icon-edit"}
+                            onClick={this.setItem.bind(this,item.id,side,'999')}
+                        />:null}
                 </div>}>    
                     { (item.text instanceof Array)?
                     <li className="item"  id={item.id} key={item.id}>{this.parserText(item.text)}</li>:
@@ -126,6 +182,8 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         delete props.rightData;
         delete props.linkType;
         delete props.pointRadius;
+        delete props.pointColor;
+        delete props.lineColor;
         return <div  ref={(ele:any)=>this.ref = ele} {...props}>
             <h3>{this.props.title||'映射关系图'}</h3>
             {/*   */}
@@ -198,15 +256,15 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             var common = {
                 connector: [_this.state.connector],
                 maxConnections: -1,
-                endpointStyle: { radius : _this.state.pointRadius, fill : "#1890ff" },
+                endpointStyle: { radius : _this.state.pointRadius, fill : _this.state.pointColor},
                 connectorStyle: {
-                    outlineStroke: '#1890ff',
-                    strokeWidth:1
+                    outlineStroke: _this.state.lineColor,
+                    strokeWidth:_this.props.lineWidth || 1
                 },
                 EndpointHoverStyle:{opacity: 0.8},
                 // ConnectionOverlays:[],//这个是鼠标拉出来的线的属性
                 overlays: [
-                    ['Arrow', { width: 12, length: 12, location: .95 ,paintStyle: {stroke:"#1890ff"}}],
+                    ['Arrow', { width: 12, length: 12, location: .95 ,paintStyle: {fill: _this.state.lineColor,stroke: _this.state.lineColor}}],
                     // ["Label", {  //标签参数设置 
                     //     id: "label",
                     //     cssClass: "activeLabel", //hover时label的样式名
@@ -257,11 +315,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 },common)
             });
              
-            
-
-            // //可以拖动的节点
-            // jsPlumb.draggable('r02')
-            // jsPlumb.draggable(['l01','l02']);
             //先解绑事件
             jsPlumb.unbind('click');
             jsPlumb.unbind('connection');
@@ -514,4 +567,11 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         }
     }
 
+    // onChange
+
+    onEditItem(fun:any){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("editItem",fun);
+        }
+    }
 }
