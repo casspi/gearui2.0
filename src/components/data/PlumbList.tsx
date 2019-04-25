@@ -183,7 +183,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     }
 
     dragLinks(){
-        console.log('建立连接关系');
         let jsPlumb:any = window.jsPlumb;
         let _this = this;
         jsPlumb.ready(function () {
@@ -207,7 +206,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 EndpointHoverStyle:{opacity: 0.8},
                 // ConnectionOverlays:[],//这个是鼠标拉出来的线的属性
                 overlays: [
-                    ['Arrow', { width: 12, length: 12, location: .95 ,stroke: "#1890ff"}],
+                    ['Arrow', { width: 12, length: 12, location: .95 ,paintStyle: {stroke:"#1890ff"}}],
                     // ["Label", {  //标签参数设置 
                     //     id: "label",
                     //     cssClass: "activeLabel", //hover时label的样式名
@@ -294,14 +293,14 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             })
              
             //连接线点击事件
-            // jsPlumb.bind('click', function (conn:any, originalEvent:any) {
-            //     console.log(originalEvent);
-            //     // G.messager.confirm({message:"确定要删除连接线吗？",callback:()=>{
-            //         _this.setState({
-            //             leftData: _this.deleteLinks(conn.sourceId,conn.targetId)
-            //         })
-            //     // }})
-            // });
+            jsPlumb.bind('click', function (conn:any, originalEvent:any) {
+                console.log(originalEvent);
+                // G.messager.confirm({message:"确定要删除连接线吗？",callback:()=>{
+                    _this.setState({
+                        leftData: _this.deleteLinks(conn.sourceId,conn.targetId)
+                    })
+                // }})
+            });
             
             // 当链接建立前
             jsPlumb.bind('beforeDrop', function (info:any) {
@@ -316,18 +315,18 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             });
 
             // //取消连接
-            jsPlumb.bind("connectionDetached", function (conn:any, originalEvent:any) {   
-                return false  
-                console.log('取消了')
-                debugger
-                if (conn.sourceId == conn.targetId) {      
-                    //自己连接自己时会自动取消连接      
-                }else{      
-                    // _this.setState({
-                    //     leftData: _this.deleteLinks(conn.sourceId,conn.targetId)
-                    // })     
-                }      
-            });
+            // jsPlumb.bind("connectionDetached", function (conn:any, originalEvent:any) {   
+            //     // return false  
+            //     console.log('取消了')
+            //     debugger
+            //     if (conn.sourceId == conn.targetId) {      
+            //         //自己连接自己时会自动取消连接      
+            //     }else{      
+            //         _this.setState({
+            //             leftData: _this.deleteLinks(conn.sourceId,conn.targetId)
+            //         })     
+            //     }      
+            // });
             // G.G$(document).on('mouseenter.link','.jtk-connector',function(){
             //     console.log(G.G$(this).index());
             //     console.log( G.G$(document).find('.jtk-overlay'))
@@ -391,6 +390,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 return item
             });
         }
+        console.log(leftData)
         return leftData;
     }
 
