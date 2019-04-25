@@ -39,11 +39,15 @@ export default class G {
         //el: 指定节点
         let el = renderOptions.el;
         let parser = new Parser();
+        let date = new Date().getTime();
         let astMsg  = parser.parse(el);
+        
         let render = new Render();
         this.cacheHtml = astMsg.cacheHtml;
         this.cacheAst = astMsg.ast;
         render.render(astMsg.ast, astMsg.parent, renderOptions.mounted);
+        let date2 = new Date().getTime();
+        console.log(date2 - date);
     }
 
     //注册自定义组件

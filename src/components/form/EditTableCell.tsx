@@ -2,7 +2,7 @@ import * as Tag from '../Tag';
 import { Icon as AntdIcon,Popover } from 'antd';
 import * as React from 'react';
 import { Form } from "./index";
-import { GearUtil } from '../../utils';
+import { GearUtil, UUID } from '../../utils';
 var props = {
     ...Tag.props,
     editable: GearType.Boolean,
@@ -29,6 +29,8 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     private gearEle: any;
     //缓存数据
     private cacheValue: any;
+
+    private reactEleKey = UUID.get();
 
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
         return {
@@ -97,8 +99,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         if(!(cellText instanceof Array)){
             cellText = [cellText]
         }
-        cellText = cellText.filter((o:any)=>o!="")
-        console.log(cellText)
+        cellText = cellText.filter((o:any)=>o!="");
         return <div className="edit-table-cell">
                 <div className="editable-cell-input-wrapper" style={{display: props.editable?"block":"none"}}>
                         {
@@ -183,19 +184,13 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         delete _props.children;
         let onchangebak = _props.onChange;
         let props:any = G.G$.extend(
-            // {
-                
-            //     width:this.props.width,
-            //     url:this.props['url'],
-            //     form:this.props['form']
-            // },
             _props,
             {
                 required:this.props['required'],
-                id: this.props.id,
+                id: this.reactEleKey,
                 dictype:this.props['dictype'],
-                key: this.props.id,
-                name: this.props.name,
+                key: this.reactEleKey,
+                name: this.reactEleKey,
                 ref: (ele: any)=>{
                     if(ele) {
                         this.gearEle = ele;
@@ -214,13 +209,11 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                         oldValue,
                         label
                     },()=>{
-                        debugger;
-                        console.log(this.gearEle)
                         if(this.props.form){
 
-                            this.gearEle.triggerChange()
+                            this.gearEle.triggerChange(value);
                         }
-                        this.gearEle.focus()
+                        this.gearEle.focus();
                     })
                     if(onchangebak && G.G$.isFunction(onchangebak)) {
                         onchangebak.call(this.gearEle,value,oldValue);
@@ -243,7 +236,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         });
         delete props.editCell
         // console.log(props)
-        return GearUtil.newInstanceByType(editCType, props);
+        return GearUtil.newInstanceByType(editCType, props, this);
         // return editCType?GearUtil.newInstanceByType(editCType, props):this.props.children; 
     }
 
