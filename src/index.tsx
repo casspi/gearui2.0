@@ -1,3 +1,4 @@
+let time1 = new Date().getTime();
 import G from './Gear';
 import * as Tags from './components';
 import { WindowUtil } from './utils';
@@ -23,7 +24,7 @@ window.G.components = Tags.components;
 //兼容老版的写法--------------------
 window.G.http = utils.Http;
 window.G.util = utils.Http;
-window["$"] = window.G;
+// window["$"] = window.G;
 window.onload = function() {
     window.G.render({
         el: this.document.body,

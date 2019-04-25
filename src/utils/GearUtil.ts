@@ -139,6 +139,9 @@ export default class GearUtil {
                 props = G.G$.extend(props, paramProps);
             }
             props["key"] = ast.id;
+            if(!props["name"]) {
+                props["name"] = props["id"];
+            }
             // let time5 = new Date().getTime();
             // console.log("创建4：" + (time5 - time4));
             let clazz = (typeof ast.tagClass == "string") ? G.components["htmltag"] : ast.tagClass;
