@@ -30,6 +30,7 @@ export var props = {
     lineColor:GearType.Any,//连接线的颜色
     lineWidth: GearType.Number,//连接线的宽的
     control:GearType.Any,
+
 }
 export interface state extends Tag.state {
     leftData:any[];
@@ -261,6 +262,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                     outlineStroke: _this.state.lineColor,
                     strokeWidth:_this.props.lineWidth || 1
                 },
+                dragAllowedWhenFull:false,
                 EndpointHoverStyle:{opacity: 0.8},
                 // ConnectionOverlays:[],//这个是鼠标拉出来的线的属性
                 overlays: [
@@ -277,6 +279,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 ],
                 // ReattachConnections: false,      
             };
+            // jsPlumb.getInstance({},common)
             let sTargetMax:number,tTargetMax:number;
             switch (_this.state.linkType) {
                 case 1://一对一

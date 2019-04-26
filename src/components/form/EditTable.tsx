@@ -11,7 +11,6 @@ import * as EditTableCell from './EditTableCell';
 import {FormComponentProps} from 'antd/es/form/Form';
 import { Form } from "./index";
 import { default as Column } from '../data/Column';
-import RequiredValidator from '../../validator/requiredValidator';
 export var props = {
     ...Table.props,
     ...FormTag.props,

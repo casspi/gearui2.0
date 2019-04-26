@@ -199,6 +199,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 lower: lower,
                 upper: upper,
                 "data-cellId": this.props.id,
+                "data-record": this.props['record'],
                 onChange: (value: any,oldValue: any) => {
                     let label = this.getLabel();
                     let record = _props.record;
@@ -210,7 +211,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                         label
                     },()=>{
                         if(this.props.form){
-
                             this.gearEle.triggerChange(value);
                         }
                         this.gearEle.focus();
@@ -232,10 +232,9 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                     };
                     return
                 },
-                value: this.state.value
+                value: this.state.value,
         });
         delete props.editCell
-        // console.log(props)
         return GearUtil.newInstanceByType(editCType, props, this);
         // return editCType?GearUtil.newInstanceByType(editCType, props):this.props.children; 
     }

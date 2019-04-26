@@ -214,7 +214,6 @@ export default class Column<T> {
                 }else {
                     jsxEles.push(this.parseColumnChild(children, ellipsisSpanWidth, record, indexColumn, 0));
                 }
-                children = []//手动解除
                 return jsxEles;
             };
         })(children, ellipsisSpanWidth || 0);
