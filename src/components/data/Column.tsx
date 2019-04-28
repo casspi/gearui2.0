@@ -196,7 +196,7 @@ export default class Column<T> {
         }
     }
 
-    //在ctype=column中存在内部节点的渲染处理
+    //渲染column
     protected parseRender(props: Column<T>, ellipsisSpanWidth?: any) {
         let children = props.children;
         let render = null;

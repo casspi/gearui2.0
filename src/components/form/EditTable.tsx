@@ -11,6 +11,7 @@ import * as EditTableCell from './EditTableCell';
 import {FormComponentProps} from 'antd/es/form/Form';
 import { Form } from "./index";
 import { default as Column } from '../data/Column';
+import { debug } from 'util';
 export var props = {
     ...Table.props,
     ...FormTag.props,
@@ -720,6 +721,8 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         let dataClone = {};
         if(dataSource instanceof Array && dataSource.length > 0) {
             dataClone = G.G$.extend({},dataSource[dataSource.length - 1]);
+        }else if(dataSource instanceof Array && dataSource.length == 0){
+            dataClone = G.G$.extend({},this.defaultRecord)
         }
         for(let key in dataClone) {
             dataClone[key] = null;
@@ -889,13 +892,13 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                         name: name,
                         form: this.form,
                         required: newProps.required=="true"?true:false,
-                        // ref:(ele: any) => {
-                        //     let cells = this.cells[record.key]||{};
-                        //     if(ele != null) {
-                        //         cells[column.name] = ele;
-                        //     }
-                        //     this.cells[record.key] = cells;
-                        // },
+                        ref:(ele: any) => {
+                            let cells = this.cells[record.key]||{};
+                            if(ele != null) {
+                                cells[column.name] = ele;
+                            }
+                            this.cells[record.key] = cells;
+                        },
                         onBeforeSave: (name: any,record: any)=>{
                             return this.doJudgementEvent("beforeCellSave",name,record);
                         },
@@ -909,14 +912,15 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                             return this.doJudgementEvent("beforeCellReset",name,record);
                         },
                         onChange: (value: any, oldValue: any, label: any) => {
+                            
                             //处理值变动的逻辑
                             if(props.onChange) {
-                                props.onChange(value, oldValue);
+                                props.onChange.call(this,value, oldValue);
                             }
                         }
                     });
 
-                    return <EditTableCell.default {...cellProps}>{children}</EditTableCell.default>;
+                    return <EditTableCell.default  {...cellProps}>{children}</EditTableCell.default>;
                 };
             })(column,props);
         }

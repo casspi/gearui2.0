@@ -120,9 +120,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
                         },()=>{
                             // 设置默认选中状态
                             let value = this.state.value;
-                            if(value instanceof Array) {
-                                this.setValue(value);
-                            }
+                            this.setValue(value);
                         });
                     }
                 }
@@ -169,7 +167,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
         return texts;
     }    
 
-    setValue(values: Array<string>){
+    setValue(values: any){
         if(values instanceof Array == false && typeof values=="string"){
             values = [values];
         }

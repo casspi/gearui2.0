@@ -83,6 +83,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     private filterContainerId = UUID.get();
     //当前展开的记录行
     private _expandRecord = null;
+    protected defaultRecord = {};
+
     constructor(props:P, context?: {}){
         super(props, context)
     }
@@ -835,6 +837,14 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         this.setEllipsisSpanWidth();
         if(this.props.id){
             G.$("#"+this.props.id).data("vmdom", this)
+        }
+
+        //缓存一份行数据字段，当没有数据时，新增用得到
+        let uColums:any = [...this.state.columns].filter(o=>o.dataIndex!='sequence'&&o.dataIndex!="control");
+        for(let i=0;i<uColums.length;i++) {
+            if(uColums[i].dataIndex){
+                this.defaultRecord[uColums[i].dataIndex] = null;
+            }
         }
     }
 

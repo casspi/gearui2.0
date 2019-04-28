@@ -32,13 +32,24 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     private reactEleKey = UUID.get();
 
+    private updateKey = false;
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
+        // console.log(this.state.value)
+        // console.log(nextProps.value)
         return {
             editable: nextProps.editable,
             value: nextProps.value,
             label: this.getLabel()
         };
     }
+    
+    // shouldUpdate(nextProps:P,nextState:S){
+    //    if(this.updateKey || nextState.value){
+    //        return true
+    //    }else{
+    //        return false
+    //    }
+    // }
 
     validate() {
         if(this.props.form) {
@@ -95,6 +106,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     render() {
         let props = this.getProps();
         let reactEle:any = this.getEditGearEle();
+        // console.log(reactEle)
         let cellText:any = (reactEle && reactEle['props'] && reactEle['props'].ctype=="file" && props.showLink)?<a key="fileLink" download href={props.label || " "}  className={"cell-value"}>{props.label || " "}</a>:<span key="cellText" className={"cell-value"}>{props.label || " "}</span>;
         if(!(cellText instanceof Array)){
             cellText = [cellText]
@@ -183,7 +195,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         delete _props.__ast__;
         delete _props.children;
         let onchangebak = _props.onChange;
-        let props:any = G.G$.extend(
+        let props:any = G.G$.extend({},
             _props,
             {
                 required:this.props['required'],
@@ -194,30 +206,33 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 ref: (ele: any)=>{
                     if(ele) {
                         this.gearEle = ele;
+                        this.gearEle["cell"] = this;
                     }
                 },
                 lower: lower,
                 upper: upper,
                 "data-cellId": this.props.id,
-                "data-record": this.props['record'],
+                "data-record": _props['record'],
                 onChange: (value: any,oldValue: any) => {
                     let label = this.getLabel();
                     let record = _props.record;
                     record[this.props.name] = value;
-                    // console.log(this.gearEle)
+                    console.log(record)
+                    debugger
+                    console.log(this.gearEle)
                     this.setState({
                         value,
                         oldValue,
                         label
                     },()=>{
-                        if(this.props.form){
-                            this.gearEle.triggerChange(value);
-                        }
-                        this.gearEle.focus();
+                        // if(this.props.form){
+                        //     this.gearEle.triggerChange(value);
+                        // }
                     })
                     if(onchangebak && G.G$.isFunction(onchangebak)) {
                         onchangebak.call(this.gearEle,value,oldValue);
                     }
+                    this.gearEle.focus();
                     
                 },
                 onLoadSuccess:()=>{//涉及到需要加载数据的组件
@@ -234,7 +249,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 },
                 value: this.state.value,
         });
-        delete props.editCell
         return GearUtil.newInstanceByType(editCType, props, this);
         // return editCType?GearUtil.newInstanceByType(editCType, props):this.props.children; 
     }
