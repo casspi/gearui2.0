@@ -574,7 +574,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
 
     editClick(id:any,side:any){
         alert(id+"---"+side)
-        this.setItem(id,side,70000)
+        this.setItem(id,side,'test')
     }
 
     onEditItem(fun:any){
