@@ -2,27 +2,19 @@ import * as Tag from "../Tag";
 import * as React from 'react';
 import {Popover,Icon as AntdIcon} from 'antd';
 import { default as Http} from '../../utils/http';
-import Parser from '../../core/Parser';
-import Link from '../basic/Link';
-import ButtonGroup from "../basic/ButtonGroup";
-import Button from "../basic/Button";
-import * as Jsplumb from 'jsplumb'
-// import { jsPlumb } from 'public/jsplumb1';
-import { Control } from '../form/EditTable';
-import { debug } from 'util';
-// import { jsPlumb } from 'public/jsplumb1';
+
 export declare type connector = 'Bezier' | 'Straight' | 'Flowchart';//贝塞尔曲线、直线、90度折线
-export declare type linkType = 1 | 2 | 3 | 4;//1:一对一、2:一对多、3：多对一、4：多对多
 export var props = {
     ...Tag.props,
     connector:GearType.Enum<connector>(),
-    listWidth:GearType.Number,
+    rightListWidth:GearType.Number,
+    leftListWidth:GearType.Number,
     width:GearType.Number,
     showLabel:GearType.Boolean,
     title: GearType.String,
     class: GearType.String,
     url:GearType.String,
-    linkType:GearType.Enum<linkType>(),
+    linkType:GearType.Number,//1:一对一、2:一对多、3：多对一、4：多对多
     leftTitle:GearType.String,
     rightTitle:GearType.String,
     pointRadius:GearType.Number,//短点半径
@@ -37,8 +29,9 @@ export interface state extends Tag.state {
     rightData:any[];
     connector:connector,
     width?:number,
-    listWidth?:string,
-    linkType?:linkType,
+    rightListWidth?:string,
+    leftListWidth?:string,
+    linkType?:number,
     pointRadius?:number,
     pointColor?:any,
     lineColor?:any,
@@ -52,12 +45,14 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     protected cacheData:any;//缓存数据
     
     getInitialState():state{
+        console.log(this.props.linkType)
         return {
             leftData: [],
             rightData: [],
             connector:this.props.connector|| 'Straight',
             width:this.props.width,
-            listWidth:(this.props.listWidth || 200)+'px',
+            rightListWidth:(this.props.rightListWidth || 200)+'px',
+            leftListWidth:(this.props.leftListWidth || 200)+'px',
             linkType:this.props.linkType||1,
             pointRadius:this.props.pointRadius || 5,
             pointColor:this.props.pointColor || "#1890ff",
@@ -65,33 +60,34 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             control : this.props.control.split(',').length>0? this.props.control.split(','):['up','down','move','edit','delete']
         }
     }
+
     getProps(){
         return G.G$.extend({},this.state,{
             className:"plumblist-warp "+this.state.className
         })
     } 
 
-    parseControl(controls:any[]){
-        let controlIcons = [];
-        for(let c in controls){
-            switch (c) {
-                case 'delete':
-                    controlIcons.push(
-                        <AntdIcon
-                            style={{ cursor:'pointer'}}
-                            type="close"
-                            title="删除"
-                            className={"plumb-cell-icon-delete"}
-                            onClick={this.deleteItem.bind(this,item.id,side)}
-                        />
-                    )
-                    break;
+    // parseControl(controls:any[]){
+    //     let controlIcons = [];
+    //     for(let c in controls){
+    //         switch (c) {
+    //             case 'delete':
+    //                 controlIcons.push(
+    //                     <AntdIcon
+    //                         style={{ cursor:'pointer'}}
+    //                         type="close"
+    //                         title="删除"
+    //                         className={"plumb-cell-icon-delete"}
+    //                         onClick={this.deleteItem.bind(this,item.id,side)}
+    //                     />
+    //                 )
+    //                 break;
             
-                default:
-                    break;
-            }
-        }
-    }
+    //             default:
+    //                 break;
+    //         }
+    //     }
+    // }
 
     parserList(data:any[],side:'left'|'right'){
         let list:any[]=[];
@@ -148,12 +144,12 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                             type={'edit'}
                             title={'编辑'}
                             className={"plumb-cell-icon-edit"}
-                            onClick={this.setItem.bind(this,item.id,side,'999')}
+                            onClick={this.editClick.bind(this,item.id,side)}
                         />:null}
                 </div>}>    
                     { (item.text instanceof Array)?
                     <li className="item"  id={item.id} key={item.id}>{this.parserText(item.text)}</li>:
-                    <li className="item"  id={item.id} key={item.id}>{item.text}</li>}
+                    <li className="item"  id={item.id} key={item.id}><span>{item.text}</span></li>}
                 </Popover>
             )
         })
@@ -178,7 +174,8 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         let leftData = this.state.leftData;
         let rightData = this.state.rightData;
         let props:any = this.getProps();
-        delete props.listWidth;
+        delete props.rightListWidth;
+        delete props.leftListWidth;
         delete props.leftData;
         delete props.rightData;
         delete props.linkType;
@@ -189,12 +186,12 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             <h3>{this.props.title||'映射关系图'}</h3>
             {/*   */}
             <div className="list-warp">
-                <ul id="item-left" key="left" className="list" style={{width:this.state.listWidth}}>
+                <ul id="item-left" key="left" className="list" style={{width:this.state.leftListWidth}}>
                     <li><h4 className="left-list-title">{this.props.leftTitle||'左侧列表'}</h4></li>
                     {leftData.length>0?this.parserList(leftData,'left'):null}
                 </ul>
-                <ul id="item-right" key="right" className="list" style={{width:this.state.listWidth}}>
-                    <li><h4 className="right-list-title">{this.props.rightTitle||'左侧列表'}</h4></li>
+                <ul id="item-right" key="right" className="list" style={{width:this.state.rightListWidth}}>
+                    <li><h4 className="right-list-title">{this.props.rightTitle||'右侧列表'}</h4></li>
                     {rightData.length>0?this.parserList(rightData,'right'):null}
                 </ul>
             </div>  
@@ -207,23 +204,19 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     // }
     
     afterUpdate(){//更细数据后画点、连线
-        console.log('afterupdate');
-        console.log(this.state.leftData);
-        console.log(this.state.rightData);
+        // console.log('afterupdate');
+        // console.log(this.state.leftData);
+        // console.log(this.state.rightData);
         this.dragLinks();
-        // console.log(
-        //     jsPlumb.getAllConnections()
-        // );
-        // console.log(G.G$('.jtk-endpoint'));
 
     }
     
     componentDidMount(){
         //初始化画点、连线
-        this.loadData();
         console.log('mount');
-        console.log(this.state.leftData);
-       
+        // console.log(this.state.leftData);
+        // this.setLinkType(1)
+        this.loadData();
     }
 
     protected loadData(){
@@ -279,17 +272,16 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 ],
                 // ReattachConnections: false,      
             };
-            // jsPlumb.getInstance({},common)
             let sTargetMax:number,tTargetMax:number;
             switch (_this.state.linkType) {
                 case 1://一对一
                     sTargetMax = 1,tTargetMax = 1
                     break;
                 case 2://一对多
-                    sTargetMax = 1,tTargetMax = -1
+                    sTargetMax = -1,tTargetMax = 1
                     break;
                 case 3://多对一
-                    sTargetMax = -1,tTargetMax = 1
+                    sTargetMax = 1,tTargetMax = -1
                     break;
                 case 4://多对多
                     sTargetMax = -1,tTargetMax = -1
@@ -328,7 +320,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 //连线时动作
                 //例如给连线添加label文字
                 let conn = connInfo.connection;
-                console.log(!(_this.props.showLabel===false))
                 if(!(_this.props.showLabel===false) && conn.source && conn.target){
                     let labelText = '连接'+conn.source.innerText+'----'+conn.target.innerText;
                     conn.setLabel(labelText);
@@ -359,17 +350,22 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             });
             
             // 当链接建立前
-            jsPlumb.bind('beforeDrop', function (info:any) {
-                console.log(info)
-                if (1) {
-                console.log('链接会自动建立')
-                return true // 链接会自动建立
-                } else {
-                console.log('链接取消')
-                return false // 链接不会建立，注意，必须是false
-                }
-            });
+            // jsPlumb.bind('beforeDrop', function (info:any) {
+            //     if (1) {
+            //     console.log('链接会自动建立')
+            //     return true // 链接会自动建立
+            //     } else {
+            //     console.log('链接取消')
+            //     return false // 链接不会建立，注意，必须是false
+            //     }
+            // });
+            jsPlumb.bind("beforeDetach",function(info:any){//手动拖拽？取消连接时删除对应数据
+                console.log(info);
+                _this.setState({
+                    leftData: _this.deleteLinks(info.sourceId,info.targetId)
+                }) 
 
+            })
             // //取消连接
             // jsPlumb.bind("connectionDetached", function (conn:any, originalEvent:any) {   
             //     // return false  
@@ -421,7 +417,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             });
         }
     }
-
+    
     //删除指定连接线
     deleteLinks(s:any,t:any){
         let leftData = this.state.leftData;
@@ -471,7 +467,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 isChange = true;
             }
         }
-        console.log(this.state.leftData)
+        // console.log(this.state.leftData)
         if(isChange){
             this.setState({
                 leftData
@@ -570,7 +566,16 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         }
     }
 
-    // onChange
+    setLinkType(type:any){//设置连接模式：1对1，1对多，多对1，多对多等
+        this.setState({
+            linkType:type
+        })
+    }
+
+    editClick(id:any,side:any){
+        alert(id+"---"+side)
+        this.setItem(id,side,70000)
+    }
 
     onEditItem(fun:any){
         if(fun && G.G$.isFunction(fun)) {

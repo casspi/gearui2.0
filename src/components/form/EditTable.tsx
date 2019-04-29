@@ -11,7 +11,6 @@ import * as EditTableCell from './EditTableCell';
 import {FormComponentProps} from 'antd/es/form/Form';
 import { Form } from "./index";
 import { default as Column } from '../data/Column';
-import { debug } from 'util';
 export var props = {
     ...Table.props,
     ...FormTag.props,
@@ -227,7 +226,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         return controls;
     }
     protected _loadSuccess() {
-        let dataSource = this.getData();
+        let dataSource:any = this.getData();
         this.cacheData = new GearArray(dataSource).clone().toArray();
     }
 
@@ -293,8 +292,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
 
     reset() {
-        alert('reset');
-        // console.log(this.cacheData)
         if(this.doJudgementEvent("beforeReset")==false)
             return;
         if(this.cacheData != null && this.cacheData.length > 0) {
@@ -310,6 +307,8 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
 
     resetRow(gele: Tag.default<typeof Tag.props & {__record__: any}, Tag.state>) {
+        console.log(this.cacheData)
+        debugger;
         let nowRow = this.mouseOnRow || this.focusRow;
         if(gele != null) {
             if(gele instanceof Tag.default) {
@@ -325,6 +324,8 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 return value.key == nowRow.key;
             });
             let data = this.getData()||[];
+            console.log(data);
+            console.log(cacheRow[0])
             if(cacheRow && cacheRow.length > 0) {
                 for(let i = 0; i < data.length;i++) {
                     if(data[i].key == cacheRow[0].key) {
@@ -917,6 +918,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                             if(props.onChange) {
                                 props.onChange.call(this,value, oldValue);
                             }
+                            console.log(this.cacheData)
                         }
                     });
 

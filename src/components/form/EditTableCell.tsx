@@ -32,7 +32,8 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     private reactEleKey = UUID.get();
 
-    private updateKey = false;
+    private isFirstRender=0;
+
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
         // console.log(this.state.value)
         // console.log(nextProps.value)
@@ -44,10 +45,13 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
     
     // shouldUpdate(nextProps:P,nextState:S){
-    //    if(this.updateKey || nextState.value){
-    //        return true
+    //     this.isFirstRender++
+    //    if(this.isFirstRender==1){
+    //        return true;
     //    }else{
-    //        return false
+    //        console.log(nextState.value)
+    //        console.log(this.state.value)
+    //        return nextState.value !== this.state.value
     //    }
     // }
 
@@ -111,7 +115,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         if(!(cellText instanceof Array)){
             cellText = [cellText]
         }
-        cellText = cellText.filter((o:any)=>o!="");
+        cellText = cellText.filter((o:any)=>typeof o!="string");
         return <div className="edit-table-cell">
                 <div className="editable-cell-input-wrapper" style={{display: props.editable?"block":"none"}}>
                         {
@@ -214,17 +218,17 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 "data-cellId": this.props.id,
                 "data-record": _props['record'],
                 onChange: (value: any,oldValue: any) => {
-                    let label = this.getLabel();
                     let record = _props.record;
                     record[this.props.name] = value;
-                    console.log(record)
                     debugger
-                    console.log(this.gearEle)
                     this.setState({
                         value,
-                        oldValue,
-                        label
+                        oldValue
                     },()=>{
+                        this.setState({
+                            label:this.getLabel()
+                        })
+                        this.gearEle.focus();
                         // if(this.props.form){
                         //     this.gearEle.triggerChange(value);
                         // }
@@ -232,8 +236,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                     if(onchangebak && G.G$.isFunction(onchangebak)) {
                         onchangebak.call(this.gearEle,value,oldValue);
                     }
-                    this.gearEle.focus();
-                    
                 },
                 onLoadSuccess:()=>{//涉及到需要加载数据的组件
                     let editable = this.state.editable;
@@ -245,7 +247,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                             });
                         }
                     };
-                    return
                 },
                 value: this.state.value,
         });
