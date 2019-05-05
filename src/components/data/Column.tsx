@@ -237,6 +237,7 @@ export default class Column<T> {
             childProps.name = record.key + indexColumn + index;
             let jsxEle = null;
             if(child.type) {
+
                 jsxEle = React.cloneElement(child, childProps, childProps.children || []);
             }else {
                 jsxEle = child;
@@ -247,7 +248,12 @@ export default class Column<T> {
     }
 
     protected parseRegexColumnValue(props: any,record: any) {
-        let newProps: any = ObjectUtil.parseDynamicProps(props, record,true);
+        let newProps:any;
+        newProps = ObjectUtil.parseDynamicProps(props, record,true);
+        // if(props.children && typeof props.children[0]=='string'){//当单元格子节点，值需要转译换算时
+        // }else{//单元格节点是复杂嵌套型，暂时不支持转译
+        //     newProps = props
+        // }
         return newProps;
     }
 

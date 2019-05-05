@@ -39,13 +39,12 @@ export interface state extends Tag.state {
 }
 
 export default class PlumbList<P extends typeof props, S extends state> extends Tag.default<P, S> {
-    constructor(...arg:any){
-        super(...arg);
-    };
+    // constructor(...arg:any){
+    //     super(...arg);
+    // };
     protected cacheData:any;//缓存数据
     
     getInitialState():state{
-        console.log(this.props.linkType)
         return {
             leftData: [],
             rightData: [],
@@ -63,7 +62,10 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
 
     getProps(){
         return G.G$.extend({},this.state,{
-            className:"plumblist-warp "+this.state.className
+            className:"plumblist-warp "+this.state.className,
+            ref: (ele: any)=>{
+                this.ref = ele;
+            },
         })
     } 
 
@@ -170,7 +172,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     }
     render(){
         console.log('render')
-        console.log(this.state.leftData)
         let leftData = this.state.leftData;
         let rightData = this.state.rightData;
         let props:any = this.getProps();
@@ -182,7 +183,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         delete props.pointRadius;
         delete props.pointColor;
         delete props.lineColor;
-        return <div  ref={(ele:any)=>this.ref = ele} {...props}>
+        return <div {...props}>
             <h3>{this.props.title||'映射关系图'}</h3>
             {/*   */}
             <div className="list-warp">
@@ -212,6 +213,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     }
     
     componentDidMount(){
+        super.componentDidMount()
         //初始化画点、连线
         console.log('mount');
         // console.log(this.state.leftData);
@@ -341,7 +343,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
              
             //连接线点击事件
             jsPlumb.bind('click', function (conn:any, originalEvent:any) {
-                console.log(originalEvent);
                 // G.messager.confirm({message:"确定要删除连接线吗？",callback:()=>{
                     _this.setState({
                         leftData: _this.deleteLinks(conn.sourceId,conn.targetId)
@@ -370,7 +371,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             // jsPlumb.bind("connectionDetached", function (conn:any, originalEvent:any) {   
             //     // return false  
             //     console.log('取消了')
-            //     debugger
             //     if (conn.sourceId == conn.targetId) {      
             //         //自己连接自己时会自动取消连接      
             //     }else{      
@@ -442,7 +442,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 return item
             });
         }
-        console.log(leftData)
         return leftData;
     }
 

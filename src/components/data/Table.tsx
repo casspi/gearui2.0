@@ -734,7 +734,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(this.haveEvent("expandedRow")) {
             index = index+1;
         }
-     
         return new Column(this, child, index);
     }
 

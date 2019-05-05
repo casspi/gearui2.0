@@ -307,8 +307,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
 
     resetRow(gele: Tag.default<typeof Tag.props & {__record__: any}, Tag.state>) {
-        console.log(this.cacheData)
-        debugger;
         let nowRow = this.mouseOnRow || this.focusRow;
         if(gele != null) {
             if(gele instanceof Tag.default) {
@@ -872,6 +870,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                     let name: string = newProps.name;
                     //获取本字段的编辑状态
                     let editable: any = this.state.editable;
+                    console.log(this.state.editable)
                     if((typeof editable == "boolean") == false) {
                         if(editable[record.key] != null) {
                             editable = editable[record.key];
@@ -913,7 +912,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                             return this.doJudgementEvent("beforeCellReset",name,record);
                         },
                         onChange: (value: any, oldValue: any, label: any) => {
-                            
                             //处理值变动的逻辑
                             if(props.onChange) {
                                 props.onChange.call(this,value, oldValue);
@@ -921,7 +919,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                             console.log(this.cacheData)
                         }
                     });
-
+                    //onEditable={this.setEditable.bind(this,record.key)}
                     return <EditTableCell.default  {...cellProps}>{children}</EditTableCell.default>;
                 };
             })(column,props);
@@ -929,6 +927,23 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         
         return column;
     }
+
+    setEditable(key:any,able:boolean){
+        let editable: any = this.state.editable;
+        console.log(editable)
+        editable[key] = able;
+        // if((typeof editable == "boolean") == false) {
+        //     if(editable[key] != null) {
+        //     }else {
+        //         editable = able;
+        //     }
+        // }
+        this.setState({
+            editable
+        },()=>{
+            console.log(this.state.editable)
+        })
+    } 
 
     //获取单元格
     getCell(record: any,columnName: any) {

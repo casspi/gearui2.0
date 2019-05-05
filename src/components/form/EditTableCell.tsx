@@ -3,6 +3,7 @@ import { Icon as AntdIcon,Popover } from 'antd';
 import * as React from 'react';
 import { Form } from "./index";
 import { GearUtil, UUID } from '../../utils';
+import { debug } from 'util';
 var props = {
     ...Tag.props,
     editable: GearType.Boolean,
@@ -13,7 +14,8 @@ var props = {
     lower: GearType.String,
     upper: GearType.String,
     label: GearType.String,
-    showLink:GearType.Boolean
+    showLink: GearType.Boolean,
+    onEditable: GearType.Function
 };
 interface state extends Tag.state {
     editable?: boolean;
@@ -25,39 +27,34 @@ interface state extends Tag.state {
 }
 //可编辑的单元格
 export default class EditTableCell<P extends typeof props, S extends state> extends Tag.default<P, S> {
-    
+   
+    constructor(props: P, context: {}) {
+        super(props, context);
+        console.log('构造器')
+    }
+
     private gearEle: any;
     //缓存数据
     private cacheValue: any;
 
     private reactEleKey = UUID.get();
-
-    private isFirstRender=0;
-
+    private reactEle:any = this.getEditGearEle();
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
-        // console.log(this.state.value)
+        console.log(this.props.editable)
+        console.log(this.state.value + "-----" + nextProps.editable)
+        console.log(this.state.value + "-----" + this.state.editable)
         // console.log(nextProps.value)
         return {
-            editable: nextProps.editable,
+            editable: nextProps.editable !== this.props.editable?nextProps.editable:this.state.editable,
             value: nextProps.value,
             label: this.getLabel()
         };
     }
-    
-    // shouldUpdate(nextProps:P,nextState:S){
-    //     this.isFirstRender++
-    //    if(this.isFirstRender==1){
-    //        return true;
-    //    }else{
-    //        console.log(nextState.value)
-    //        console.log(this.state.value)
-    //        return nextState.value !== this.state.value
-    //    }
-    // }
 
     validate() {
         if(this.props.form) {
-            return this.props.form.validateField(this.props.name);
+            console.log(this.props.form.validateField(this.reactEleKey))
+            return this.props.form.validateField(this.reactEleKey);
         }
         return true;
     }
@@ -65,29 +62,29 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     getProps() {
         return {
             save: ()=>{
-                if(this.doJudgementEvent("beforeSave",this.props.name,this.props.value)==false)
+                if(this.doJudgementEvent("beforeSave",this.reactEleKey,this.state.value)==false)
                     return;
-                let error = this.validate();
-                if(error != true) {
-                    return;
-                }
+                // let error = this.validate();
+                // if(error != true) {
+                //     return;
+                // }
                 this.doEvent("change", this.state.value, this.state.oldValue, this.state.value);
                 this.editDisable(()=>{
                     //返回false保持编辑状态
-                    if(this.doJudgementEvent("save",this.props.name,this.state.value)==false) {
+                    if(this.doJudgementEvent("save",this.reactEleKey,this.state.value)==false) {
                         this.editEnable();
                     }
                 });
             },
             edit:()=>{
                 //编辑的时候缓存数据
-                if(this.doJudgementEvent("beforeEdit",this.props.name,this.state.value)==false)
+                if(this.doJudgementEvent("beforeEdit",this.reactEleKey,this.state.value)==false)
                     return;
                 this.cacheValue = this.state.value;
                 this.editEnable();                
             },
             reset:()=>{
-                if(this.doJudgementEvent("beforeReset",this.props.name,this.state.value)==false)
+                if(this.doJudgementEvent("beforeReset",this.reactEleKey,this.state.value)==false)
                     return;
                 this.setValue(this.cacheValue);
             },
@@ -109,7 +106,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     render() {
         let props = this.getProps();
-        let reactEle:any = this.getEditGearEle();
+        let reactEle = this.reactEle;
         // console.log(reactEle)
         let cellText:any = (reactEle && reactEle['props'] && reactEle['props'].ctype=="file" && props.showLink)?<a key="fileLink" download href={props.label || " "}  className={"cell-value"}>{props.label || " "}</a>:<span key="cellText" className={"cell-value"}>{props.label || " "}</span>;
         if(!(cellText instanceof Array)){
@@ -211,6 +208,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                     if(ele) {
                         this.gearEle = ele;
                         this.gearEle["cell"] = this;
+                        this.ref = this
                     }
                 },
                 lower: lower,
@@ -218,24 +216,29 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 "data-cellId": this.props.id,
                 "data-record": _props['record'],
                 onChange: (value: any,oldValue: any) => {
-                    let record = _props.record;
-                    record[this.props.name] = value;
-                    debugger
+                    console.log(this.state.editable)
+                    // let record = _props.record;
+                    // record[this.props.name] = value;
                     this.setState({
                         value,
-                        oldValue
+                        oldValue,
                     },()=>{
                         this.setState({
+                            editable:true,
                             label:this.getLabel()
                         })
-                        this.gearEle.focus();
-                        // if(this.props.form){
-                        //     this.gearEle.triggerChange(value);
-                        // }
+                        
+                    //     // if(this.props.form){
+                    //     //     this.gearEle.triggerChange(value);
+                    //     // }
                     })
                     if(onchangebak && G.G$.isFunction(onchangebak)) {
                         onchangebak.call(this.gearEle,value,oldValue);
                     }
+                    // debugger
+                    // console.log(this.gearEle)
+                    this.gearEle.focus();
+                    console.log(this.state.editable)
                 },
                 onLoadSuccess:()=>{//涉及到需要加载数据的组件
                     let editable = this.state.editable;
@@ -293,6 +296,8 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
 
     editEnable(callback?: Function) {
+        // debugger
+        // this.props.onEditable(true)
         this.setState({
             editable: true
         },()=>{
@@ -306,8 +311,10 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         this.setState({
             editable: false
         },()=>{
+                console.log(this.state.editable)
             if(callback) {
                 callback();
+                console.log(this.state.editable)
             }
         });
     }

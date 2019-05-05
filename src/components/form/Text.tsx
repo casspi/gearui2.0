@@ -182,10 +182,6 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
                 this.doEvent("pressEnter", e);
             },
             onChange: (e) => {
-                // if(this.props['data-record']){//判断是editlist中使用
-                //     this.doEvent('change',e.target.value,this.getValue());
-                //     return
-                // }
                 //控件基础改变事件
                 this._change(e);
             },

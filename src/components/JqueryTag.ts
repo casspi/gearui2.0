@@ -95,6 +95,11 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         state: any,
         callback?: () => void
     ) {
+        // super.setState(state, function(){
+        //     if(callback) {
+        //         callback.call(this);
+        //     }
+        // });
         let promise = new Promise<boolean>((resolve, reject)=>{
             let _this = this;
             super.setState(state, function(){
@@ -106,7 +111,6 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
             });
         });
         G.addUpdating(promise);
-        
     }
 
     onAfterRender(fun: Function) {

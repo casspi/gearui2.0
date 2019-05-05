@@ -96,7 +96,6 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     triggerChange(changedValue: any, callback?: Function) {
         let name: any = this.state.name;
         if(this.form) {
-            debugger
             this.form.setFieldValue(name, changedValue, callback);
             // this.needChange = true;
         }else{
@@ -138,6 +137,9 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
                 value
             }, () => {
                     this.triggerChange(value, callback);
+                    if(callback){
+                        callback.call(this)
+                    }
             });            
         }else {
             this.setState({
