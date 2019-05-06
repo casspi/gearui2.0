@@ -54,7 +54,24 @@
     <g-button id='bg-btn2'>更新</g-button>
     <g-button id="bg-btn3">创建连接</g-button>
   </g-buttongroup>
-  <!-- <g-dialog loadType="iframe" controlbar='false' width="600"  title="查看详情" url="./test.html"></g-dialog> -->
+  <g-dialogaction id="d1" loadType="async" dialogWidth="600"  title="弹框一"  url="./test.html">弹框一</g-dialogaction>
+  
+  
+  <!-- <g-dialog  id="d1"   title="弹框一">
+      <g-button id="open-d1">打开弹框一</g-button>
+  </g-dialog>
+  <script>
+    G(function(){
+      G('#open-d1').onClick(function(){
+        console.log(G('#d1'))
+        G('#d1').open()
+      })
+    })
+  </script> -->
+  <!-- <g-dialog visible="false" id="d2" title="弹框二">
+      test
+  </g-dialog> -->
+  <!-- <g-dialogaction loadType="iframe" controlbar='false' dialogWidth="600"  title="查看详情" url="./test.html"></g-dialogaction> -->
   
   <!-- <a ctype="text" id="span" width="50%">22222</a>
   <g-text id="span" width="50%">22222</g-text> -->
@@ -74,6 +91,17 @@
   </body>
   <script>
   G(function() {
+    // console.log($('#d2'))
+    // G('#open-d2').onClick(function(){
+      // G('#d1').setVisible(false)
+      // G('#d2').setVisible(true)
+    // })
+    // G("#d1").onProcess(function(){
+    //   console.log(G('#bg-btn4'))
+    //   G('#bg-btn4').onClick(function(){
+    //     console.log(G("#plumb").getValue())
+    //   })
+    // })
     G('#bg-btn1').onClick(function(){
       console.log(G("#plumb").getValue())
       G("#plumb").setItem('l02','修改后的值')

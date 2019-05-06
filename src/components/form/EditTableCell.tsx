@@ -3,7 +3,6 @@ import { Icon as AntdIcon,Popover } from 'antd';
 import * as React from 'react';
 import { Form } from "./index";
 import { GearUtil, UUID } from '../../utils';
-import { debug } from 'util';
 var props = {
     ...Tag.props,
     editable: GearType.Boolean,
@@ -39,11 +38,14 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     private reactEleKey = UUID.get();
     private reactEle:any = this.getEditGearEle();
+    private isValidate:boolean;
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
-        console.log(this.props.editable)
-        console.log(this.state.value + "-----" + nextProps.editable)
-        console.log(this.state.value + "-----" + this.state.editable)
-        // console.log(nextProps.value)
+        console.log('nextProps.value'+nextProps.value)
+        console.log('this.state.value'+this.state.value)
+        // console.log(this.props.editable)
+        // console.log(this.state.value + "-----" + nextProps.editable)
+        // console.log(this.state.value + "-----" + this.state.editable)
+        // console.log(nextProps.editable !== this.props.editable?nextProps.editable:this.state.editable)
         return {
             editable: nextProps.editable !== this.props.editable?nextProps.editable:this.state.editable,
             value: nextProps.value,
@@ -53,7 +55,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     validate() {
         if(this.props.form) {
-            console.log(this.props.form.validateField(this.reactEleKey))
             return this.props.form.validateField(this.reactEleKey);
         }
         return true;
@@ -65,14 +66,19 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 if(this.doJudgementEvent("beforeSave",this.reactEleKey,this.state.value)==false)
                     return;
                 // let error = this.validate();
+                // console.log(error)
                 // if(error != true) {
                 //     return;
                 // }
+                if(this.isValidate != true){
+                    return;
+                }
                 this.doEvent("change", this.state.value, this.state.oldValue, this.state.value);
                 this.editDisable(()=>{
                     //返回false保持编辑状态
                     if(this.doJudgementEvent("save",this.reactEleKey,this.state.value)==false) {
                         this.editEnable();
+                        console.log(this.state.editable)
                     }
                 });
             },
@@ -216,7 +222,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 "data-cellId": this.props.id,
                 "data-record": _props['record'],
                 onChange: (value: any,oldValue: any) => {
-                    console.log(this.state.editable)
+                    this.isValidate = this.validate();
                     // let record = _props.record;
                     // record[this.props.name] = value;
                     this.setState({
@@ -311,6 +317,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         this.setState({
             editable: false
         },()=>{
+            debugger;
                 console.log(this.state.editable)
             if(callback) {
                 callback();

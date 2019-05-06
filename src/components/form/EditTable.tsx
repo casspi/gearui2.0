@@ -333,6 +333,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             }else {
                 data = new GearArray(this.cacheData).clone().toArray();
             }
+            console.log(data)
             this.setState({
                 dataSource: data
             });
@@ -919,7 +920,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                             console.log(this.cacheData)
                         }
                     });
-                    //onEditable={this.setEditable.bind(this,record.key)}
                     return <EditTableCell.default  {...cellProps}>{children}</EditTableCell.default>;
                 };
             })(column,props);
@@ -927,23 +927,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         
         return column;
     }
-
-    setEditable(key:any,able:boolean){
-        let editable: any = this.state.editable;
-        console.log(editable)
-        editable[key] = able;
-        // if((typeof editable == "boolean") == false) {
-        //     if(editable[key] != null) {
-        //     }else {
-        //         editable = able;
-        //     }
-        // }
-        this.setState({
-            editable
-        },()=>{
-            console.log(this.state.editable)
-        })
-    } 
 
     //获取单元格
     getCell(record: any,columnName: any) {

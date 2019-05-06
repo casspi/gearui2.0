@@ -186,7 +186,8 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             maxable: this.props.maxable||false,
             maxTitle: "最大化",
             isMax: false,
-            maxIconType:'border'//switcher//border
+            maxIconType:'border',//switcher//border
+            children:[]
         };
     }
     getMaxIconProps(){
@@ -309,8 +310,8 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         //     alert(pt+'--'+pb);
         //     modalWarp.find(".ant-modal-body").height(rHeight)
         // }
+        this.getChildren()
     }    
-
     afterUpdate() {
         
         
@@ -381,7 +382,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         let props:any = this.getProps();
         let iconProps:any = this.getMaxIconProps();
         delete iconProps.maxable;
-        let children = this.getChildren()||"";//避免子节点为空时，VoidTag 报错
+        // let children = this.getChildren() ||"";//避免子节点为空时，VoidTag 报错
         if(this.state.destory) {
             return null;
         }
@@ -428,7 +429,6 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             width:"16px",
         };
         delete props.dragable
-        console.log(children)
         return <AntdModal  {...props} style={style} getContainer={()=>{
             let node:any = document.querySelector('#'+this.state.id+'dialog-warp');
             if(node){//由于每次显示隐藏都会创建新的节点，所以此处先清处
@@ -440,7 +440,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             return this.ref;
         }}>
             {this.state.maxable?<AntdIcon {...iconProps} onClick={props.maxIconClick} style={iconStyle}/>:null}
-            {children}
+            {props.children}
         </AntdModal>;
     }
 
@@ -456,25 +456,37 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                     let result = await Http.get(url);
                     if(result.success){
                         let data = result.data;
+                        //截取异步请求中的<script></script>
+                        let jsReg = new RegExp(/<script.*?>([\s\S]+?)<\/script>/img);
+                        let scriptCode = '';
+                        data.replace(jsReg,function(str:any,js:any){
+                            scriptCode=str
+                        })
+                        scriptCode = scriptCode.replace('<script>',"").replace('</script>',"")
                         let r = G.$(data, undefined, true);
-                        children = [r.result];
+                        children = r instanceof Array? r:[r];
+                        this.setState({children},()=>{
+                            //执行异步加载所需的js代码
+                            eval(scriptCode);
+                        })
                     }
                 };
                 fn();
             }else if(loadType=="iframe"){
                 children = [<iframe key={this.props.id + "_iframe"} src={url} frameBorder={0} width={"100%"} height={"100%"} data-dialog={this.props.id}></iframe>];
+                this.setState({children})
             }
         }else {
             let content = this.state.content;
             if(content) {
                 children = G.$(content, undefined, true);
+                this.setState({children})
             }else {
                 children = this.props.children;
+                this.setState({children})
             }
         }
-        console.log(children)
-        debugger
-        return children;
+        // return children;
     }
 
     protected findRealDom() {
