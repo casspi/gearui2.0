@@ -181,7 +181,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     protected controls = {};
     protected cells = {};
     //数据缓存
-    protected cacheData:any;
+    protected cacheData:any[];
     //记录单元格是否已经渲染过了，防止在column["render"]中多次渲染----antd的bug
     protected cellRendered = {};
     protected form: Form.Form<typeof Form.props & FormComponentProps, Form.state>;
@@ -228,6 +228,15 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     protected _loadSuccess() {
         let dataSource:any = this.getData();
         this.cacheData = new GearArray(dataSource).clone().toArray();
+        console.log(this.cacheData);
+
+        // let datas:any = this.state.dataSource;
+        // datas[0].name = 999;
+        // this.setState({
+        //     dataSource:datas
+        // },()=>{
+        //     console.log(this.cacheData)
+        // })
     }
 
     getInitialState(): state {
@@ -306,6 +315,18 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         }
     }
 
+    //单元格修改后，同步到数据集
+    changeValue(index:number,props:any,value:any){
+        console.log(index)
+        console.log(props)
+        console.log(value)
+        let data:any = this.state.dataSource;
+        data[index][props] = value;
+        this.setState({
+            dataSource:data
+        })
+    }
+
     resetRow(gele: Tag.default<typeof Tag.props & {__record__: any}, Tag.state>) {
         let nowRow = this.mouseOnRow || this.focusRow;
         if(gele != null) {
@@ -318,6 +339,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         if(this.doJudgementEvent("beforeRowReset",nowRow)==false)
             return false;
         if(this.cacheData != null && this.cacheData.length > 0) {
+            console.log(this.cacheData)
             let cacheRow = this.cacheData.filter((value: any,index: any)=>{
                 return value.key == nowRow.key;
             });
@@ -333,6 +355,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             }else {
                 data = new GearArray(this.cacheData).clone().toArray();
             }
+            console.log(this.state.dataSource)
             console.log(data)
             this.setState({
                 dataSource: data
@@ -862,7 +885,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         if(props.editctype){
             ((column, props)=>{
                 column.render = (text: any,record: any)=>{
-                    // console.log(props)
                     let newProps = ObjectUtil.parseDynamicProps(props, record);
                     let editCType: string = newProps.editctype||  newProps.editCType  ||"";
                     let lower: string = newProps.lower ? newProps.lower + record.key : "";
@@ -871,7 +893,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                     let name: string = newProps.name;
                     //获取本字段的编辑状态
                     let editable: any = this.state.editable;
-                    console.log(this.state.editable)
+                    console.log(name)
                     if((typeof editable == "boolean") == false) {
                         if(editable[record.key] != null) {
                             editable = editable[record.key];
@@ -920,7 +942,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                             console.log(this.cacheData)
                         }
                     });
-                    return <EditTableCell.default  {...cellProps}>{children}</EditTableCell.default>;
+                    return <EditTableCell.default onChangeValue={this.changeValue.bind(this,index,name)} {...cellProps}>{children}</EditTableCell.default>;
                 };
             })(column,props);
         }

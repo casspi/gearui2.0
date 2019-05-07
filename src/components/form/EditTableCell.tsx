@@ -40,8 +40,8 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     private reactEle:any = this.getEditGearEle();
     private isValidate:boolean;
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
-        console.log('nextProps.value'+nextProps.value)
-        console.log('this.state.value'+this.state.value)
+        // console.log('nextProps.value'+nextProps.value)
+        // console.log('this.state.value'+this.state.value)
         // console.log(this.props.editable)
         // console.log(this.state.value + "-----" + nextProps.editable)
         // console.log(this.state.value + "-----" + this.state.editable)
@@ -222,6 +222,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 "data-cellId": this.props.id,
                 "data-record": _props['record'],
                 onChange: (value: any,oldValue: any) => {
+                    _props.onChangeValue(value)
                     this.isValidate = this.validate();
                     // let record = _props.record;
                     // record[this.props.name] = value;
