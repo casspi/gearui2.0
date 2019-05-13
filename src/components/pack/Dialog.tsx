@@ -100,6 +100,12 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             }else{
                 className = className +" ant-modal-dialog";
             }
+            if(this.props.footer!=false){
+                className = className + ' ant-modal-hasfooter'
+            }
+            if(this.props.title!=null){
+                className = className + ' ant-modal-hasheader'
+            }
         }
         return G.G$.extend({},this.state,{
             className: className,
@@ -301,16 +307,16 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
 
     afterRender() {
         if(this.state.dragable) this.dragEvent();//绑定拖拽事件
+        this.getChildren()
         // if(this.props.height){
         //     let height:any = this.props.height;
-        //     let modalWarp = G.$('#'+this.state.id+'dialog-warp')
-        //     let rHeight = parseInt(height)-(modalWarp.find('.ant-modal-header').outerHeight()||0)-(modalWarp.find('.ant-modal-footer').outerHeight()||0);
-        //     let pt = modalWarp.find(".ant-modal-body").css('padding-top');
-        //     let pb = modalWarp.find(".ant-modal-body").css('padding-bottom');
-        //     alert(pt+'--'+pb);
-        //     modalWarp.find(".ant-modal-body").height(rHeight)
+        //     let modalWarp = G.G$('#'+this.state.id+'dialog-warp')
+        //     console.log(modalWarp.find('.ant-modal-body'))
+        //     console.log(G.G$(this.realDom).find('.ant-modal-body'))
+        //     let rHeight = parseInt(height)-(48||0)-(53||0);
+        //     console.log(rHeight)
+        //     G.G$(".ant-modal-body").height(rHeight-10)
         // }
-        this.getChildren()
     }    
     afterUpdate() {
         

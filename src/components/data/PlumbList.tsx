@@ -1,8 +1,8 @@
 import * as Tag from "../Tag";
 import * as React from 'react';
-import {Popover,Icon as AntdIcon} from 'antd';
+import {Popover,Icon as AntdIcon,Select} from 'antd';
 import { default as Http} from '../../utils/http';
-
+import * as Button from '../basic/Button';
 export declare type connector = 'Bezier' | 'Straight' | 'Flowchart';//贝塞尔曲线、直线、90度折线
 export var props = {
     ...Tag.props,
@@ -35,7 +35,9 @@ export interface state extends Tag.state {
     pointRadius?:number,
     pointColor?:any,
     lineColor?:any,
-    control?:any[]
+    control:any[],
+    url:string,
+    selectData:any[],//下拉框数据
 }
 
 export default class PlumbList<P extends typeof props, S extends state> extends Tag.default<P, S> {
@@ -48,6 +50,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         return {
             leftData: [],
             rightData: [],
+            selectData: [],
             connector:this.props.connector|| 'Straight',
             width:this.props.width,
             rightListWidth:(this.props.rightListWidth || 200)+'px',
@@ -56,7 +59,8 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             pointRadius:this.props.pointRadius || 5,
             pointColor:this.props.pointColor || "#1890ff",
             lineColor:this.props.lineColor || "#1890ff",
-            control : this.props.control.split(',').length>0? this.props.control.split(','):['up','down','move','edit','delete']
+            control : this.props.control.split(',').length>0? this.props.control.split(','):[],
+            url:this.props.url,
         }
     }
 
@@ -94,11 +98,12 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     parserList(data:any[],side:'left'|'right'){
         let list:any[]=[];
         let controlArray:any = this.state.control;
+        let control = this.state.control;
         data.map((item:any,index:number)=>{
             list.push(
+                control.length>0?
                 <Popover key={'pop'+item.id} placement={side}
                     content={<div className="plumb-cell-control">
-                    
                         {controlArray.includes('delete')?<AntdIcon
                             style={{ cursor:'pointer'}}
                             type="close"
@@ -106,7 +111,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                             className={"plumb-cell-icon-delete"}
                             onClick={this.deleteItem.bind(this,item.id,side)}
                         />:null}
-                        {controlArray.includes('delete')?<AntdIcon
+                        {controlArray.includes('up')?<AntdIcon
                             style={{ cursor:'pointer',display:index!=0?'inline-block':'none'}}
                             type="arrow-up"
                             title="上移"
@@ -152,7 +157,10 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                     { (item.text instanceof Array)?
                     <li className="item"  id={item.id} key={item.id}>{this.parserText(item.text)}</li>:
                     <li className="item"  id={item.id} key={item.id}><span>{item.text}</span></li>}
-                </Popover>
+                </Popover>:
+                (item.text instanceof Array)?
+                    <li className="item"  id={item.id} key={item.id}>{this.parserText(item.text)}</li>:
+                    <li className="item"  id={item.id} key={item.id}><span>{item.text}</span></li>
             )
         })
         return list;
@@ -171,7 +179,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         jsPlumb.remove([id])
     }
     render(){
-        console.log('render')
         let leftData = this.state.leftData;
         let rightData = this.state.rightData;
         let props:any = this.getProps();
@@ -183,59 +190,96 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         delete props.pointRadius;
         delete props.pointColor;
         delete props.lineColor;
+        delete props.selectData;
+        console.log(this.state.selectData)
+        let selectProps = {
+            
+        };
         return <div {...props}>
             <h3>{this.props.title||'映射关系图'}</h3>
-            {/*   */}
             <div className="list-warp">
                 <ul id="item-left" key="left" className="list" style={{width:this.state.leftListWidth}}>
-                    <li><h4 className="left-list-title">{this.props.leftTitle||'左侧列表'}</h4></li>
+                    <li><h4 className="left-list-title"><span>{this.props.leftTitle||'左侧列表'}</span></h4></li>
                     {leftData.length>0?this.parserList(leftData,'left'):null}
                 </ul>
                 <ul id="item-right" key="right" className="list" style={{width:this.state.rightListWidth}}>
-                    <li><h4 className="right-list-title">{this.props.rightTitle||'右侧列表'}</h4></li>
+                    <li>
+                        <h4 className="right-list-title">
+                            <span>{this.props.rightTitle||'右侧列表'}</span>
+                            <span className="list-title-select">
+                                {this.state.selectData.length>0?<Select onSelect={this.onSelect.bind(this)} style={{ width: "50%" }} {...selectProps}>
+                                    {this.state.selectData.map((item)=>{
+                                        return <Select.Option  key={item.value}>{item.label}</Select.Option>
+                                    })}
+                                </Select>:null}
+                            </span>
+                        </h4>
+                    </li>
                     {rightData.length>0?this.parserList(rightData,'right'):null}
                 </ul>
-            </div>  
+            </div>
+            {/* <div className="plumb-btn-bar">
+                <Button.default onClick={this.save.bind(this)}>保存</Button.default>
+                <Button.default onClick={this.reset.bind(this)}>重置</Button.default>
+            </div>   */}
         </div>
     }
-   
-    // afterRender(){
-    //     console.log('afterRender');
-    //     this.loadData();
-    // }
-    
+    onSelect(key:any,option:any){
+        console.log(key);
+        console.log(option);
+        let url:string=""
+        this.state.selectData.map(o=>{
+            if(o.value==key){
+                url = o.url
+            }
+        })
+        console.log(url)
+        this.setState({
+            url
+        },()=>{
+            this.loadData()
+        })
+    }
     afterUpdate(){//更细数据后画点、连线
-        // console.log('afterupdate');
-        // console.log(this.state.leftData);
-        // console.log(this.state.rightData);
+        
         this.dragLinks();
-
+        // console.log(this.getValue())
+        // console.log(this.cacheData)
     }
     
     componentDidMount(){
         super.componentDidMount()
         //初始化画点、连线
-        console.log('mount');
-        // console.log(this.state.leftData);
-        // this.setLinkType(1)
         this.loadData();
+        
     }
 
     protected loadData(){
-        let p = Http.getMethod('get')(this.props.url,'json');
+        console.log('loaddata')
+        let p = Http.getMethod('get')(this.state.url,'json');
         if(p){
             p.then((response)=>{
-                this.cacheData = response.data;
+                let resData = response.data;
                 this.setState({
-                    leftData:response.data.leftData,
-                    rightData:response.data.rightData
+                    leftData:  new GearArray(resData.leftData).clone(true).toArray(),
+                    rightData: new GearArray(resData.rightData).clone(true).toArray(),//response.data.rightData
+                    selectData: new GearArray(resData.selectData).clone(true).toArray()
+                },()=>{
+                    this.cacheData =  resData;
                 })
             }).catch((error)=>{
                 return Promise.resolve(error);
             });
         }
     }
-
+    reset(){
+        console.log('cachedata------------------')
+        console.log(this.cacheData)
+        this.setState({
+            leftData:this.cacheData.leftData,
+            rightData:this.cacheData.rightData,
+        })
+    }
     dragLinks(){
         let jsPlumb:any = window.jsPlumb;
         let _this = this;
@@ -361,7 +405,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             //     }
             // });
             jsPlumb.bind("beforeDetach",function(info:any){//手动拖拽？取消连接时删除对应数据
-                console.log(info);
                 _this.setState({
                     leftData: _this.deleteLinks(info.sourceId,info.targetId)
                 }) 
@@ -470,6 +513,8 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         if(isChange){
             this.setState({
                 leftData
+            },()=>{
+                console.log(this.cacheData)
             })
         }
     }
@@ -580,5 +625,9 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         if(fun && G.G$.isFunction(fun)) {
             this.bind("editItem",fun);
         }
+    }
+    save(){
+        console.log({leftDate:this.state.leftData,rightData:this.state.rightData})
+        return {leftDate:this.state.leftData,rightData:this.state.rightData}
     }
 }

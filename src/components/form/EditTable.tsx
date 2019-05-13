@@ -227,16 +227,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
     protected _loadSuccess() {
         let dataSource:any = this.getData();
-        this.cacheData = new GearArray(dataSource).clone().toArray();
-        console.log(this.cacheData);
-
-        // let datas:any = this.state.dataSource;
-        // datas[0].name = 999;
-        // this.setState({
-        //     dataSource:datas
-        // },()=>{
-        //     console.log(this.cacheData)
-        // })
+        this.cacheData = new GearArray(dataSource).clone(true).toArray();
     }
 
     getInitialState(): state {
@@ -305,25 +296,39 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             return;
         if(this.cacheData != null && this.cacheData.length > 0) {
             let dataSource = new GearArray(this.cacheData).clone().toArray();
+            let data = this._loadFilter({dataList:dataSource});
             this.setState({
-                dataSource: dataSource
+                dataSource: data.dataList
+            },()=>{
+                //清除选中等其他状态
+                G.G$(".list-row-selected").removeClass("list-row-selected");
+                this.mouseOnRow = null;
+                this.focusRow = null;
             });
         }else {
             this.setState({
                 dataSource: []
+            },()=>{
+                G.G$(".list-row-selected").removeClass("list-row-selected");
+                this.mouseOnRow = null;
+                this.focusRow = null;
             });
         }
     }
 
-    //单元格修改后，同步到数据集
-    changeValue(index:number,props:any,value:any){
-        console.log(index)
-        console.log(props)
-        console.log(value)
-        let data:any = this.state.dataSource;
-        data[index][props] = value;
+    //子组件-单元格修改后，同步到父组件 
+    changeValue(key:any,props:any,value:any){
+        let data:any = this.getData() || [];
+        data = data.map((row:any)=>{
+            if(row.key == key){
+                row[props] = value;
+            }
+            return row
+        })
         this.setState({
             dataSource:data
+        },()=>{
+            console.log(this.cacheData)
         })
     }
 
@@ -345,7 +350,8 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             });
             let data = this.getData()||[];
             console.log(data);
-            console.log(cacheRow[0])
+            console.log(cacheRow[0]);
+            debugger
             if(cacheRow && cacheRow.length > 0) {
                 for(let i = 0; i < data.length;i++) {
                     if(data[i].key == cacheRow[0].key) {
@@ -355,10 +361,10 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             }else {
                 data = new GearArray(this.cacheData).clone().toArray();
             }
-            console.log(this.state.dataSource)
-            console.log(data)
             this.setState({
                 dataSource: data
+            },()=>{
+                console.log(this.state.dataSource)
             });
         }else {
             this.setState({
@@ -401,10 +407,10 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             this.setState({
                 editable
             },()=>{
-                this.cacheData = new GearArray(this.getData()).clone().toArray();
+                this.cacheData = new GearArray(this.getData()).clone(true).toArray();
             });
         }else {
-            this.cacheData = new GearArray(this.getData()).clone().toArray();
+            this.cacheData = new GearArray(this.getData()).clone(true).toArray();
         }
     }
 
@@ -476,6 +482,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             return;
         }
         let dataSource:Array<any> = this.getData()||[];
+        console.log(this.state.dataSource)
         let dataArr = new GearArray(dataSource);
         nowRow = dataSource.filter((value,index)=>{
             return value.key == nowRow.key;
@@ -525,10 +532,12 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         nowRow = nowRow[0];
         dataArr.up(nowRow);
         dataSource = dataArr.toArray();
+        console.log(dataSource)
         let data = this._loadFilter({dataList:dataSource});
         this.setState({
             dataSource:data.dataList
         },()=>{
+            console.log(this.state.dataSource)
             for(let i = 0; i< dataSource.length;i++){
                 let row = dataSource[i];
                 if(row.key == nowRow.key) {
@@ -583,7 +592,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 "dataSource":data.dataList,
                 "editable": editable
             },()=>{
-                this.cacheData = new GearArray(data.dataList).clone().toArray();
+                this.cacheData = new GearArray(data.dataList).clone(true).toArray();
             });
         }
     }
@@ -636,7 +645,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             G.messager.alert("提示消息","没有可供编辑的数据");
             return;
         }
-        this.cacheData = new GearArray(dataSource).clone().toArray();
+        this.cacheData = new GearArray(dataSource).clone(true).toArray();
         let editable = this.state.editable||{};
         if(typeof editable == "boolean") {
             editable = {};
@@ -664,12 +673,13 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         //返回false保持编辑状态
         if(this.doJudgementEvent("beforeRowEdit",nowRow)==false)
             return;
-        let dataSource = this.getData();
+        const dataSource:any[] = this.getData() || [];
         if(nowRow == null) {
             G.messager.alert("提示消息","请先选中要编辑的行");
             return;
         }
-        this.cacheData = new GearArray(dataSource).clone().toArray();
+        this.cacheData = new GearArray(dataSource).clone(true).toArray();
+        console.log(this.cacheData)
         let editable = this.state.editable||{};
         if(dataSource && typeof editable == "boolean") {
             editable = {};
@@ -732,7 +742,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             this.setState({
                 dataSource: data.dataList
             },()=>{
-                this.cacheData = new GearArray(data.dataList).clone().toArray();
+                this.cacheData = new GearArray(data.dataList).clone(true).toArray();
             });
         }
     }
@@ -793,10 +803,11 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 key: UUID.get(),
                 title: "编辑",
                 class: "list-conlum-control list-conlum-control-edit",
-                onclick: ()=>{
+                onclick: (e:any)=>{
                     let recordControls = this.controls[record.key]||{};
                     let editControl = recordControls["editControl"];
                     this.editRow(editControl);
+                    e.stopPropagation();
                 }
             };
             let saveProps: any = {
@@ -810,10 +821,11 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 key: UUID.get(),
                 title: "保存",
                 class: "list-conlum-control list-conlum-control-save",
-                onclick: ()=>{
+                onclick: (e:any)=>{
                     let recordControls = this.controls[record.key]||{};
                     let saveControl = recordControls["saveControl"];
                     this.saveRow(saveControl);
+                    e.stopPropagation();
                 }
             };
             let rowbackProps: any = {
@@ -827,10 +839,11 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 key: UUID.get(),
                 title: "撤销",
                 class: "list-conlum-control list-conlum-control-rowback",
-                onclick: ()=>{
+                onclick: (e:any)=>{
                     let recordControls = this.controls[record.key]||{};
                     let rowbackControl = recordControls["rowbackControl"];
                     this.resetRow(rowbackControl);
+                    e.stopPropagation();
                 }
             };
             let deleteProps: any = {
@@ -844,10 +857,11 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 key: UUID.get(),
                 title: "删除",
                 class: "list-conlum-control list-conlum-control-delete",
-                onclick: ()=>{
+                onclick: (e:any)=>{
                     let recordControls = this.controls[record.key]||{};
                     let deleteControl = recordControls["deleteControl"];
                     this.delete(deleteControl);
+                    e.stopPropagation();
                 }
             };
             let editable: any = this.state.editable;
@@ -884,7 +898,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         let props = child.props;
         if(props.editctype){
             ((column, props)=>{
-                column.render = (text: any,record: any)=>{
+                column.render = (text: any,record: any,rowIndex:number)=>{
                     let newProps = ObjectUtil.parseDynamicProps(props, record);
                     let editCType: string = newProps.editctype||  newProps.editCType  ||"";
                     let lower: string = newProps.lower ? newProps.lower + record.key : "";
@@ -893,7 +907,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                     let name: string = newProps.name;
                     //获取本字段的编辑状态
                     let editable: any = this.state.editable;
-                    console.log(name)
                     if((typeof editable == "boolean") == false) {
                         if(editable[record.key] != null) {
                             editable = editable[record.key];
@@ -939,10 +952,9 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                             if(props.onChange) {
                                 props.onChange.call(this,value, oldValue);
                             }
-                            console.log(this.cacheData)
                         }
                     });
-                    return <EditTableCell.default onChangeValue={this.changeValue.bind(this,index,name)} {...cellProps}>{children}</EditTableCell.default>;
+                    return <EditTableCell.default onChangeValue={this.changeValue.bind(this,record.key,name)} {...cellProps}>{children}</EditTableCell.default>;
                 };
             })(column,props);
         }

@@ -25,13 +25,17 @@ export var props =  {
     disabled: GearType.Boolean,//是否禁用
     readonly: GearType.Boolean,
     withcredentials:GearType.Boolean,//上传请求时是否携带 cookie
-    fileListMax:GearType.Number
+    fileListMax:GearType.Number,
+    showIcon:GearType.Boolean,//是否显示上传icon
+    buttonText:GearType.String,//按钮文字
 }
 export interface state extends FormTag.state{
     fileList?:any,
     previewVisible?:boolean,
     previewImage?:any,
-    fileListMax?:number
+    fileListMax?:number,
+    showIcon?:boolean,
+    buttonText?:string,
 }
 export default class GUpload<P extends typeof props,S extends state> extends FormTag.default<P,S> {
 
@@ -141,7 +145,9 @@ export default class GUpload<P extends typeof props,S extends state> extends For
             fileList: fileList,
             disabled: this.props.disabled,
             readOnly: this.props.readonly,
-            fileListMax: this.props.fileListMax || 9999
+            fileListMax: this.props.fileListMax || 9999,
+            buttonText: this.props.buttonText || '',
+            showIcon: this.props.showIcon==false?false:true
         });
     }
 
@@ -185,7 +191,7 @@ export default class GUpload<P extends typeof props,S extends state> extends For
                 <Wrapper {...wProps}>
                         <Upload {...props}>
                             <Button disabled={props.disabled==true||props.readonly==true} style={props.style}>
-                                <Icon type={"upload"}></Icon>
+                                {this.state.showIcon?<Icon type={"upload"}></Icon>:null}{this.state.buttonText}
                             </Button>
                         </Upload>
                         <Modal visible={this.state["previewVisible"]} footer={null} onCancel={this.handleCancel}>

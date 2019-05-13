@@ -3,6 +3,7 @@ import { Icon as AntdIcon,Popover } from 'antd';
 import * as React from 'react';
 import { Form } from "./index";
 import { GearUtil, UUID } from '../../utils';
+import { debug } from 'util';
 var props = {
     ...Tag.props,
     editable: GearType.Boolean,
@@ -40,12 +41,9 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     private reactEle:any = this.getEditGearEle();
     private isValidate:boolean;
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
-        // console.log('nextProps.value'+nextProps.value)
-        // console.log('this.state.value'+this.state.value)
-        // console.log(this.props.editable)
-        // console.log(this.state.value + "-----" + nextProps.editable)
-        // console.log(this.state.value + "-----" + this.state.editable)
-        // console.log(nextProps.editable !== this.props.editable?nextProps.editable:this.state.editable)
+        if(nextProps.value!==this.state.value){
+            this.gearEle.setValue(nextProps.value)//保证edittable修改数据，单元格的编辑组件能同步到数据
+        }
         return {
             editable: nextProps.editable !== this.props.editable?nextProps.editable:this.state.editable,
             value: nextProps.value,
@@ -73,6 +71,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 if(this.isValidate != true){
                     return;
                 }
+                debugger
                 this.doEvent("change", this.state.value, this.state.oldValue, this.state.value);
                 this.editDisable(()=>{
                     //返回false保持编辑状态
@@ -103,6 +102,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     getInitialState(): state {
         this.cacheValue = this.props.value;
+        console.log('props.value------------'+this.props.value)
         return {
             editable: this.props.editable,
             value: this.props.value,
@@ -185,7 +185,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         if(editable != true) {
             let label = this.getLabel();
             this.setState({
-                label: label
+                label: label,
             });
         }
     }
@@ -245,7 +245,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                     // debugger
                     // console.log(this.gearEle)
                     this.gearEle.focus();
-                    console.log(this.state.editable)
+                    // console.log(this.state.editable)
                 },
                 onLoadSuccess:()=>{//涉及到需要加载数据的组件
                     let editable = this.state.editable;

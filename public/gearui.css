@@ -12622,7 +12622,7 @@ form .ant-input-group-addon .ant-cascader-picker:only-child {
   color: #f04134;
 }
 .has-error .ant-select-selection {
-  border-color: #f04134;
+  border-color: #f04134!important;
 }
 .has-error .ant-select-open .ant-select-selection,
 .has-error .ant-select-focused .ant-select-selection {
@@ -19625,26 +19625,32 @@ li.ant-tree-treenode-disabled > .ant-tree-node-content-wrapper:hover {
 }
 .ant-modal-dialog-fixedsize .ant-modal-body,
 .ant-modal-dialog-max .ant-modal-body{
-  	position:absolute;
-    top:48px;
+    padding:5px !important;
+    position:absolute;
+    top:0;
     bottom:0px;
     left:0px;
-    right:0px;	
-    padding:5px !important;
+    right:0px;
 }
-
 .ant-modal-dialog-max{
 	width:100% !important;
 	height:100% !important;
 	left:0px !important;
 	top:0px !important;
 }
+.ant-modal-dialog-fixedsize .ant-modal-header,
 .ant-modal-dialog-max .ant-modal-header{
   	position:absolute;
     top:0px;
     left:0px;
     right:0px;
     height:48px;
+}
+.ant-modal-dialog-fixedsize.ant-modal-hasfooter .ant-modal-body{
+	bottom:53px;
+}
+.ant-modal-dialog-fixedsize.ant-modal-hasheader .ant-modal-body{
+	top:48px;
 }
 .ant-modal-dialog-max .ant-modal-body {
   	position:absolute;
@@ -19653,8 +19659,8 @@ li.ant-tree-treenode-disabled > .ant-tree-node-content-wrapper:hover {
     left:0px;
     right:0px;
 }
+.ant-modal-dialog-fixedsize .ant-modal-footer, 
 .ant-modal-dialog-max .ant-modal-footer {
-	display:;
   	position:absolute;
     height:53px;
     bottom:0px;
@@ -21006,6 +21012,7 @@ tr.ant-table-expanded-row:hover {
 .plumblist-warp .left-list-title,.plumblist-warp .right-list-title{
   height: 40px;line-height: 40px;background: #f0efef;
 }
+.plumblist-warp .list-title-select{margin-left: 15px;}
 .plumblist-warp .list .item{
   padding: 0 15px;
   height: 40px;
@@ -21027,3 +21034,4 @@ tr.ant-table-expanded-row:hover {
 .jtk-overlay{display: block;position: relative;color: #f90;background: #fff;padding: 5px;line-height: 12px;height: 22px;border-radius:2px;border: 1px dotted #ececec}
 /* .jtk-overlay:after{content: '';position: absolute;border: 6px solid transparent;display:inline-block;height: 0;width: 0;border-top-color: #ececec} */
 .jtk-overlay.activeLabel{display: block}
+.plumb-btn-bar{text-align: right;margin-top: 15px;}
