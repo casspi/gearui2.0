@@ -311,6 +311,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             return;
         }
         let lower:Select<P,state> = G.$("#"+lowerName);
+        console.log(lower)
         if(lower instanceof Select) {
             this.childSelect = lower;
             lower.parentSelect = this;

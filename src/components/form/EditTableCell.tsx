@@ -68,10 +68,10 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 // if(error != true) {
                 //     return;
                 // }
-                if(this.isValidate != true){
+                console.log(this.validate())
+                if(this.validate() != true){
                     return;
                 }
-                debugger
                 this.doEvent("change", this.state.value, this.state.oldValue, this.state.value);
                 this.editDisable(()=>{
                     //返回false保持编辑状态

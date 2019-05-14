@@ -1,14 +1,16 @@
 import * as Tag from "../Tag";
 import * as React from 'react';
-import {Popover,Icon as AntdIcon,Select} from 'antd';
+import {Popover,Icon as AntdIcon,Select,Spin as AntdSpin} from 'antd';
 import { default as Http} from '../../utils/http';
-import * as Button from '../basic/Button';
+import UUID from '../../utils/uuid';
 export declare type connector = 'Bezier' | 'Straight' | 'Flowchart';//贝塞尔曲线、直线、90度折线
 export var props = {
     ...Tag.props,
     connector:GearType.Enum<connector>(),
     rightListWidth:GearType.Number,
     leftListWidth:GearType.Number,
+    leftCellWidth:GearType.Any,
+    rightCellWidth:GearType.Any,
     width:GearType.Number,
     showLabel:GearType.Boolean,
     title: GearType.String,
@@ -23,8 +25,11 @@ export var props = {
     lineWidth: GearType.Number,//连接线的宽的
     control:GearType.Any,
 
+
 }
 export interface state extends Tag.state {
+    leftDataIndex:any;
+    rightDataIndex:any;
     leftData:any[];
     rightData:any[];
     connector:connector,
@@ -38,6 +43,8 @@ export interface state extends Tag.state {
     control:any[],
     url:string,
     selectData:any[],//下拉框数据
+    defaultSelectValue:any,//下拉默认选中项
+    loading:boolean,
 }
 
 export default class PlumbList<P extends typeof props, S extends state> extends Tag.default<P, S> {
@@ -50,7 +57,10 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         return {
             leftData: [],
             rightData: [],
+            leftDataIndex:[],
+            rightDataIndex:[],
             selectData: [],
+            defaultSelectValue:"",
             connector:this.props.connector|| 'Straight',
             width:this.props.width,
             rightListWidth:(this.props.rightListWidth || 200)+'px',
@@ -59,8 +69,9 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             pointRadius:this.props.pointRadius || 5,
             pointColor:this.props.pointColor || "#1890ff",
             lineColor:this.props.lineColor || "#1890ff",
-            control : this.props.control.split(',').length>0? this.props.control.split(','):[],
+            control : (this.props.control && this.props.control.split(',').length>0)? this.props.control.split(','):[],
             url:this.props.url,
+            loading:true,
         }
     }
 
@@ -154,13 +165,15 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                             onClick={this.editClick.bind(this,item.id,side)}
                         />:null}
                 </div>}>    
-                    { (item.text instanceof Array)?
-                    <li className="item"  id={item.id} key={item.id}>{this.parserText(item.text)}</li>:
-                    <li className="item"  id={item.id} key={item.id}><span>{item.text}</span></li>}
+                    <div className="plumblist-col item"  id={item.id} key={item.id}>
+                        {side==="left"?<span>{index}</span>:null}
+                        {this.parserText(item.fieldText)}
+                    </div>
                 </Popover>:
-                (item.text instanceof Array)?
-                    <li className="item"  id={item.id} key={item.id}>{this.parserText(item.text)}</li>:
-                    <li className="item"  id={item.id} key={item.id}><span>{item.text}</span></li>
+                <div className="plumblist-col item"  id={item.id} key={item.id}>
+                    {side==="left"?<span>{index}</span>:null}                        
+                    {this.parserText(item.fieldText)}
+                </div>
             )
         })
         return list;
@@ -169,7 +182,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         let children:any[]=[];
         arr.map((item:any,index:number)=>{
             children.push(
-                <span className="cell-span" key={'item_span'+index}>{item}</span>
+                <span key={UUID.get()}>{item}</span>
             )
         })
         return children;
@@ -186,56 +199,72 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         delete props.leftListWidth;
         delete props.leftData;
         delete props.rightData;
+        delete props.leftDataIndex;
+        delete props.rightDataIndex;
         delete props.linkType;
         delete props.pointRadius;
         delete props.pointColor;
         delete props.lineColor;
         delete props.selectData;
-        console.log(this.state.selectData)
+        delete props.defaultSelectValue;
+        delete props.loading;
         let selectProps = {
             
         };
-        return <div {...props}>
-            <h3>{this.props.title||'映射关系图'}</h3>
-            <div className="list-warp">
-                <ul id="item-left" key="left" className="list" style={{width:this.state.leftListWidth}}>
-                    <li><h4 className="left-list-title"><span>{this.props.leftTitle||'左侧列表'}</span></h4></li>
-                    {leftData.length>0?this.parserList(leftData,'left'):null}
-                </ul>
-                <ul id="item-right" key="right" className="list" style={{width:this.state.rightListWidth}}>
-                    <li>
-                        <h4 className="right-list-title">
-                            <span>{this.props.rightTitle||'右侧列表'}</span>
-                            <span className="list-title-select">
-                                {this.state.selectData.length>0?<Select onSelect={this.onSelect.bind(this)} style={{ width: "50%" }} {...selectProps}>
-                                    {this.state.selectData.map((item)=>{
-                                        return <Select.Option  key={item.value}>{item.label}</Select.Option>
-                                    })}
-                                </Select>:null}
-                            </span>
-                        </h4>
-                    </li>
-                    {rightData.length>0?this.parserList(rightData,'right'):null}
-                </ul>
+        return <AntdSpin spinning={this.state.loading} style={{"minHeight":"21px"}} delay={100}>
+            <div {...props}>
+                {this.props.title?<h3>{this.props.title}</h3>:null}
+                <div className="list-warp">
+                        <dl key="left" className="left-list list" style={{width:this.state.leftListWidth}}>
+                            <dt><h4 className="left-list-title"><span>{this.props.leftTitle||'左侧列表'}</span></h4></dt>
+                            <dd className="plumblist-table">
+                                <div className="plumblist-col plumblist-table-th">{this.state.leftDataIndex.map((item:any)=>
+                                            <span key={UUID.get()}>{item}</span>
+                                )}</div> 
+                                {leftData.length>0?this.parserList(leftData,'left'):null}
+
+                            </dd>
+                        </dl>
+                        <dl key="right" className="right-list list" style={{width:this.state.rightListWidth}}>
+                            <dt>
+                                <h4 className="right-list-title">
+                                    <span>{this.props.rightTitle||'右侧列表'}</span>
+                                    <span className="list-title-select">
+                                        {this.state.selectData.length>0?<Select defaultValue={this.state.defaultSelectValue} onSelect={this.onSelect.bind(this)} style={{ width: "50%" }} {...selectProps}>
+                                            {this.state.selectData.map((item)=>{
+                                                return <Select.Option  key={item.value}>{item.label}</Select.Option>
+                                            })}
+                                        </Select>:null}
+                                    </span>
+                                </h4>
+                            </dt>
+                            <dd className="plumblist-table">
+                                <div className="plumblist-col plumblist-table-th">
+                                    {this.state.rightDataIndex.map((item:any)=>
+                                        <span key={UUID.get()}>{item}</span>
+                                    )}
+                                </div>
+                                {rightData.length>0?this.parserList(rightData,'right'):null}    
+                            </dd>
+                        </dl>
+                </div>
+                {/* <div className="plumb-btn-bar">
+                    <Button.default onClick={this.save.bind(this)}>保存</Button.default>
+                    <Button.default onClick={this.reset.bind(this)}>重置</Button.default>
+                </div>   */}
             </div>
-            {/* <div className="plumb-btn-bar">
-                <Button.default onClick={this.save.bind(this)}>保存</Button.default>
-                <Button.default onClick={this.reset.bind(this)}>重置</Button.default>
-            </div>   */}
-        </div>
+        </AntdSpin>
     }
     onSelect(key:any,option:any){
-        console.log(key);
-        console.log(option);
-        let url:string=""
+        let url:string="";
         this.state.selectData.map(o=>{
             if(o.value==key){
                 url = o.url
             }
         })
-        console.log(url)
         this.setState({
-            url
+            url,
+            defaultSelectValue:key
         },()=>{
             this.loadData()
         })
@@ -243,8 +272,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     afterUpdate(){//更细数据后画点、连线
         
         this.dragLinks();
-        // console.log(this.getValue())
-        // console.log(this.cacheData)
+        this.setCellWidth()
     }
     
     componentDidMount(){
@@ -255,26 +283,49 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     }
 
     protected loadData(){
-        console.log('loaddata')
         let p = Http.getMethod('get')(this.state.url,'json');
         if(p){
             p.then((response)=>{
                 let resData = response.data;
                 this.setState({
+                    leftDataIndex: resData.leftDataIndex,
+                    rightDataIndex: resData.rightDataIndex,
                     leftData:  new GearArray(resData.leftData).clone(true).toArray(),
                     rightData: new GearArray(resData.rightData).clone(true).toArray(),//response.data.rightData
-                    selectData: new GearArray(resData.selectData).clone(true).toArray()
+                    selectData: new GearArray(resData.selectData).clone(true).toArray(),
+                    defaultSelectValue: resData.defaultSelectValue
                 },()=>{
-                    this.cacheData =  resData;
+                    this.cacheData =  {
+                        leftData:  new GearArray(resData.leftData).clone(true).toArray(),
+                        rightData: new GearArray(resData.rightData).clone(true).toArray(),
+                    };
+                    this.setState({
+                        loading:false
+                    })
                 })
             }).catch((error)=>{
                 return Promise.resolve(error);
             });
         }
     }
+
+    setCellWidth(){//设置定义的单元格宽度
+        let leftWidthArr = this.props.leftCellWidth.split(',');
+        let rightWidthArr = this.props.rightCellWidth.split(',');
+        let leftCol = G.G$(this.realDom).find('.left-list .plumblist-col');
+        let rightCol = G.G$(this.realDom).find('.right-list .plumblist-col');
+        let fn = (col:any,widthArr:any)=>{
+            for(let i=0;i<col.length;i++){
+                widthArr.map((item:any,index:number)=>{
+                    G.G$(col[i]).find('span')[index].style.width = item + "px";
+                })
+            }
+        }
+        fn(leftCol,leftWidthArr);
+        fn(rightCol,rightWidthArr);
+    }
+
     reset(){
-        console.log('cachedata------------------')
-        console.log(this.cacheData)
         this.setState({
             leftData:this.cacheData.leftData,
             rightData:this.cacheData.rightData,
@@ -357,7 +408,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             });
              
             //先解绑事件
-            jsPlumb.unbind('click');
+            jsPlumb.unbind('dblclick');
             jsPlumb.unbind('connection');
             jsPlumb.unbind('beforeDrop');
             jsPlumb.unbind('connectionDetached');
@@ -367,7 +418,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 //例如给连线添加label文字
                 let conn = connInfo.connection;
                 if(!(_this.props.showLabel===false) && conn.source && conn.target){
-                    let labelText = '连接'+conn.source.innerText+'----'+conn.target.innerText;
+                    let labelText = '连接'+conn.source.innerText+'--'+conn.target.innerText;
                     conn.setLabel(labelText);
                 }
                 //修改数据
@@ -386,7 +437,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             })
              
             //连接线点击事件
-            jsPlumb.bind('click', function (conn:any, originalEvent:any) {
+            jsPlumb.bind('dblclick', function (conn:any, originalEvent:any) {
                 // G.messager.confirm({message:"确定要删除连接线吗？",callback:()=>{
                     _this.setState({
                         leftData: _this.deleteLinks(conn.sourceId,conn.targetId)
@@ -509,12 +560,9 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 isChange = true;
             }
         }
-        // console.log(this.state.leftData)
         if(isChange){
             this.setState({
                 leftData
-            },()=>{
-                console.log(this.cacheData)
             })
         }
     }
@@ -626,8 +674,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             this.bind("editItem",fun);
         }
     }
-    save(){
-        console.log({leftDate:this.state.leftData,rightData:this.state.rightData})
-        return {leftDate:this.state.leftData,rightData:this.state.rightData}
-    }
+    // save(){
+    //     return {leftDate:this.state.leftData,rightData:this.state.rightData}
+    // }
 }

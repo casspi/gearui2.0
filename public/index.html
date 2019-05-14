@@ -49,7 +49,8 @@
   <g-icon icon="down-circle"></g-icon> -->
   <g-upload width="200" ></g-upload>
   <g-text title="999" id="text1" onchange="alert(999)" width="200"></g-text>
-  <g-plumblist id="plumb" leftTitle="左列表" pointColor="red"  pointRadius="4" lineColor="#f97" lineWidth="1.5" control="delete,up,down,move,edit"width="800" linkType="4" class="my-plumb" url="./plumbData.json"  leftListWidth="300" rightListWidth="300" showLabel="true" connector="Straight"></g-plumblist>
+  <!-- control="delete,up,down,move,edit" -->
+  <g-plumblist id="plumb" leftTitle="左列表"  rightTitle="右列表" pointColor="red" leftCellWidth="100,160,170" rightCellWidth="219,219" pointRadius="4" lineColor="#f97" lineWidth="1.5" width="1200" linkType="4" class="my-plumb" url="./plumbData.json"  leftListWidth="440" rightListWidth="440" showLabel="false" connector="Straight"></g-plumblist>
   <g-buttongroup id="bg">
     <g-button id='bg-btn1'>获取数据</g-button>
     <g-button id='bg-btn2'>更新</g-button>
