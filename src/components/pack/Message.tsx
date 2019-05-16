@@ -118,13 +118,14 @@ export default class Messager {
             content: args.message||"你确定要进行该操作吗？",
             className:args.className,
             width: args.width || (args.style && args.style.width)?args.style.width:null,
-            style: args.style,
+            style: G.G$.extend({},{top:args.top},args.style),
             okText: args.okText||"确定",
             cancelText: args.cancelText || "取消",
             iconType: args.iconType ||"question-circle",
             okType: args.type||"primary",
             maskClosable: args.maskClosable || false,
             okButtonProps: args.okButtonProps,
+            centered: args.centered === false? false:true,
             onOk:function(){
                 if(args.callback)
                 args.callback.call(this,true);
@@ -135,7 +136,6 @@ export default class Messager {
             },
             zIndex:args.zIndex || 9999
         };
-        
         let modal = AntdModal.confirm(param);
         if(args.delay)
             setTimeout(() => modal.destroy(), args.delay);        

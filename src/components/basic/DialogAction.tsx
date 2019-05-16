@@ -13,7 +13,9 @@ export var props = {
     cancelText: GearType.String,
     maskClosable: GearType.Boolean,
     dragable:GearType.Boolean,
-    closable:GearType.Boolean
+    closable:GearType.Boolean,
+    centered:GearType.Boolean,
+    top:GearType.Number
 }
 
 export interface state extends ClickAction.state {
@@ -26,7 +28,9 @@ export interface state extends ClickAction.state {
     confirmText?: string;
     cancelText?: string;
     maskClosable?: boolean;
-    dragable?:boolean
+    dragable?:boolean;
+    centered?:boolean;
+    top?:number;
 }
 
 export default class DialogAction<P extends typeof props, S extends state> extends ClickAction.default<P, S> {
@@ -43,7 +47,9 @@ export default class DialogAction<P extends typeof props, S extends state> exten
             maskClosable: this.props.maskClosable,
             loadType: this.props.loadType,
             url: this.props.url,
-            dragable:this.props.dragable
+            dragable: this.props.dragable,
+            centered: this.props.centered===true?true:false,
+            top: this.props.top,
         })
     }
 
@@ -90,7 +96,9 @@ export default class DialogAction<P extends typeof props, S extends state> exten
                 "cancelText":obj.state.cancelText,
                 "maskClosable": obj.state.maskClosable,
                 "dragable":obj.state.dragable,
-                'closable':obj.props.closable
+                'closable':obj.props.closable,
+                'centered':obj.props.centered,
+                'top':obj.props.top
             }); 
         } 
     };

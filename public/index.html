@@ -25,6 +25,7 @@
     <script>
       var LEVEI=[{label:'严重',value:"l1"},{label:"错误",value:"l2"}];
     </script>
+    
     <title>React App</title>
   </head>
   <body>
@@ -56,8 +57,8 @@
     <g-button id='bg-btn2'>更新</g-button>
     <g-button id="bg-btn3">创建连接</g-button>
   </g-buttongroup>
-  <g-dialogaction id="d1" loadType="async" dialogWidth="600" dialogHeight="500" title="弹框一"  url="./test.html">弹框一</g-dialogaction>
-  
+  <g-dialogaction id="d1" loadType="async" dialogWidth="600" centered="true" dialogHeight="300" title="弹框一"  url="./test.html">弹框一</g-dialogaction>
+  <g-dialog centered="false" style="top:300px" dragable="true"></g-dialog>
   
   <!-- <g-dialog  id="d1"   title="弹框一">
       <g-button id="open-d1">打开弹框一</g-button>

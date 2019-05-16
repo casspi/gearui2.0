@@ -6,8 +6,6 @@ import { TreeProps as AntdTreeProps, AntTreeNode } from 'antd/lib/tree';
 import { Http, UUID } from '../../utils';
 import { methods } from '../../utils/http';
 import DicUtil from '../../utils/DicUtil';
-import Check from './Check';
-import { debug } from 'util';
 const AntdTreeNodeJsx = AntdTree.TreeNode;
 export var props = {
     ...FormTag.props,
@@ -608,9 +606,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     }
 
     afterRender() {
-        //获取父子树的映射关联
-        this.getParentTree();
-        this.getChildTree();
+        
         if(this._onBeforeLoad) {
             this._onBeforeLoad();
         }
@@ -683,6 +679,9 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
     }
   
     updateReftree() {//更新父子关联数据
+        //获取父子树的映射关联
+        this.getParentTree();
+        this.getChildTree();
         let checked: any = this.getChecked();
         if(checked.length <= 0) {
             checked = this.getSelected();
@@ -691,6 +690,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         if(this.childTree instanceof Tree) {
             if(this.state.options != null && this.state.options.length > 0) {
                 if(node) {
+                    this.childTree.clear();
                     if(this.childTree._promise){
                         this.childTree._promise.then((e)=>{
                             let _childTree = e.result;

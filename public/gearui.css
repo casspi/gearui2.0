@@ -14024,6 +14024,22 @@ textarea.ant-mention-wrapper .ant-mention-editor {
   -webkit-overflow-scrolling: touch;
   outline: 0;
 }
+.ant-modal-centered {
+  text-align: center;
+}
+.ant-modal-centered::before {
+  display: inline-block;
+  width: 0;
+  height: 100%;
+  vertical-align: middle;
+  content: '';
+}
+.ant-modal-centered .ant-modal {
+  top: 0;
+  display: inline-block;
+  text-align: left;
+  vertical-align: middle;
+}
 .ant-modal-title {
   margin: 0;
   font-size: 14px;

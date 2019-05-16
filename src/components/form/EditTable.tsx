@@ -886,7 +886,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 return ele;
             });
             return <span>
-                {iconsMap}
+                {record.cannotCrtorl === true? "---":iconsMap}
             </span>;
         };
     }
@@ -914,7 +914,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                             editable = this.props.editable == null ? true : this.props.editable;
                         }
                     }
-                    // console.log(record)
+                    console.log(editable)
                     let cellProps: any = G.G$.extend(newProps,{
                         dictype:newProps.dictype,
                         id: id,

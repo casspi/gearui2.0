@@ -27,7 +27,8 @@ export var props = {
     //是否可以拖动
     dragable:GearType.Boolean,
     maxable:GearType.Boolean,
-    maxIconClick:GearType.Function
+    maxIconClick:GearType.Function,
+    centered:GearType.Boolean,//垂直居中
 }
 export interface state extends Tag.state {
     footer?: boolean | string;
@@ -53,6 +54,7 @@ export interface state extends Tag.state {
     maxable?:boolean,//是否显示最大化按钮
     maxTitle?:string,//最大化提示语
     isMax?:boolean,//是否已经最大化
+    centered?:boolean,//是否垂直居中
     maxIconType:string
 }
 
@@ -117,6 +119,8 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             title: this.state.title,
             /** 是否显示右上角的关闭按钮*/
             closable: this.state.closable,
+            //是否垂直居中
+            centered: this.state.centered, 
             /** 窗口宽度 */
             width: width,
             height:height,
@@ -192,6 +196,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             maxable: this.props.maxable||false,
             maxTitle: "最大化",
             isMax: false,
+            centered: this.props.centered===true?true:false,
             maxIconType:'border',//switcher//border
             children:[]
         };
@@ -394,16 +399,16 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         }
         let style:Object;
         if(this.state.dragable){
-            style={
+            style = G.G$.extend({},props.style,{
                 cursor:"move",
-            };
+            });
         }else{
-            style={
+            style = G.G$.extend({},props.style,{
                 cursor:"default",
-            };
+            });
         }
         if(!this.state.footer){
-            style['paddingBottom']=0
+            style['paddingBottom'] = 0
         }
         // let voidTagProps:any = {
         //     onLoadSuccess: ()=> {
@@ -435,7 +440,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             width:"16px",
         };
         delete props.dragable
-        return <AntdModal  {...props} style={style} getContainer={()=>{
+        return <AntdModal centered  {...props} style={style} getContainer={()=>{
             let node:any = document.querySelector('#'+this.state.id+'dialog-warp');
             if(node){//由于每次显示隐藏都会创建新的节点，所以此处先清处
                node.remove()
@@ -546,7 +551,8 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
             props.footer = props.controlBar;
         }
         props.style = {
-            padding: '0px'
+            padding: '0px',
+            top: props.top + "px"
         }
         props.showIcon = true;
         props.visible = true;

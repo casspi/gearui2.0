@@ -41,6 +41,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     private reactEle:any = this.getEditGearEle();
     private isValidate:boolean;
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
+        console.log('afterReceive')
         if(nextProps.value!==this.state.value){
             this.gearEle.setValue(nextProps.value)//保证edittable修改数据，单元格的编辑组件能同步到数据
         }
@@ -53,7 +54,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     validate() {
         if(this.props.form) {
-            return this.props.form.validateField(this.reactEleKey);
+            return this.props.form.validateField(this.props.id);
         }
         return true;
     }
@@ -68,7 +69,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 // if(error != true) {
                 //     return;
                 // }
-                console.log(this.validate())
+                // console.log(this.validate())
                 if(this.validate() != true){
                     return;
                 }
@@ -102,7 +103,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     getInitialState(): state {
         this.cacheValue = this.props.value;
-        console.log('props.value------------'+this.props.value)
         return {
             editable: this.props.editable,
             value: this.props.value,
@@ -206,10 +206,10 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
             _props,
             {
                 required:this.props['required'],
-                id: this.reactEleKey,
+                id: this.props.id,
                 dictype:this.props['dictype'],
                 key: this.reactEleKey,
-                name: this.reactEleKey,
+                name: this.props.id,
                 ref: (ele: any)=>{
                     if(ele) {
                         this.gearEle = ele;
@@ -242,10 +242,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                     if(onchangebak && G.G$.isFunction(onchangebak)) {
                         onchangebak.call(this.gearEle,value,oldValue);
                     }
-                    // debugger
-                    // console.log(this.gearEle)
                     this.gearEle.focus();
-                    // console.log(this.state.editable)
                 },
                 onLoadSuccess:()=>{//涉及到需要加载数据的组件
                     let editable = this.state.editable;
@@ -303,11 +300,10 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
 
     editEnable(callback?: Function) {
-        // debugger
-        // this.props.onEditable(true)
         this.setState({
             editable: true
         },()=>{
+            console.log(this.state.editable)
             if(callback) {
                 callback();
             }
@@ -318,11 +314,9 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         this.setState({
             editable: false
         },()=>{
-            debugger;
-                console.log(this.state.editable)
+            console.log(this.state.editable)
             if(callback) {
                 callback();
-                console.log(this.state.editable)
             }
         });
     }

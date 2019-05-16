@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { InputNumber } from 'antd';
 
 import * as Tag from '../Tag';
 import Http, { methods } from '../../utils/http';

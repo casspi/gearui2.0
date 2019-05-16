@@ -66,6 +66,7 @@ export default class Button<P extends typeof props, S extends state> extends Tag
         delete state.loadType;
         delete state.dragable;
         delete state.maximized;
+        delete state.centered;
         //删除listAction中属性
         delete state.actionType;
         delete state.listId;
