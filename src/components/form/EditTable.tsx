@@ -275,6 +275,13 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 this.controlBtns.get("down").enable();
             }
         }
+        if(this.controlBtns.get("delete")) {
+            if(this.focusRow.cannotControl===true) {//
+                this.controlBtns.get("delete").disable();
+            }else {
+                this.controlBtns.get("delete").enable();
+            }
+        }
     }
 
     //获取头部按钮
@@ -295,7 +302,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         if(this.doJudgementEvent("beforeReset")==false)
             return;
         if(this.cacheData != null && this.cacheData.length > 0) {
-            let dataSource = new GearArray(this.cacheData).clone().toArray();
+            let dataSource = new GearArray(this.cacheData).clone(true).toArray();
             let data = this._loadFilter({dataList:dataSource});
             this.setState({
                 dataSource: data.dataList
@@ -327,8 +334,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         })
         this.setState({
             dataSource:data
-        },()=>{
-            console.log(this.cacheData)
         })
     }
 
@@ -344,14 +349,11 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         if(this.doJudgementEvent("beforeRowReset",nowRow)==false)
             return false;
         if(this.cacheData != null && this.cacheData.length > 0) {
-            console.log(this.cacheData)
             let cacheRow = this.cacheData.filter((value: any,index: any)=>{
                 return value.key == nowRow.key;
             });
             let data = this.getData()||[];
-            console.log(data);
-            console.log(cacheRow[0]);
-            debugger
+            // console.log(cacheRow[0]);
             if(cacheRow && cacheRow.length > 0) {
                 for(let i = 0; i < data.length;i++) {
                     if(data[i].key == cacheRow[0].key) {
@@ -359,12 +361,11 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                     }
                 }
             }else {
-                data = new GearArray(this.cacheData).clone().toArray();
+                data = new GearArray(this.cacheData).clone(true).toArray();
             }
             this.setState({
                 dataSource: data
             },()=>{
-                console.log(this.state.dataSource)
             });
         }else {
             this.setState({
@@ -457,10 +458,10 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 this.setState({
                     editable
                 },()=>{
-                    this.cacheData = new GearArray(this.getData()).clone().toArray();
+                    this.cacheData = new GearArray(this.getData()).clone(true).toArray();
                 });
             }else {
-                this.cacheData = new GearArray(this.getData()).clone().toArray();
+                this.cacheData = new GearArray(this.getData()).clone(true).toArray();
             }
             
         }
@@ -482,7 +483,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             return;
         }
         let dataSource:Array<any> = this.getData()||[];
-        console.log(this.state.dataSource)
         let dataArr = new GearArray(dataSource);
         nowRow = dataSource.filter((value,index)=>{
             return value.key == nowRow.key;
@@ -532,12 +532,10 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         nowRow = nowRow[0];
         dataArr.up(nowRow);
         dataSource = dataArr.toArray();
-        console.log(dataSource)
         let data = this._loadFilter({dataList:dataSource});
         this.setState({
             dataSource:data.dataList
         },()=>{
-            console.log(this.state.dataSource)
             for(let i = 0; i< dataSource.length;i++){
                 let row = dataSource[i];
                 if(row.key == nowRow.key) {
@@ -679,7 +677,6 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
             return;
         }
         this.cacheData = new GearArray(dataSource).clone(true).toArray();
-        console.log(this.cacheData)
         let editable = this.state.editable||{};
         if(dataSource && typeof editable == "boolean") {
             editable = {};
@@ -886,7 +883,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                 return ele;
             });
             return <span>
-                {record.cannotCrtorl === true? "---":iconsMap}
+                {record.cannotControl === true? "---":iconsMap}
             </span>;
         };
     }
@@ -910,11 +907,10 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                     if((typeof editable == "boolean") == false) {
                         if(editable[record.key] != null) {
                             editable = editable[record.key];
-                        }else {
+                        }else{
                             editable = this.props.editable == null ? true : this.props.editable;
                         }
                     }
-                    console.log(editable)
                     let cellProps: any = G.G$.extend(newProps,{
                         dictype:newProps.dictype,
                         id: id,
@@ -924,7 +920,8 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                         lower: lower,
                         upper: upper,
                         record:record,
-                        editCell: this.props.editCell,
+                        editCell: record.cannotControl === true ?false:this.props.editCell,
+                        cannotControl: record.cannotControl,
                         name: name,
                         form: this.form,
                         required: newProps.required=="true"?true:false,
@@ -947,14 +944,14 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                         onBeforeReset:(name: any,record: any) => {
                             return this.doJudgementEvent("beforeCellReset",name,record);
                         },
-                        onChange: (value: any, oldValue: any, label: any) => {
-                            //处理值变动的逻辑
-                            if(props.onChange) {
-                                props.onChange.call(this,value, oldValue);
-                            }
-                        }
+                        // onChange: (value: any, oldValue: any, label: any) => {
+                        //     //处理值变动的逻辑
+                        //     if(props.onChange) {
+                        //         props.onChange.call(this,value, oldValue);
+                        //     }
+                        // }
                     });
-                    return <EditTableCell.default onChangeValue={this.changeValue.bind(this,record.key,name)} {...cellProps}>{children}</EditTableCell.default>;
+                    return <EditTableCell.default  onChangeValue={this.changeValue.bind(this,record.key,name)} {...cellProps}>{children}</EditTableCell.default>;
                 };
             })(column,props);
         }

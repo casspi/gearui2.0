@@ -3,7 +3,6 @@ import { Icon as AntdIcon,Popover } from 'antd';
 import * as React from 'react';
 import { Form } from "./index";
 import { GearUtil, UUID } from '../../utils';
-import { debug } from 'util';
 var props = {
     ...Tag.props,
     editable: GearType.Boolean,
@@ -15,7 +14,9 @@ var props = {
     upper: GearType.String,
     label: GearType.String,
     showLink: GearType.Boolean,
-    onEditable: GearType.Function
+    onEditable: GearType.Function,
+    cannotControl: GearType.Boolean,
+    onChangeValue: GearType.Function
 };
 interface state extends Tag.state {
     editable?: boolean;
@@ -39,14 +40,17 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     private reactEleKey = UUID.get();
     private reactEle:any = this.getEditGearEle();
-    private isValidate:boolean;
+    private cellEditable:boolean;
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
-        console.log('afterReceive')
+        // console.log('afterReceive')
         if(nextProps.value!==this.state.value){
             this.gearEle.setValue(nextProps.value)//保证edittable修改数据，单元格的编辑组件能同步到数据
         }
+        if(nextProps.editable !== this.props.editable){
+            this.cellEditable = nextProps.editable;
+        }
         return {
-            editable: nextProps.editable !== this.props.editable?nextProps.editable:this.state.editable,
+            editable: nextProps.editable !== this.props.editable?nextProps.editable:this.cellEditable,
             value: nextProps.value,
             label: this.getLabel()
         };
@@ -69,7 +73,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 // if(error != true) {
                 //     return;
                 // }
-                // console.log(this.validate())
                 if(this.validate() != true){
                     return;
                 }
@@ -78,7 +81,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                     //返回false保持编辑状态
                     if(this.doJudgementEvent("save",this.reactEleKey,this.state.value)==false) {
                         this.editEnable();
-                        console.log(this.state.editable)
                     }
                 });
             },
@@ -104,7 +106,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     getInitialState(): state {
         this.cacheValue = this.props.value;
         return {
-            editable: this.props.editable,
+            editable: this.props.cannotControl===true? false : this.props.editable,
             value: this.props.value,
             label: ""
         };
@@ -223,7 +225,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                 "data-record": _props['record'],
                 onChange: (value: any,oldValue: any) => {
                     _props.onChangeValue(value)
-                    this.isValidate = this.validate();
+                    // this.isValidate = this.validate();
                     // let record = _props.record;
                     // record[this.props.name] = value;
                     this.setState({
@@ -240,6 +242,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                     //     // }
                     })
                     if(onchangebak && G.G$.isFunction(onchangebak)) {
+                        console.log(onchangebak)
                         onchangebak.call(this.gearEle,value,oldValue);
                     }
                     this.gearEle.focus();
@@ -266,6 +269,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         let oldValue: any = this.state.value;
         if(this.gearEle) {
             this.gearEle.setValue(value, ()=> {
+                this.props.onChangeValue(value)
                 text = this.gearEle.getText();
                 this.doEvent("change", value, oldValue, text);
                 if(callback) {
@@ -283,7 +287,8 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
 
     setText(text: any,callback?: Function) {
         let oldValue: any = this.state.value;;
-        if(this.gearEle) {
+        if(this.gearEle.setText) {
+            console.log(this.gearEle)
             this.gearEle.setText(text, ()=> {
                 let value = this.gearEle.getValue();
                 this.doEvent("change", value, oldValue, text);
@@ -300,10 +305,10 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
 
     editEnable(callback?: Function) {
+        this.cellEditable = true;
         this.setState({
             editable: true
         },()=>{
-            console.log(this.state.editable)
             if(callback) {
                 callback();
             }
@@ -311,10 +316,10 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
 
     editDisable(callback?: Function) {
+        this.cellEditable = false;
         this.setState({
             editable: false
         },()=>{
-            console.log(this.state.editable)
             if(callback) {
                 callback();
             }

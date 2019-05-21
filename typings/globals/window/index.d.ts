@@ -100,6 +100,7 @@ declare var G: {
     removeUpdating: (id: Promise<boolean>) => Array<string>;
     isUpdating: () => boolean;
     http: any;
+    post: any;
     util: any;
     // domEventTargets:Node[];
 }

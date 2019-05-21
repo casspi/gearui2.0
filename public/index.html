@@ -48,7 +48,8 @@
   
   <g-tooltip title="999"></g-tooltip>
   <g-icon icon="down-circle"></g-icon> -->
-  <g-upload width="200" ></g-upload>
+  <g-tree url="10.10.10/ccc"></g-tree>
+  <g-upload width="200" listtype="picture"></g-upload>
   <g-text title="999" id="text1" onchange="alert(999)" width="200"></g-text>
   <!-- control="delete,up,down,move,edit" -->
   <g-plumblist id="plumb" leftTitle="左列表"  rightTitle="右列表" pointColor="red" leftCellWidth="100,160,170" rightCellWidth="219,219" pointRadius="4" lineColor="#f97" lineWidth="1.5" width="1200" linkType="4" class="my-plumb" url="./plumbData.json"  leftListWidth="440" rightListWidth="440" showLabel="false" connector="Straight"></g-plumblist>
@@ -57,8 +58,8 @@
     <g-button id='bg-btn2'>更新</g-button>
     <g-button id="bg-btn3">创建连接</g-button>
   </g-buttongroup>
-  <g-dialogaction id="d1" loadType="async" dialogWidth="600" centered="true" dialogHeight="300" title="弹框一"  url="./test.html">弹框一</g-dialogaction>
-  <g-dialog centered="false" style="top:300px" dragable="true"></g-dialog>
+  <!-- <g-dialogaction id="d1" loadType="async" dialogWidth="600" centered="true" dialogHeight="300" title="弹框一"  url="./test.html">弹框一</g-dialogaction> -->
+  <!-- <g-dialog centered="false" style="top:300px" dragable="true"></g-dialog> -->
   
   <!-- <g-dialog  id="d1"   title="弹框一">
       <g-button id="open-d1">打开弹框一</g-button>
@@ -107,7 +108,11 @@
     // })
     G('#bg-btn1').onClick(function(){
       console.log(G("#plumb").getValue())
-      G("#plumb").setItem('l02','修改后的值')
+      G('#plumb').loadUrl('../plumbData2.json',function(){
+            console.log(G('#plumb').getValue())
+            console.log(G('#plumb').getSelectValue())//获取select选中值
+        })
+      // G("#plumb").setItem('l02','修改后的值')
       // G("#plumb")._promise.then((e)=>{
       //       let plumb = e.result;
       //       console.log(e)

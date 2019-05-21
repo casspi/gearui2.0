@@ -384,7 +384,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             scrolly: this.props.scrolly,
             otherParam: {},
             columns:[],
-            emptyText: this.props.emptyText || "",
+            emptyText: this.props.emptyText || "暂无数据",
             checkAll: this.props.checkAll,
             sequence: this.props.sequence,
             sequenceLabel: this.props.sequenceLabel,

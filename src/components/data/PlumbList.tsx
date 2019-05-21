@@ -24,6 +24,7 @@ export var props = {
     lineColor:GearType.Any,//连接线的颜色
     lineWidth: GearType.Number,//连接线的宽的
     control:GearType.Any,
+    showSequence:GearType.Boolean
 
 
 }
@@ -45,6 +46,7 @@ export interface state extends Tag.state {
     selectData:any[],//下拉框数据
     defaultSelectValue:any,//下拉默认选中项
     loading:boolean,
+    showSequence:boolean
 }
 
 export default class PlumbList<P extends typeof props, S extends state> extends Tag.default<P, S> {
@@ -72,6 +74,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             control : (this.props.control && this.props.control.split(',').length>0)? this.props.control.split(','):[],
             url:this.props.url,
             loading:true,
+            showSequence:this.props.showSequence===true?true:false,
         }
     }
 
@@ -166,12 +169,12 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                         />:null}
                 </div>}>    
                     <div className="plumblist-col item"  id={item.id} key={item.id}>
-                        {side==="left"?<span>{index}</span>:null}
+                        {side==="left"&&this.state.showSequence?<span>{index}</span>:null}
                         {this.parserText(item.fieldText)}
                     </div>
                 </Popover>:
                 <div className="plumblist-col item"  id={item.id} key={item.id}>
-                    {side==="left"?<span>{index}</span>:null}                        
+                    {side==="left"&&this.state.showSequence?<span>{index}</span>:null}                        
                     {this.parserText(item.fieldText)}
                 </div>
             )
@@ -208,6 +211,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         delete props.selectData;
         delete props.defaultSelectValue;
         delete props.loading;
+        delete props.showSequence;
         let selectProps = {
             
         };
@@ -221,7 +225,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                                 <div className="plumblist-col plumblist-table-th">{this.state.leftDataIndex.map((item:any)=>
                                             <span key={UUID.get()}>{item}</span>
                                 )}</div> 
-                                {leftData.length>0?this.parserList(leftData,'left'):null}
+                                {leftData.length>0?this.parserList(leftData,'left'):"暂无数据"}
 
                             </dd>
                         </dl>
@@ -230,7 +234,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                                 <h4 className="right-list-title">
                                     <span>{this.props.rightTitle||'右侧列表'}</span>
                                     <span className="list-title-select">
-                                        {this.state.selectData.length>0?<Select defaultValue={this.state.defaultSelectValue} onSelect={this.onSelect.bind(this)} style={{ width: "50%" }} {...selectProps}>
+                                        {this.state.selectData.length>0?<Select value={this.state.defaultSelectValue} onSelect={this.onSelect.bind(this)} style={{ width: "50%" }} {...selectProps}>
                                             {this.state.selectData.map((item)=>{
                                                 return <Select.Option  key={item.value}>{item.label}</Select.Option>
                                             })}
@@ -244,7 +248,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                                         <span key={UUID.get()}>{item}</span>
                                     )}
                                 </div>
-                                {rightData.length>0?this.parserList(rightData,'right'):null}    
+                                {rightData.length>0?this.parserList(rightData,'right'):"暂无数据"}    
                             </dd>
                         </dl>
                 </div>
@@ -272,7 +276,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     afterUpdate(){//更细数据后画点、连线
         
         this.dragLinks();
-        this.setCellWidth()
+        this.setCellWidth();
     }
     
     componentDidMount(){
@@ -282,18 +286,22 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         
     }
 
-    protected loadData(){
+    protected loadData(callback?:Function){
         let p = Http.getMethod('get')(this.state.url,'json');
         if(p){
             p.then((response)=>{
                 let resData = response.data;
+                if(resData.defaultSelectValue){
+                    this.setState({
+                        defaultSelectValue: resData.defaultSelectValue
+                    })
+                }
                 this.setState({
                     leftDataIndex: resData.leftDataIndex,
                     rightDataIndex: resData.rightDataIndex,
                     leftData:  new GearArray(resData.leftData).clone(true).toArray(),
                     rightData: new GearArray(resData.rightData).clone(true).toArray(),//response.data.rightData
                     selectData: new GearArray(resData.selectData).clone(true).toArray(),
-                    defaultSelectValue: resData.defaultSelectValue
                 },()=>{
                     this.cacheData =  {
                         leftData:  new GearArray(resData.leftData).clone(true).toArray(),
@@ -301,6 +309,10 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                     };
                     this.setState({
                         loading:false
+                    },()=>{
+                        if(callback){
+                            callback()
+                        };
                     })
                 })
             }).catch((error)=>{
@@ -308,7 +320,14 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             });
         }
     }
-
+    //loadUrl
+    loadUrl(url:any,callback:Function){
+        this.setState({
+            url
+        },()=>{
+            this.loadData(callback)
+        })
+    }
     setCellWidth(){//设置定义的单元格宽度
         let leftWidthArr = this.props.leftCellWidth.split(',');
         let rightWidthArr = this.props.rightCellWidth.split(',');
@@ -317,6 +336,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         let fn = (col:any,widthArr:any)=>{
             for(let i=0;i<col.length;i++){
                 widthArr.map((item:any,index:number)=>{
+                    if(G.G$(col[i]).find('span')[index]) 
                     G.G$(col[i]).find('span')[index].style.width = item + "px";
                 })
             }
@@ -387,25 +407,30 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                     break;
             }
             //给做出列表每项增加端点
-            _this.state.leftData.map((item:any,index:number)=>{
-                jsPlumb.addEndpoint([item.id],{
-                    anchors: ['Right'],
-                    isSource: true,//作为起点
-                    // isTarget: true,//作为终点
-                    uuid: item.id,
-                    maxConnections: sTargetMax
-                },common)
-            });
+            if(_this.state.leftData.length>0){
+                _this.state.leftData.map((item:any,index:number)=>{
+                    jsPlumb.addEndpoint([item.id],{
+                        anchors: ['Right'],
+                        isSource: true,//作为起点
+                        // isTarget: true,//作为终点
+                        uuid: item.id,
+                        maxConnections: sTargetMax
+                    },common)
+                });
+            }
+
             //给右侧列表每项设置终点
-            _this.state.rightData.map((item:any,index:number)=>{
-                jsPlumb.addEndpoint([item.id],{
-                    anchors: ['Left'],
-                    isTarget: true,
-                    // isSource: true,
-                    uuid: item.id||1,
-                    maxConnections: tTargetMax
-                },common)
-            });
+            if(_this.state.rightData.length>0){
+                _this.state.rightData.map((item:any,index:number)=>{
+                    jsPlumb.addEndpoint([item.id],{
+                        anchors: ['Left'],
+                        isTarget: true,
+                        // isSource: true,
+                        uuid: item.id||1,
+                        maxConnections: tTargetMax
+                    },common)
+                });
+            }
              
             //先解绑事件
             jsPlumb.unbind('dblclick');
@@ -573,7 +598,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             let leftData = this.state.leftData;
             let index = leftData.indexOf(item);
             leftData[index] = leftData.splice(index-1,1,leftData[index])[0]
-            // console.log(leftData);
             this.setState({
                 leftData
             })
@@ -581,7 +605,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             let rightData = this.state.rightData;
             let index = rightData.indexOf(item);
             rightData[index] = rightData.splice(index-1,1,rightData[index])[0]
-            // console.log(rightData);
             this.setState({
                 rightData
             })
@@ -633,7 +656,11 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     }
 
     getValue(){
-        return {leftDate:this.state.leftData,rightData:this.state.rightData}
+        return {leftData:this.state.leftData,rightData:this.state.rightData}
+    }
+
+    getSelectValue(){
+        return this.state.defaultSelectValue;
     }
 
     setItem(id:any,side:string,text:any){//设置指定节点的值
@@ -675,6 +702,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         }
     }
     // save(){
-    //     return {leftDate:this.state.leftData,rightData:this.state.rightData}
+    //     return {leftData:this.state.leftData,rightData:this.state.rightData}
     // }
 }

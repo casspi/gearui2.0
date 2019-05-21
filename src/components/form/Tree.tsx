@@ -234,7 +234,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 if((keyValue instanceof Array) == false) {
                     keyValue = [];
                 }else {
-                    keyValue = new GearArray(keyValue).clone().toArray();
+                    keyValue = new GearArray(keyValue).clone(true).toArray();
                 }
                 if(new GearArray(keyValue).contains(ele.id) == false) {
                     keyValue.push(ele.id);
@@ -361,7 +361,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             };
 
             ele.expand = () => {
-                let expandedkeys:Array<any> = new GearArray(this.state.expandedKeys ||[]).clone().toArray();
+                let expandedkeys:Array<any> = new GearArray(this.state.expandedKeys ||[]).clone(true).toArray();
                 if((expandedkeys instanceof Array) == false) {
                     expandedkeys = [];
                 }
@@ -375,7 +375,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
 
             ele.collapse = () => {
                 this.doEvent("beforeCollapse");
-                let expandedkeys:Array<any> = new GearArray(this.state.expandedKeys ||[]).clone().toArray();
+                let expandedkeys:Array<any> = new GearArray(this.state.expandedKeys ||[]).clone(true).toArray();
                 if(expandedkeys instanceof Array) {
                     this._collaseAll(expandedkeys,ele);
                     this.setState({
