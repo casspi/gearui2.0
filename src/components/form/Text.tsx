@@ -284,7 +284,19 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
             });
         }
     }
+    
     clear(){
         this.setValue(null)
+    }
+
+    reset(){
+        if(this.form) {
+            this.form.reset(this.state.name);
+        }else{
+            this.triggerChange(this.props.value || "");
+            this.setState({
+                value: this.props.value || "",
+            });
+        }
     }
 }

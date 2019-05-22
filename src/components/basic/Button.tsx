@@ -22,6 +22,7 @@ export var props = {
     group: GearType.String,
     text: GearType.String,
     value: GearType.String,
+    htmlType: GearType.String,
     ...Tag.props
 }
 export interface state extends Tag.state {
@@ -34,6 +35,7 @@ export interface state extends Tag.state {
     size?: ButtonSize,
     loading?: boolean | {delay: number},
     url?: string | Function,
+    htmlType?:string
 }
 export default class Button<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
@@ -48,6 +50,7 @@ export default class Button<P extends typeof props, S extends state> extends Tag
             icon: this.props.icon,
             text: this.props.value || this.props.text ||this.props.children,
             url: this.props.url,
+            htmlType: this.props.htmlType || 'button'
         };
     }
     getProps(){

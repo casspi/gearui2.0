@@ -449,5 +449,8 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
             super.setValue(value);
         }
     }
-  
+    
+    reset(){
+        this.setValue(this.props.value);
+    }
 }

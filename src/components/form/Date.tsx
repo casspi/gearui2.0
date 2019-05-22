@@ -262,4 +262,8 @@ export default class Date<P extends typeof props, S extends state> extends FormT
         }
     }
 
+    reset(){
+        this.setValue(this.props.value);
+    }
+
 }

@@ -63,10 +63,12 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     protected cannotUpdate:GearArray<keyof S> = new GearArray<keyof state>(["name","id"]);
     protected form: Form.Form<typeof Form.props & FormComponentProps, Form.state>;
+    protected initValue=this.state.value;
     constructor(props:any, context: {}){
         super(props);
         // this._propsValue = this.props.value;
         this.setForm(this.ast);
+        console.log(this.state.value)
     }
 
     private setForm(ast: ASTElement) {
@@ -275,7 +277,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             let formUtils: WrappedFormUtils = this.form.props.form;
             let rules: any = this.state.rules;
             let formTag = formUtils.getFieldDecorator(name, {
-                initialValue: this.state.value,
+                initialValue: this.initValue,
                 rules: this.isValidation() ? rules : [],
             })(ele);
             return this.getFormItem(formTag);

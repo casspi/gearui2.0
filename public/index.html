@@ -48,16 +48,23 @@
   
   <g-tooltip title="999"></g-tooltip>
   <g-icon icon="down-circle"></g-icon> -->
+  <!-- <g-select></g-select>
   <g-tree url="10.10.10/ccc"></g-tree>
   <g-upload width="200" listtype="picture"></g-upload>
-  <g-text title="999" id="text1" onchange="alert(999)" width="200"></g-text>
+  <g-text title="999" id="text1" onchange="alert(999)" width="200"></g-text> -->
   <!-- control="delete,up,down,move,edit" -->
-  <g-plumblist id="plumb" leftTitle="左列表"  rightTitle="右列表" pointColor="red" leftCellWidth="100,160,170" rightCellWidth="219,219" pointRadius="4" lineColor="#f97" lineWidth="1.5" width="1200" linkType="4" class="my-plumb" url="./plumbData.json"  leftListWidth="440" rightListWidth="440" showLabel="false" connector="Straight"></g-plumblist>
+  <!-- <g-plumblist id="plumb" leftTitle="左列表"  rightTitle="右列表" pointColor="red" leftCellWidth="100,160,170" rightCellWidth="219,219" pointRadius="4" lineColor="#f97" lineWidth="1.5" width="1200" linkType="4" class="my-plumb" url="./plumbData.json"  leftListWidth="440" rightListWidth="440" showLabel="false" connector="Straight"></g-plumblist>
   <g-buttongroup id="bg">
     <g-button id='bg-btn1'>获取数据</g-button>
     <g-button id='bg-btn2'>更新</g-button>
     <g-button id="bg-btn3">创建连接</g-button>
-  </g-buttongroup>
+  </g-buttongroup> -->
+  <g-form id="form1">
+    <g-text id="name" value="9999" width="200"></g-text> 
+    <g-date id="date" value="2019/09/08" required="true"></g-date>
+    <g-time id="time" value="18:16" required="true"></g-time>
+    <g-button id="reset" onClick="reset">重置</g-button> 
+  </g-form>
   <!-- <g-dialogaction id="d1" loadType="async" dialogWidth="600" centered="true" dialogHeight="300" title="弹框一"  url="./test.html">弹框一</g-dialogaction> -->
   <!-- <g-dialog centered="false" style="top:300px" dragable="true"></g-dialog> -->
   
@@ -95,6 +102,10 @@
   </body>
   <script>
   G(function() {
+    G('#reset').onClick(function(){
+      // G('#name').reset()
+      G("#form1").reset()
+    })
     // console.log($('#d2'))
     // G('#open-d2').onClick(function(){
       // G('#d1').setVisible(false)
@@ -106,20 +117,20 @@
     //     console.log(G("#plumb").getValue())
     //   })
     // })
-    G('#bg-btn1').onClick(function(){
-      console.log(G("#plumb").getValue())
-      G('#plumb').loadUrl('../plumbData2.json',function(){
-            console.log(G('#plumb').getValue())
-            console.log(G('#plumb').getSelectValue())//获取select选中值
-        })
-      // G("#plumb").setItem('l02','修改后的值')
-      // G("#plumb")._promise.then((e)=>{
-      //       let plumb = e.result;
-      //       console.log(e)
-      //   }).finally((e)=>{
-      //     console.log(e)
-      //   })
-    })
+    // G('#bg-btn1').onClick(function(){
+    //   console.log(G("#plumb").getValue())
+    //   G('#plumb').loadUrl('../plumbData2.json',function(){
+    //         console.log(G('#plumb').getValue())
+    //         console.log(G('#plumb').getSelectValue())//获取select选中值
+    //     })
+    //   // G("#plumb").setItem('l02','修改后的值')
+    //   // G("#plumb")._promise.then((e)=>{
+    //   //       let plumb = e.result;
+    //   //       console.log(e)
+    //   //   }).finally((e)=>{
+    //   //     console.log(e)
+    //   //   })
+    // })
     // var root = G("#root");
     // var bu = root.find("#aaaa");
     // var test = G("#test");
