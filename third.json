@@ -1,3 +1,4 @@
 {
-  "sockjs": "third/sockjs.min.js"
+  "sockjs": "src/third/sockjs.min.js",
+  "jsplumb": "src/third/jsplumb.js"
 }

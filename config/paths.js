@@ -56,5 +56,5 @@ module.exports = {
   appTsLint: resolveApp('tslint.json'),
   publicUrl: getPublicUrl(resolveApp('package.json')),
   servedPath: getServedPath(resolveApp('package.json')),
-  third: getServedPath(resolveApp('third.json')),
+  third: require(resolveApp('third.json')),
 };
