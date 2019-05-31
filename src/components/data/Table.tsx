@@ -840,7 +840,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
         let columns = this.state.columns || [];
         //缓存一份行数据字段，当没有数据时，新增用得到
-        let uColums:any = columns.filter(o=>o.dataIndex!='sequence' && o.dataIndex!="control");
+        let uColums:any = (columns as Array<any>).filter(o=>o.dataIndex!='sequence' && o.dataIndex!="control");
         for(let i=0;i<uColums.length;i++) {
             if(uColums[i].dataIndex){
                 this.defaultRecord[uColums[i].dataIndex] = null;
