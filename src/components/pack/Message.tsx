@@ -43,6 +43,7 @@ export default class Messager {
             title: title||"操作提示",
             content: message,
             okText:"确定",
+            // centered: true,
             onOk:function() {
                 if(fun)
                     fun.call(this);

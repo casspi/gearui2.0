@@ -11,7 +11,7 @@ export var props = {
     width: GearType.Any,
     height: GearType.Number,
     disabled: GearType.Boolean,
-    visible: GearType.Boolean,
+    visible: GearType.Any,
     remove: GearType.Boolean,//删除该组件节点
     class: GearType.String,
     className: GearType.String,
@@ -194,6 +194,7 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
         if(this.props.visible == false) {
             style.display = "none";
         }
+
         let commonState:state = {
             id: this.props.id,
             name: this.props.name,

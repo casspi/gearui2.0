@@ -97,19 +97,19 @@ export default class Websocket<P extends typeof props, S extends state> extends 
             //console.log(evt);
             //console.log(websocket.readyState);
             if (this.haveEvent("open")) {
-                this.doEvent("open");
+                this.doEvent("open",evt);
             }
         };
 
         websocket.onmessage = (evt: any) => {
             if (this.haveEvent("message")) {
-                this.doEvent("message");
+                this.doEvent("message",evt.data);
             }
         };
 
         websocket.onerror = (evt: any) => {
             if (this.haveEvent("error")) {
-                this.doEvent("error");
+                this.doEvent("error",evt);
             }
         };
 
@@ -180,7 +180,7 @@ export default class Websocket<P extends typeof props, S extends state> extends 
 
     render() {
         return (
-            <div></div>
+            <div ref={(ele: any)=>{this.ref = ele;}}></div>
         );
     }
 }

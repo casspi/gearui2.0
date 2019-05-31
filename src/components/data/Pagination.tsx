@@ -86,7 +86,7 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
     render() {
         let props: any = this.getProps();
         return this.props.showTooltipAble!==false
-        ?<AntdTooltip placement="right"  visible={this.state.showTooltip}  title="跳转页大于总页数，为您跳转到最后一页">
+        ?<AntdTooltip placement="top"  visible={this.state.showTooltip}  title="跳转页大于总页数，为您跳转到最后一页">
            <span><AntdPagination {...props}></AntdPagination></span> 
         </AntdTooltip>
         :<AntdPagination {...props}></AntdPagination>;

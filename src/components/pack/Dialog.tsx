@@ -13,8 +13,8 @@ export var props = {
     confirmLoading: GearType.Boolean,
     closable: GearType.Boolean,
     mask: GearType.Boolean,
-    confirmText: GearType.String,
-    cancelText: GearType.String,
+    confirmText: GearType.String,//确认按钮文字
+    cancelText: GearType.String,//取消按钮文字
     maskClosable: GearType.Boolean,
     wrapClassName: GearType.String,
     maskTransitionName: GearType.String,
@@ -26,9 +26,9 @@ export var props = {
     url: GearType.Or(GearType.String, GearType.Function),
     //是否可以拖动
     dragable:GearType.Boolean,
-    maxable:GearType.Boolean,
-    maxIconClick:GearType.Function,
-    centered:GearType.Boolean,//垂直居中
+    // maxable:GearType.Boolean,
+    // maxIconClick:GearType.Function,
+    centered:GearType.Boolean,//是否垂直居中
 }
 export interface state extends Tag.state {
     footer?: boolean | string;
@@ -313,15 +313,6 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
     afterRender() {
         if(this.state.dragable) this.dragEvent();//绑定拖拽事件
         this.getChildren()
-        // if(this.props.height){
-        //     let height:any = this.props.height;
-        //     let modalWarp = G.G$('#'+this.state.id+'dialog-warp')
-        //     console.log(modalWarp.find('.ant-modal-body'))
-        //     console.log(G.G$(this.realDom).find('.ant-modal-body'))
-        //     let rHeight = parseInt(height)-(48||0)-(53||0);
-        //     console.log(rHeight)
-        //     G.G$(".ant-modal-body").height(rHeight-10)
-        // }
     }    
     afterUpdate() {
         
@@ -467,17 +458,27 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                     let result = await Http.get(url);
                     if(result.success){
                         let data = result.data;
+                        // let html = "";
+                        // data.replace(/<body.*?>([\s\S]+?)<\/body>/img,function(htmls:any){
+                        //     //请求页面含有html body标签会报错，此处截取body内容作为渲染
+                        //     html = htmls.replace('<body>',"").replace('</body>',"")
+                        // })
                         //截取异步请求中的<script></script>
                         let jsReg = new RegExp(/<script.*?>([\s\S]+?)<\/script>/img);
+                        // console.log(jsReg)
                         let scriptCode = '';
                         data.replace(jsReg,function(str:any,js:any){
-                            scriptCode=str
+                            scriptCode=str;
                         })
-                        scriptCode = scriptCode.replace('<script>',"").replace('</script>',"")
+                        scriptCode = scriptCode.replace(/<script.*?>/,"").replace('</script>',"")
                         let r = G.$(data, undefined, true);
                         children = r instanceof Array? r:[r];
+                        // let children = <div className={"async-body-"+this.state.id}></div>
                         this.setState({children},()=>{
                             //执行异步加载所需的js代码
+                            // console.log(".async-body-"+this.state.id)
+                            // G.G$(".async-body-"+this.state.id).load(url)
+                            // console.log(scriptCode)
                             eval(scriptCode);
                         })
                     }

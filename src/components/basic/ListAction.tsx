@@ -32,7 +32,7 @@ export default class ListAction<P extends typeof props, S extends state> extends
             refreshList: this.props.refreshList != false,
             parameters: this.props.parameters,
             confirm: this.props.confirm,
-            type:this.props.type || "button"//设置默认为button （可选button/link）
+            // type:this.props.type || "button"//设置默认为button （可选button/link）
         };
     }
 

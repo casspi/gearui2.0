@@ -590,7 +590,7 @@ export default class ObjectUtil {
             let valueInProps:any;
             key = ObjectUtil.parseDynamicValue(key, value);
             valueInProps = ObjectUtil.parseDynamicValue(props[key], value);
-            if(key=='isvisible'){//visible需特殊处理
+            if(key=='visible'){//visible需特殊处理
                 propsNew['visible'] = valueInProps=='false'?false:true;
             }else{
                 if(typeof valueInProps == 'string'){

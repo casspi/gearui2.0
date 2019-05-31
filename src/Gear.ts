@@ -1,9 +1,10 @@
 import * as Jquery from 'jquery';
 import JqueryTag from './components/JqueryTag';
 import { Events, Parser } from './core';
-import { GearUtil, StringUtil } from './utils';
+import { GearUtil, StringUtil ,UUID} from './utils';
 import Tag from './components/Tag';
 import Render from './core/Render';
+import * as HtmlTag from './components/HtmlTag';
 export default class G {
 
     static SockJs:any = null;
@@ -39,15 +40,36 @@ export default class G {
         //el: 指定节点
         let el = renderOptions.el;
         let parser = new Parser();
-        // let date = new Date().getTime();
         let astMsg  = parser.parse(el);
         
         let render = new Render();
-        this.cacheHtml = astMsg.cacheHtml;
-        this.cacheAst = astMsg.ast;
+        if(this.cacheHtml && this.cacheHtml != "") {
+            this.cacheHtml = "<span>" + this.cacheHtml + astMsg.cacheHtml + "</span>";
+        }else {
+            this.cacheHtml = astMsg.cacheHtml;
+        }
+        if(this.cacheAst) {
+            this.cacheAst = <any>{
+                type: 1,
+                tag: "span",
+                id: UUID.get(),
+                children: [this.cacheAst, astMsg.ast],
+                tagClass: "span",
+                html:function():JQuery<HTMLElement>|undefined {
+                    let id = this.id;
+                    if(id) {
+                        let cacheHtml = G.G$(G.cacheHtml).find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+id+"']");
+                        if(cacheHtml && cacheHtml.length > 0) {
+                            return cacheHtml;
+                        }
+                    }
+                    return undefined;
+                }
+            }
+        }else{
+            this.cacheAst = astMsg.ast;
+        }
         render.render(astMsg.ast, astMsg.parent, renderOptions.mounted);
-        // let date2 = new Date().getTime();
-        // console.log(date2 - date);
     }
 
     //注册自定义组件
@@ -136,7 +158,23 @@ export default class G {
         clazz.prototype[key] = function(...args: any[]) {
             if(this._promise) {
                 let promise = _this.then(this._promise, key, ...args);
-                return _this.getPromiseObject.call(_this, ...args, promise);
+
+                return {
+                    _promise: promise,
+                    _then: function(promise: Promise<any>, fun: Function) {
+                        promise.then((ele: any) => {
+                            if(ele instanceof Promise) {
+                                this._then(ele);
+                            }else {
+                                fun(ele);
+                            }
+                        });
+                    },
+                    resolve: function(fun: Function) {
+                        this._then(this._promise, fun);
+                    }
+                };
+                // return _this.getPromiseObject.call(_this, ...args, promise);
             }
         };
         for(let key in Events) {
@@ -144,20 +182,39 @@ export default class G {
                 clazz.prototype[key] = function(...args: any[]) {
                     if(this._promise) {
                         let promise = _this.then(this._promise, key, ...args);
-                        return _this.getPromiseObject.call(_this, ...args, promise);
+                        return {
+                            _promise: promise,
+                            _then: function(promise: Promise<any>, fun: Function) {
+                                promise.then((ele: any) => {
+                                    if(ele instanceof Promise) {
+                                        this._then(ele);
+                                    }else {
+                                        fun(ele);
+                                    }
+                                });
+                            },
+                            resolve: function(fun: Function) {
+                                this._then(this._promise, fun);
+                            }
+                        };
+                        // return _this.getPromiseObject.call(_this, ...args, promise);
                     }
                 };
             }
         }
     }
 
-    static then(promise: Promise<any>, key: string, ...args: any[]) {
+    static then(promise: Promise<any>, key: string, ...args: any[]): any {
         return promise.then((ele: any) => {
             if(ele instanceof Promise) {
-                this.then(ele, key, ...args);
+                return this.then(ele, key, ...args);
             }else {
-                if(ele && ele[key]) {
-                    ele[key].call(ele, ...args);
+                if(ele) {
+                    if(ele.finded && ele.result) {
+                        return ele.result[key].call(ele.result, ...args);
+                    }else if(ele[key]){
+                        return ele[key].call(ele, ...args);
+                    }
                 }
             }
         });
@@ -306,11 +363,17 @@ export default class G {
             let doms:JQuery<HTMLElement>|undefined = undefined;
             let vmdoms = this.findVmDomFromCacheAst(selector, (html instanceof JqueryTag) ? html : undefined);
             if(vmdoms.length > 0) {
+                if(vmdoms[0] == -1) {
+                    return {
+                        finded: true,
+                        result: this.G$([])
+                    };
+                }
                 for(let i = 0; i < vmdoms.length; i++) {
                     let vmdom = vmdoms[i];
                     if(!doms) {
                         if(vmdom){
-                            doms = this.G$(vmdom.realDom);
+                            doms = this.G$(document.body).find(vmdom.realDom);
                         }
                     }else {
                         if(vmdom){
@@ -342,8 +405,10 @@ export default class G {
                     let dom = this.G$(doms[i]);
                     try{
                         let gObj = dom.data("vmdom"); 
-                        if(gObj) {
-                            //记录自定义方法名称
+                        // console.log(gObj.__proto__.constructor.name)
+                        // if(!(gObj instanceof HtmlTag.default)) {//不是原生标签、&& gObj.__proto__.constructor.name != 'Hidden'隐藏字段
+                        if(gObj) {    
+                        //记录自定义方法名称
                             for(let key in gObj) {
                                 if(this.G$.isFunction(gObj[key])) {
                                     fnNames.push(key);
@@ -362,6 +427,7 @@ export default class G {
                             if(eles.indexOf(gObj) == -1) {
                                 eles.push(gObj);
                             }
+                            eles['length'] = 1;
                         }else if(dom.length == 1) {
                             let jele = new JqueryTag();
                             jele.realDom = dom[0];
@@ -390,10 +456,11 @@ export default class G {
             }
             if(eles.length > 1) {
                 let domArrays = [];
-                for(let i = 0; i < doms.length; i++) {
-                    if(doms.eq(i).attr("ctype") == null) {
-                        domArrays.push(doms[i]);
-                    }
+                for(let i = 0; i < eles.length; i++) {
+                    // if(doms.eq(i).attr("ctype") == null) {
+                    //     domArrays.push(doms[i]);
+                    // }
+                    domArrays.push(eles[i]);
                 }
                 doms = this.G$(domArrays);
                 //筛选器获取了多个元素的时候，将各自执行各自的方法
@@ -419,12 +486,19 @@ export default class G {
                 doms.eq = (index:number)=>{
                     return eles[index];
                 };
+                doms.length = eles.length;
+                // doms[0] = eles
+                // console.log(doms)
                 return {
                     finded,
                     result: doms
                 };
             }else {
                 if(eles.length > 0) {
+                    if(eles[0] instanceof Tag){//兼容老版返回结果
+                        eles[0][0] = eles[0];
+                    }
+                    eles[0].length=1;
                     return {
                         finded,
                         result: eles[0]
@@ -475,30 +549,39 @@ export default class G {
 
     public static findVmDomFromCacheAst(selector: string|Element, cacheHtml?: JqueryTag<any, any>) {
         let vmdoms: any[] = [];
-        let jEleFromCache = G.G$(cacheHtml ? cacheHtml.ast.html() : this.cacheHtml).find(selector);
-        if(jEleFromCache.length > 0 && this.cacheAst) {
-            jEleFromCache.each((i, ele)=>{
-                let index = this.G$(ele).attr(Constants.HTML_PARSER_DOM_INDEX);
-                if(index) {
-                    let ast = this.cacheAstMap[index];
-                    // let indexs: string[] = index.split(",");
-                    // let ast = this.cacheAst;
-                    // for(let i = 1; i < indexs.length; i++) {
-                    //     let idx = indexs[i] ? parseInt(indexs[i]) : -1;
-                    //     if(ast) {
-                    //         ast = ast.children[idx];
-                    //     }else {
-                    //         break;
-                    //     }
-                    // }
-                    if(ast && ast != this.cacheAst) {
-                        vmdoms.push(ast.vmdom);
+        
+        if(typeof selector == "string") {
+            let jEleFromCache = G.G$(cacheHtml ? cacheHtml.ast.html() : this.cacheHtml).find(selector);
+            if(jEleFromCache.length > 0 && this.cacheAst) {
+                jEleFromCache.each((i, ele)=>{
+                    let index = this.G$(ele).attr(Constants.HTML_PARSER_DOM_INDEX);
+                    if(index) {
+                        let ast = this.cacheAstMap[index];
+                        // let indexs: string[] = index.split(",");
+                        // let ast = this.cacheAst;
+                        // for(let i = 1; i < indexs.length; i++) {
+                        //     let idx = indexs[i] ? parseInt(indexs[i]) : -1;
+                        //     if(ast) {
+                        //         ast = ast.children[idx];
+                        //     }else {
+                        //         break;
+                        //     }
+                        // }
+                        if(ast && ast != this.cacheAst) {
+                            vmdoms.push(ast.vmdom);
+                        }
                     }
-                }
-            });
-            
+                });
+                return vmdoms;
+            }
+        }else {
+            let vmdom = this.G$(selector).data("vmdom");
+            if(vmdom) {
+                vmdoms.push(vmdom); 
+                return vmdoms;
+            }
         }
-        return vmdoms;
+        return [-1];
     }
     
 }

@@ -290,9 +290,9 @@ export default class HtmlParser {
             let valueNew = this.decodeAttr(value, shouldDecodeNewlines);
             let name = args[1];
             if(tagClass) {
-                let type = this.getAttributeValueType(name, valueNew);
+                // let type = this.getAttributeValueType(name,valueNew);
                 name = window.getPossibleStandardTagName(args[1]);
-                valueNew = this.parseAttributeValue(name, valueNew, type);
+                valueNew = this.parseAttributeValue(name, valueNew);
             }else {
                 name = window.getPossibleStandardName(args[1]);
                 valueNew = this.formatDomProperties(name, valueNew);
@@ -336,7 +336,7 @@ export default class HtmlParser {
     }
 
     // 解析属性值
-    private parseAttributeValue(name:string,value:string, typeConstractor: any,htmlTag?: boolean){
+    private parseAttributeValue(name:string,value:string, typeConstractor?: any,htmlTag?: boolean){
         // 解析value中的表达式 G{xxx} ，对表达式中的函数或变量进行解析处理
         value = value.replace(/\G\{([^\}]+)\}/g,function(match,m1){
             // 获得表达式，如果表达式是以“();”结尾的，去除之
@@ -373,11 +373,11 @@ export default class HtmlParser {
                     return "";                    
             }
         });
-
         if(G.events.contains(name.toLowerCase())){
             let values = value.split(";");
             let funs = [];
             for(let i = 0; i < values.length; i++) {
+                let typeConstractor = this.getAttributeValueType(name,value)
                 let valueInner = values[i];
                 if(typeConstractor == "script" || typeConstractor == "function") {
                     valueInner = valueInner.replace(/^javascript:/,"");
@@ -408,11 +408,12 @@ export default class HtmlParser {
                 return funs[0];
             }
             return funs;
-        }else{
-            let type = typeConstractor;
+        }else {
+            // let type = typeConstractor;
+            let type = this.getAttributeValueType(name,value)
             //回调函数
             try {
-                if(type == 'function'){
+                if(type == 'function') {//|| type.indexOf("_g_function")>-1
                     if(htmlTag == true) {
                         return value;
                     }
@@ -435,7 +436,7 @@ export default class HtmlParser {
                         return value;
                     }
                     let script = value.replace(/^javascript:/,"");
-                    return function(...args: any[]){
+                    return function(...args: any[]) {
                         try{
                             return eval(script);
                         }catch(err){
@@ -492,7 +493,7 @@ export default class HtmlParser {
 
     private getAttributeValueType(name: string, value:string) {
         let type = window.getPossibleStandardType(name);
-        if(type != "any") {
+        if(type.indexOf("any") < 0 && type.indexOf(",") < 0 ) {
             return type;
         }
         value = value.trim();

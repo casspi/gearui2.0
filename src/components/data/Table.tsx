@@ -838,8 +838,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             G.$("#"+this.props.id).data("vmdom", this)
         }
 
+        let columns = this.state.columns || [];
         //缓存一份行数据字段，当没有数据时，新增用得到
-        let uColums:any = [...this.state.columns].filter(o=>o.dataIndex!='sequence'&&o.dataIndex!="control");
+        let uColums:any = columns.filter(o=>o.dataIndex!='sequence' && o.dataIndex!="control");
         for(let i=0;i<uColums.length;i++) {
             if(uColums[i].dataIndex){
                 this.defaultRecord[uColums[i].dataIndex] = null;

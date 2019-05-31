@@ -6,6 +6,14 @@ import { Dialog } from './components/pack';
 import * as utils from './utils';
 WindowUtil.extendPrototype();
 const SockJs = require('sockjs-client');
+G.G$.extend(G.G$.fn,{
+    //初始化一个元素
+    doRender: function(callback?: Function) {
+        if(callback){
+            callback(this);
+        }
+    }
+});
 let GearWeb:any = function(selector: string|object|Function) {
   return G.$.call(GearWeb, selector);
 };

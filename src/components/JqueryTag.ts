@@ -111,7 +111,18 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
             });
         });
         G.addUpdating(promise);
+        promise.then(function() {
+            G.removeUpdating(promise);
+        }, function() {
+            G.removeUpdating(promise);
+        });
     }
+
+    protected resolve(fun?: Function): void{
+        if(fun instanceof Function) {
+            fun(this);
+        }
+    };
 
     onAfterRender(fun: Function) {
         if(fun && G.G$.isFunction(fun)) {
@@ -177,29 +188,38 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     append(...args:any[]){
         //通过append添加的元素要实现动态渲染，并且将内容append到元素中
         // if(React.isValidElement(this)) {
-            let parser = new Parser();
-            let astMsg: ParseResult  = parser.parse.call(parser, ...args, true);
-            let html = G.G$(astMsg.cacheHtml).html();
-            let cacheHtmlElement = G.G$(G.cacheHtml);
-            let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.ast.id+"']");
-            cacheElement.append(html);
-            G.cacheHtml = cacheHtmlElement.prop("outerHTML");
-            let asts = astMsg.ast.children;
-            let children: any = this.state.children;
-            if(!(children instanceof Array)) {
-                children = [children];
+            let render = true;
+            if(args.length > 1 && typeof args[args.length - 1] == "boolean") {
+                render = args[args.length - 1];
             }
-            asts.forEach((ast: ASTElement)=>{
-                ast.parent = this.ast;
-                let reactEle = GearUtil.newReactInstance(ast);
-                children.push(reactEle);
-            });
-            this.setState({
-                children
-            },() => {
-            });
+            if(render) {
+                let parser = new Parser();
+                let astMsg: ParseResult  = parser.parse.call(parser, ...args, true);
+                let html = G.G$(astMsg.cacheHtml).html();
+                let cacheHtmlElement = G.G$(G.cacheHtml);
+                let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.data('vmdom').ast.id+"']");
+                cacheElement.append(html);
+                G.cacheHtml = cacheHtmlElement.prop("outerHTML");
+                let asts = astMsg.ast.children;
+                let children: any = this.data('vmdom').state.children;
+                if(!(children instanceof Array)) {
+                    children = [children];
+                }
+                asts.forEach((ast: ASTElement)=>{
+                    ast.parent = this.data('vmdom').ast;
+                    let reactEle = GearUtil.newReactInstance(ast);
+                    children.push(reactEle);
+                });
+                this.data('vmdom').setState({
+                    children
+                },() => {
+                });
+            }else {
+                let jdom = G.G$(this.realDom);
+                return jdom.append.call(jdom,...args);
+            }
         // }
-        return this;
+        return this.data('vmdom');
     }
     appendTo(...args:any[]){
         // if(React.isValidElement(this)) {
@@ -606,6 +626,22 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         return jdom.ready.call(jdom,...args);
     }
     remove(...args:any[]){
+        if(this.ast) {
+            let cacheHtmlElement = G.G$(G.cacheHtml);
+            cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.ast.id+"']").remove();
+            G.cacheHtml = cacheHtmlElement.prop("outerHTML");
+            delete G.cacheAstMap[this.ast.id];
+            let parent = this.ast.parent;
+            if(parent) {
+                let parentChildren = parent.children;
+                if(parentChildren) {
+                    let index = parentChildren.indexOf(this.ast);
+                    if(index > -1) {
+                        parentChildren.splice(index, 1);
+                    }
+                }
+            }
+        }
         let jdom = G.G$(this.realDom);
         return jdom.remove.call(jdom,...args);
     }

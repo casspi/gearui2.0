@@ -38,7 +38,7 @@ export default class DialogAction<P extends typeof props, S extends state> exten
     getInitialState(): state {
         let state = this.state;
         return G.G$.extend({},state,{
-            type: this.props.type || 'button',
+            // type: this.props.type || 'button',
             maximized: this.props.maximized,
             dialogWidth: this.props.dialogWidth,
             dialogHeight: this.props.dialogHeight,

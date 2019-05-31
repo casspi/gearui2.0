@@ -540,7 +540,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     //删除指定连接线
     deleteLinks(s:any,t:any){
         let leftData = this.state.leftData;
-        if(s&&t){//如果起点终点都有，即删除指定线条
+        if(s && t){//如果起点终点都有，即删除指定线条
             // G.messager.confirm({message:'确定解除所点击的链接吗？',callback:(id:any)=>{})
             leftData = leftData.map((item)=>{
                if(item.id===s){

@@ -34,11 +34,11 @@
     </noscript>
     <!-- <div id="root">
       <div id="aaaa">
-        <g-button width="90%" id="test">11</g-button>
+        <g-button width="90" id="test">11</g-button>
         <i class="iconfont icon-close"></i>
       </div>
-    </div>
-    <g-checktag dictype="LEVEI" value="l1"></g-checktag>
+    </div> -->
+    <!-- <g-checktag dictype="LEVEI" value="l1"></g-checktag>
     <g-checktag url="http://10.10.10.6:81/example/Checkbox/data" value="bj,sh,l2"></g-checktag>
   <g-buttongroup id="ec3">
     <g-button id='ec3-btn1'>全选</g-button>
@@ -46,7 +46,6 @@
     <g-button>999</g-button>
   </g-buttongroup>
   
-  <g-tooltip title="999"></g-tooltip>
   <g-icon icon="down-circle"></g-icon> -->
   <!-- <g-select></g-select>
   <g-tree url="10.10.10/ccc"></g-tree>
@@ -59,13 +58,59 @@
     <g-button id='bg-btn2'>更新</g-button>
     <g-button id="bg-btn3">创建连接</g-button>
   </g-buttongroup> -->
-  <g-form id="form1">
-    <g-text id="name" value="9999" width="200"></g-text> 
-    <g-date id="date" value="2019/09/08" required="true"></g-date>
-    <g-time id="time" value="18:16" required="true"></g-time>
-    <g-button id="reset" onClick="reset">重置</g-button> 
+  <!-- <g-ajaxlist id="result" url="./datalist.json">
+    <g-column label="任务ID" name="taskId" width="250"></g-column>
+    <g-column label="任务名称" name="taskName" width="250"></g-column>
+    <g-column label="任务类型" name="readType" width="100"></g-column>
+    <g-column label="任务状态" name="statusCn" width="100"></g-column>
+    <g-column label="分组ID" name="groupIds" width="100"></g-column>
+    <g-column label="操作" class="actiontd">
+      <g-link type="link" target="_blank"
+        url="/read/task/getTask?taskId={taskId}">查看任务信息
+      </g-link>
+      <g-link name="gg" type="link" target="_blank"
+        visible="{(status != '21')}"
+        url="/read/task/getInstructions?taskId={taskId}">查看指令状态
+      </g-link>
+      <span ctype="button" buttonStyle="primary" icon="arrow-right">
+        查看
+      </span>
+      <span ctype="label"  class="{status}">9999</span>
+      <g-ajaxaction name="gg" type="link" visible="{(status != '21')}"
+        url="/read/task/revoke?taskId={taskId}" confirm="你确定要撤销这条读取任务吗？">撤销
+      </g-ajaxaction>
+    </g-column>
+  </g-ajaxlist> -->
+  <!-- <div style="background: #ccc">
+    <g-dialogaction buttonStyle="primary" ghost="true">按钮</g-dialogaction>
+    <g-listaction buttonStyle="primary" type="link">list</g-listaction>
+  </div>-->
+  <script> 
+  let getUrl = function() {
+      return "./test.html"
+    }
+  </script>
+  <div id="box"></div>
+  <g-text id="tstt"></g-text>
+  <g-form id="form1" url="http://www.baidu.com">
+    <!-- <g-int min="1" ></g-int> -->
+    <!-- <input type="hidden" ctype="hidden"   >
+    <g-text id="id1"  name="t1" value="9999" width="200"></g-text>  -->
+    <g-text required="true" id="gg" name="t1" value="2222" width="200"></g-text>
+    <g-text required="true" id="gg1" name="t1" value="2222" width="200"></g-text>
+    <g-select id="se1" name="s1" value="888" width="300"></g-select> 
+    <g-time name="time"></g-time>
+    <g-date name="date"></g-date>
+    <!-- <g-button  name="btn1">btn</g-button>
+    <g-upload url="./upload"></g-upload>
+    <g-date id="date" name="date" value="2019/09/08" required="true"></g-date>
+    <g-time id="time" name="time" value="18:16" required="true"></g-time>
+    <g-button id="reset"  onClick="reset">重置</g-button>  -->
+    <g-submit>提交</g-submit>
   </g-form>
-  <!-- <g-dialogaction id="d1" loadType="async" dialogWidth="600" centered="true" dialogHeight="300" title="弹框一"  url="./test.html">弹框一</g-dialogaction> -->
+  
+  <!-- <g-dialogaction id="addBtn" value="添加" type="button" buttonStyle="primary" title="部门信息录入" url="./test1.html" dialogWidth="800" loadType="async" controlBar="true" onConfirm="onDepartmentSave(this)" icon="icon-add" function="AUTH_DEPARTMENT_C"></g-dialogaction>
+  <g-dialogaction id="d1" loadType="async" dialogWidth="600" centered="true" dialogHeight="300" title="弹框一"  url="http://10.10.10.6">弹框一</g-dialogaction> -->
   <!-- <g-dialog centered="false" style="top:300px" dragable="true"></g-dialog> -->
   
   <!-- <g-dialog  id="d1"   title="弹框一">
@@ -99,13 +144,36 @@
     </g-tabs>
     
   </div> -->
+  <body>
+  <div id="root"></div>
   </body>
   <script>
   G(function() {
-    G('#reset').onClick(function(){
-      // G('#name').reset()
-      G("#form1").reset()
-    })
+      G("#root").append("<g-button id='test'>append</g-button>");
+        G("#test").onClick(function(){
+          alert('test---')
+        })
+        G("#test").append("<g-icon id='icon' type='file'></g-icon>");
+        var _promise = G("#test").attr("id");
+        _promise.resolve(function(id) {
+          console.log(id);
+        });
+        setTimeout(function(){
+          G("#icon").remove()//删除必须使用G的remove
+        },3000)
+    
+      // console.log(G("#test"))
+      // G("#test")._promise.then(function(e){
+      //   e.result.onClick(function(){
+      //     alert(99)
+      //   })
+      // })
+
+
+    // G('#reset').onClick(function(){
+    //   // G('#name').reset()
+    //   G("#form1").reset()
+    // })
     // console.log($('#d2'))
     // G('#open-d2').onClick(function(){
       // G('#d1').setVisible(false)
@@ -137,7 +205,8 @@
     // console.log(test);
     // bu.append("<g-button id='ccc'>append</g-button>");
     // var ccc = $("#ccc");
-    // root.doRender();
+    // console.log(ccc)
+    // // root.doRender();
     // ccc.setLoading(true);
     // test.setLoading(true);
     //console.log(ccc instanceof G.tag.button);

@@ -1,10 +1,19 @@
 import * as Tag from "../Tag";
+import * as Text from "../form/Text";
+import * as Number from "../form/Number";
+import * as File from "../form/File";
+import * as Time from "../form/Time";
+import * as Date from "../form/Date";
+import * as Datetime from "../form/Datetime";
+import * as TimePicker from "../form/TimePicker";
 import { Form as AntdForm } from 'antd';
 import { FormComponentProps } from 'antd/es/form/Form';
 import * as React from 'react';
 import { ObjectUtil, UUID } from "../../utils";
 import { Validator } from "../../validator";
 import Http, { methods } from '../../utils/http';
+import * as Hidden from './Hidden';
+import { Label } from "../data";
 export var props = {
     //是否验证隐藏控件，在validator中使用
     validateHidden: GearType.Boolean,
@@ -32,6 +41,7 @@ export interface state extends Tag.state {
     method?: methods;
     redirect?: string;
     validate?: boolean;
+    hiddenValue?:any
 };
 
 export class Form<P extends (typeof props & FormComponentProps), S extends state> extends Tag.default<P, S> {
@@ -39,6 +49,9 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     // private values = {};
 
     // private cacheItems: any = null;
+
+    private addedOtherParam = false;
+    private addedParam = false;
 
     constructor(props: P, context: {}) {
         super(props, context);
@@ -49,7 +62,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     getInitialState(): state {
-        // this.values = {};
         return {
             invalidType: this.props.invalidType,
             validateHidden: this.props.validateHidden,
@@ -61,7 +73,8 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             ajax: this.props.ajax==false?false:true,
             method: this.props.method,
             validate: true,
-            redirect: this.props.redirect
+            redirect: this.props.redirect,
+            hiddenValue:null
         };
     }
 
@@ -79,6 +92,8 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     private getChildren() {
         let children:any = this.props.children;
+        // children.push(<div className={"hidden-warp"} key="hidden-warp">{this.state.hiddenValue}</div>)
+        // console.log(children)
         let methodParam = this.getMethodParam();
         if(methodParam != null) {
             if(children instanceof Array) {
@@ -87,6 +102,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 return [children, methodParam];
             }
         }
+        
         return children;
     }
         
@@ -100,9 +116,10 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         delete props.validate;
         delete props.validation;
         delete props.ajax;
+        delete props.hiddenValue;
         let children = this.getChildren();
         return (<AntdForm {...props}>
-            {children}
+            {children}{this.state.hiddenValue}
         </AntdForm>);
     }
 
@@ -198,103 +215,208 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     //添加参数的隐藏域
-    addParams() {
+    addParams(callback: Function) {
         //先删除所有的隐藏域
         this.removeAllHiddens(true);
         //获取当前修改过的字段的数据---暂时未实现
-        let values = this.props.form.getFieldsValue();
+        let values: any = this.props.form.getFieldsValue();
+        let count = 0;
         for(let key in values) {
-            let gearObjs = G.$("[name='" + key + "']");
-            if(gearObjs.length && gearObjs.length > 1 && gearObjs.eq) {
-                for(let i=0; i < gearObjs.length; i++) {
-                    let gearObj = gearObjs.eq(i);
-                    this.addParamsValueFormat(gearObj, values, key);
-                }
-            }else {
-                this.addParamsValueFormat(gearObjs, values, key);
-            }
-            
+            count += 1;
         }
+        if(count > 0) {
+            for(let key in values) {
+                // console.log(G.$('#'+key))
+                let gearObjs = G.$("#" + key)//G.$("[name='" + key + "']");
+                if((gearObjs.length == null || gearObjs.length <=0 || gearObjs.eq == null) && !(gearObjs instanceof Tag.default)) {
+                    //gearObjs = gearObjs.parent()
+                    gearObjs = G.$("[name='" + key + "']");
+                    if((gearObjs.length == null || gearObjs.length <=0 || gearObjs.eq == null) && !(gearObjs instanceof Tag.default)) {
+                        gearObjs = gearObjs.parent();
+                    }
+                } 
+                if(gearObjs.length && gearObjs.length > 1 && gearObjs.eq) {
+                    let countInner = gearObjs.length;
+                    for(let i=0; i < gearObjs.length; i++) {
+                        let gearObj = gearObjs.eq(i);
+                        if(!(gearObj instanceof Tag.default)) {
+                            //gearObjs = gearObjs.parent()
+                            gearObj = G.$("[name='" + key + "']");
+                            if(!(gearObj instanceof Tag.default)) {
+                                gearObj = gearObj.parent();
+                            }
+                        }
+                        this.addParamsValueFormat(gearObj, values,()=>{
+                            countInner = countInner - 1;
+                            if(countInner <= 0) {
+                                count = count - 1;
+                                if(count <= 0) {
+                                    callback();
+                                }
+                            }
+                        }, key);
+                    }
+                }else {
+                    this.addParamsValueFormat(gearObjs[0], values,()=>{
+                        count = count - 1;
+                        if(count <= 0) {
+                            callback();
+                        }
+                    }, key);
+                }
+                
+            }
+        }else {
+            callback();
+        }
+        
     }
 
-    private addParamsValueFormat(gearObj: any, values: any, key: any) {
+    private addParamsValueFormat(gearObj: any, values: any,callback: Function, key: any) {
         // text、number、file控件，直接使用自身传值
-        if(ObjectUtil.isExtends(gearObj, "Tag") && !(ObjectUtil.isExtends(gearObj, "Text") || ObjectUtil.isExtends(gearObj, "Hidden") || ObjectUtil.isExtends(gearObj, "Number") || ObjectUtil.isExtends(gearObj, "File") || ObjectUtil.isExtends(gearObj, "Label"))){
+        if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default)){
             let name = gearObj.props.name;
             let value = values[key];
-            if(ObjectUtil.isExtends(gearObj, "Date") || ObjectUtil.isExtends(gearObj, "Datetime") || ObjectUtil.isExtends(gearObj, "Time")) {
+            if(gearObj instanceof Date.default || gearObj instanceof Datetime.default || gearObj instanceof Time.default) {
                 value = gearObj.getFormatValue(value);
             }
-            //if(name && gearObj.props.disabled != true) {
+            //if(name && gearObj.props.disabled != true) 
             if(name && gearObj.isEnable() == true) {
-                this.addHiddenValue(name,value,true);
+                this.addHiddenValue(name,value,callback, true);
             }
+        }else {
+            callback();
         }
     }
 
     removeAllHiddens(inner?:boolean){
-        this.getHiddenContainer(inner).remove();
+        if(inner==true){
+            this.find(".inner-hidden").remove();
+        }else{
+            this.find("div.hidden").remove();       
+        }
+        // let fun = async ()=>{
+        //     let com = await this.getHiddenContainer(inner);
+        //     console.log(com)
+        //     // com[0].remove()
+        // }
+        // fun()
     }
 
     //添加其他参数
-    addOtherParams() {
+    addOtherParams(callback: Function) {
         let otherParams: any = this.state.otherParams;
         if(otherParams) {
             if(otherParams instanceof Array) {
-                otherParams.map((ele) => {
-                    let eleKey = ele.split("=")[0];
-                    let eleVal = ele.split("=")[1];
-                    this.setHiddenValue(eleKey,eleVal,true);
-                });
-            }else {
-                for(let key in otherParams){
-                    let value = otherParams[key];
-                    this.setHiddenValue(key,value,true);
+                let count = otherParams.length;
+                let countObj = {count};
+                if(count > 0) {
+                    otherParams.map((ele) => {
+                        let eleKey = ele.split("=")[0];
+                        let eleVal = ele.split("=")[1];
+                        
+                        this.setHiddenValue(eleKey,eleVal,callback,countObj, true);
+                    });
+                }else {
+                    callback();
                 }
+            }else {
+                let count = 0;
+                for(let key in otherParams){
+                    count += 1;
+                }
+                let countObj = {count};
+                if(count > 0) {
+                    for(let key in otherParams){
+                        let value = otherParams[key];
+                        this.setHiddenValue(key,value,callback,countObj,true);
+                    }
+                }else {
+                    callback();
+                }
+                
             }
+        }else {
+            callback();
         }
     }
 
     // 设置指定名称的隐藏字段的值
-    setHiddenValue(name: any,value: any,inner?:boolean){
+    setHiddenValue(name: any,value: any,callback: Function,countObj:{count:number},inner?:boolean){
         let hiddenDiv = this.getHiddenContainer(inner);
-        value = value || "";
         if(value instanceof Array) {
             // 先删除以前的
             this.removeHiddenValue(name,inner);
+            let count = value.length;
             value.forEach((valueInner,index) => {
-                this.addHiddenValue(name,valueInner,inner);
+                this.addHiddenValue(name,valueInner,()=>{
+                    count = count - 1;
+                    if(count <= 0) {
+                        countObj.count = countObj.count - 1;
+                        if(countObj.count <= 0) {
+                            callback();
+                        }
+                    }
+                },inner);
             });
         }else {
             // 获取到表单内所有未禁用的指定名称的隐藏控件
             var jinput = hiddenDiv.find("input[type='hidden'][name='"+name+"']").not(":disabled");
             if(jinput.length==0){
-                this.addHiddenValue(name,value,inner);
+                this.addHiddenValue(name,value,()=>{
+                    countObj.count = countObj.count - 1;
+                    if(countObj.count <= 0) {
+                        callback();
+                    }
+                },inner);
             }else if(jinput.length==1){
                 jinput.val(value);
             }else if(jinput.length>1){
                 this.removeHiddenValue(name,inner);
-                this.addHiddenValue(name,value,inner);
+                this.addHiddenValue(name,value,()=>{
+                    countObj.count = countObj.count - 1;
+                    if(countObj.count <= 0) {
+                        callback();
+                    }
+                },inner);
             }
         }
     }
 
     private getHiddenContainer(inner?:boolean){
         let hiddenDiv;
-        if(inner==true){
-            hiddenDiv = this.find("div.inner-hidden");
-            if(hiddenDiv.length==0){
-                hiddenDiv = G.G$("<div class='inner-hidden' style='display:none'></div>")
-                this.append(hiddenDiv);
+        // return new Promise(function(resolve){
+            if(inner==true){
+                // this.setState({hiddenValue:<div className='inner-hidden' style={{"display":"none"}}></div>},()=>{
+                //     console.log(G.G$('.inner-hidden'));
+                //     // debugger
+                //     hiddenDiv = G.G$('.inner-hidden');
+                //     // resolve(hiddenDiv);
+                // })
+                hiddenDiv = this.find(".inner-hidden");
+                if(hiddenDiv.length==0){
+                    // hiddenDiv = G.G$("<div class='inner-hidden' style='display:none'></div>")
+                    this.append("<div class='inner-hidden' style='display:none'></div>");
+                    // console.log(this.find(".inner-hidden"))
+                    // console.log(G.$('#'+this.state.id+'-inner-warp'))
+                }
+                return this.find(".inner-hidden");
+            }else{
+                // this.setState({hiddenValue:<div className='hidden' style={{"display":"none"}}>99999999999</div>},()=>{
+                //     // console.log(G.G$('.hidden'));
+                //     hiddenDiv = G.G$('.hidden');
+                //     // resolve(hiddenDiv);
+                // })
+                hiddenDiv = this.find("div.hidden");
+                if(hiddenDiv.length==0){
+                    // hiddenDiv = G.G$("<div class='hidden' style='display:none'></div>")
+                    this.append("<div class='hidden' style='display:none'></div>");
+                }
+                return this.find("div.hidden");          
             }
-        }else{
-            hiddenDiv = this.find("div.hidden");
-            if(hiddenDiv.length==0){
-                hiddenDiv = G.G$("<div class='hidden' style='display:none'></div>")
-                this.append(hiddenDiv);
-            }            
-        }
-        return hiddenDiv;
+        // })
+        
+        
     }
 
     // 移除隐藏字段
@@ -332,15 +454,27 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     // 向表单中追回一个隐藏字段
-    addHiddenValue(name: any,value: any,inner?:boolean){
+    addHiddenValue(name: any,value: any,callback: Function,inner?:boolean){
         value = value || "";
         if(value instanceof Array) {
             value.forEach((valueInner,index) => {
-                this.addHiddenValue(name,valueInner,inner);
+                this.addHiddenValue(name,valueInner,callback,inner);
             });            
         }else{
             let hiddenDiv = this.getHiddenContainer(inner);
-            hiddenDiv.append("<input type='hidden' name='"+name+"' value='"+value+"'/>");
+            // this.find(".")
+            let appendResult: any = (hiddenDiv as any).append("<input type='hidden' name='"+name+"' value='"+value+"'/>", false);
+            
+            appendResult.resolve(function(ele: any) {
+                callback(ele);
+            });
+            // let fun = async ()=>{
+            //     let hiddenDiv:any = await this.getHiddenContainer(inner);
+            //     console.log(hiddenDiv)
+            //     hiddenDiv.append("<input type='hidden' name='"+name+"' value='"+value+"'/>");
+            // }
+            // fun()
+
         }
     }
 
@@ -404,15 +538,19 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 this.doEvent("submit");
                 //设置了target以后就直接走同步的form提交
                 if(this.state.iframe && this.state.target == null) {
-                    this.addParams();
-                    this.addOtherParams();
-                    this.submitIframe();
+                    this.addParams(()=>{
+                        this.addOtherParams(()=>{
+                            this.submitIframe();
+                        });
+                    });
                 }else {
                     if(this.state.ajax == false || this.state.target != null) {
                         //增加额外参数，只提交修改参数
-                        this.addParams(); 
-                        this.addOtherParams();
-                        this.realDom.submit();
+                        this.addParams(()=>{
+                            this.addOtherParams(()=>{
+                                (this.realDom as any).submit();
+                            });
+                        }); 
                     }else {
                         this.ajaxSubmit(callback);
                     }
@@ -436,9 +574,13 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         if (window["FormData"] !== undefined){
             this.submitXhr(callback);
         } else {
-            this.addParams();
-            this.addOtherParams();
-            this.submitIframe();
+            this.addParams(()=>{
+                this.addOtherParams(()=>{
+                    this.submitIframe();
+                });
+            });
+            
+            
         }
     }
 
@@ -514,51 +656,54 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
     
     submitXhr(callback?:Function){
-        let action: any = this.state.action||""
-		G.G$.ajax({
-			url: action,
-			type: "post",
-			xhr: ()=>{
-                var xhrMethod = G.G$.ajaxSettings.xhr;
-                let xhr: any;
-                if(xhrMethod) {
-                    xhr = xhrMethod();
-                    if (xhr.upload) {
-                        xhr.upload.addEventListener('progress', (e: any)=>{
-                            if (e.lengthComputable) {
-                                var total = e.total;
-                                var position = e.loaded || e.position;
-                                var percent = Math.ceil(position * 100 / total);
-                                this._onProgress(percent);
-                                this.doEvent("process",percent);
-                            }
-                        }, false);
+        this.getParamsAsFormData((data: any)=>{
+            let action: any = this.state.action||""
+            G.G$.ajax({
+                url: action,
+                type: "post",
+                xhr: ()=>{
+                    var xhrMethod = G.G$.ajaxSettings.xhr;
+                    let xhr: any;
+                    if(xhrMethod) {
+                        xhr = xhrMethod();
+                        if (xhr.upload) {
+                            xhr.upload.addEventListener('progress', (e: any)=>{
+                                if (e.lengthComputable) {
+                                    var total = e.total;
+                                    var position = e.loaded || e.position;
+                                    var percent = Math.ceil(position * 100 / total);
+                                    this._onProgress(percent);
+                                    this.doEvent("process",percent);
+                                }
+                            }, false);
+                        }
                     }
+                    return xhr;
+                },
+                data,
+                dataType: 'html',
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: (data, textStatus)=>{
+                    this.success(data);
+                    if(callback)
+                        callback.call(this,data);
+                },
+                error: (xhr, textStatus, errorThrown)=>{
+                    console.error("Error:");
+                    console.error(xhr);
+                    let data = {
+                        status:98,
+                        message:"请求失败，请求的URL不存在或者网络异常"
+                    };
+                    this.error(data);
+                    if(callback)
+                        callback.call(this,data);                
                 }
-				return xhr;
-			},
-			data: this.getParamsAsFormData(),
-			dataType: 'html',
-			cache: false,
-			contentType: false,
-			processData: false,
-			success: (data, textStatus)=>{
-                this.success(data);
-                if(callback)
-                    callback.call(this,data);
-			},
-            error: (xhr, textStatus, errorThrown)=>{
-                console.error("Error:");
-                console.error(xhr);
-                let data = {
-                    status:98,
-                    message:"请求失败，请求的URL不存在或者网络异常"
-                };
-                this.error(data);
-                if(callback)
-                    callback.call(this,data);                
-            }
-		});
+            });
+        });
+        
     }
 
     protected _onProgress(percent: any) {
@@ -566,18 +711,21 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
     
     //获取所有的条件
-    getParamsAsFormData() {
-        this.addParams();
-        this.addOtherParams();
-        if(window["FormData"] !== undefined) {
-            let formData: FormData|undefined;
-            if(this.realDom instanceof HTMLFormElement) {
-                formData = new FormData(this.realDom);
-            }
-            return formData;
-        }else {
-            return this.serializeArray();
-        }
+    getParamsAsFormData(callback: Function) {
+        this.addParams(()=>{
+            this.addOtherParams(()=>{
+                let formData: FormData|undefined;
+                if(window["FormData"] !== undefined) {
+                    
+                    if(this.realDom instanceof HTMLFormElement) {
+                        formData = new FormData(this.realDom);
+                    }
+                }else {
+                    formData = this.serializeArray();
+                }
+                callback(formData);
+            });
+        });
     }
 
     setOtherParams(param: any,callback?: Function) {

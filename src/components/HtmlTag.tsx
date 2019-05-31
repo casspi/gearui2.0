@@ -27,6 +27,7 @@ export default class HtmlTag<P extends typeof props, S extends (state)> extends 
         }, this.state.props);
         delete props.focus;
         delete props.control;
+        delete props.__ast__;
         return React.createElement(this.props.__ast__.tag, props, this.state.children);
         // return null;
     }

@@ -194,7 +194,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         });
     }
     getInitialState() {
-        let value = this.getPropStringArrayValue(this.props.value);
+        let value = this.getPropStringArrayValue(this.props.value) || [];
         return {
             disabled: this.props.disabled,
             readOnly: this.props.readOnly,
@@ -217,7 +217,10 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             delete props.value;
             delete props.defaultValue;
         }
-        return <AntdSelect {...props}>{optionsMap}</AntdSelect>;
+        return <AntdSelect {...props}>{optionsMap}</AntdSelect>
+        // <div>
+        //         <input key="hidden-input" value={this.state.value}  name={this.state.name} disabled={true} style={{display: "none"}}></input>
+        //     </div>
     }
 
    // 选择
@@ -799,7 +802,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     }
 
     blur(...args:any){
-        this.find(".ant-select-selection").blur(...args);
+        this.find("div.ant-select-selection").blur(...args);
     }
 
 }

@@ -75,7 +75,6 @@ export default class Button<P extends typeof props, S extends state> extends Tag
         delete state.listId;
         delete state.actionName;
         delete state.refreshList;
-
         if(state.iconAlign == "right" && this.state.icon && this.state.text) {
             delete state.icon;
             let icon:any = this.state.icon;

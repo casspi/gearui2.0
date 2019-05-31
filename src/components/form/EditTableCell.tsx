@@ -31,7 +31,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
    
     constructor(props: P, context: {}) {
         super(props, context);
-        console.log('构造器')
     }
 
     private gearEle: any;
@@ -242,7 +241,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                     //     // }
                     })
                     if(onchangebak && G.G$.isFunction(onchangebak)) {
-                        console.log(onchangebak)
                         onchangebak.call(this.gearEle,value,oldValue);
                     }
                     this.gearEle.focus();
@@ -288,7 +286,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     setText(text: any,callback?: Function) {
         let oldValue: any = this.state.value;;
         if(this.gearEle.setText) {
-            console.log(this.gearEle)
+            // console.log(this.gearEle)
             this.gearEle.setText(text, ()=> {
                 let value = this.gearEle.getValue();
                 this.doEvent("change", value, oldValue, text);

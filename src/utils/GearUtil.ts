@@ -267,6 +267,8 @@ export default class GearUtil {
                     if(clazz == null) {
                         clazz = G.components["text"];
                     }
+                }else {
+                    clazz = G.components["htmltag"];
                 }
             }
         }
@@ -361,7 +363,7 @@ export default class GearUtil {
         }
         return false;
     }
-
+    
     //属性转换成对应的props
     static attrsToProps(attrs: any, propsTemplete: any,ast: ASTElement):any {
         let props = G.G$.extend({}, propsTemplete);
@@ -416,7 +418,6 @@ export default class GearUtil {
     // 解析属性值
     static parseAttributeValue(name:string,value:string, typeConstractor: any,htmlTag?: boolean){
         // 解析value中的表达式 G{xxx} ，对表达式中的函数或变量进行解析处理
-       
         value = value.replace(/\G\{([^\}]+)\}/g,function(match,m1){
             // 获得表达式，如果表达式是以“();”结尾的，去除之
             var expression = m1.replace(/\([\.|$|\w]{0,}\);?$/,"");

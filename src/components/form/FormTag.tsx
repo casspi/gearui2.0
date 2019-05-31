@@ -64,11 +64,11 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     protected cannotUpdate:GearArray<keyof S> = new GearArray<keyof state>(["name","id"]);
     protected form: Form.Form<typeof Form.props & FormComponentProps, Form.state>;
     protected initValue=this.state.value;
+    // protected itemId = (this.props.id || UUID.get()) + "_item-id"
     constructor(props:any, context: {}){
         super(props);
         // this._propsValue = this.props.value;
         this.setForm(this.ast);
-        console.log(this.state.value)
     }
 
     private setForm(ast: ASTElement) {
@@ -96,9 +96,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     // needChange:any;
     triggerChange(changedValue: any, callback?: Function) {
-        let name: any = this.state.name;
         if(this.form) {
-            this.form.setFieldValue(name, changedValue, callback);
+            this.form.setFieldValue(this.state.id, changedValue, callback);
             // this.needChange = true;
         }else{
         
@@ -121,7 +120,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             readOnly: this.props.readOnly,
             value: this.props.value,
             labelText: this.props.labelText,
-            name: this.props.name || UUID.get()
+            name: this.props.name || UUID.get(),
+            id: this.props.id || this.props.name || UUID.get() 
         };
     }
 
@@ -159,9 +159,9 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     
     validate(fun?: Function): boolean {
-        let name: any = this.state.name;
-        if(this.form && name) {
-            return this.form.validateField(name, fun);
+        let id: any = this.state.id;
+        if(this.form && id) {
+            return this.form.validateField(id, fun);
         }
         return true;
     }
@@ -229,7 +229,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     reset(){
         if(this.form) {
-            this.form.reset(this.state.name);
+            this.form.reset(this.state.id);
         }
     }
 
@@ -237,9 +237,9 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
      * 获取控件验证信息
      */
     getValidateMessage() {
-        let name: any = this.state.name;
+        let id: any = this.state.id;
         if(this.form) {
-            return this.form.getError(name);
+            return this.form.getError(id);
         }
         return null;
     }
@@ -270,7 +270,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     makeJsx(): React.ReactNode {return null;}
     render() {
-        let name: any = this.state.name;
+        let name: any = this.state.id;
         let ele: React.ReactNode = this.makeJsx();
         // console.log(this.state.rules)
         if(this.form) {
@@ -292,7 +292,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
      */
     private getFormItem(formTag: React.ReactNode) {
         let formUtils: WrappedFormUtils = this.form.props.form;
-        let tagName: any = this.state.name;
+        let tagName: any = this.state.id;
         let validateStatus:'success' | 'warning' | 'error' | 'validating' = "success";
         let help = null;
         let invalidType = this.getInvalidType();

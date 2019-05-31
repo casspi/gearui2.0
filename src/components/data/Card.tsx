@@ -115,7 +115,7 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
         let childrenJsxs: any[] = [];
         
         let children:any[] = this.props.children;
-        console.log(children)
+        // console.log(children)
         if(!(children instanceof Array)) {
             children = [children];
         }
@@ -149,7 +149,7 @@ export default class Card<P extends typeof props, S extends state> extends Tag.d
                 childrenJsxs.push(childJsx);;
             });
         }
-        console.log(childrenJsxs)
+        // console.log(childrenJsxs)
         return childrenJsxs;
     }
 }

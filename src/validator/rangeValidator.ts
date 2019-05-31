@@ -24,14 +24,14 @@ export default class RangeValidator extends Validator {
                     callback();
                     return;
                 } else {
-                    callback("MAC地址必须在" + this.props.min + "和" + this.props.max + "之间")
+                    callback("MAC地址必须在" + min + "和" + max + "之间")
                 }
             } else if (this.props.type == "number") {
                 let min = parseFloat(this.props.min);
                 if (StringUtil.isNumber(min) == false) {
                     min = 0;
                 }
-                let max = parseFloat(this.props.max);
+                let max = parseFloat(this.props.max || 999999999);
                 if (StringUtil.isNumber(max) == false) {
                     max = 999999999;
                 }
@@ -40,14 +40,14 @@ export default class RangeValidator extends Validator {
                     callback();
                     return;
                 } else {
-                    callback("数值必须在" + this.props.min + "和" + this.props.max + "之间")
+                    callback("数值必须在" + min + "和" + max + "之间")
                 }
             } else if (this.props.type == "int") {
                 let min = parseInt(this.props.min);
                 if (StringUtil.isInteger(min) == false) {
                     min = 0;
                 }
-                let max = parseInt(this.props.max);
+                let max = parseInt(this.props.max || 999999999);
                 if (StringUtil.isInteger(max) == false) {
                     max = 999999999;
                 }
@@ -56,7 +56,7 @@ export default class RangeValidator extends Validator {
                     callback();
                     return;
                 } else {
-                    callback("数值必须在" + this.props.min + "和" + this.props.max + "之间")
+                    callback("数值必须在" + min + "和" + max + "之间")
                 }
             } else if (this.props.type == "ip") {
                 let min = this.props.min;
