@@ -91,6 +91,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             className: "inputtag-text-control",
             style: { width: this.state.inputWidth || 150},// display: this.state.inputVisible ? "" : "none" },
             onBlur:() => {
+                // console.log('blur')
                 let value = this._inputControl.getValue();
                 let text = this._inputControl.getText();
                 if(value && value.length>0) {
@@ -150,7 +151,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             async: this.state.async,
             limit: this.props.limit,
             rows: this.state.rows,
-            style: { width: this.state.inputWidth || 150,display:this.state.inputVisible?"block":"none"},
+            style: { width: this.state.inputWidth || 150,display:this.state.inputVisible?"":"none"},
             // onMatchFormat: (option: any) => {
             //     this.doEvent("matchFormat", option);
             // },
@@ -232,7 +233,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
     getInitialState(): state {
         return {
             value: this.props.value || [],
-            inputVisible: this.props.inputVisible,
+            inputVisible: false,
             disabled: this.props.disabled,
             loading: false,
             repeatAble: this.props.repeatAble==true,

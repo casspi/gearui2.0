@@ -120,7 +120,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             readOnly: this.props.readOnly,
             value: this.props.value,
             labelText: this.props.labelText,
-            name: this.props.name || UUID.get(),
+            name: this.props.name,
             id: this.props.id || this.props.name || UUID.get() 
         };
     }
@@ -135,6 +135,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     setValue(value: any, callback?: Function) {
         if(this.form) {
+            // console.log(value)
+            // debugger
             this.setState({
                 value
             }, () => {

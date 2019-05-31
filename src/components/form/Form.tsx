@@ -400,20 +400,19 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     addHiddenValue(name: any,value: any,inner?:boolean){
         value = value || "";
         if(value instanceof Array) {
-            value.forEach((valueInner,index) => {
-                this.addHiddenValue(name,valueInner,inner);
-            });            
+            if(value.length>0){
+                value.forEach((valueInner,index) => {
+                    this.addHiddenValue(name,valueInner,inner);
+                });            
+            }else{
+                this.addHiddenValue(name,null,inner)
+            }
         }else{
             let hiddenDiv = this.getHiddenContainer(inner);
-            // this.find(".")
+            if(typeof value == "object" && value.value){
+                value = value.value
+            }
             hiddenDiv.append("<input type='hidden' name='"+name+"' value='"+value+"'/>");
-            // let fun = async ()=>{
-            //     let hiddenDiv:any = await this.getHiddenContainer(inner);
-            //     console.log(hiddenDiv)
-            //     hiddenDiv.append("<input type='hidden' name='"+name+"' value='"+value+"'/>");
-            // }
-            // fun()
-
         }
     }
 

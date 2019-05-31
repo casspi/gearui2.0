@@ -234,6 +234,8 @@ export default class Date<P extends typeof props, S extends state> extends FormT
             }else{
                 value = moment(val, this.state.format);
             }
+        }else{
+            value = val;
         }
         super.setValue(value, callback);
     }
@@ -260,6 +262,11 @@ export default class Date<P extends typeof props, S extends state> extends FormT
             }
             super.setValue(value);
         }
+    }
+
+    clear(){
+        this.setValue(null)
+        // this.setValue(null)
     }
 
     reset(){

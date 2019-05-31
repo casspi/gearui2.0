@@ -424,6 +424,8 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
             }else{
                 value = moment(val, this.state.format);
             }
+        }else{
+            value = val;
         }
         super.setValue(value, callback);
     }
@@ -450,6 +452,10 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
         }
     }
     
+    clear(){
+        this.setValue(null)
+    }
+
     reset(){
         this.setValue(this.props.value);
     }
