@@ -560,18 +560,80 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     parents(...args:any[]){
         let jdom = G.G$(this.realDom).parents(...args);
         let parents: any[] = [];
+        let fnNames: any[] = [];
         jdom.each((index, ele) => {
-            parents.push(G.$(ele));
+            let gObj = G.$(ele);
+            for(let key in gObj) {
+                if(G.G$.isFunction(gObj[key]) && fnNames.indexOf(key) == -1) {
+                    fnNames.push(key);
+                }
+            }
+            parents.push(gObj);
         });
-        return parents;
+        let parentsRe = G.G$(parents) as any;
+        G.G$.each(fnNames,(i,name)=>{
+            let fn:any = (...args:any[])=>{
+                let res = [];
+                for(let j = 0; j < parents.length;j ++) {
+                    let ele = parents[j];
+                    if(ele[name] != null && G.G$.isFunction(ele[name])) {
+                        let re = ele[name].call(ele,...args);
+                        res.push(re);
+                    }
+                }
+                return res;
+            };
+            if(name.indexOf(Constants.EXPAND_NAME) != -1) {
+                name = name.replace(Constants.EXPAND_NAME, '');
+            }
+            if(parentsRe) {
+                parentsRe[name] = fn;
+            }
+        });
+        parentsRe.eq = (index:number)=>{
+            return parents[index];
+        };
+        parentsRe.length = parents.length;
+        return parentsRe;
     }
     parentsUntil(...args:any[]){
         let jdom = G.G$(this.realDom).parentsUntil(...args);
         let parents: any[] = [];
+        let fnNames: any[] = [];
         jdom.each((index, ele) => {
-            parents.push(G.$(ele));
+            let gObj = G.$(ele);
+            for(let key in gObj) {
+                if(G.G$.isFunction(gObj[key]) && fnNames.indexOf(key) == -1) {
+                    fnNames.push(key);
+                }
+            }
+            parents.push(gObj);
         });
-        return parents;
+        let parentsRe = G.G$(parents) as any;
+        G.G$.each(fnNames,(i,name)=>{
+            let fn:any = (...args:any[])=>{
+                let res = [];
+                for(let j = 0; j < parents.length;j ++) {
+                    let ele = parents[j];
+                    if(ele[name] != null && G.G$.isFunction(ele[name])) {
+                        let re = ele[name].call(ele,...args);
+                        res.push(re);
+                    }
+                }
+                return res;
+            };
+            if(name.indexOf(Constants.EXPAND_NAME) != -1) {
+                name = name.replace(Constants.EXPAND_NAME, '');
+            }
+            if(parentsRe) {
+                parentsRe[name] = fn;
+            }
+        });
+        parentsRe.eq = (index:number)=>{
+            return parents[index];
+        };
+        parentsRe.length = parents.length;
+        return parentsRe;
     }
     position(...args:any[]){
         let jdom = G.G$(this.realDom);
@@ -982,10 +1044,10 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
             for(let key in state) {
                 let vInState = state[key];
                 if(vInState instanceof Function && propsTemplete[key] && propsTemplete[key] != Constants.TYPE.Function) {
-                    let v = vInState();
                     delete state[key];
                     Object.defineProperty(state, key, {
                         get: function() {
+                            let v = vInState();
                             if(this["_" + key]) {
                                 return this["_" + key];
                             }
