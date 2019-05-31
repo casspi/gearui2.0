@@ -215,66 +215,44 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     //添加参数的隐藏域
-    addParams(callback: Function) {
+    addParams() {
         //先删除所有的隐藏域
         this.removeAllHiddens(true);
         //获取当前修改过的字段的数据---暂时未实现
         let values: any = this.props.form.getFieldsValue();
-        let count = 0;
         for(let key in values) {
-            count += 1;
-        }
-        if(count > 0) {
-            for(let key in values) {
-                // console.log(G.$('#'+key))
-                let gearObjs = G.$("#" + key)//G.$("[name='" + key + "']");
+            // console.log(G.$('#'+key))
+            let gearObjs = G.$("#" + key)//G.$("[name='" + key + "']");
+            if((gearObjs.length == null || gearObjs.length <=0 || gearObjs.eq == null) && !(gearObjs instanceof Tag.default)) {
+                //gearObjs = gearObjs.parent()
+                gearObjs = G.$("[name='" + key + "']");
                 if((gearObjs.length == null || gearObjs.length <=0 || gearObjs.eq == null) && !(gearObjs instanceof Tag.default)) {
-                    //gearObjs = gearObjs.parent()
-                    gearObjs = G.$("[name='" + key + "']");
-                    if((gearObjs.length == null || gearObjs.length <=0 || gearObjs.eq == null) && !(gearObjs instanceof Tag.default)) {
-                        gearObjs = gearObjs.parent();
-                    }
-                } 
-                if(gearObjs.length && gearObjs.length > 1 && gearObjs.eq) {
-                    let countInner = gearObjs.length;
-                    for(let i=0; i < gearObjs.length; i++) {
-                        let gearObj = gearObjs.eq(i);
-                        if(!(gearObj instanceof Tag.default)) {
-                            //gearObjs = gearObjs.parent()
-                            gearObj = G.$("[name='" + key + "']");
-                            if(!(gearObj instanceof Tag.default)) {
-                                gearObj = gearObj.parent();
-                            }
-                        }
-                        this.addParamsValueFormat(gearObj, values,()=>{
-                            countInner = countInner - 1;
-                            if(countInner <= 0) {
-                                count = count - 1;
-                                if(count <= 0) {
-                                    callback();
-                                }
-                            }
-                        }, key);
-                    }
-                }else {
-                    this.addParamsValueFormat(gearObjs[0], values,()=>{
-                        count = count - 1;
-                        if(count <= 0) {
-                            callback();
-                        }
-                    }, key);
+                    gearObjs = gearObjs.parent();
                 }
-                
+            } 
+            if(gearObjs.length && gearObjs.length > 1 && gearObjs.eq) {
+                for(let i=0; i < gearObjs.length; i++) {
+                    let gearObj = gearObjs.eq(i);
+                    if(!(gearObj instanceof Tag.default)) {
+                        //gearObjs = gearObjs.parent()
+                        gearObj = G.$("[name='" + key + "']");
+                        if(!(gearObj instanceof Tag.default)) {
+                            gearObj = gearObj.parent();
+                        }
+                    }
+                    this.addParamsValueFormat(gearObj, values, key);
+                }
+            }else {
+                this.addParamsValueFormat(gearObjs[0], values, key);
             }
-        }else {
-            callback();
         }
-        
     }
 
-    private addParamsValueFormat(gearObj: any, values: any,callback: Function, key: any) {
+    private addParamsValueFormat(gearObj: any, values: any, key: any) {
         // text、number、file控件，直接使用自身传值
+        // if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default)){
         if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default)){
+        
             let name = gearObj.props.name;
             let value = values[key];
             if(gearObj instanceof Date.default || gearObj instanceof Datetime.default || gearObj instanceof Time.default) {
@@ -282,10 +260,8 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             }
             //if(name && gearObj.props.disabled != true) 
             if(name && gearObj.isEnable() == true) {
-                this.addHiddenValue(name,value,callback, true);
+                this.addHiddenValue(name,value, true);
             }
-        }else {
-            callback();
         }
     }
 
@@ -304,81 +280,47 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     //添加其他参数
-    addOtherParams(callback: Function) {
+    addOtherParams() {
         let otherParams: any = this.state.otherParams;
         if(otherParams) {
             if(otherParams instanceof Array) {
                 let count = otherParams.length;
-                let countObj = {count};
                 if(count > 0) {
                     otherParams.map((ele) => {
                         let eleKey = ele.split("=")[0];
                         let eleVal = ele.split("=")[1];
                         
-                        this.setHiddenValue(eleKey,eleVal,callback,countObj, true);
+                        this.setHiddenValue(eleKey,eleVal, true);
                     });
-                }else {
-                    callback();
                 }
             }else {
-                let count = 0;
                 for(let key in otherParams){
-                    count += 1;
+                    let value = otherParams[key];
+                    this.setHiddenValue(key,value,true);
                 }
-                let countObj = {count};
-                if(count > 0) {
-                    for(let key in otherParams){
-                        let value = otherParams[key];
-                        this.setHiddenValue(key,value,callback,countObj,true);
-                    }
-                }else {
-                    callback();
-                }
-                
             }
-        }else {
-            callback();
         }
     }
 
     // 设置指定名称的隐藏字段的值
-    setHiddenValue(name: any,value: any,callback: Function,countObj:{count:number},inner?:boolean){
+    setHiddenValue(name: any,value: any,inner?:boolean){
         let hiddenDiv = this.getHiddenContainer(inner);
         if(value instanceof Array) {
             // 先删除以前的
             this.removeHiddenValue(name,inner);
-            let count = value.length;
             value.forEach((valueInner,index) => {
-                this.addHiddenValue(name,valueInner,()=>{
-                    count = count - 1;
-                    if(count <= 0) {
-                        countObj.count = countObj.count - 1;
-                        if(countObj.count <= 0) {
-                            callback();
-                        }
-                    }
-                },inner);
+                this.addHiddenValue(name,valueInner,inner);
             });
         }else {
             // 获取到表单内所有未禁用的指定名称的隐藏控件
             var jinput = hiddenDiv.find("input[type='hidden'][name='"+name+"']").not(":disabled");
             if(jinput.length==0){
-                this.addHiddenValue(name,value,()=>{
-                    countObj.count = countObj.count - 1;
-                    if(countObj.count <= 0) {
-                        callback();
-                    }
-                },inner);
+                this.addHiddenValue(name,value,inner);
             }else if(jinput.length==1){
                 jinput.val(value);
             }else if(jinput.length>1){
                 this.removeHiddenValue(name,inner);
-                this.addHiddenValue(name,value,()=>{
-                    countObj.count = countObj.count - 1;
-                    if(countObj.count <= 0) {
-                        callback();
-                    }
-                },inner);
+                this.addHiddenValue(name,value,inner);
             }
         }
     }
@@ -386,6 +328,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     private getHiddenContainer(inner?:boolean){
         let hiddenDiv;
         // return new Promise(function(resolve){
+            let _this = G.G$(this.realDom);
             if(inner==true){
                 // this.setState({hiddenValue:<div className='inner-hidden' style={{"display":"none"}}></div>},()=>{
                 //     console.log(G.G$('.inner-hidden'));
@@ -393,26 +336,26 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 //     hiddenDiv = G.G$('.inner-hidden');
                 //     // resolve(hiddenDiv);
                 // })
-                hiddenDiv = this.find(".inner-hidden");
+                hiddenDiv = _this.find(".inner-hidden");
                 if(hiddenDiv.length==0){
                     // hiddenDiv = G.G$("<div class='inner-hidden' style='display:none'></div>")
-                    this.append("<div class='inner-hidden' style='display:none'></div>");
+                    _this.append("<div class='inner-hidden' style='display:none'></div>");
                     // console.log(this.find(".inner-hidden"))
                     // console.log(G.$('#'+this.state.id+'-inner-warp'))
                 }
-                return this.find(".inner-hidden");
+                return _this.find(".inner-hidden");
             }else{
                 // this.setState({hiddenValue:<div className='hidden' style={{"display":"none"}}>99999999999</div>},()=>{
                 //     // console.log(G.G$('.hidden'));
                 //     hiddenDiv = G.G$('.hidden');
                 //     // resolve(hiddenDiv);
                 // })
-                hiddenDiv = this.find("div.hidden");
+                hiddenDiv = _this.find("div.hidden");
                 if(hiddenDiv.length==0){
                     // hiddenDiv = G.G$("<div class='hidden' style='display:none'></div>")
-                    this.append("<div class='hidden' style='display:none'></div>");
+                    _this.append("<div class='hidden' style='display:none'></div>");
                 }
-                return this.find("div.hidden");          
+                return _this.find("div.hidden");          
             }
         // })
         
@@ -454,20 +397,16 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     // 向表单中追回一个隐藏字段
-    addHiddenValue(name: any,value: any,callback: Function,inner?:boolean){
+    addHiddenValue(name: any,value: any,inner?:boolean){
         value = value || "";
         if(value instanceof Array) {
             value.forEach((valueInner,index) => {
-                this.addHiddenValue(name,valueInner,callback,inner);
+                this.addHiddenValue(name,valueInner,inner);
             });            
         }else{
             let hiddenDiv = this.getHiddenContainer(inner);
             // this.find(".")
-            let appendResult: any = (hiddenDiv as any).append("<input type='hidden' name='"+name+"' value='"+value+"'/>", false);
-            
-            appendResult.resolve(function(ele: any) {
-                callback(ele);
-            });
+            hiddenDiv.append("<input type='hidden' name='"+name+"' value='"+value+"'/>");
             // let fun = async ()=>{
             //     let hiddenDiv:any = await this.getHiddenContainer(inner);
             //     console.log(hiddenDiv)
@@ -538,19 +477,15 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 this.doEvent("submit");
                 //设置了target以后就直接走同步的form提交
                 if(this.state.iframe && this.state.target == null) {
-                    this.addParams(()=>{
-                        this.addOtherParams(()=>{
-                            this.submitIframe();
-                        });
-                    });
+                    this.addParams();
+                    this.addOtherParams();
+                    this.submitIframe();
                 }else {
                     if(this.state.ajax == false || this.state.target != null) {
                         //增加额外参数，只提交修改参数
-                        this.addParams(()=>{
-                            this.addOtherParams(()=>{
-                                (this.realDom as any).submit();
-                            });
-                        }); 
+                        this.addParams(); 
+                        this.addOtherParams();
+                        (this.realDom as any).submit();
                     }else {
                         this.ajaxSubmit(callback);
                     }
@@ -574,13 +509,9 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         if (window["FormData"] !== undefined){
             this.submitXhr(callback);
         } else {
-            this.addParams(()=>{
-                this.addOtherParams(()=>{
-                    this.submitIframe();
-                });
-            });
-            
-            
+            this.addParams();
+            this.addOtherParams();
+            this.submitIframe();
         }
     }
 
@@ -656,52 +587,51 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
     
     submitXhr(callback?:Function){
-        this.getParamsAsFormData((data: any)=>{
-            let action: any = this.state.action||""
-            G.G$.ajax({
-                url: action,
-                type: "post",
-                xhr: ()=>{
-                    var xhrMethod = G.G$.ajaxSettings.xhr;
-                    let xhr: any;
-                    if(xhrMethod) {
-                        xhr = xhrMethod();
-                        if (xhr.upload) {
-                            xhr.upload.addEventListener('progress', (e: any)=>{
-                                if (e.lengthComputable) {
-                                    var total = e.total;
-                                    var position = e.loaded || e.position;
-                                    var percent = Math.ceil(position * 100 / total);
-                                    this._onProgress(percent);
-                                    this.doEvent("process",percent);
-                                }
-                            }, false);
-                        }
+        let data = this.getParamsAsFormData();
+        let action: any = this.state.action||""
+        G.G$.ajax({
+            url: action,
+            type: "post",
+            xhr: ()=>{
+                var xhrMethod = G.G$.ajaxSettings.xhr;
+                let xhr: any;
+                if(xhrMethod) {
+                    xhr = xhrMethod();
+                    if (xhr.upload) {
+                        xhr.upload.addEventListener('progress', (e: any)=>{
+                            if (e.lengthComputable) {
+                                var total = e.total;
+                                var position = e.loaded || e.position;
+                                var percent = Math.ceil(position * 100 / total);
+                                this._onProgress(percent);
+                                this.doEvent("process",percent);
+                            }
+                        }, false);
                     }
-                    return xhr;
-                },
-                data,
-                dataType: 'html',
-                cache: false,
-                contentType: false,
-                processData: false,
-                success: (data, textStatus)=>{
-                    this.success(data);
-                    if(callback)
-                        callback.call(this,data);
-                },
-                error: (xhr, textStatus, errorThrown)=>{
-                    console.error("Error:");
-                    console.error(xhr);
-                    let data = {
-                        status:98,
-                        message:"请求失败，请求的URL不存在或者网络异常"
-                    };
-                    this.error(data);
-                    if(callback)
-                        callback.call(this,data);                
                 }
-            });
+                return xhr;
+            },
+            data,
+            dataType: 'html',
+            cache: false,
+            contentType: false,
+            processData: false,
+            success: (data, textStatus)=>{
+                this.success(data);
+                if(callback)
+                    callback.call(this,data);
+            },
+            error: (xhr, textStatus, errorThrown)=>{
+                console.error("Error:");
+                console.error(xhr);
+                let data = {
+                    status:98,
+                    message:"请求失败，请求的URL不存在或者网络异常"
+                };
+                this.error(data);
+                if(callback)
+                    callback.call(this,data);                
+            }
         });
         
     }
@@ -711,21 +641,19 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
     
     //获取所有的条件
-    getParamsAsFormData(callback: Function) {
-        this.addParams(()=>{
-            this.addOtherParams(()=>{
-                let formData: FormData|undefined;
-                if(window["FormData"] !== undefined) {
-                    
-                    if(this.realDom instanceof HTMLFormElement) {
-                        formData = new FormData(this.realDom);
-                    }
-                }else {
-                    formData = this.serializeArray();
-                }
-                callback(formData);
-            });
-        });
+    getParamsAsFormData() {
+        this.addParams();
+        this.addOtherParams();
+        let formData: FormData|undefined;
+        if(window["FormData"] !== undefined) {
+            
+            if(this.realDom instanceof HTMLFormElement) {
+                formData = new FormData(this.realDom);
+            }
+        }else {
+            formData = this.serializeArray();
+        }
+        return formData;
     }
 
     setOtherParams(param: any,callback?: Function) {

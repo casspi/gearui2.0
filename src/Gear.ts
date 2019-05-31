@@ -364,19 +364,22 @@ export default class G {
             let vmdoms = this.findVmDomFromCacheAst(selector, (html instanceof JqueryTag) ? html : undefined);
             if(vmdoms.length > 0) {
                 if(vmdoms[0] == -1) {
-                    return {
-                        finded: true,
-                        result: this.G$([])
-                    };
+                    doms = this.G$(selector);
+                    if(doms.length == 0) {
+                        return {
+                            finded: true,
+                            result: this.G$([])
+                        };
+                    }
                 }
                 for(let i = 0; i < vmdoms.length; i++) {
                     let vmdom = vmdoms[i];
                     if(!doms) {
-                        if(vmdom){
+                        if(vmdom && vmdom != -1){
                             doms = this.G$(document.body).find(vmdom.realDom);
                         }
                     }else {
-                        if(vmdom){
+                        if(vmdom && vmdom != -1){
                             doms = doms.add(vmdom.realDom);
                         }
                     }
