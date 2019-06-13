@@ -176,7 +176,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         // console.log(params)
         // console.log(this.props.form.getFieldsValue())
         this.props.form.setFieldsValue(params);
-        this.validateField(name, callback);
+        //this.validateField(name, callback);
     }
     
     public setFieldsValue(params:any,callback?:Function){

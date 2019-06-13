@@ -447,7 +447,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             url = this.state.url;
             data = this.state.dictype;
         }
-        if(url && url != "" && data) {
+        if((url && url != "") || data) {
             this.reload(url,data,method,callback);
         }else {
             this.setState({
