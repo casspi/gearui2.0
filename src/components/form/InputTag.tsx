@@ -175,9 +175,25 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                 }
             },
             onBlur: (e: any) => {
-                this._hideInput();
+                if(this.state.mustMatch){
+                    this._hideInput();
+                }else{
+                    if(this._inputControl.getValue()){
+                        // 如果不允许重复，先检查值是否已经存在了
+                        if(this.state.repeatAble == false){
+                            if(this.existValue(this._inputControl.getValue())==false){
+                                this._addValue(this._inputControl.getValue(),this._inputControl.getValue());
+                            }else{
+                                G.messager.simple.info("输入值已存在于选中项中！");
+                            }
+                        }else{
+                            this._addValue(this._inputControl.getValue(),this._inputControl.getValue());
+                        }
+                    }
+                    this._hideInput();
+                }
             },
-            onSelect: (v:any) => {//根据antd api 将onchange改为onSelect
+            onSelect: (v:any) => {//根据antd api 将onChange改为onSelect
                 let vobj = this._inputControl.getOption(v);
                 let value = vobj.value||"";
                 let text = vobj.text || vobj.value;
@@ -236,8 +252,8 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             inputVisible: false,
             disabled: this.props.disabled,
             loading: false,
-            repeatAble: this.props.repeatAble==true,
-            mustMatch: this.props.mustMatch,
+            repeatAble: this.props.repeatAble == true,
+            mustMatch: this.props.mustMatch === true ? true:false,
             method: this.props.method,
             dictype: this.props.dictype,
             url: this.props.url,
@@ -245,7 +261,8 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             dropdownWidth: this.props.dropdownWidth,
             prompt: this.props.prompt,
             readOnly: this.props.readonly,
-            limit:this.props.limit
+            limit:this.props.limit,
+            async: this.props.async == true ? true : false
         };
     }
     
@@ -273,7 +290,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             if(this.form){
                 delete props.value
             }
-            inputControl = <AutoComplete.default key={"input"} {...props}></AutoComplete.default>
+            inputControl = <span style={{display:this.state.inputVisible?'':'none'}}><AutoComplete.default key={"input"} {...props}></AutoComplete.default></span>
         }else{
             let props:any = this.getInputProps();
             delete props.invalidType;
@@ -282,7 +299,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             // if(this.form){
             //     delete props.value
             // }
-            inputControl = <span style={{display:this.state.inputVisible?'block':'none'}}><Text.default key={"input"}  {...props} ></Text.default></span>;
+            inputControl = <span style={{display:this.state.inputVisible?'':'none'}}><Text.default key={"input"}  {...props} ></Text.default></span>;
         }
         return <div {..._props}>
                 <AntdSpin size={"default"} spinning={this.state.loading}  delay={100}>

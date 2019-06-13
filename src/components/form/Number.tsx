@@ -57,6 +57,7 @@ export default class Number<P extends typeof props, S extends state> extends For
                 return (this.state.prefix) + valuer + (this.state.suffix);
             },
             placeholder: this.state.prompt,
+            name:this.props.name || this.props.id
         });
     }
 

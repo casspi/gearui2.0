@@ -31,6 +31,8 @@ window.G.components = Tags.components;
 //兼容老版的写法--------------------
 window.G.http = utils.Http;
 window.G.post = utils.Http.post;
+window.G.put = utils.Http.put;
+window.G.get = utils.Http.get;
 window.G.util = utils.Http;
 // window["$"] = window.G;
 window.onload = function() {

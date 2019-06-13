@@ -108,8 +108,10 @@ export default class HtmlCompiler {
                 }
                 // pop stack
                 this.stack.length -= 1;
+                let currentElement = this.currentParent;
                 this.currentParent = this.stack[this.stack.length - 1];
                 this.closeElement(element);
+                return currentElement;
             },
 
             chars: (text: string) => {

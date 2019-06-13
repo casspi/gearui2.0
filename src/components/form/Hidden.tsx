@@ -31,6 +31,7 @@ export default class Hidden<P extends typeof props & InputProps, S extends (stat
         }
         return G.G$.extend({}, superProps, {
             disabled: this.state["disabled"],
+            name:this.props.name || this.props.id
         });
     }
 

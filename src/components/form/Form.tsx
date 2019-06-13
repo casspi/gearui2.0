@@ -5,8 +5,9 @@ import * as File from "../form/File";
 import * as Time from "../form/Time";
 import * as Date from "../form/Date";
 import * as Datetime from "../form/Datetime";
+import * as Radio from "../form/Radio";
 import * as TimePicker from "../form/TimePicker";
-import { Form as AntdForm } from 'antd';
+import { Form as AntdForm  } from 'antd';
 import { FormComponentProps } from 'antd/es/form/Form';
 import * as React from 'react';
 import { ObjectUtil, UUID } from "../../utils";
@@ -41,7 +42,8 @@ export interface state extends Tag.state {
     method?: methods;
     redirect?: string;
     validate?: boolean;
-    hiddenValue?:any
+    hiddenValue?:any;
+    
 };
 
 export class Form<P extends (typeof props & FormComponentProps), S extends state> extends Tag.default<P, S> {
@@ -52,6 +54,8 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     private addedOtherParam = false;
     private addedParam = false;
+
+    noSubmitArr?:any[] = [];
 
     constructor(props: P, context: {}) {
         super(props, context);
@@ -167,8 +171,17 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     public setFieldValue(name: string, value: any, callback?: Function) {
         let params = {};
         params[name] = value;
+        // console.log(params)
+        // console.log(this.props.form.getFieldsValue())
         this.props.form.setFieldsValue(params);
         this.validateField(name, callback);
+    }
+    
+    public setFieldsValue(params:any,callback?:Function){
+        setTimeout(()=>{
+            this.props.form.setFieldsValue(params);
+            // this.validateField([""], callback);
+        },0)
     }
 
     //验证一个form控件
@@ -251,9 +264,9 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     private addParamsValueFormat(gearObj: any, values: any, key: any) {
         // text、number、file控件，直接使用自身传值
         // if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default)){
-        if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default)){
+        if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default ||  gearObj instanceof Radio.default)){
         
-            let name = gearObj.props.name;
+            let name = gearObj.props.name || gearObj.props.id;
             let value = values[key];
             if(gearObj instanceof Date.default || gearObj instanceof Datetime.default || gearObj instanceof Time.default) {
                 value = gearObj.getFormatValue(value);
@@ -271,12 +284,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         }else{
             this.find("div.hidden").remove();       
         }
-        // let fun = async ()=>{
-        //     let com = await this.getHiddenContainer(inner);
-        //     console.log(com)
-        //     // com[0].remove()
-        // }
-        // fun()
     }
 
     //添加其他参数
@@ -426,9 +433,22 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     validate():boolean {
+        let values = this.props.form.getFieldsValue();
+        let fieldsname:any[] = [];
+        for( let key in values){
+            fieldsname.push(key)
+            // console.log(fieldsname)
+        }
+        let noSubmitArr:any = this.noSubmitArr;
+        if(noSubmitArr.length > 0){//过滤不需提交的
+            for (let i=0;i<noSubmitArr.length;i++){
+                fieldsname = fieldsname.filter(o=>o!=noSubmitArr[i])
+            }
+        }
+        // console.log(fieldsname)
         let result = false;
         if(this.state.validate == true) {
-            this.props.form.validateFieldsAndScroll({force:true},(err, values) => {
+            this.props.form.validateFieldsAndScroll(fieldsname.length>0?fieldsname:[],{force:true},(err, values) => {
                 if (!err) {
                     result = true; 
                 }
@@ -455,6 +475,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     submit(param?: any) {
+        // debugger;
         let callback;
         if(param){
             if(typeof param == "function")
@@ -464,6 +485,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 // 如果param是对象，则从对象中获取callback属性
                 callback = param.callback;
         }
+        // console.log(this.props.form.getFieldsValue())
         let validResult = this.validate();
         if(validResult == true) {
             let bsub:any = this.doEvent("beforeSubmit");
@@ -800,6 +822,12 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     protected _onSubmitSuccess(data: any) {}
 
+    onSubmitSuccess(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("submitSuccess",fun);
+        }
+    }
+
     static submitSuccess(fun: any) {
     	if(fun && G.G$.isFunction(fun)) {
         	Form.submitSuccess = fun;
@@ -867,6 +895,18 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     		}
         }
         return Form;
+    }
+
+    onSubmitFailed(fun:Function) {
+        if(fun && $.isFunction(fun)) {
+            this.bind("submitFailed",fun);
+        }
+    }
+
+    onBeforeSubmit(fun:Function) {
+        if(fun && $.isFunction(fun)) {
+            this.bind("beforeSubmit",fun);
+        }
     }
     //是否开启验证
     public isValidation(): boolean | undefined {

@@ -6,7 +6,8 @@ import Tag from '../Tag';
 // 推荐在入口文件全局设置 locale
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
-import zhCN from 'antd/lib/locale-provider/zh_CN';
+// import zhCN from 'antd/lib/locale-provider/zh_CN';
+import locale from 'antd/lib/date-picker/locale/zh_CN';
 const { RangePicker } = DatePicker;
 
 export var props = {
@@ -361,10 +362,16 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
     makeJsx() {
         let props: any = this.getProps();
         let type = this.props.type;
+        if(this.form){
+            delete props.value
+            delete props.defaultValue
+        }
         if (type == null || type == "date") {
-            return <LocaleProvider locale={zhCN}><DatePicker {...props}></DatePicker></LocaleProvider>;
+            return <DatePicker locale={locale} {...props}></DatePicker>
+            // return <LocaleProvider locale={locale}><DatePicker locale={locale} {...props}></DatePicker></LocaleProvider>;
         } else if (type == "range") {
-            return <LocaleProvider locale={zhCN}><RangePicker {...props}></RangePicker></LocaleProvider>;
+            return <RangePicker locale={locale} {...props}></RangePicker>;
+            // return <LocaleProvider locale={zhCN}><RangePicker {...props}></RangePicker></LocaleProvider>;
         }
         return null;
     }

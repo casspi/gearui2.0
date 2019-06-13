@@ -6,8 +6,7 @@ import * as React from 'react';
 import 'moment/locale/zh-cn';
 import Tag from '../Tag';
 moment.locale('zh-cn');
-import zhCN from 'antd/lib/locale-provider/zh_CN';
-import Content from '../data/Content';
+import locale from 'antd/lib/date-picker/locale/zh_CN';
 const { MonthPicker, RangePicker } = DatePicker;
 
 export var props = {
@@ -166,14 +165,15 @@ export default class Date<P extends typeof props, S extends state> extends FormT
         let props:any = this.getProps();
         if(this.form){
             delete props.value;
+            delete props.defaultValue
         }
         let type = this.props.type;
         if (type == null || type == "date") {
-            return <LocaleProvider locale={zhCN}><DatePicker {...props}></DatePicker></LocaleProvider>;
+            return <DatePicker locale={locale} {...props}></DatePicker>;
         } else if (type == "month") {
-            return <LocaleProvider locale={zhCN}><MonthPicker {...props}></MonthPicker></LocaleProvider>;
+            return <MonthPicker locale={locale} {...props}></MonthPicker>;
         } else if (type == "range") {
-            return <LocaleProvider locale={zhCN}><RangePicker {...props}></RangePicker></LocaleProvider>;
+            return <RangePicker locale={locale} {...props}></RangePicker>;
         }
         return null;
     }
@@ -250,9 +250,7 @@ export default class Date<P extends typeof props, S extends state> extends FormT
             super.setValue(value);
         }
     }
-    afterRender(){
-        super.afterRender()
-    }
+    
     setEnd(val: any,callback?: Function) {
         if(this.props.type == "range") {
             let format = this.getFormat();
@@ -266,11 +264,16 @@ export default class Date<P extends typeof props, S extends state> extends FormT
 
     clear(){
         this.setValue(null)
-        // this.setValue(null)
     }
 
     reset(){
-        this.setValue(this.props.value);
+        // let initValue = moment(this.props.value, this.getFormat());
+        if(this.form){
+            this.form.reset(this.state.id)
+        }else{
+            this.setValue(this.props.value);
+        }
+        
     }
 
 }

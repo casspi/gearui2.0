@@ -105,9 +105,9 @@ export default class Column<T> {
         return control;
     }
 
-    private filterContainerId:any = UUID.get();
-    
+    // private filterContainerId:any = UUID.get();
     constructor(table: Table<any, any>,column: React.ReactElement<Column<T>>|null, index: number) {
+        // console.log(this.filterContainerId)
         this.table = table;
         if(column && column.props) {
             let props = column.props;
@@ -145,7 +145,7 @@ export default class Column<T> {
             if(ordercolumn != null && ordercolumn != "") {
                 this.ordercolumn = ordercolumn;
                 //打开该字段的排序
-                this.sorter = (a: any,b: any): number => {return 0};
+                this.sorter = true//(a: any,b: any): number => {return 0};
                 //禁用排序图标的自动控制，使用自定义控制setSortClass方法
                 this.sortorder = false;
             }
@@ -227,20 +227,25 @@ export default class Column<T> {
             let childProps =G.G$.extend({},child.props);
             childProps = this.parseRegexColumnValue(childProps,record);
             // console.log(record)
-            // console.log(childProps)
             let style = childProps.style instanceof String ? GearJson.fromStyle(childProps.style || "") : new GearJson(childProps.style);
             if(ellipsisSpanWidth > 0) {
                 style.put("width", ellipsisSpanWidth+"");
             }
             childProps.style = style.toJson();
-            childProps.id = record.key + indexColumn + index;
+            childProps.id = childProps.id || record.key + indexColumn + index;
             childProps.__record__ = record;
-            childProps.key =record.key + indexColumn + index;
-            childProps.name = record.key + indexColumn + index;
+            childProps.key = record.key + indexColumn + index;
+            childProps.name = childProps.name || record.key + indexColumn + index;
             let jsxEle = null;
             if(child.type) {
-
-                jsxEle = React.cloneElement(child, childProps, childProps.children || []);
+                jsxEle = React.cloneElement(child, childProps);
+                // console.log(child)
+                // console.log(child instanceof Text.default)
+                // if(child.type instanceof Text.default){
+                //     jsxEle = React.cloneElement(child, childProps);
+                // }else{
+                //     jsxEle = React.cloneElement(child, childProps, childProps.children || []);
+                // }
             }else {
                 jsxEle = child;
             }
@@ -293,9 +298,9 @@ export default class Column<T> {
     protected getFilter(props: Column<T>) {
         let filterid = props.filterid;
         let filterProps: any = {
-            getCalendarContainer: ()=> {
-                return G.G$("#" + this.filterContainerId)[0];
-            }
+            // getCalendarContainer: ()=> {
+            //     return G.G$("#" + this.filterContainerId)[0];
+            // }
         };
         let filterJsx: any;
         let filtertype:any = props.filtertype;

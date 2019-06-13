@@ -98,7 +98,7 @@ export default class DialogAction<P extends typeof props, S extends state> exten
                 "dragable":obj.state.dragable,
                 'closable':obj.props.closable,
                 'centered':obj.props.centered,
-                'top':obj.props.top
+                'top':obj.props.top,
             }); 
         } 
     };

@@ -24,6 +24,8 @@ interface CheckTagOption {
 }
 
 export default class CheckTag<P extends typeof props, S extends state> extends FormTag.default<P, S> {
+    
+    private waitSetValue:any = []
 
     getInitialState(): state {
         return {
@@ -120,7 +122,13 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
                         },()=>{
                             // 设置默认选中状态
                             let value = this.state.value;
-                            this.setValue(value);
+                            this.setValue(value,true);
+                            // console.log(this.waitSetValue)
+                            if(this.waitSetValue.length>0){
+                                for(let i=0;i<this.waitSetValue.length;i++){
+                                    this.waitSetValue[i]()
+                                }
+                            }
                         });
                     }
                 }
@@ -166,36 +174,50 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
         }
         return texts;
     }    
+    
+    _setValue(values:any[]){
+        
+    }
 
-    setValue(values: any){
+    setValue(values: any,afterrender?:any){
         if(values instanceof Array == false && typeof values=="string"){
             values = [values];
         }
         if(values){
-            this.setState({
-                options:(this.state.options || []).map((option)=>{
-                    let valuesGearArr = new GearArray(values);
-                    if(valuesGearArr.contains(option.value))
-                        option.checked = true;
-                    else
-                        option.checked = false;
-                    return option;
-                })
-            },()=>{
-                super.setValue(this.getValue());
-            });
+            let fns = ()=>{
+                this.setState({
+                    options:(this.state.options || []).map((option)=>{
+                        let valuesGearArr = new GearArray(values);
+                        if(valuesGearArr.contains(option.value))
+                            option.checked = true;
+                        else
+                            option.checked = false;
+                        return option;
+                    })
+                },()=>{
+                    super.setValue(this.getValue());
+                });
+            }
+            fns();
+            if(afterrender!==true){
+                this.waitSetValue.push(fns)//push到异步列表中，初始化afterrender调用
+            }
         }
     }
 
     addValue(value:string){
         if(value){
-            this.setState({
-                options:(this.state.options || []).map((option)=>{
-                    if(value == option.value)
-                        option.checked = true;
-                    return option;
-                })
-            });
+            let fn =()=>{
+                this.setState({
+                    options:(this.state.options || []).map((option)=>{
+                        if(value == option.value)
+                            option.checked = true;
+                        return option;
+                    })
+                });
+            } 
+            fn();
+            this.waitSetValue.push(fn)//push到异步列表中，初始化afterrender调用
         }        
     }
 

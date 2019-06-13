@@ -5,7 +5,7 @@ import { Validator } from "../../validator";
 import { ObjectUtil, UUID } from '../../utils';
 import * as React from 'react';
 import {FormComponentProps, WrappedFormUtils} from 'antd/es/form/Form';
-import { Form as AntdForm } from 'antd';
+import { Form as AntdForm ,LocaleProvider} from 'antd';
 const AntdFormItem = AntdForm.Item;
 import Tooltip from "../pack/Tooltip";
 export var props = {
@@ -96,8 +96,9 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     // needChange:any;
     triggerChange(changedValue: any, callback?: Function) {
+        let id:any = this.state.id;
         if(this.form) {
-            this.form.setFieldValue(this.state.id, changedValue, callback);
+            this.form.setFieldValue(id, changedValue, callback);
             // this.needChange = true;
         }else{
         
@@ -135,15 +136,13 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     setValue(value: any, callback?: Function) {
         if(this.form) {
-            // console.log(value)
-            // debugger
             this.setState({
                 value
             }, () => {
-                    this.triggerChange(value, callback);
-                    if(callback){
-                        callback.call(this)
-                    }
+                this.triggerChange(value, callback);
+                if(callback){
+                    callback.call(this)
+                }
             });            
         }else {
             this.setState({
@@ -272,6 +271,15 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     makeJsx(): React.ReactNode {return null;}
     render() {
+        if(this.form){
+            if(this.state.disabled===true){//disabled 就不验证
+                let arr:any = this.form.noSubmitArr
+                if(arr.indexOf(this.state.id)<0){//不含有载push
+                    arr.push(this.state.id);
+                }
+                this.form.noSubmitArr = arr;
+            }
+        }
         let name: any = this.state.id;
         let ele: React.ReactNode = this.makeJsx();
         // console.log(this.state.rules)
@@ -282,6 +290,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
                 initialValue: this.initValue,
                 rules: this.isValidation() ? rules : [],
             })(ele);
+            // console.log(this.state.id)
+            // console.log(G.G$(this.state.id))
             return this.getFormItem(formTag);
         }else {
             return Tooltip.addTooltip(ele,this.state.title,this.state.titleAlign);

@@ -24,13 +24,13 @@ export default class Link<P extends typeof props, S extends state> extends Tag.d
 
     //获取当前属性
     getProps() {
-        return {
+        return G.G$.extend({},this.state,{
             href: this.state.url,
             target:this.state.target,
             onClick: this.clickEvent.bind(this)
-        };
+        });
     }
-
+    
     //插件初始化，状态发生变化重新进行渲染
     getInitialState() : state {
         return {

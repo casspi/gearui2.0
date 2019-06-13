@@ -176,7 +176,7 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
     
     //获取公共state
     private getCommonsState(): state {
-        let style = this.props.style || {};
+        let style = G.G$.extend({},this.props.style);
         if(this.props.width != undefined) {
             if(typeof this.props.width === 'string'){
                 if(this.props.width.indexOf("%")>-1){
@@ -194,13 +194,12 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
         if(this.props.visible == false) {
             style.display = "none";
         }
-
         let commonState:state = {
             id: this.props.id,
             name: this.props.name,
             title: this.props.title,
             disabled: this.props.disabled,
-            className: this.props.class || this.props.className,
+            className: this.props.class || this.props.className || "",
             children: this.props.children,
             ref: (ele: any)=>{
                 this.ref = ele;
@@ -320,7 +319,7 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
     show(){
         let style = this.state.style;
         if(style) {
-            style.display = "block";
+            style = G.G$.extend({},style,{display:"block"});
             this.setState({
                 style
             });
@@ -330,7 +329,7 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
     hide(){
         let style = this.state.style;
         if(style) {
-            style.display = "none";
+            style = G.G$.extend({},style,{display:"none"});
             this.setState({
                 style
             });

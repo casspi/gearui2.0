@@ -53,6 +53,8 @@ export default class HtmlParser {
         this.html = html;
         this.options = options;
     }
+     
+    private isColumn:boolean = false;
 
     parseHTML() {
         this.expectHTML = this.options.expectHTML ? this.options.expectHTML : false;
@@ -106,10 +108,17 @@ export default class HtmlParser {
 
                     // End tag:
                     const endTagMatch = this.html.match(endTag);
+                    // console.log(endTagMatch)
                     if (endTagMatch) {
                         const curIndex = this.index;
                         let cacheHtml = this.advance(endTagMatch[0].length);
-                        let index = this.parseEndTag(endTagMatch[1], curIndex, this.index);
+                        let endMessage = this.parseEndTag(endTagMatch[1], curIndex, this.index);
+                        let index = endMessage.index;
+                        let currentElement = endMessage.currentElement;
+                        if(currentElement && (currentElement.tag=='g-column' || currentElement.attrsMap.ctype=='column')){
+                            // console.log(currentElement);
+                            this.isColumn = false;
+                        }
                         if(endTagMatch[1] === "br") {
                             cacheHtml = cacheHtml.replace("</br", "</br "+ Constants.HTML_PARSER_DOM_INDEX +"=\"" + index+"\"");
                         }
@@ -123,6 +132,10 @@ export default class HtmlParser {
                     // Start tag:
                     const startTagMatch = this.parseStartTag();
                     if (startTagMatch) {
+                        if(startTagMatch.tagName == 'g-column' || startTagMatch.ctype == 'column'){
+                            // console.log(startTagMatch)
+                            this.isColumn = true;
+                        }
                         let index = this.handleStartTag(startTagMatch);
                         this.cacheHtml = this.cacheHtml.replace("{" + Constants.HTML_PARSER_DOM_INDEX + "}", index);
                         if (shouldIgnoreFirstNewline(this.lastTag, this.html)) {
@@ -272,7 +285,6 @@ export default class HtmlParser {
         }
 
         const unary = this.isUnaryTag(tagName) || !!unarySlash;
-
         const l = match.attrs.length;
         const attrs = new Array(l);
         for (let i = 0; i < l; i++) {
@@ -411,6 +423,10 @@ export default class HtmlParser {
         }else {
             // let type = typeConstractor;
             let type = this.getAttributeValueType(name,value)
+            // if(name=='value'){
+            //     console.log(type)
+            //     // type = 'object'
+            // }
             //回调函数
             try {
                 if(type == 'function') {//|| type.indexOf("_g_function")>-1
@@ -496,6 +512,11 @@ export default class HtmlParser {
         if(type.indexOf("any") < 0 && type.indexOf(",") < 0 ) {
             return type;
         }
+        let testReg = /^{.*}$/;//判断是否是{}包裹的写法，针对table的 column 解析此处都作为string
+        if(testReg.test(value) && this.isColumn === true){
+            return "string"
+        }
+        
         value = value.trim();
         type = "string";
         let valueTypeArr = value.split("::");
@@ -507,7 +528,7 @@ export default class HtmlParser {
             }else {
                 let methodReg = /[$|\w]{1,}\([\.|$|\w]{0,}\);?/;
                 let match = value.match(methodReg);
-                if(match && window[match[0].replace(/\([\.|$|\w]{0,}\);?/,"")]) {
+                if(match  && window[match[0].replace(/\([\.|$|\w]{0,}\);?/,"")]) {
                     type = "function";
                 }else if(G.events.contains(name) && /^javascript:.+/.test(value)){
                     // 如果以javascript开头，则认为是脚本
@@ -530,6 +551,7 @@ export default class HtmlParser {
 
     private parseEndTag(tagName?: string, start?: any, end?: any) {
         let pos, lowerCasedTagName;
+        let currentElement;
         if (start == null) start = this.index;
         if (end == null) end = this.index;
 
@@ -556,7 +578,7 @@ export default class HtmlParser {
                     this.options.warn(`tag <${this.stack[i].tag}> has no matching end tag.`);
                 }
                 if (this.options.end) {
-                    this.options.end(this.stack[i].tag, start, end);
+                    currentElement = this.options.end(this.stack[i].tag, start, end);
                 }
             }
 
@@ -572,9 +594,9 @@ export default class HtmlParser {
                 index = this.options.start(tagName,"p", [], false, start, end);
             }
             if (this.options.end) {
-                this.options.end(tagName, start, end);
+                currentElement = this.options.end(tagName, start, end);
             }
         }
-        return index;
+        return {index: index, currentElement: currentElement};
     }
 }

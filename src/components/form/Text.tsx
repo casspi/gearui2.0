@@ -198,7 +198,9 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
     }
 
     protected getProps() {
-        return G.G$.extend({},super.getProps(),this.state);
+        return G.G$.extend({},super.getProps(),this.state,{
+            name:this.props.name || this.props.id
+        });
     }
 
     afterRender() {
@@ -291,7 +293,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
 
     reset(){
         if(this.form) {
-            this.form.reset(this.state.name);
+            this.form.reset(this.state.id);
         }else{
             this.triggerChange(this.props.value || "");
             this.setState({

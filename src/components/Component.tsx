@@ -3,10 +3,9 @@ import * as React from 'react';
 import { GearUtil } from "../utils";
 
 export var props = {
+    ...Tag.props,
     value: GearType.Object,
-    ...Tag.props
 };
-
 export interface state extends Tag.state {
     options: object;
     components: any[];
@@ -44,6 +43,7 @@ export default class Component<P extends typeof props, S extends state> extends 
             if(this.state)
                 options = this.state.options;
         }
+        // console.log(options.ctype)
         let components = [];
         if(options){
             if(options instanceof Array){

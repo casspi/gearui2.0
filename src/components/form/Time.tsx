@@ -47,6 +47,7 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
     getProps() {
         let state = this.state;
         return G.G$.extend({},state, {
+            name:this.props.name || this.props.id,
             defaultValue: this.state.value,
             value: this.state.value,
             placeholder: this.state.placeholder,
@@ -298,7 +299,7 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
             delete props.value;
             delete props.defaultValue
         }
-        return <AntdTimePicker {...props}></AntdTimePicker>;
+        return <AntdTimePicker  {...props}></AntdTimePicker>;
     }
 
     setValue(val:any,callback?:Function){

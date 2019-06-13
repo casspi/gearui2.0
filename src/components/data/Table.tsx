@@ -25,7 +25,8 @@ export var props = {
     paginationId: GearType.String,
     bordered:GearType.Boolean,
     defaultExpandAllRows:GearType.Boolean,
-    sequenceWidth:GearType.Any//排序列宽度
+    sequenceWidth:GearType.Any,//排序列宽度,
+    showHeader:GearType.Boolean
 };
 
 export interface state extends Tag.state, TableProps<any> {
@@ -319,7 +320,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(sorterInfo) {
             for(let key in sorterInfo) {
                 let info  = sorterInfo[key];
-                let orderColumn:string = info.column.orderColumn;
+                // console.log(info.order)
+                let orderColumn:string = info.column.ordercolumn;//colmun里面是小写
                 let sortType:string = info.order == "descend" ? " desc " : " asc ";
                 if(orderColumns.trim() != "") {
                     orderColumns += ","
@@ -446,6 +448,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             }:null,
             scroll: scroll,
             loading: this.state.loading,
+            showHeader: this.props.showHeader===false ? false: true,
             rowSelection: this.state.checkType != null? {
                 type: this.state.checkType,
                 onChange: (checkedRowKeys: any, checkedRows: any) => {
@@ -854,6 +857,21 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     afterUpdate() {
+        // setTimeout(()=>{
+        //     // console.log(this.formEle)
+        //     // let _promise = this.formEle.state;
+        //     // _promise.resolve(function(e:any){
+        //     //     console.log(e)
+        //     // })
+        //     this.getPaginations();
+        //     if(this.formEle && this.formEle.state.action != this.state.url) {
+        //         this.formEle.setForm({action: this.state.url});
+        //     }
+        //     this.setSortClass();
+        //     this.hideCheckAllBtn();
+        //     // this.setCheckAllBtn();
+        //     this.setEllipsisSpanWidth();
+        // },0)
         this.getPaginations();
         if(this.formEle && this.formEle.state.action != this.state.url) {
             this.formEle.setForm({action: this.state.url});
@@ -1011,7 +1029,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 data = this._loadFilter(data);
                 this.setState({
                     dataSource: data.dataList,
-                    columns: data.columns||this.state.columns
+                    columns: data.columns || this.state.columns
                 });
                 this.setPagination(data);
             }
@@ -1140,7 +1158,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     //执行ajax提交
-	submitXhr(tableSubmit?:boolean){
+	 submitXhr(tableSubmit?:boolean){
         let method: any = this.state.method || "get";
         let url = this.state.url;
         if(url) {
@@ -1221,10 +1239,14 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             for(let i=0;i<columns.length;i++){
                 let column = columns[i];
                 if(column && column.rowSpan=="auto"){
+                    // console.log(this.find(".ant-table-body,.ant-table-body-outer"))
                     this.find(".ant-table-body,.ant-table-body-outer").each(function(){
+                        // console.log(G.G$(this))
+                        // console.log(G.G$(this).find("table"))
                         let preData: any = null;
                         let preJdom: any = null;
                         let array = G.G$(this).find("table tbody tr").toArray().reverse();
+                        // console.log(G.G$(this))
                         G.G$(array).each(function(){
                             let trJdom = G.G$(this);
                             G.G$(this).find("td:eq("+column.index+")").each(function(){
@@ -1244,6 +1266,9 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 }
             }
             this.find("td[_delete=Y]").hide();
+            this.find("td[_delete=Y]").each(function(){
+                G.G$(this).hide()
+            })
             this.find("td[_rowspan]").each(function(){
                 let jdom = G.G$(this);
                 let __rowspan: any = jdom.attr("_rowspan");

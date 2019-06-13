@@ -4,7 +4,6 @@ import { Events, Parser } from './core';
 import { GearUtil, StringUtil ,UUID} from './utils';
 import Tag from './components/Tag';
 import Render from './core/Render';
-import * as HtmlTag from './components/HtmlTag';
 export default class G {
 
     static SockJs:any = null;
@@ -362,9 +361,11 @@ export default class G {
             let finded = false;
             let doms:JQuery<HTMLElement>|undefined = undefined;
             let vmdoms = this.findVmDomFromCacheAst(selector, (html instanceof JqueryTag) ? html : undefined);
+            // debugger
+            // console.log(vmdoms)
             if(vmdoms.length > 0) {
                 if(vmdoms[0] == -1) {
-                    doms = this.G$(selector);
+                    doms = html ? G.G$(html.realDom).find(selector) : this.G$(selector);
                     if(doms.length == 0) {
                         return {
                             finded: true,
@@ -385,6 +386,7 @@ export default class G {
                     }
                 }
             }
+            // console.log(doms)
             if(!doms) {
                 if(html) {
                     if(html instanceof JqueryTag) {
@@ -430,7 +432,7 @@ export default class G {
                             if(eles.indexOf(gObj) == -1) {
                                 eles.push(gObj);
                             }
-                            eles['length'] = 1;
+                            
                         }else if(dom.length == 1) {
                             let jele = new JqueryTag();
                             jele.realDom = dom[0];
@@ -455,8 +457,10 @@ export default class G {
                         }
                     }
                 }
+                // eles['length'] = doms.length;
                 finded = true;
             }
+            // console.log(eles)
             if(eles.length > 1) {
                 let domArrays = [];
                 for(let i = 0; i < eles.length; i++) {
@@ -473,8 +477,15 @@ export default class G {
                         for(let j = 0; j < eles.length;j ++) {
                             let ele = eles[j];
                             if(ele[name] != null && this.G$.isFunction(ele[name])) {
-                                let re = ele[name].call(ele,...args);
-                                res.push(re);
+                                if(name == "not"){//not涉及到
+                                    let re = ele[name].call(ele,...args);
+                                    if(re.length>0){
+                                        res.push(re);
+                                    }
+                                }else{
+                                    let re = ele[name].call(ele,...args);
+                                    res.push(re);
+                                }
                             }
                         }
                         return res;
@@ -489,7 +500,8 @@ export default class G {
                 doms.eq = (index:number)=>{
                     return eles[index];
                 };
-                doms.length = eles.length;
+                
+                // doms.length = eles.length;
                 // doms[0] = eles
                 // console.log(doms)
                 return {
@@ -552,7 +564,6 @@ export default class G {
 
     public static findVmDomFromCacheAst(selector: string|Element, cacheHtml?: JqueryTag<any, any>) {
         let vmdoms: any[] = [];
-        
         if(typeof selector == "string") {
             let jEleFromCache = G.G$(cacheHtml ? cacheHtml.ast.html() : this.cacheHtml).find(selector);
             if(jEleFromCache.length > 0 && this.cacheAst) {

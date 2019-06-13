@@ -25,8 +25,9 @@ export default class File<P extends typeof props, S extends state> extends FormT
                 this.doEvent("click",e);
             },
             suffix: <AntdButton key="button" icon={"folder-open"} disabled={this.state["disabled"]} onClick={()=>{
-                this.find("input[type='file']").click();
+                this.find("input[type='file']").click()
             }}>{"选择文件"}</AntdButton>,
+            name:this.props.name || this.props.id
         });
     }
 
