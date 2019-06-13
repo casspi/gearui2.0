@@ -201,7 +201,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 cacheElement.append(html);
                 G.cacheHtml = cacheHtmlElement.prop("outerHTML");
                 let asts = astMsg.ast.children;
-                let children: any = this.data('vmdom').state.children;
+                let children: any = this.data('vmdom').tempChildren || this.data('vmdom').state.children;
                 if(!(children instanceof Array)) {
                     children = [children];
                 }
@@ -210,9 +210,11 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                     let reactEle = GearUtil.newReactInstance(ast);
                     children.push(reactEle);
                 });
+                this.data('vmdom').tempChildren = children;
                 this.data('vmdom').setState({
                     children
                 },() => {
+                    this.data('vmdom').tempChildren = null;
                 });
             }else {
                 let jdom = G.G$(this.realDom);

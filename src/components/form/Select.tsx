@@ -339,6 +339,12 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                                 _childSelect.loadData(data.children);
                             }
                         })
+                    }else {
+                        if(this.childSelect.props.dictype || this.childSelect.props.url) {
+                            this.childSelect.loadData(Http.appendUrlParam(this.childSelect.props.url,{code:data.value}));
+                        }else {
+                            this.childSelect.loadData(data.children);
+                        }
                     }
                 }else {
                     if(this.childSelect._promise){
@@ -441,7 +447,16 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             url = this.state.url;
             data = this.state.dictype;
         }
-        this.reload(url,data,method,callback);
+        if(url && url != "" && data) {
+            this.reload(url,data,method,callback);
+        }else {
+            this.setState({
+                options: []
+            },()=>{
+                this.clear();
+            });
+        }
+        
     }
     // 通过指定的url或者data加载数据
     reload(url:string,dictype:object,method:methods,callback?:Function) {
