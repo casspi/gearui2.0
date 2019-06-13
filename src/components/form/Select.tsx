@@ -336,31 +336,14 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                             if(_childSelect.props.dictype || _childSelect.props.url) {
                                 _childSelect.loadData(Http.appendUrlParam(_childSelect.props.url,{code:data.value}));
                             }else {
-                                if(data.children) {
-                                    _childSelect.loadData(data.children);
-                                }else {
-                                    this.childSelect.setState({
-                                        options: []
-                                    },()=>{
-                                        this.childSelect.clear();
-                                    });
-                                }
+                                _childSelect.loadData(data.children);
                             }
                         })
                     }else {
                         if(this.childSelect.props.dictype || this.childSelect.props.url) {
                             this.childSelect.loadData(Http.appendUrlParam(this.childSelect.props.url,{code:data.value}));
                         }else {
-                            if(data.children) {
-                                this.childSelect.loadData(data.children);
-                            }else {
-                                this.childSelect.setState({
-                                    options: []
-                                },()=>{
-                                    this.childSelect.clear();
-                                });
-                            }
-                            
+                            this.childSelect.loadData(data.children);
                         }
                     }
                 }else {
@@ -464,7 +447,16 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             url = this.state.url;
             data = this.state.dictype;
         }
-        this.reload(url,data,method,callback);
+        if(url && url != "" && data) {
+            this.reload(url,data,method,callback);
+        }else {
+            this.setState({
+                options: []
+            },()=>{
+                this.clear();
+            });
+        }
+        
     }
     // 通过指定的url或者data加载数据
     reload(url:string,dictype:object,method:methods,callback?:Function) {
