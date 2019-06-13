@@ -214,8 +214,14 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             return ele;
         });
         if(this.form){
-            delete props.value;
-            delete props.defaultValue;
+            //delete props.value;
+            // delete props.defaultValue;
+            if(props.value instanceof Array && props.value.length == 0) {
+                props.value = " ";
+            }
+            if(props.value == "") {
+                props.value = " ";
+            }
         }
         return <AntdSelect {...props}>{optionsMap}</AntdSelect>
         // <div>
@@ -327,6 +333,23 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             value = value[value.length - 1];
         }
         if(this.childSelect instanceof Select) {
+            if(this.childSelect._promise){
+                this.childSelect._promise.then((e)=>{
+                    let _childSelect = e.result;
+                    _childSelect.setState({
+                        options: []
+                    },()=>{
+                        _childSelect.clear();
+                    });
+
+                })
+            }else{
+                this.childSelect.setState({
+                    options: []
+                },()=>{
+                    this.childSelect.clear();
+                });
+            }
             if(this.state["options"] != null && this.state["options"].length > 0) {
                 let data = this.findByValue(value);
                 if(data) {
