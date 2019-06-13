@@ -2,35 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d48e1a13-c93f-4864-8357-782eb2f028de" name="Default" comment="Merge branch 'master' of https://github.com/Gear-Framework/react-typescript-gearui&#10;&#10;# Conflicts:&#10;#&#9;public/index.html&#10;#&#9;src/components/basic/Tabs.tsx">
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822103911.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822105751.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822105753.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822105813.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822105816.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822112331.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822112545.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822134057.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822134226.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822134558.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822142358.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180822144252.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180823103219.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180823103423.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/components/data/AjaxArea_20180823162300.tsx" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/utils/GearUtil_20180830165036.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/utils/GearUtil_20180830165232.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/utils/GearUtil_20180830165403.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.history/src/utils/GearUtil_20180830165424.ts" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/.vscode/launch.json" beforeDir="false" afterPath="$PROJECT_DIR$/.vscode/launch.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/paths.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/paths.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/webpack.config.prod.js" beforeDir="false" afterPath="$PROJECT_DIR$/config/webpack.config.prod.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/index.tsx" beforeDir="false" afterPath="$PROJECT_DIR$/src/index.tsx" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/polyfills.ts" beforeDir="false" afterPath="$PROJECT_DIR$/src/polyfills.ts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/third.json" beforeDir="false" afterPath="$PROJECT_DIR$/third.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/third/sockjs.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third/sockjs.js.map" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/third/sockjs.min.js" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/tsconfig.json" beforeDir="false" afterPath="$PROJECT_DIR$/tsconfig.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -59,7 +31,7 @@
       <file leaf-file-name="paths.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/config/paths.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="295">
+            <state relative-caret-position="1566">
               <caret line="58" column="7" selection-start-line="58" selection-start-column="2" selection-end-line="58" selection-end-column="7" />
             </state>
           </provider>
@@ -77,16 +49,9 @@
       <file leaf-file-name="polyfills.ts" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/polyfills.ts">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
+            <state relative-caret-position="243">
               <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
             </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="polyfills.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/polyfills.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-81" />
           </provider>
         </entry>
       </file>
@@ -104,7 +69,7 @@
       <file leaf-file-name="webpack.config.prod.js" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/config/webpack.config.prod.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="216">
+            <state relative-caret-position="27">
               <caret line="118" column="20" selection-start-line="118" selection-start-column="20" selection-end-line="118" selection-end-column="20" />
             </state>
           </provider>
@@ -113,16 +78,9 @@
       <file leaf-file-name="jsplumb.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/build/jsplumb.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="124">
+            <state relative-caret-position="74736">
               <caret line="2768" column="16" selection-start-line="2768" selection-start-column="9" selection-end-line="2768" selection-end-column="16" />
             </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="webpack.config.dev.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/config/webpack.config.dev.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-57" />
           </provider>
         </entry>
       </file>
@@ -182,7 +140,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -190,41 +149,17 @@
               <item name="react-typescript-gearui-n" type="b2602c69:ProjectViewProjectNode" />
               <item name="react-typescript-gearui-n" type="462c0819:PsiDirectoryNode" />
             </path>
-            <path>
-              <item name="react-typescript-gearui-n" type="b2602c69:ProjectViewProjectNode" />
-              <item name="react-typescript-gearui-n" type="462c0819:PsiDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="react-typescript-gearui-n" type="b2602c69:ProjectViewProjectNode" />
-              <item name="react-typescript-gearui-n" type="462c0819:PsiDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="react-typescript-gearui-n" type="b2602c69:ProjectViewProjectNode" />
-              <item name="react-typescript-gearui-n" type="462c0819:PsiDirectoryNode" />
-              <item name="build" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="react-typescript-gearui-n" type="b2602c69:ProjectViewProjectNode" />
-              <item name="react-typescript-gearui-n" type="462c0819:PsiDirectoryNode" />
-              <item name="config" type="462c0819:PsiDirectoryNode" />
-            </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="AndroidView" />
-      <pane id="Scope" />
+      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/../test" />
+    <property name="last_opened_file_path" value="H:/workspace/gabd/config-center" />
     <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
     <property name="nodejs_npm_path_reset_for_default_project" value="true" />
     <property name="nodejs_package_manager_path" value="yarn" />
@@ -316,6 +251,10 @@
       <workItem from="1556159224677" duration="1745000" />
       <workItem from="1557017479271" duration="8000" />
       <workItem from="1558504346577" duration="3283000" />
+      <workItem from="1558581842077" duration="597000" />
+      <workItem from="1558596981507" duration="13000" />
+      <workItem from="1559263503769" duration="2587000" />
+      <workItem from="1560409886793" duration="1876000" />
     </task>
     <task id="LOCAL-00001" summary="修改form的渲染方式，以及table的渲染方式">
       <created>1553060773296</created>
@@ -471,11 +410,25 @@
       <option name="project" value="LOCAL" />
       <updated>1556186780567</updated>
     </task>
-    <option name="localTasksCounter" value="23" />
+    <task id="LOCAL-00023" summary="Merge branch 'master' of https://github.com/Gear-Framework/react-typescript-gearui&#10;&#10;# Conflicts:&#10;#&#9;public/index.html&#10;#&#9;src/components/basic/Tabs.tsx">
+      <created>1559269119506</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1559269119506</updated>
+    </task>
+    <task id="LOCAL-00024" summary="Merge branch 'master' of https://github.com/Gear-Framework/react-typescript-gearui&#10;&#10;# Conflicts:&#10;#&#9;public/index.html&#10;#&#9;src/components/basic/Tabs.tsx">
+      <created>1559276026783</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1559276026783</updated>
+    </task>
+    <option name="localTasksCounter" value="25" />
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="28828000" />
+    <option name="totallyTimeSpent" value="33901000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -487,7 +440,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-8" y="-8" width="1616" height="876" extended-state="6" />
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
     <layout>
       <window_info anchor="right" id="Palette" order="3" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32962447" />
@@ -497,16 +450,15 @@
       <window_info anchor="bottom" id="Event Log" order="7" sideWeight="0.50385606" side_tool="true" weight="0.32962447" />
       <window_info anchor="right" id="Maven Projects" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" show_stripe_button="false" />
-      <window_info anchor="bottom" id="Version Control" order="7" sideWeight="0.49614397" weight="0.32823366" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.32962447" />
+      <window_info active="true" anchor="bottom" id="Version Control" order="7" sideWeight="0.49614397" visible="true" weight="0.32814237" />
       <window_info id="npm" order="2" sideWeight="0.5020747" side_tool="true" weight="0.25" />
-      <window_info active="true" anchor="bottom" id="Terminal" order="7" visible="true" weight="0.32962447" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32962447" />
+      <window_info anchor="bottom" id="Terminal" order="7" weight="0.32916668" />
       <window_info id="Capture Tool" order="2" />
       <window_info anchor="bottom" id="TypeScript" order="7" />
       <window_info id="Designer" order="2" />
-      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4979253" visible="true" weight="0.24807198" />
-      <window_info anchor="right" id="Database" order="8" visible="true" weight="0.117609255" />
-      <window_info anchor="bottom" id="Find" order="1" />
+      <window_info content_ui="combo" id="Project" order="0" sideWeight="0.4979253" visible="true" weight="0.26066098" />
+      <window_info anchor="right" id="Database" order="8" visible="true" weight="0.11727079" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -518,6 +470,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" />
     </layout>
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -543,6 +496,50 @@
     <option name="LAST_COMMIT_MESSAGE" value="Merge branch 'master' of https://github.com/Gear-Framework/react-typescript-gearui&#10;&#10;# Conflicts:&#10;#&#9;public/index.html&#10;#&#9;src/components/basic/Tabs.tsx" />
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/third.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="54">
+          <caret line="2" column="10" selection-start-line="2" selection-start-column="10" selection-end-line="2" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/polyfills.ts">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="243">
+          <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/components/Websocket.tsx">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding>
+            <element signature="e#0#31#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/build/jsplumb.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="74736">
+          <caret line="2768" column="16" selection-start-line="2768" selection-start-column="9" selection-end-line="2768" selection-end-column="16" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/webpack.config.prod.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3186">
+          <caret line="118" column="20" selection-start-line="118" selection-start-column="20" selection-end-line="118" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/config/webpack.config.prod.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3186">
+          <caret line="118" column="20" selection-start-line="118" selection-start-column="20" selection-end-line="118" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/components/data/AjaxLoad.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2268">
@@ -703,9 +700,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="16146">
           <caret line="604" column="24" selection-start-line="604" selection-start-column="24" selection-end-line="604" selection-end-column="24" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -713,18 +707,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="1971">
           <caret line="77" column="5" selection-start-line="77" selection-start-column="5" selection-end-line="77" selection-end-column="5" />
-          <folding>
-            <element signature="e#0#37#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/form/EditTableCell.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#30#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -749,22 +731,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/components/form/FormTag.tsx">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="e#0#30#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/utils/GearUtil.ts">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="3267">
           <caret line="124" column="17" selection-start-line="124" selection-start-column="17" selection-end-line="124" selection-end-column="17" />
-          <folding>
-            <element signature="e#0#31#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -774,12 +744,6 @@
           <caret line="58" column="23" selection-start-line="58" selection-start-column="23" selection-end-line="58" selection-end-column="23" />
         </state>
       </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/manifest.json">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/public/pinyin.json">
-      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/public/jsplumb.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -804,21 +768,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="297">
           <caret line="14" column="25" selection-start-line="14" selection-start-column="25" selection-end-line="14" selection-end-column="25" />
-          <folding>
-            <element signature="e#34#57#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/third/sockjs.min.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-18040">
-          <folding>
-            <element signature="n#!!doc" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/third/sockjs.min.js" />
     <entry file="file://$PROJECT_DIR$/src/components/Websocket.tsx">
       <provider selected="true" editor-type-id="text-editor">
         <state>
@@ -828,56 +781,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/webpack.config.dev.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-57" />
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/utils/jsplumb.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-409742" />
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/utils/jsplumb.js" />
     <entry file="file://$PROJECT_DIR$/src/polyfills.ts">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
+        <state relative-caret-position="243">
           <caret line="9" column="30" selection-start-line="9" selection-start-column="30" selection-end-line="9" selection-end-column="30" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/config/polyfills.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-81" />
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/config/paths.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="295">
+        <state relative-caret-position="1566">
           <caret line="58" column="7" selection-start-line="58" selection-start-column="2" selection-end-line="58" selection-end-column="7" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/build/jsplumb.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="124">
+        <state relative-caret-position="74736">
           <caret line="2768" column="16" selection-start-line="2768" selection-start-column="9" selection-end-line="2768" selection-end-column="16" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/static/js/main.1d8a8d1e.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="117">
-          <caret column="2055853" selection-start-column="2055829" selection-end-column="2055853" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/third/jsplumb.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="64">
-          <caret line="15184" column="10" lean-forward="true" selection-start-line="15184" selection-start-column="10" selection-end-line="15184" selection-end-column="10" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/build/static/js/main.1d8a8d1e.js" />
+    <entry file="file://$PROJECT_DIR$/third/jsplumb.js" />
     <entry file="file://$PROJECT_DIR$/third.json">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="54">
@@ -887,7 +814,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/config/webpack.config.prod.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="216">
+        <state relative-caret-position="27">
           <caret line="118" column="20" selection-start-line="118" selection-start-column="20" selection-end-line="118" selection-end-column="20" />
         </state>
       </provider>

@@ -193,18 +193,21 @@
   <body>
   <div id="root"></div>
   <div class="root"></div>
+  <!-- <div class="root"></div>
   <div class="root"></div>
-  <div class="root"></div>
-  <div class="root"></div>
+  <div class="root"></div> -->
   </body>
   <script>
   G(function() {
     console.log(G("#checktag1"))
-    G('#d2-w').remove()
+    //G('#d2-w').remove()
     // G("#checktag1").addValue('zw')
     // G("#checktag1").addValue('zs')
     // G('#checktag1').setValue("ls")
     G(".root").append("<g-button id='test'>append</g-button>");
+    G(".root").append("<g-button id='test2'>appendaaa</g-button>");
+    G("#form1").setMethod("post");
+    G("#form1").submit();
       // G("#test").onClick(function(){
       //   // alert('test---')
       // })

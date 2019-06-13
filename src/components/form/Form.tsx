@@ -66,6 +66,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     getInitialState(): state {
+        let children = this.getChildren();
         return {
             invalidType: this.props.invalidType,
             validateHidden: this.props.validateHidden,
@@ -78,7 +79,8 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             method: this.props.method,
             validate: true,
             redirect: this.props.redirect,
-            hiddenValue:null
+            hiddenValue:null,
+            children: children
         };
     }
 
@@ -121,9 +123,9 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         delete props.validation;
         delete props.ajax;
         delete props.hiddenValue;
-        let children = this.getChildren();
+        
         return (<AntdForm {...props}>
-            {children}{this.state.hiddenValue}
+            {this.state.children}{this.state.hiddenValue}
         </AntdForm>);
     }
 
@@ -142,7 +144,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 have = true;
             }
         }
-        let method = this.state.method;
+        let method = this.props.method;
         if(method && method.toLowerCase() == "put" && !have) {
             let formTag: any = this.props.form.getFieldDecorator("_method",{
                 initialValue: "put",
@@ -610,9 +612,10 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     submitXhr(callback?:Function){
         let data = this.getParamsAsFormData();
         let action: any = this.state.action||""
+        let method = this.state.method||"post";
         G.G$.ajax({
             url: action,
-            type: "post",
+            type: method,
             xhr: ()=>{
                 var xhrMethod = G.G$.ajaxSettings.xhr;
                 let xhr: any;
@@ -655,6 +658,12 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             }
         });
         
+    }
+
+    public setMethod(method:methods) {
+        this.setState({
+            method: method
+        });
     }
 
     protected _onProgress(percent: any) {

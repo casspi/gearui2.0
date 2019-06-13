@@ -137,6 +137,9 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
 
     shouldComponentUpdate(nextProps: P, nextState: S) {
         let shouldUpdate = this.shouldUpdate(nextProps, nextState);
+        if(nextState == this.state) {
+            return false;
+        }
         return shouldUpdate;
     }
 
@@ -160,14 +163,14 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
         
         if(newState && !G.G$.isEmptyObject(newState)) {
             state = G.G$.extend({}, state, newState);
+            //排除不能被更新的属性
+            if(this.cannotUpdate && this.cannotUpdate.toArray()) {
+                this.cannotUpdate.toArray().forEach(key => {
+                    delete state[key];
+                });
+            }
+            this.setState(state);
         }
-        //排除不能被更新的属性
-        if(this.cannotUpdate && this.cannotUpdate.toArray()) {
-            this.cannotUpdate.toArray().forEach(key => {
-                delete state[key];
-            });
-        }
-        this.setState(state);
     }
 
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {return {}};

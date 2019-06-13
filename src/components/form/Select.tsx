@@ -336,9 +336,32 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                             if(_childSelect.props.dictype || _childSelect.props.url) {
                                 _childSelect.loadData(Http.appendUrlParam(_childSelect.props.url,{code:data.value}));
                             }else {
-                                _childSelect.loadData(data.children);
+                                if(data.children) {
+                                    _childSelect.loadData(data.children);
+                                }else {
+                                    this.childSelect.setState({
+                                        options: []
+                                    },()=>{
+                                        this.childSelect.clear();
+                                    });
+                                }
                             }
                         })
+                    }else {
+                        if(this.childSelect.props.dictype || this.childSelect.props.url) {
+                            this.childSelect.loadData(Http.appendUrlParam(this.childSelect.props.url,{code:data.value}));
+                        }else {
+                            if(data.children) {
+                                this.childSelect.loadData(data.children);
+                            }else {
+                                this.childSelect.setState({
+                                    options: []
+                                },()=>{
+                                    this.childSelect.clear();
+                                });
+                            }
+                            
+                        }
                     }
                 }else {
                     if(this.childSelect._promise){
