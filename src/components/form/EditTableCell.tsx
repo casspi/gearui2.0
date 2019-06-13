@@ -41,7 +41,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     private reactEle:any = this.getEditGearEle();
     private cellEditable:boolean;
     protected afterReceiveProps(nextProps: P): Partial<typeof props> {
-        // console.log('afterReceive')
         if(nextProps.value!==this.state.value){
             this.gearEle.setValue(nextProps.value)//保证edittable修改数据，单元格的编辑组件能同步到数据
         }
@@ -170,10 +169,14 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     getLabel() {
         let label;
         if(this.gearEle != null && this.gearEle.getText) {
-            label = this.gearEle.getText();
+            label = this.gearEle.getText() 
+        }else if(this.gearEle != null && this.gearEle.getValue){
+            label = this.gearEle.getValue();
         }
         if(label) {
             return label;
+        }else{
+            // return this.gearEle.state.value
         }
         // else {
         //     label = G.$(this.props.columnEle).attr("text");

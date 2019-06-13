@@ -96,9 +96,7 @@ export default class G {
 
     // //注册组件
     // static registerCustomComponents() {
-    //     let time1 = new Date().getTime();
     //     let requireComponent = require['context']('./components', true , /[A-Z]\w+\.(tsx)$/);
-    //     console.log("注册的组件个数：" + requireComponent.keys().length);
     //     requireComponent.keys().forEach((fileName: string) => {
     //         if(fileName.endsWith('index.ts')) {
     //             return;

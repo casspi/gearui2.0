@@ -56,10 +56,8 @@
 
       }
       function reset(){
-        G("#form1").setFieldValue(
-        "d2","2008-09-09"
-        ,function(){
-          // G("#form1").submit()
+        G("#form1").setForm({method:'get'},function(){
+          G("#form1").submit()
         })
       }
     </script>
@@ -109,6 +107,9 @@
           <div id="d2-w">
             <g-datetime  value="2019-05-09" type="date" name="d1n" id="d2"></g-datetime>
           </div>
+          <!-- <g-select id="s1" width="200" lower="s2" url="http://10.10.10.6:81/example/source?name=Select&type=element&id=example"></g-select>
+          <g-select id="s2" width="200" upper="s1"></g-select> -->
+          <g-autocomplete  url="http://localhost:8080//dictionary/query?type=DIC_AREA" width="100" prompt="输入内容必须在选项内"></g-autocomplete>
         <!-- <g-checktag id="checktag1" name="c1" dictype="checkboxJson1"  value="0,1"></g-checktag> -->
         <!-- <g-component value="{ctype:'text',value:'文本框',name:'textc',required:true,width:'300px'}"></g-component> -->
       <g-submit>提交</g-submit>

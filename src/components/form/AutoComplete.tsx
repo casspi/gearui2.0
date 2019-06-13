@@ -225,6 +225,8 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
      */
     public getOption(value: any, optionsParam?: OptionData[]): OptionData | null {
         let options = optionsParam || this.state.options;
+        // console.log(options)
+        // debugger
         if(options) {
             for(let i = 0; i < options.length; i++) {
                 let option = options[i];
@@ -370,7 +372,12 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                         this.setState({
                             options: options,
                             searchOptions: options
-                        },callback);
+                        },()=>{
+                            this.doEvent("loadSuccess")
+                            if(callback){
+                                callback
+                            }
+                        });
                     }else {
                         this.doEvent("error", result);
                     }
