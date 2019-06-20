@@ -9,6 +9,7 @@ export default class Cancel<P extends typeof props, S extends state> extends But
 
     // 点击事件
     protected clickEvent(){
+        debugger;
         if(this.haveEvent("beforeCancel")){
             let r = this.doEvent("beforeCancel");
             if(r && r[0] == false)

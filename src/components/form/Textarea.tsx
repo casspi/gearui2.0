@@ -65,12 +65,19 @@ export default class Textarea<P extends typeof props,S extends state> extends Fo
                 maxRows: this.props.maxRows
             }
         }
-
+        let value = this.props.value;
+        if(!this.props.value) {
+            if(this.ast && this.ast.children && this.ast.children.length >= 1) {
+                if(this.ast.children[0].type == 3) {
+                    value = this.ast.children[0].text;
+                }
+            }
+        }
         return G.G$.extend({}, state, {
             placeholder: this.props.prompt,
             disabled: this.props.disabled,
             readOnly: this.props.readOnly,
-            value: this.props.value,
+            value: value,
             autosize: autosize,
             rows: this.props.rows,
         });

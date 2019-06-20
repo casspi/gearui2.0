@@ -67,7 +67,6 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     // protected itemId = (this.props.id || UUID.get()) + "_item-id"
     constructor(props:any, context: {}){
         super(props);
-        // this._propsValue = this.props.value;
         this.setForm(this.ast);
     }
 
@@ -94,7 +93,6 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             // onChange: nextProps.onChange
         };
     }
-    // needChange:any;
     triggerChange(changedValue: any, callback?: Function) {
         let id:any = this.state.id;
         if(this.form) {
@@ -230,7 +228,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     reset(){
         if(this.form) {
-            this.form.reset(this.state.id);
+            this.form.reset(this.state.id || this.state.name);
         }
     }
 
@@ -284,6 +282,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         let ele: React.ReactNode = this.makeJsx();
         // console.log(this.state.rules)
         if(this.form) {
+            // console.log(this.initValue)
             let formUtils: WrappedFormUtils = this.form.props.form;
             let rules: any = this.state.rules;
             let formTag = formUtils.getFieldDecorator(name, {

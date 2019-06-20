@@ -42,23 +42,24 @@
         // G("#sampleType").setValue("100")
         // // G("#result").request()
         // G("#form1").submit()
-        G("#www").append("<div id='itemDivId' class='itemDiv'>" +
-					 								"<g-text id='parameterNameId' name='parameterName' width='120px' style='margin-right:10px' disabled='disabled'></g-text>" +
-					 								"<g-select id='parameterTypeId' class='parameterType' name='parameterType' width='70px'  style='margin-right:10px' value='1' disabled='disabled'></g-select>" +
-					 								"<g-select id='staticValueTypeId' class='staticValueType' name='staticValueType' style='display:none;margin-right:10px' width='200px'  disabled='disabled'></g-select>"+
-					 								"<g-text id='dataElementCodeId' class='dataElementCode' style='margin-right:10px' name='dataElementCode' width='200px' disabled='disabled'></g-text></div>");
+        // G("#www").append("<div id='itemDivId' class='itemDiv'>" +
+				// 	 								"<g-text id='parameterNameId' name='parameterName' width='120px' style='margin-right:10px' disabled='disabled'></g-text>" +
+				// 	 								"<g-select id='parameterTypeId' class='parameterType' name='parameterType' width='70px'  style='margin-right:10px' value='1' disabled='disabled'></g-select>" +
+				// 	 								"<g-select id='staticValueTypeId' class='staticValueType' name='staticValueType' style='display:none;margin-right:10px' width='200px'  disabled='disabled'></g-select>"+
+				// 	 								"<g-text id='dataElementCodeId' class='dataElementCode' style='margin-right:10px' name='dataElementCode' width='200px' disabled='disabled'></g-text></div>");
         
         // G("#www").doRender();
-        G("#date-w").remove()
+        G("#d2-w").remove()
       }
       function setUrl(url){
         return url
 
       }
       function reset(){
-        G("#form1").setForm({method:'get'},function(){
-          G("#form1").submit()
-        })
+        // G("#form1").setForm({method:'get'},function(){
+        //   G("#form1").submit()
+        // })
+        G("#form1").reset()
       }
     </script>
     
@@ -91,28 +92,37 @@
         <!-- <g-time id="time"   required="true"></g-time>
           <g-inputtag id='inputtag'  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" async="true"></g-inputtag>
         <g-text disabled="true" required="true"></g-text>
-        <g-select id="se1" required="true" onChange="selectChange(arguments[0],arguments[1],this)" name="s1" multiple="true" dictype="LEVEI" width="300"></g-select>  -->
-        <!-- <span ctype="datetime" id="createTime" name="createTime" type="range" width="400"></span>
+        <span ctype="datetime" id="createTime" name="createTime" type="range" width="400"></span>
           <g-upload name="picture"></g-upload>  
           <g-check name="check">11</g-check>
           <g-file ></g-file>
-          <span name="type" ctype="select" width="190" id="sampleType" name="sampleType"></span> -->
-          <!-- <div id="date-w">
+          <span name="type" ctype="select" width="190" id="sampleType" name="sampleType"></span>
+         <div id="date-w">
           </div>
           
-          <div id="www"></div>
-          <span ctype="button" buttonStyle="primary" onClick="executeQuery()" class="m-r">查询</span> -->
-          <g-date name="date" id="d0" value="2019-06-09"></g-date>
-          <!-- <g-datetime  value="2019-05-09" type="range" name="d1n" id="d1"></g-datetime> -->
-          <div id="d2-w">
-            <g-datetime  value="2019-05-09" type="date" name="d1n" id="d2"></g-datetime>
+          <div id="www"></div>  -->
+          <!-- <g-select id="se1" required="true" onChange="selectChange(arguments[0],arguments[1],this)" name="s1" multiple="true" dictype="LEVEI" width="300"></g-select> -->
+          <span ctype="button" buttonStyle="primary" onClick="executeQuery()" class="m-r">查询</span>
+          
+          <!-- <div id="d2-w">
+            <div>
+              <div>
+
+                <g-date name="date" id="d0" required="true" value="2019-06-09"></g-date>
+              </div>
+            </div> 
+            <g-datetime   required="true" value="2019-05-09" type="date" name="d1n" id="d2"></g-datetime>
           </div>
+          <g-combotree editable="true" width="200" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree> -->
           <!-- <g-select id="s1" width="200" lower="s2" url="http://10.10.10.6:81/example/source?name=Select&type=element&id=example"></g-select>
           <g-select id="s2" width="200" upper="s1"></g-select> -->
-          <g-autocomplete  url="http://localhost:8080//dictionary/query?type=DIC_AREA" width="100" prompt="输入内容必须在选项内"></g-autocomplete>
-        <!-- <g-checktag id="checktag1" name="c1" dictype="checkboxJson1"  value="0,1"></g-checktag> -->
+          <!-- <g-autocomplete name="autocomplete"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" width="200" prompt="输入内容必须在选项内"></g-autocomplete> -->
+        <!-- <g-text value="test text"></g-text>       -->
+          <g-checktag id="checktag1" name="c1" dictype="checkboxJson1"  value="ws,zs"></g-checktag>
+        <!-- <g-datetime  value="2019-05-09" type="range" name="d1" id="d1"></g-datetime> -->
+        <!-- <g-textarea id="hey" name="textarea"></g-textarea> -->
         <!-- <g-component value="{ctype:'text',value:'文本框',name:'textc',required:true,width:'300px'}"></g-component> -->
-      <g-submit>提交</g-submit>
+        <g-submit>提交</g-submit>
       <g-button onClick="reset()">重置</g-button>  
     </form>
   <!-- <div ctype="ajaxlist" id="result" url="./datalist.json">
@@ -200,6 +210,7 @@
   </body>
   <script>
   G(function() {
+    // G('#hey').setValue("99")
     console.log(G("#checktag1"))
     //G('#d2-w').remove()
     // G("#checktag1").addValue('zw')
@@ -208,7 +219,7 @@
     G(".root").append("<g-button id='test'>append</g-button>");
     G(".root").append("<g-button id='test2'>appendaaa</g-button>");
     G("#form1").setMethod("post");
-    G("#form1").submit();
+    // G("#form1").submit();
       // G("#test").onClick(function(){
       //   // alert('test---')
       // })

@@ -47,7 +47,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
 
     getInitialState(): state {
         return {
-            mustMatch: this.props.mustMatch,
+            mustMatch: this.props.mustMatch === false ? false : true,
             rows: this.props.rows,
             options: [],
             searchOptions: [],

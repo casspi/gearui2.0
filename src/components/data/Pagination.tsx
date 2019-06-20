@@ -3,7 +3,6 @@ import { Pagination as AntdPagination, message as AntdMessage,Tooltip as AntdToo
 import { PaginationProps } from '../../../node_modules/antd/lib/pagination/Pagination';
 const Locale = require('../../../node_modules/rc-pagination/es/locale/zh_CN').default;
 import * as Tag from '../Tag';
-import {Message} from '../pack';
 export var props={
     ...Tag.props,
     total: GearType.String,//数据总数
@@ -24,7 +23,8 @@ export var props={
     locale: GearType.Object,
     selectPrefixcls: GearType.String,
     // itemrender: (page: number, type: 'page' | 'prev' | 'next' | 'jump-prev' | 'jump-next') => React.ReactNode,//用于自定义页码的结构，可用于优化 SEO
-    showTooltipAble:GearType.Boolean
+    showTooltipAble:GearType.Boolean,
+    toolTooltipPlacement:GearType.String
 }
 export interface state extends Tag.state  {
     total?: string,//数据总数
@@ -85,9 +85,10 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
     }
     render() {
         let props: any = this.getProps();
+        let placement:any = this.props.toolTooltipPlacement || "topRight";
         return this.props.showTooltipAble!==false
-        ?<AntdTooltip placement="top"  visible={this.state.showTooltip}  title="跳转页大于总页数，为您跳转到最后一页">
-           <span><AntdPagination {...props}></AntdPagination></span> 
+        ?<AntdTooltip placement={placement}  visible={this.state.showTooltip}  title="跳转页大于总页数，为您跳转到最后一页">
+           <div><AntdPagination {...props}></AntdPagination></div> 
         </AntdTooltip>
         :<AntdPagination {...props}></AntdPagination>;
     }
@@ -117,7 +118,7 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
                         this.setState({
                             showTooltip:false
                         })
-                    },5500)
+                    },3500)
                 })
             }
         }

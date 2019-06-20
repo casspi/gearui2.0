@@ -137,9 +137,13 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
 
     shouldComponentUpdate(nextProps: P, nextState: S) {
         let shouldUpdate = this.shouldUpdate(nextProps, nextState);
-        if(nextState == this.state && this.props == nextProps) {
-            return false;
-        }
+        // console.log(nextState == this.state && this.props == nextProps);
+        // if((ObjectUtil.isExtends(this, "HtmlTag"))) {
+        //     return shouldUpdate;
+        // }
+        // if(nextState == this.state && this.props == nextProps) {
+        //     return false;
+        // }
         return shouldUpdate;
     }
 

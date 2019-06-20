@@ -7,7 +7,7 @@ export default class RemoteValidator extends Validator {
     validator = (rule: any,value: any,callback: any) => {
         let remote: any = this.props.remote;
 		if(typeof remote === 'function') {
-			var ctl = G.G$("#"+this.props.name);
+			var ctl = G.G$("#"+( this.props.id || this.props.name));
 			if(ctl) {
 				remote = remote.call(ctl);
 			}else {
@@ -25,20 +25,20 @@ export default class RemoteValidator extends Validator {
         }else {
             remote += "?" + remoteKey + "=" + value;
         }
-        // let data = Http.post(false,remote);
-        // if(data.message == null || G.G$.trim(data.message) == "") {
-        //     callback();
-        //     return;
-        // }
-        // callback(data.message);
-        let fn = async ()=>{
-            let data = await  Http.post(false,remote);
-            if(data.message == null || G.G$.trim(data.message) == "") {
-                callback();
-                return;
-            }
-            callback(data.message);
+        let data = Http.post(false,remote);
+        if(data.responseJSON.message == null || G.G$.trim(data.responseJSON.message) == "") {
+            callback();
+            return;
         }
-        fn()
+        callback(data.responseJSON.message);
+        // let fn = async ()=>{
+        //     let data = await  Http.post(false,remote);
+        //     if(data.message == null || G.G$.trim(data.message) == "") {
+        //         callback();
+        //         return;
+        //     }
+        //     callback(data.message);
+        // }
+        // fn();
     }
 }

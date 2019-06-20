@@ -80,6 +80,19 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         super(props, context);
         this.onShowPanel(this.props.onShowPanel);
     }
+
+    shouldUpdate(nextProps: P, nextState: S) {
+        // let shouldUpdate = this.shouldUpdate(nextProps, nextState);
+        // // console.log(nextState == this.state && this.props == nextProps);
+        // if((ObjectUtil.isExtends(this, "HtmlTag"))) {
+        //     return true;
+        // }
+        // if(nextState == this.state && this.props == nextProps) {
+        //     return false;
+        // }
+        return true;
+    }
+
     getProps() {
         return G.G$.extend({},super.getProps(),{
             size: this.state.size,
@@ -115,6 +128,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                 this._onChange();
                 this.doEvent("change",value,oldValue);
                 this.triggerChange({value});
+                this.clearChild();
             },
             onSelect: (value:any) => {
                 let re = this.doEvent("beforeSelect");
@@ -287,7 +301,20 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         }
         //如果存在父节点，需要父节点有初始值的情况下才去加载子节点
         if(this.parentSelect == null) {
-            this.loadData();
+            this.loadData(null, ()=>{
+                if(this.state.value) {
+                    let data = this.findByValue(this.state.value);
+                    if(!data) {
+                        this.setState({
+                            value: []
+                        });
+                        this.clearChild();
+                    }
+                }else {
+                    this.clearChild();
+                }
+                
+            });
         }
     }
 
@@ -320,6 +347,30 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         }
     }
 
+    private clearChild() {
+        if(this.childSelect) {
+            if(this.childSelect._promise){
+                this.childSelect._promise.then((e)=>{
+                    let _childSelect = e.result;
+                    _childSelect.setState({
+                        options: []
+                    },()=>{
+                        _childSelect.clear();
+                        _childSelect.clearChild();
+                    });
+
+                })
+            }else{
+                this.childSelect.setState({
+                    options: []
+                },()=>{
+                    this.childSelect.clear();
+                    this.childSelect.clearChild();
+                });
+            }
+        }
+    }
+
     afterUpdate() {
         //连动效果 当组件值发生改变之后再执行
         let value:any = this.getValue();
@@ -327,23 +378,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             value = value[value.length - 1];
         }
         if(this.childSelect instanceof Select) {
-            // if(this.childSelect._promise){
-            //     this.childSelect._promise.then((e)=>{
-            //         let _childSelect = e.result;
-            //         _childSelect.setState({
-            //             options: []
-            //         },()=>{
-            //             _childSelect.clear();
-            //         });
-
-            //     })
-            // }else{
-            //     this.childSelect.setState({
-            //         options: []
-            //     },()=>{
-            //         this.childSelect.clear();
-            //     });
-            // }
+            
             if(this.state["options"] != null && this.state["options"].length > 0) {
                 let data = this.findByValue(value);
                 if(data) {
@@ -364,42 +399,42 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                         }
                     }
                 }else {
-                    if(this.childSelect._promise){
-                        this.childSelect._promise.then((e)=>{
-                            let _childSelect = e.result;
-                            _childSelect.setState({
-                                options: []
-                            },()=>{
-                                _childSelect.clear();
-                            });
+                    // if(this.childSelect._promise){
+                    //     this.childSelect._promise.then((e)=>{
+                    //         let _childSelect = e.result;
+                    //         _childSelect.setState({
+                    //             options: []
+                    //         },()=>{
+                    //             _childSelect.clear();
+                    //         });
     
-                        })
-                    }else{
-                        this.childSelect.setState({
-                            options: []
-                        },()=>{
-                            this.childSelect.clear();
-                        });
-                    }
+                    //     })
+                    // }else{
+                    //     this.childSelect.setState({
+                    //         options: []
+                    //     },()=>{
+                    //         this.childSelect.clear();
+                    //     });
+                    // }
                 }
             }else {
-                if(this.childSelect._promise){
-                    this.childSelect._promise.then((e)=>{
-                        let _childSelect = e.result;
-                        _childSelect.setState({
-                            options: []
-                        },()=>{
-                            _childSelect.clear();
-                        });
+                // if(this.childSelect._promise){
+                //     this.childSelect._promise.then((e)=>{
+                //         let _childSelect = e.result;
+                //         _childSelect.setState({
+                //             options: []
+                //         },()=>{
+                //             _childSelect.clear();
+                //         });
 
-                    })
-                }else{
-                    this.childSelect.setState({
-                        options: []
-                    },()=>{
-                        this.childSelect.clear();
-                    });
-                }
+                //     })
+                // }else{
+                //     this.childSelect.setState({
+                //         options: []
+                //     },()=>{
+                //         this.childSelect.clear();
+                //     });
+                // }
             }
         }
     }
@@ -470,7 +505,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             this.setState({
                 options: []
             },()=>{
-                this.clear();
+                //this.clear();
             });
         }
         

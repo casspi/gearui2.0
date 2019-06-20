@@ -27,6 +27,20 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
     
     private waitSetValue:any = []
 
+    shouldComponentUpdate (nextProps: P, nextState: S) {
+        let shouldUpdate = this.shouldUpdate(nextProps, nextState);
+        // console.log(nextState == this.state && this.props == nextProps);
+        // if((ObjectUtil.isExtends(this, "HtmlTag"))) {
+        //     return shouldUpdate;
+        // }
+        // if(nextState == this.state && this.props == nextProps) {
+        //     return false;
+        // }else{
+
+        // }
+        return shouldUpdate;
+    }
+
     getInitialState(): state {
         return {
             options: [],
@@ -49,6 +63,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
         </div>;
     }
 
+    
     //获取当前属性
     getProps() {
         let state:any = this.state;
@@ -65,7 +80,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
             className: className,
         });
     }
-
+    
     //获取当前属性
     getCheckTagProps(key: any,value: any,text: any,checked: any) {
         return G.G$.extend({},{
@@ -78,7 +93,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
             disabled:this.state.disabled,
             onChange:(chked: any)=>{
                 if(this.state.readOnly == true || this.state.disabled == true)
-                    return;
+                return;
                 let oldValues = this.getValue();
                 this._setChecked(key,chked,()=>{
                     this._change(this.getValue(),oldValues);
@@ -86,7 +101,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
             }
         });
     }
-
+    
     private getTags() {
         let options = this.state.options;
         let tags: any[] = [];
@@ -97,7 +112,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
         }
         return tags;
     }
-
+    
     afterRender() {
         this.blur(()=>{
             this.find(".gearui-control-wrapper").removeAttr("tabindex");
@@ -136,6 +151,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
             fn();
         }        
     }    
+    
 
     private _change(newValues: any,oldValues: any){
         super.setValue(newValues);
@@ -251,4 +267,16 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
         this.attr("tabindex","-1");
         this.find(".gearui-control-wrapper").blur(...args);
     }  
+
+    reset(){
+        let initValue:any = this.props.value;
+        if(typeof initValue == 'string'){
+            initValue = initValue.split(',')
+        }
+        this.setValue(initValue)
+    }
+
+    clear(){
+        this.setValue('')
+    }
 }

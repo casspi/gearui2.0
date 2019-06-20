@@ -601,7 +601,12 @@ export default class ObjectUtil {
                         .replace(/&lt;/g, '\<')
                         .replace(/&gt;/g, '\>')
                         .replace(/&#10;/g, '\n');
-                        propsNew[key] = JSON.parse(valueInProps);
+                        try {
+                            valueInProps = JSON.parse(valueInProps)
+                        } catch (error) {
+                            valueInProps = valueInProps;
+                        }
+                        propsNew[key] =  valueInProps;
                     }else{
                         propsNew[key] = valueInProps.replace(/&amp;/g, '\&')
                         .replace(/&quot;/g, '\"')

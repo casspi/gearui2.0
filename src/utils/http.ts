@@ -13,10 +13,11 @@ axios.interceptors.request.use((config: any) => {
     config.withCredentials = true;
     const token = Http.getCookie("sessionId") || WindowUtil.getSessionId();
     const data = config.data;
-    config.data = qs.stringify(data);
+    config.data = qs.stringify(data,{ arrayFormat: 'repeat' });
     config.headers = {
         'Content-Type': 'application/x-www-form-urlencoded',
     };
+    // config.responseType = 'json';
     config.headers[Constants.SESSION_COOKIENAME] = token;
     let ieVersion = WindowUtil.getIeVersion();
     if(ieVersion > -1 && ieVersion < 10) {
@@ -30,7 +31,7 @@ axios.interceptors.request.use((config: any) => {
     return Promise.reject(err.response.data);
 });
 axios.interceptors.response.use((response: any)=>{
-    return response;
+    return  response;
 },(err: any) => {
     return Promise.reject(err);
 });
@@ -90,21 +91,26 @@ export default class Http {
             url = `http://query.yahooapis.com/v1/public/yql?q=select * from json where url='${options.url}?${encodeURIComponent(qs.stringify(options.data))}'&format=json`
             data = null
         }
-
-
+        
         switch (method.toLowerCase()) {
             case 'get':
                 return axios.get(url, {
                     params: cloneData,
-                })
+                    paramsSerializer: (cloneData:any) => {
+                        return qs.stringify(cloneData, { indices: false })
+                    }
+                },{responseType: dataType})
             case 'delete':
                 return axios.delete(url, {
                     data: cloneData,
+                    paramsSerializer: (cloneData:any) => {
+                        return qs.stringify(cloneData, { indices: false })
+                    }
                 })
             case 'post':
-                return axios.post(url, cloneData)
+                return axios.post(url, cloneData ,{responseType: dataType})
             case 'put':
-                return axios.put(url, cloneData)
+                return axios.put(url, qs.stringify(cloneData, { indices: false }))
             case 'patch':
                 return axios.patch(url, cloneData)
             default:

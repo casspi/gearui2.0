@@ -6,6 +6,7 @@ import * as Time from "../form/Time";
 import * as Date from "../form/Date";
 import * as Datetime from "../form/Datetime";
 import * as Radio from "../form/Radio";
+import * as Textarea from "../form/Textarea";
 import * as TimePicker from "../form/TimePicker";
 import { Form as AntdForm  } from 'antd';
 import { FormComponentProps } from 'antd/es/form/Form';
@@ -66,7 +67,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     getInitialState(): state {
-        let children = this.getChildren();
+        
         return {
             invalidType: this.props.invalidType,
             validateHidden: this.props.validateHidden,
@@ -80,7 +81,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             validate: true,
             redirect: this.props.redirect,
             hiddenValue:null,
-            children: children
+            // children: children
         };
     }
 
@@ -123,9 +124,10 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         delete props.validation;
         delete props.ajax;
         delete props.hiddenValue;
+        let children = this.getChildren();
         
         return (<AntdForm {...props}>
-            {this.state.children}{this.state.hiddenValue}
+            {children}{this.state.hiddenValue}
         </AntdForm>);
     }
 
@@ -144,7 +146,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 have = true;
             }
         }
-        let method = this.props.method;
+        let method = this.state.method;
         if(method && method.toLowerCase() == "put" && !have) {
             let formTag: any = this.props.form.getFieldDecorator("_method",{
                 initialValue: "put",
@@ -176,7 +178,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         // console.log(params)
         // console.log(this.props.form.getFieldsValue())
         this.props.form.setFieldsValue(params);
-        //this.validateField(name, callback);
+        this.validateField(name, callback);
     }
     
     public setFieldsValue(params:any,callback?:Function){
@@ -266,7 +268,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     private addParamsValueFormat(gearObj: any, values: any, key: any) {
         // text、number、file控件，直接使用自身传值
         // if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default)){
-        if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default ||  gearObj instanceof Radio.default)){
+        if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default ||  gearObj instanceof Radio.default || gearObj instanceof Textarea.default)){
         
             let name = gearObj.props.name || gearObj.props.id;
             let value = values[key];
@@ -341,7 +343,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             if(inner==true){
                 // this.setState({hiddenValue:<div className='inner-hidden' style={{"display":"none"}}></div>},()=>{
                 //     console.log(G.G$('.inner-hidden'));
-                //     // debugger
                 //     hiddenDiv = G.G$('.inner-hidden');
                 //     // resolve(hiddenDiv);
                 // })
@@ -447,7 +448,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 fieldsname = fieldsname.filter(o=>o!=noSubmitArr[i])
             }
         }
-        // console.log(fieldsname)
         let result = false;
         if(this.state.validate == true) {
             this.props.form.validateFieldsAndScroll(fieldsname.length>0?fieldsname:[],{force:true},(err, values) => {
@@ -477,7 +477,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
 
     submit(param?: any) {
-        // debugger;
         let callback;
         if(param){
             if(typeof param == "function")
@@ -613,6 +612,9 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         let data = this.getParamsAsFormData();
         let action: any = this.state.action||""
         let method = this.state.method||"post";
+        if(this.state.method == "put"){
+            method = 'post'
+        }
         G.G$.ajax({
             url: action,
             type: method,

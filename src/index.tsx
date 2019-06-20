@@ -30,10 +30,15 @@ window.G.components = Tags.components;
 
 //兼容老版的写法--------------------
 window.G.http = utils.Http;
+window.G.util = utils.Http;
 window.G.post = utils.Http.post;
 window.G.put = utils.Http.put;
 window.G.get = utils.Http.get;
-window.G.util = utils.Http;
+
+window.G.head = utils.Http.head;
+window.G.delete = utils.Http.delete;
+window.G.options = utils.Http.options;
+window.G.ajax = utils.Http.ajax;
 // window["$"] = window.G;
 window.onload = function() {
     window.G.render({

@@ -26,7 +26,7 @@ export var props = {
     bordered:GearType.Boolean,
     defaultExpandAllRows:GearType.Boolean,
     sequenceWidth:GearType.Any,//排序列宽度,
-    showHeader:GearType.Boolean
+    showHeader:GearType.Boolean,//是否显示表头
 };
 
 export interface state extends Tag.state, TableProps<any> {
@@ -54,7 +54,8 @@ export interface state extends Tag.state, TableProps<any> {
     paginationId?: Array<string>;//
     bordered?:boolean;
     children?: React.ReactNode,
-    defaultExpandAllRows?:boolean
+    defaultExpandAllRows?:boolean,
+    expandRowDom?:any
 }
 export var useName = 'ajaxlist';
 
@@ -85,7 +86,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     //当前展开的记录行
     private _expandRecord = null;
     protected defaultRecord = {};
-
+    
     constructor(props:P, context?: {}){
         super(props, context)
     }
@@ -393,7 +394,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             lazy: this.props.lazy,
             paginationId: this.props.paginationId ? this.props.paginationId.split(",") : [],
             formId: this.props.formId,
-            defaultExpandAllRows:this.props.defaultExpandAllRows==true?true:false
+            defaultExpandAllRows:this.props.defaultExpandAllRows === true? true : false,
+            expandRowDom: null
         };
     }
     getProps() {  
@@ -840,7 +842,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(this.props.id){
             G.$("#"+this.props.id).data("vmdom", this)
         }
-
         let columns = this.state.columns || [];
         //缓存一份行数据字段，当没有数据时，新增用得到
         let uColums:any = (columns as Array<any>).filter(o=>o.dataIndex!='sequence' && o.dataIndex!="control");

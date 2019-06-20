@@ -3626,6 +3626,14 @@ samp {
   white-space: pre;
   pointer-events: none;
 }
+/* combotree的搜索框样式 */
+.ant-select-search__field__mirror {
+  position: absolute;
+  top: 0;
+  left: -9999px;
+  white-space: pre;
+  pointer-events: none;
+}
 .ant-select-search--inline > i {
   float: right;
 }

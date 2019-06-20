@@ -126,7 +126,7 @@ export default class DialogAction<P extends typeof props, S extends state> exten
             for (var key in window._dialog) {
                 let handle = window._dialog[key];
                 if(handle){
-                    handle.close();
+                    handle.destroy();//close()
                 }                
             }
             window._dialog = {};
