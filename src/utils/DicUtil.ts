@@ -39,18 +39,21 @@ export default class DicUtil {
                 } else if (typeof dictype == "string") {
                     //如果dic_url在当前代码之前被执行，就直接执行获取字典代码，否则就定义事件，等待自定义设置解析完成之后触发
                     if (DicUtil.url_global) {
-                        let result = await DicUtil.getDicFromDependUrl(dictype, method);
-                        if(result.success && result.data && result.data.status == 0) {
-                            window[dictype] = result.data.data;
-                        }else {
-                            window[dictype] = result.data;
-                        }
-                        if (window[dictype] instanceof Array) {
-                            let arr = new GearArray<any>(window[dictype]);
-                            dicNew = arr.clone(true).toArray()
-                        } else {
-                            dicNew = G.G$.extend(true, {}, window[dictype]);
-                        }
+                        // let fn = async ()=>{
+                            let result = await DicUtil.getDicFromDependUrl(dictype, method);
+                            if(result.success && result.data && result.data.status == 0) {
+                                window[dictype] = result.data.data;
+                            }else {
+                                window[dictype] = result.data;
+                            }
+                            if (window[dictype] instanceof Array) {
+                                let arr = new GearArray<any>(window[dictype]);
+                                dicNew = arr.clone(true).toArray()
+                            } else {
+                                dicNew = G.G$.extend(true, {}, window[dictype]);
+                            }
+                        // }
+                        // fn()    
                     }
                 }
                 let response = new HttpResponse(true, "",0 , dicNew);
@@ -65,9 +68,11 @@ export default class DicUtil {
     private static async getDicFromDependUrl(dictype: any, method: methods) {
         var url = DicUtil.url_global;
         if (url.indexOf(".json") != -1 && url.indexOf(".json") == (url.length - 5)) {
+            url = Http.absoluteUrl(url);
             return DicUtil.getJsonDic(url, dictype);
         } else {
             url = DicUtil.getGlobalUrl(dictype);
+            url = Http.absoluteUrl(url);
             return Http.ajax(method, url);
         }
     }
@@ -93,6 +98,15 @@ export default class DicUtil {
             return Promise.resolve(result);
         }
         return Promise.reject(result);
+    }
+    // 根据代码集类型和编码查找相关代码数据
+    static getDataByCode(dic:any,codes:any,callback:Function,method?:any){
+        var url = this.url_data_global;
+        if(url){
+            url = Http.getRootPath() + this.url_data_global;
+            G.G$.ajax({url: url,async: false,dataType: 'json',data: {type:dic,code:codes},traditional:true}).done(callback)
+            // Http.getMethod(method)("http://10.10.10.6:81/dictionary/query?type=DIC_AREA",false,{type:dic,code:codes}).done(callback);
+        }
     }
 
     //获取全局字典的url

@@ -2,6 +2,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
+    <!-- <meta name="web-context" content="/test"> -->
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <meta name="theme-color" content="#000000">
     <!--
@@ -11,7 +12,15 @@
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
     <link rel="shortcut icon" href="%PUBLIC_URL%/favicon.ico">
     <link href="gearui.css" rel="stylesheet" type="text/css">
-    <script src="./jquery.min.js"></script>
+    <link rel="stylesheet" href="./icon-font/iconfont.css">
+    
+    <style>
+      .atest{width: 500px;height: 200px;position: relative;}
+      .atest p{line-height: 30px;background: #f77;position: relative;right: -100%; transition: all .3s}
+      .atest:hover p{right: 0}
+      .ant-modal-confirm .ant-modal-confirm-btns{display: flex;float: none;flex-direction: row-reverse;justify-content: space-evenly}
+      .ant-modal-confirm .ant-modal-confirm-btns button + button{margin-left: 0;}
+    </style>
     <!-- <script src="./jsplumb.js"></script> -->
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
@@ -61,6 +70,9 @@
         // })
         G("#form1").reset()
       }
+      function dataConvert(name,department){
+        return "<img src="+name+" />"
+      }
     </script>
     
     <title>React App</title>
@@ -88,7 +100,10 @@
     <noscript>
       You need to enable JavaScript to run this app.
     </noscript>
+    <!-- <input type="file">
+    <input id="r1" type="range" min="0" max="100" value="10"/> -->
     <form ctype="form" id="form1">
+        <g-radio readonly="true" disabled="true" required="true"></g-radio>
         <!-- <g-time id="time"   required="true"></g-time>
           <g-inputtag id='inputtag'  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" async="true"></g-inputtag>
         <g-text disabled="true" required="true"></g-text>
@@ -101,13 +116,13 @@
           </div>
           
           <div id="www"></div>  -->
-          <!-- <g-select id="se1" required="true" onChange="selectChange(arguments[0],arguments[1],this)" name="s1" multiple="true" dictype="LEVEI" width="300"></g-select> -->
-          <span ctype="button" buttonStyle="primary" onClick="executeQuery()" class="m-r">查询</span>
-          
+          <!-- <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag>
+          <g-select id="se1" required="true" onChange="selectChange(arguments[0],arguments[1],this)" name="s1"  url="http://10.10.10.6:81/example/Select/data" width="300"></g-select> -->
+          <!-- <g-text name="c5" required="true"></g-text>
+          <span ctype="button" buttonStyle="primary" onClick="executeQuery()" class="m-r">查询</span> -->
           <!-- <div id="d2-w">
             <div>
               <div>
-
                 <g-date name="date" id="d0" required="true" value="2019-06-09"></g-date>
               </div>
             </div> 
@@ -116,42 +131,68 @@
           <g-combotree editable="true" width="200" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree> -->
           <!-- <g-select id="s1" width="200" lower="s2" url="http://10.10.10.6:81/example/source?name=Select&type=element&id=example"></g-select>
           <g-select id="s2" width="200" upper="s1"></g-select> -->
-          <!-- <g-autocomplete name="autocomplete"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" width="200" prompt="输入内容必须在选项内"></g-autocomplete> -->
+          <!-- <g-autocomplete id="auto1" value="110106" name="autocomplete" async="true"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" width="200" prompt="输入内容必须在选项内"></g-autocomplete> -->
         <!-- <g-text value="test text"></g-text>       -->
-          <g-checktag id="checktag1" name="c1" dictype="checkboxJson1"  value="ws,zs"></g-checktag>
+          <!-- <g-checktag id="checktag1" name="c1" dictype="checkboxJson1"  value="ws,zs"></g-checktag> -->
         <!-- <g-datetime  value="2019-05-09" type="range" name="d1" id="d1"></g-datetime> -->
         <!-- <g-textarea id="hey" name="textarea"></g-textarea> -->
         <!-- <g-component value="{ctype:'text',value:'文本框',name:'textc',required:true,width:'300px'}"></g-component> -->
         <g-submit>提交</g-submit>
-      <g-button onClick="reset()">重置</g-button>  
+        <g-button onClick="reset()">重置</g-button>  
     </form>
-  <!-- <div ctype="ajaxlist" id="result" url="./datalist.json">
-    <g-column label="任务ID" name="taskId" width="250"></g-column>
-    <g-column label="任务名称" name="taskName" width="250"></g-column>
-    <g-column label="任务类型" name="readType" width="100"></g-column>
-    <g-column label="任务状态" name="statusCn" width="100"></g-column>
-    <g-column label="分组ID" name="groupIds" width="100"></g-column>
-    <div ctype="column" label="操作" class="actiontd">
+    <!-- <g-link url="http://www.baidu.com"><i class="iconfont icon-quanbu "></i></g-link> -->
+    <script>
+      function dataConvert(status){
+        return "<img src="+status+" />"
+      }
+    </script>
+   <!--<div ctype="ajaxlist" id="result" url="./datalist.json">
+      <div ctype="column" label="操作" class="actiontd">
+        <g-label >{#(dataConvert(status))}</g-label>
+      </div>
+      <g-column label="任务ID分组ID分组ID分组ID分组ID" name="taskId" width="150" ellipsis="true"></g-column>
+      <g-column label="任务名称" name="taskName" width="250"></g-column>
+      <g-column label="任务类型" name="readType" width="100"></g-column>
+      <g-column label="任务状态" name="statusCn" width="100"></g-column>
+      <g-column label="分组ID" name="groupIds" width="100"></g-column>
+      <g-link url="http://www.baidu.com"><i class="iconfont icon-quanbu "></i></g-link>
+      <g-link  id="id{(setUrl(status))}"name="gg" type="link" target="_blank"
+        visible="{(status != '03' || status!='21')}"
+        url="/read/task/getInstructions?taskId={taskId}">查看指令状态
+      </g-link>
       <g-link type="link" target="_blank"
         url="/read/task/getTask?taskId={taskId}">查看任务信息
       </g-link>
       <g-text name="text"  width="100"></g-text>
       <g-dialogaction type="button"  visible="{(status != '03' || status!='21')}">dialog</g-dialogaction>
-      <g-link  id="id{(setUrl(status))}"name="gg" type="link" target="_blank"
-        visible="{(status != '03' || status!='21')}"
-        url="/read/task/getInstructions?taskId={taskId}">查看指令状态
-      </g-link>
       <span ctype="button" buttonStyle="primary" icon="arrow-right">
         查看
       </span>
       <span ctype="label"  class="{status}">9999</span>
       <g-ajaxaction name="gg" type="link" visible="{(status != '21')}"
         url="/read/task/revoke?taskId={taskId}" confirm="你确定要撤销这条读取任务吗？">撤销
-      </g-ajaxaction>
+      </g-ajaxaction> 
+    
+  </div>-->
+  <!-- <div style="overflow:hidden;height: 2000px">
+    <div class="atest">
+      <p>99999999999999999999999999999999999</p>
     </div>
   </div> -->
+  <!-- <g-form id="editlist-form1">
+    <g-editlist id="editlist1" footerControl="true" editable="false" editcell="false" control="save,reset,add,delete,up,down,clear" url="http://localhost:8080/example/webview/definition/Editlist/data?page=10&key=0&pageSize=10&currentPage=1" rowControl="true">
+      <g-column label="姓名" width="100"  name="name" editctype="text" onChange="change(arguements[0],arguments[1])" required="{(name==='乔国瑞'?'true':'false')}"></g-column>
+      <g-column label="选项" width="100">
+        <g-label>{(name==='乔国瑞'?'true':'false')}</g-label>
+      </g-column>
+      <g-column label="单位" width="200" id="unitId1"   name="unitId" required="true" onChange="onChangeUnit(this,arguments[0],arguments[1])" editctype="select" url="http://localhost:8080/dictionary/tree?type=DIC_UNIT_TEST"/></g-column>				
+    </g-editlist>
+  </g-form> -->
+  <g-button id="btn111">按钮</g-button>
+  <g-dialogaction dialogWidth="600"  dialogHeight="1200" url="./index.html">弹框</g-dialogaction>
+  <g-icon type="amazon-circl"></g-icon>
   <script> 
-  let getUrl = function() {
+    let getUrl = function() {
       return "./test.html"
     }
     function selectChange(newValue,oldValue,ele){
@@ -210,6 +251,17 @@
   </body>
   <script>
   G(function() {
+    // 
+    // G(".s11").each(function(){
+    //   console.log(G(this))
+    //   G(this).onSelect(function(node){
+    //     console.log(node)
+    //   })
+    // })
+   
+    G('#btn111').onClick(()=>{
+      G.messager.confirm({centered:false,top:100})
+    })
     // G('#hey').setValue("99")
     console.log(G("#checktag1"))
     //G('#d2-w').remove()

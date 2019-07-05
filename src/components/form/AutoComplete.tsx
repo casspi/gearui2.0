@@ -225,8 +225,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
      */
     public getOption(value: any, optionsParam?: OptionData[]): OptionData | null {
         let options = optionsParam || this.state.options;
-        // console.log(options)
-        // debugger
         if(options) {
             for(let i = 0; i < options.length; i++) {
                 let option = options[i];
@@ -344,7 +342,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         let dictype = this.state.dictype;
         if(url == null && dictype && typeof dictype == 'string'){
             url = Http.getRootPath() + "/dictionary/query?type=" + dictype;
-            // url = '10.10.10.6:81' + "/dictionary/query?type=" + dictype;
         }
         if(url){
             let options: any[];
@@ -358,7 +355,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             }else{
                 let fn = async ()=> {
                     // 如果不是异步查询，则设置查询上线为0，表示返回所有记录
-                    let result = await Http.ajax("get", url, {q: value,limit: this.props.async == false ? 0 : this.state.limit});
+                    let result = await Http.ajax("get",url, {q: value,limit: this.props.async == false ? 0 : this.state.limit});
                     if(result.success) {
                         let message = result.data;
                         if(message && message.data && typeof message.data == "object"){
@@ -375,10 +372,19 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                         },()=>{
                             this.doEvent("loadSuccess")
                             if(callback){
-                                callback
+                                callback()
                             }
                         });
                     }else {
+                        this.setState({
+                            options: result.data,
+                            searchOptions: result.data
+                        },()=>{
+                            this.doEvent("loadSuccess")
+                            if(callback){
+                                callback()
+                            }
+                        });
                         this.doEvent("error", result);
                     }
                 }
@@ -483,21 +489,28 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
              
     }
 
-    // setValue(value: any, text?:any, callback?: Function) {
-    //     if(this.props.form) {
-    //         this.triggerChange(value);
-    //     }else {
-    //         this.setState({
-    //             value,
-    //             // text
-    //         }, () => {
-    //             if(callback) {
-    //                 callback();
-    //             }
-    //         });
-    //     }
-        
-    // }
+    setValue(value: any, callback?: Function) {
+        if(this.form) {
+            this.setState({
+                value
+            }, () => {
+                this.search(value)//匹配到合适选项
+                this.triggerChange(value, callback);
+                if(callback){
+                    callback.call(this)
+                }
+            });            
+        }else {
+            this.setState({
+                value
+            }, () => {
+                this.search(value)//匹配到合适选项
+                if(callback) {
+                    callback();
+                }
+            });
+        }
+    }
 
     reset(){
         // if(this.form){

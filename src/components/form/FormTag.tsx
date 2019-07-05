@@ -229,6 +229,8 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     reset(){
         if(this.form) {
             this.form.reset(this.state.id || this.state.name);
+        }else{
+            this.setValue(this.props.value)
         }
     }
 
@@ -272,9 +274,13 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         if(this.form){
             if(this.state.disabled===true){//disabled 就不验证
                 let arr:any = this.form.noSubmitArr
-                if(arr.indexOf(this.state.id)<0){//不含有载push
+                if(arr.indexOf(this.state.id)<0){//不含有则push
                     arr.push(this.state.id);
                 }
+                this.form.noSubmitArr = arr;
+            }else{
+                let arr:any = this.form.noSubmitArr
+                arr = arr.filter((o:any)=>o != this.state.id)//含有则去除
                 this.form.noSubmitArr = arr;
             }
         }

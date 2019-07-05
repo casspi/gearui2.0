@@ -19,7 +19,8 @@ export var props = {
     copyType: GearType.Enum<"copy"|"insert">(),
     control: GearType.String,
     rowControl: GearType.Boolean,
-    controlLabel: GearType.String
+    controlLabel: GearType.String,
+    footerControl: GearType.Boolean
 }
 export interface state extends Table.state,FormTag.state {
     control?: string;
@@ -241,12 +242,14 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     }
 
     getProps() {
+
         let props = super.getProps();
-        return G.G$.extend({},props,{
-            title:(currentPageData: any)=>{
-                return this.getHeader();
-            }
-        });
+        let controlBar = this.props.footerControl===true?{footer:()=>{
+            return this.getFooter();
+        }}:{title:(currentPageData: any)=>{
+            return this.getHeader();
+        }}
+        return G.G$.extend({},props,controlBar);
     }
 
     protected _onMouseLeave(record: any,index: any,event: any) {
@@ -292,6 +295,19 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         });
         if(eleMap.length > 0) {
             return <div className={"list-header"}>
+                {eleMap}
+            </div>;
+        }
+        return null;
+    }
+    //获取底部按钮
+    protected getFooter() {
+        let controls = this.getControls();
+        let eleMap = controls.map((ele)=>{
+            return <div key={UUID.get()} className={"list-control"}>{ele}</div>;
+        });
+        if(eleMap.length > 0) {
+            return <div className={"list-footer"}>
                 {eleMap}
             </div>;
         }
@@ -744,7 +760,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         }
     }
 
-    add() {
+    add(addData?:any) {
         if(this.doJudgementEvent("beforeRowAdd")==false)
             return;             
         let dataSource = this.getData()||[];
@@ -757,6 +773,8 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         for(let key in dataClone) {
             dataClone[key] = null;
         }
+        // let defaultData = addData || {};//默认数据
+        // dataClone = G.G$.extend({},dataClone,defaultData)
         dataSource.push(dataClone);
         let data = this._loadFilter({dataList:dataSource});
         let lastData = data.dataList[data.dataList.length - 1];
@@ -770,9 +788,11 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         this.setState({
             dataSource: data.dataList,
             editable
+        },()=>{
+            this.doEvent('afteradd',lastData)
         });
     }
-
+   
     /**
      * 两种方式
      * 1：从json数据中直接解析
@@ -924,7 +944,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                         cannotControl: record.cannotControl,
                         name: name,
                         form: this.form,
-                        required: newProps.required=="true"?true:false,
+                        required: newProps.required==="true"?true:false,
                         ref:(ele: any) => {
                             let cells = this.cells[record.key]||{};
                             if(ele != null) {
@@ -968,5 +988,12 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
     // 得到默认的样式名称
     protected getDefaultClassName() {
         return "ant-table-editlist";
+    }
+
+    //新增row回调
+    onAfterAdd(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("afteradd",fun);
+        }
     }
 }

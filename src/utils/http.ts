@@ -207,21 +207,37 @@ export default class Http {
     //转换相对路径的url为完整路径，url须以/开头
 	static absoluteUrl(url: string){
         var root = Http.getRootContext();
+        let newUrl = url;
         if(url){
-            if(url.startsWith("/"))
-                return url;
-            else
-                return root + url;
+            if(url.startsWith("/")) {
+                if(root != "/") {
+                    newUrl = root + url;
+                }
+                // newUrl = url;
+            }
+            else {
+                newUrl = root + url;
+            }
         }else{
-            return root;
+            newUrl = root;
         }
+        if(newUrl.startsWith('/')){
+            return newUrl
+        }else{
+            return "/" + newUrl;
+        }
+        
     }
 
     static getRootContext() {
         var meta = document.getElementsByTagName("meta")["web-context"];
         var projectName= '';
-        if(meta && meta[0]) {
-            projectName = meta.attr("content");
+        if(meta) {
+            if(meta.content) {
+                projectName = meta.content;
+            }else if(meta.attr) {
+                projectName = meta.attr("content");
+            }
         }else {
             projectName= config.api.rootContext||this.getPathName().substring(0,this.getPathName().substr(1).indexOf('/')+1);
         }

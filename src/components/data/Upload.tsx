@@ -28,6 +28,7 @@ export var props =  {
     fileListMax:GearType.Number,
     showIcon:GearType.Boolean,//是否显示上传icon
     buttonText:GearType.String,//按钮文字
+    multiple:GearType.Boolean
 }
 export interface state extends FormTag.state{
     fileList?:any,
@@ -61,11 +62,11 @@ export default class GUpload<P extends typeof props,S extends state> extends For
             name: this.props.name,
             defaultFileList: this._dataFilter(this.props.value),//默认已经上传的文件列表
             fileList: this.state.fileList,//已经上传的文件列表（受控），使用此参数时，如果遇到 onChange 只调用一次的问题，请参考 
-            action: this.props.url || Http.absoluteUrl("upload"),//必选参数, 上传的地址
+            action: this.props.url || Http.absoluteUrl("/upload"),//必选参数, 上传的地址
             data: this.props.data,//上传所需参数或返回上传参数的方法
             //headers: this.props.headers,//设置上传的请求头部，IE10 以上有效
-            showUploadList: this.props.showUpoadList==false?false:true,//是否展示 uploadList, 可设为一个对象，用于单独设定 showPreviewIcon 和 showRemoveIcon
-            multiple: false,//是否支持多选文件，ie10+ 支持。开启后按住 ctrl 可选择多个文件。
+            showUploadList: this.props.showUpoadList==false? false : true,//是否展示 uploadList, 可设为一个对象，用于单独设定 showPreviewIcon 和 showRemoveIcon
+            multiple: this.props.multiple === true? true : false,//是否支持多选文件，ie10+ 支持。开启后按住 ctrl 可选择多个文件。
             accept: this.props.accept,//支持上传的类型，详见：https://developer.mozilla.org/en-US/docs/Web/HTML/Element/input#attr-accept
             beforeUpload: (file:any, fileList:any) => {
                 return this._beforeUpload(file, fileList);
@@ -100,12 +101,15 @@ export default class GUpload<P extends typeof props,S extends state> extends For
                             // 触发onChange
                             let newValue = this.getValue();
                             this._change(newValue,oldValue);
+                            this.doEvent('success',newValue,oldValue,info)
                         });
                         message.info(`${info.file.name} 文件上传成功`);
                     }else{
+                        this.doEvent('failed',info);
                         message.error(`${info.file.name} 文件上传失败`);
                     }
                 } else if (info.file.status === 'error') {
+                    this.doEvent('failed',info);
                     message.error(`${info.file.name} 文件上传失败`);
                 }
             },//上传文件改变时的状态，详见 onChange
@@ -186,6 +190,7 @@ export default class GUpload<P extends typeof props,S extends state> extends For
 
     makeJsx () {
         let props = this.getUploadProps();
+        console.log(props.action)
         let wProps:any = this.getProps();
         return<LocaleProvider locale={zhCN}>
                 <Wrapper {...wProps}>
@@ -224,6 +229,18 @@ export default class GUpload<P extends typeof props,S extends state> extends For
         }
     }
 
+    onSuccess(fun:any) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("success",fun);
+        }
+    }
+
+    onFailed(fun:any) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("failed",fun);
+        }
+    }
+
     onRemove(fun:any) {
         if(fun && G.G$.isFunction(fun)) {
             this.bind("remove",fun);
@@ -248,7 +265,7 @@ export default class GUpload<P extends typeof props,S extends state> extends For
     }
 
     protected _beforeUpload(file:any, fileList:any){
-        let re = this.doEvent("beforeUpload");
+        let re = this.doEvent("beforeUpload",file,fileList);
         if(re instanceof Array && re.length > 0) {
             return re[0];
         }

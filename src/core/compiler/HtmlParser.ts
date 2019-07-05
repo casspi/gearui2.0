@@ -115,6 +115,7 @@ export default class HtmlParser {
                         let endMessage = this.parseEndTag(endTagMatch[1], curIndex, this.index);
                         let index = endMessage.index;
                         let currentElement = endMessage.currentElement;
+                        
                         if(currentElement && (currentElement.tag=='g-column' || currentElement.attrsMap.ctype=='column')){
                             // console.log(currentElement);
                             this.isColumn = false;
@@ -257,12 +258,13 @@ export default class HtmlParser {
                             }else {
                                 match.tagClass = G.components[match.tagName.substring(1, match.tagName.length)];
                             }
-                        }else if(match.tagName == "input") {
-                            match.tagClass = G.components[inputType];
-                            if(match.tagClass == null) {
-                                match.tagClass = G.components["text"];
-                            }
                         }
+                        // else if(match.tagName == "input") {
+                        //     match.tagClass = G.components[inputType];
+                        //     if(match.tagClass == null) {
+                        //         match.tagClass = G.components["text"];
+                        //     }
+                        // }
                     }
                 }
                 return match;

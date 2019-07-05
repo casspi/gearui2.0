@@ -195,7 +195,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
     
     getEditGearEle() { 
-        let _props:any =G.G$.extend({},this.props,true);
+        let _props:any = G.G$.extend({},this.props,true);
         let editCType = this.props.editCType;
         let lower = this.props.lower;
         let upper = this.props.upper;
@@ -238,10 +238,6 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                             editable:true,
                             label:this.getLabel()
                         })
-                        
-                    //     // if(this.props.form){
-                    //     //     this.gearEle.triggerChange(value);
-                    //     // }
                     })
                     if(onchangebak && G.G$.isFunction(onchangebak)) {
                         onchangebak.call(this.gearEle,value,oldValue);
@@ -326,4 +322,5 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
             }
         });
     }
+
 }

@@ -424,15 +424,16 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         let state = this.state;
         return G.G$.extend({},state,{
             locale: {
-                filterTitle:"筛选",
+                filterTitle: "筛选",
                 emptyText: this.state.emptyText,
-                sortTitle:'排序'
+                sortTitle: '排序'
             },
-            defaultExpandAllRows:this.state.defaultExpandAllRows,
+            defaultExpandAllRows: this.state.defaultExpandAllRows,
             dataSource: this.state.dataSource,
             columns: this.getColumnsFromState(),
             pagination: this.state.pagination,
             expandedRowRender: this.haveEvent("expandedrow")?(record: any)=>{
+                console.log('expandedRowRender')
                 this._expandRecord = record;
                 if(this.expandedRowCached[record.key] == null){
                     let re = this.doEvent("expandedrow",record);

@@ -8,6 +8,7 @@ import * as Datetime from "../form/Datetime";
 import * as Radio from "../form/Radio";
 import * as Textarea from "../form/Textarea";
 import * as TimePicker from "../form/TimePicker";
+import * as Upload from "../data/Upload";
 import { Form as AntdForm  } from 'antd';
 import { FormComponentProps } from 'antd/es/form/Form';
 import * as React from 'react';
@@ -277,7 +278,14 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             }
             //if(name && gearObj.props.disabled != true) 
             if(name && gearObj.isEnable() == true) {
-                this.addHiddenValue(name,value, true);
+                if(gearObj instanceof Upload.default){//upload 回填值为数组时
+                    if(value instanceof Object){
+                        value = JSON.stringify(value);
+                    }
+                    this.addHiddenValue(name,value, true)
+                }else{
+                    this.addHiddenValue(name,value, true);
+                }
             }
         }
     }

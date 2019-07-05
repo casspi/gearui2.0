@@ -1,5 +1,6 @@
 import * as ClickAction from './ClickAction';
 import Dialog from '../pack/Dialog';
+import { UUID } from 'src/utils';
 
 export var props = {
     ...ClickAction.props,
@@ -110,7 +111,7 @@ export default class DialogAction<P extends typeof props, S extends state> exten
     }
 
     static getDialogId(obj: DialogAction<typeof props, state>) {
-        return obj.props.id + "_dialog";
+        return obj.props.id? obj.props.id : UUID.get() + "_dialog";
     }
 
     // 当被点击时触发

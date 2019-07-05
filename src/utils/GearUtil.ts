@@ -261,13 +261,15 @@ export default class GearUtil {
                     }else {
                         clazz = G.components[tag.substring(1, tag.length)];
                     }
-                }else if(tag == "input") {
-                    let type = attrs["type"];
-                    clazz = G.components[type.value];
-                    if(clazz == null) {
-                        clazz = G.components["text"];
-                    }
-                }else {
+                }
+                // else if(tag == "input") {
+                //     let type = attrs["type"];
+                //     clazz = G.components[type.value];
+                //     if(clazz == null) {
+                //         clazz = G.components["text"];
+                //     }
+                // }
+                else {
                     clazz = G.components["htmltag"];
                 }
             }

@@ -162,15 +162,15 @@ export default class Check<P extends typeof props, S extends state> extends Form
             // 如果是未指定集合的复先框，则使用它本身的label和value来创建集合
             this.setState({
                 options: [{
-                    label: this.state.label||"",
-                    value: this.state.value||"on",
+                    label: this.state.label || "",
+                    value: this.state.value || "on",
                 }]
             },()=>{
                 callback.call(this);
             });
             // 检查checked属性是否默认为true，如果是则设置它为选中
             if(ObjectUtil.isTrue(this.state.checked)) {
-                this.setValue([this.state.value||"on"]);
+                this.setValue([this.state.value || "on"]);
             }
         }
     }

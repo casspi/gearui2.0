@@ -1,5 +1,6 @@
 let events = {
     onAbort: GearType.Function,
+    onAfterAdd: GearType.Function,
     onAfterChange: GearType.Function,
     onAfterCheck: GearType.Function,
     onAfterClose: GearType.Function,

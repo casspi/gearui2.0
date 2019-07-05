@@ -145,7 +145,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         return G.G$.extend({}, {
             dictype: this.state.dictype,
             url: this.state.url,
-            mustMatch: this.state.mustMatch,
+            mustMatch: this.state.mustMatch === false? false:true,
             controlType: this.state.controlType,
             dropdownWidth: this.state.dropdownWidth || 150,
             async: this.state.async,
@@ -195,14 +195,14 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             },
             onSelect: (v:any) => {//根据antd api 将onChange改为onSelect
                 let vobj = this._inputControl.getOption(v);
-                let value = vobj.value||"";
+                let value = vobj.value || "";
                 let text = vobj.text || vobj.value;
                 if(this.state.mustMatch){
                     // 如果设置为不允许重复，先检查是否和现有值重复
                     if(this.state.repeatAble == false){
                         // 如果不允许重复，先检查值是否已经存在了
                         if(this.existValue(value)==false){
-                            if((this.state.mustMatch && this.state.dictype)){
+                            if((this.state.mustMatch && this.state.dictype )){
                                 this._addValue(value, text);
                             }else{
                                 this._addValue(value, value);
@@ -253,7 +253,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             disabled: this.props.disabled,
             loading: false,
             repeatAble: this.props.repeatAble == true,
-            mustMatch: this.props.mustMatch === true ? true:false,
+            mustMatch: this.props.mustMatch === false ? false:true,
             method: this.props.method,
             dictype: this.props.dictype,
             url: this.props.url,
@@ -262,7 +262,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             prompt: this.props.prompt,
             readOnly: this.props.readonly,
             limit:this.props.limit,
-            async: this.props.async == true ? true : false
+            async: this.props.async == true ? true : false,
         };
     }
     
@@ -290,7 +290,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             if(this.form){
                 delete props.value
             }
-            inputControl = <span style={{display:this.state.inputVisible?'':'none'}}><AutoComplete.default key={"input"} {...props}></AutoComplete.default></span>
+            inputControl = <span style={{display:this.state.inputVisible?'':'none'}}><AutoComplete.default  key={"input"} {...props}></AutoComplete.default></span>
         }else{
             let props:any = this.getInputProps();
             delete props.invalidType;
@@ -314,18 +314,12 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                 </AntdSpin>
             </div>;
     }
+
     closeHandle(value:any){//标签关闭时，删除inputtag的数据
         let values = this.state.value.filter((o:any)=>o.value!=value);
-        this.setValue(
-            values,
-            ()=>{
-                // console.log(this.props)
-                // if(this.props.form){
-                //     this.props.form.setFieldsValue({this.state.name:this.state.value})
-                // }
-            }
-        )
+        super.setValue(values)
     }
+
     //获取所有的标签
     private getTags() {
         let values: any = this.state.value;
@@ -353,35 +347,40 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                 // 如果有设置默认值，支持以逗号分隔的字符串，支持json格式字符串
                 if(typeof this.props.value=='string'){
                     let values: any = this.getPropStringArrayValue(this.props.value);
-                    if(this.state.dictype && this.state.mustMatch) {
-                        let url = this.state.url;
-                        let method = this.state.method;
-                        let dictype = this.state.dictype;
-                        let fn = async () => {
-                            let result = await DicUtil.getDic({url, method, dictype});
-                            if(result.success) {
-                                let message = result.data;
-                                let nValues = [];
-                                for(var i=0;i<values.length;i++){
-                                    for(var j=0;j<message.length;j++){
-                                        if(values[i]==message[j].value){
-                                            nValues.push(message[j])
-                                        }
-                                    }
-                                }
-                                this.setValue(nValues);
-                            }else {
-                                this.setState({
-                                    loading: false
-                                });
-                            }
-                        }
-                        fn()
-                    }
-                    else{
-                        // 否则直接赋值
-                        this.setValue(values);
-                    }
+                    this.setValue(values)
+                    // if( this.state.dictype && this.state.mustMatch) {
+                    //     let defaultData = this.getValueByCode(values);
+                    //     console.log(defaultData)
+                    //     this.setValue(defaultData)
+                        // let url = this.state.url;
+                        // let method = this.state.method || 'post';
+                        // let dictype = this.state.dictype;
+                        
+                        // let fn = async () => {
+                        //     let result = await DicUtil.getDic({url, method, dictype});
+                        //     if(result.success) {
+                        //         let message = result.data;
+                        //         let nValues = [];
+                        //         for(var i=0;i<values.length;i++){
+                        //             for(var j=0;j<message.length;j++){
+                        //                 if(values[i]==message[j].value){
+                        //                     nValues.push(message[j])
+                        //                 }
+                        //             }
+                        //         }
+                        //         this.setValue(nValues);
+                        //     }else {
+                        //         this.setState({
+                        //             loading: false
+                        //         });
+                        //     }
+                        // }
+                        // fn()
+                    // }
+                    // else{
+                    //     // 否则直接赋值
+                    //     this.setValue(values);
+                    // }
                 }else{
                     // Json对象或数组
                     let values: any = this.props.value;
@@ -484,19 +483,44 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         return v;
     }
 
-    setValue(values: Array<any>, callback?: ()=>void){       
+    getValueByCode(values:any[]){
+        let method = this.state.method || 'post';
+        let dictype = this.state.dictype;
+        let resData:any[] = []
+        DicUtil.getDataByCode(dictype,values,(message:any)=>{
+            // console.log(message)
+            if(message.status==0 && message.data){
+                resData = message.data
+            }
+        },method)
+        return resData
+    }
+
+    setValue(values: Array<any>, callback?: ()=>void){
         let v: any[] = [];
         if(values){
             if((values instanceof Array) == false){
                 values = [values];
             }             
-            for(var i=0;i<values.length;i++){
-                if(typeof values[i] == "string"){
-                    v.push({
-                        key:UUID.get(),
-                        value:values[i],
-                        text:values[i]
-                    });
+            for(let i=0;i<values.length;i++){
+                if(typeof values[i] == "string"){//当设置值为string，去字典集里查询
+                    if( this.state.dictype && this.state.mustMatch) {
+                        let resVal = this.getValueByCode(values[i]);
+                        if(resVal.length>0){
+                            v.push({
+                                key:UUID.get(),
+                                value: resVal[0].value,
+                                text: resVal[0].text || resVal[0].label || resVal[0].value
+                            });
+                        }
+                    }else{
+                        v.push({
+                            key:UUID.get(),
+                            value:values[i],
+                            text:values[i]
+                        });
+                    }
+                    
                 }else{
                     v.push({
                         key:UUID.get(),
@@ -506,25 +530,27 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                 }
             }
         }
-        
         this.setState({
             loading:true,
         },()=>{
-            super.setValue(v);
-            this.setState({
-                loading: false
-            }, callback);
+                super.setValue(v);
+                this.setState({
+                    loading: false
+                }, callback);
         });
     }
 
     addValue(value:any, callback?: ()=>void){
         let values = this.state.value || [];
         if(typeof value == "string"){
-            values.push({
-                key:UUID.get(),
-                value:values,
-                text:values
-            });
+            let resVal = this.getValueByCode([value]);
+            if(resVal.length>0){
+                values.push({
+                    key:UUID.get(),
+                    value:resVal[0].value,
+                    text:resVal[0].text || resVal[0].label || resVal[0].value
+                });
+            }
         }else{
             values.push({
                 key:UUID.get(),

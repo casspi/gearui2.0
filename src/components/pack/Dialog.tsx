@@ -60,6 +60,7 @@ export interface state extends Tag.state {
 
 export default class Dialog<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
+    private warpDivId:any;//外部包裹div的id
     constructor(props: P, context?: any) {
         super(props, context);
         window._dialog = window._dialog || {};
@@ -282,6 +283,8 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
 
     // 销毁
     destroy() {
+        //删除外部div
+        G.$("#" + this.warpDivId).remove();
         this.setState({
             destory: true
         });
@@ -437,7 +440,9 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                node.remove()
             }
             this.ref = document.createElement("div");
-            this.ref.id = this.state.id+'dialog-warp'; 
+            this.ref.id = (this.state.id || UUID.get()) + 'dialog-warp'; 
+            // 暂存这个id
+            this.warpDivId = this.ref.id;
             document.body.appendChild(this.ref);
             return this.ref;
         }}>
@@ -559,9 +564,10 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         props.visible = true;
         let dialog =  <Dialog  {...props} ></Dialog>;
         let span = document.createElement("span");
-        span = document.body.appendChild(span);
-        ReactDOM.render(dialog, span);
-
+        span.id = id + "span";
+        document.body.appendChild(span);
+        ReactDOM.render(dialog,span);
+        G.$("#" + span.id).remove();
         // 返回对对话框的操作句柄
         return {
             "id": id,

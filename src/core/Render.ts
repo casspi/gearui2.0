@@ -10,8 +10,8 @@ export default class Render {
     public render(ast: ASTElement, parent: Element, callback?: Function) {
         let reactEles: any = [];
         let asts = ast.children;
-        let time11 =new Date();
-        let newReactInstancestart = time11.getTime();
+        // let time11 =new Date();
+        // let newReactInstancestart = time11.getTime();
         // let reactElesa:Array<{ele: any, ast:ASTElement}> = [];
         // console.log('newReactInstancestart:'+newReactInstancestart)
         asts.forEach((ast)=>{

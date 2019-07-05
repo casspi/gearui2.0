@@ -371,14 +371,11 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
     }      
    
     reset(){
-        super.reset();
-        // this.setValue(this.props.value || "")
-        // this.setValue(
-        //     this.props.value || ""
-        // ,()=>{
-        //     console.log(this.state.value)
-        //     this.loadData();
-        // });
+        if(this.form) {
+            this.form.reset(this.state.id || this.state.name);
+        }else{
+            this.setValue(this.props.value)
+        }
     }
     
 }

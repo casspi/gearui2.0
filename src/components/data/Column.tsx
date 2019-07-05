@@ -1,12 +1,13 @@
 import * as React from 'react';
 import Table from './Table';
 import EditTable from '../form/EditTable';
-import { Button, Icon } from 'antd';
+import { Button, Icon, Spin as AntdSpin, Tooltip } from 'antd';
 import * as Text from '../form/Text';
 import * as Date from '../form/Date';
 import * as Datetime from '../form/Datetime';
 import * as Combotree from '../form/Combotree';
 import { UUID, ObjectUtil } from '../../utils';
+import * as Tag from '../Tag'
 export interface TableColumns {
     //字段名称
     name: string;
@@ -130,6 +131,9 @@ export default class Column<T> {
             if(props.ellipsis){
                 classNameArr.add("ant-table-ellipsis-column");
                 ellipsisSpanWidth = this.width;
+                this.render = (text:any)=><Tooltip title={text}>
+                        <span style={{"cursor":'pointer'}}><span>{text}</span></span>
+                    </Tooltip>
             }
             if(ellipsisSpanWidth && ellipsisSpanWidth > 0) {
                 this.ellipsisSpanWidth = ellipsisSpanWidth;
@@ -214,6 +218,11 @@ export default class Column<T> {
                 }else {
                     jsxEles.push(this.parseColumnChild(children, ellipsisSpanWidth, record, indexColumn, 0));
                 }
+                // console.log(props);
+                // if(props.ellipsis){
+                //     return <span>{jsxEles}</span>
+                // }
+                // // column['render'] = (text:any)=><span style={{"cursor":'pointer'}} title={text}>{text}</span>
                 return jsxEles;
             };
         })(children, ellipsisSpanWidth || 0);
@@ -255,12 +264,25 @@ export default class Column<T> {
     }
 
     protected parseRegexColumnValue(props: any,record: any) {
+        let cacheChildren:any;
+        if(props.children instanceof Array && props.children.length>0){//children是组件的话，就不再转译
+            // console.log(props.children.length)
+            for(let i=0,propsChildren = props.children; i < propsChildren.length ; i++){
+                if(ObjectUtil.isExtends(propsChildren[i].type,'Tag')){
+                    cacheChildren = propsChildren;
+                }    
+            }
+            
+        }
         let newProps:any;
         newProps = ObjectUtil.parseDynamicProps(props, record,true);
         // if(props.children && typeof props.children[0]=='string'){//当单元格子节点，值需要转译换算时
         // }else{//单元格节点是复杂嵌套型，暂时不支持转译
         //     newProps = props
         // }
+        if(cacheChildren){
+            newProps.children = cacheChildren;
+        }
         return newProps;
     }
 

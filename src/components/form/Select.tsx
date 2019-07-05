@@ -754,16 +754,24 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         this.setValue(values);
     }
     // 设置值
-    setValue(...value:any) {
+    setValue(value:any,callback?:Function) {
         if(value && value.length > 0) {
             this.triggerChange(value[0]);
             this.setState({
                 value: value[0]
+            },()=>{
+                if(callback){
+                    callback()
+                }
             });
         }else {
             this.triggerChange([]);
             this.setState({
                 value: []
+            },()=>{
+                if(callback){
+                    callback()
+                }
             });
         }
     }
