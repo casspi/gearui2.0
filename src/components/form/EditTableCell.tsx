@@ -54,6 +54,29 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         };
     }
 
+    // shouldComponentUpdate (nextProps: P, nextState: S) {
+    //     // let _nextProps:any = G.G$.extend({},nextProps);
+    //     // let _nextState:any =  G.G$.extend({},nextState);
+    //     // let _thisProps:any =  G.G$.extend({},this.props);
+    //     // let _thisState:any = G.G$.extend({},this.state);
+    //     // delete _nextProps.label;
+    //     // delete _nextState.label;
+    //     // delete _thisProps.label;
+    //     // delete _thisState.label;
+    //     // console.log(_nextProps)
+    //     // console.log(_thisProps)
+    //     // console.log(_nextState)
+    //     // console.log(_thisState)
+    //     // console.log(JSON.stringify(this.props) == JSON.stringify(nextProps))
+    //     // console.log(JSON.stringify(nextState) == JSON.stringify(this.state) && JSON.stringify(this.props) == JSON.stringify(nextProps));
+    //     // if(_nextState == _thisState && _thisProps == _nextProps){
+    //     //     return false
+    //     // }else{
+    //     //     return false;
+    //     // }
+    //     return false;
+    // }
+
     validate() {
         if(this.props.form) {
             return this.props.form.validateField(this.props.id);
@@ -113,7 +136,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     render() {
         let props = this.getProps();
         let reactEle = this.reactEle;
-        // console.log(reactEle)
+        console.log("cell ---------------render")
         let cellText:any = (reactEle && reactEle['props'] && reactEle['props'].ctype=="file" && props.showLink)?<a key="fileLink" download href={props.label || " "}  className={"cell-value"}>{props.label || " "}</a>:<span key="cellText" className={"cell-value"}>{props.label || " "}</span>;
         if(!(cellText instanceof Array)){
             cellText = [cellText]

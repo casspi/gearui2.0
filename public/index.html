@@ -103,7 +103,7 @@
     <!-- <input type="file">
     <input id="r1" type="range" min="0" max="100" value="10"/> -->
     <form ctype="form" id="form1">
-        <g-radio readonly="true" disabled="true" required="true"></g-radio>
+        <!-- <g-radio readonly="true" disabled="true" required="true"></g-radio> -->
         <!-- <g-time id="time"   required="true"></g-time>
           <g-inputtag id='inputtag'  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" async="true"></g-inputtag>
         <g-text disabled="true" required="true"></g-text>
@@ -117,9 +117,8 @@
           
           <div id="www"></div>  -->
           <!-- <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag>
-          <g-select id="se1" required="true" onChange="selectChange(arguments[0],arguments[1],this)" name="s1"  url="http://10.10.10.6:81/example/Select/data" width="300"></g-select> -->
-          <!-- <g-text name="c5" required="true"></g-text>
-          <span ctype="button" buttonStyle="primary" onClick="executeQuery()" class="m-r">查询</span> -->
+          <g-select id="se1" required="true" onChange="selectChange(arguments[0],arguments[1],this)" name="s1"  url="http://10.10.10.6:81/example/Select/data" width="300"></g-select>
+          <g-text name="c5" required="true"></g-text> -->
           <!-- <div id="d2-w">
             <div>
               <div>
@@ -134,9 +133,9 @@
           <!-- <g-autocomplete id="auto1" value="110106" name="autocomplete" async="true"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" width="200" prompt="输入内容必须在选项内"></g-autocomplete> -->
         <!-- <g-text value="test text"></g-text>       -->
           <!-- <g-checktag id="checktag1" name="c1" dictype="checkboxJson1"  value="ws,zs"></g-checktag> -->
-        <!-- <g-datetime  value="2019-05-09" type="range" name="d1" id="d1"></g-datetime> -->
-        <!-- <g-textarea id="hey" name="textarea"></g-textarea> -->
-        <!-- <g-component value="{ctype:'text',value:'文本框',name:'textc',required:true,width:'300px'}"></g-component> -->
+        <g-datetime  value="2019-05-09" type="range" name="d1" id="d1"></g-datetime>
+        <g-textarea  name="textarea"></g-textarea>
+        <g-component value="{ctype:'text',value:'文本框',id:'text',required:true,width:'300px'}"></g-component>
         <g-submit>提交</g-submit>
         <g-button onClick="reset()">重置</g-button>  
     </form>
@@ -262,8 +261,6 @@
     G('#btn111').onClick(()=>{
       G.messager.confirm({centered:false,top:100})
     })
-    // G('#hey').setValue("99")
-    console.log(G("#checktag1"))
     //G('#d2-w').remove()
     // G("#checktag1").addValue('zw')
     // G("#checktag1").addValue('zs')
