@@ -81,17 +81,6 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         this.onShowPanel(this.props.onShowPanel);
     }
 
-    shouldUpdate(nextProps: P, nextState: S) {
-        // let shouldUpdate = this.shouldUpdate(nextProps, nextState);
-        // // console.log(nextState == this.state && this.props == nextProps);
-        // if((ObjectUtil.isExtends(this, "HtmlTag"))) {
-        //     return true;
-        // }
-        // if(nextState == this.state && this.props == nextProps) {
-        //     return false;
-        // }
-        return true;
-    }
 
     getProps() {
         return G.G$.extend({},super.getProps(),{
@@ -231,6 +220,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             delete props.value;
             delete props.defaultValue;
         }
+        delete props.validateTempId;
         return <AntdSelect {...props}>{optionsMap}</AntdSelect>
         // <div>
         //         <input key="hidden-input" value={this.state.value}  name={this.state.name} disabled={true} style={{display: "none"}}></input>
@@ -302,14 +292,31 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         //如果存在父节点，需要父节点有初始值的情况下才去加载子节点
         if(this.parentSelect == null) {
             this.loadData(null, ()=>{
-                if(this.state.value) {
-                    let data = this.findByValue(this.state.value);
-                    if(!data) {
+                let value: any = this.state.value;
+                if(value) {
+                    if(value instanceof Array) {
+                        let valueNew = [];
+                        for(let i = 0; i < value.length; i ++) {
+                            let data = this.findByValue(value[i]);
+                            if(data) {
+                                valueNew.push(value[i]);
+                            }
+                        }
+
                         this.setState({
-                            value: []
+                            value: valueNew
                         });
                         this.clearChild();
+                    }else{
+                        let data = this.findByValue(this.state.value);
+                        if(!data) {
+                            this.setState({
+                                value: []
+                            });
+                            this.clearChild();
+                        }
                     }
+                    
                 }else {
                     this.clearChild();
                 }
@@ -561,12 +568,11 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     //获取初始值
     getInitValue(dic:any) {
         let value:any = this.state.value;
-        if(this.props.multiple != true && value instanceof Array) {
-            value = value[0];
-        }
-        let valueC = value;
+        // if(this.props.multiple != true && value instanceof Array) {
+        //     value = value[0];
+        // }
+        let valueC:any[] = [];
         if(this.props.multiple == true) {
-            valueC = [];
             if(value instanceof Array) {
                 value.forEach((valueIn)=>{
                     let nodeRe = this.findByValue(valueIn,dic);
@@ -576,9 +582,14 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                 });
             }
         }else {
-            let nodeRe = this.findByValue(valueC,dic);
+            if(value instanceof Array){
+                value = value[0]
+            }
+            let nodeRe = this.findByValue(value,dic);
             if(nodeRe == null) {
                 valueC = [];
+            }else{
+                valueC = value
             }
         }
         return valueC;
@@ -735,7 +746,10 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         }
     }
     findByValue(value:any,data?:any):any {
-        let dataInner = data||this.getAllData();
+        if(typeof value == 'object' && value.value) {
+            value = value.value;
+        }
+        let dataInner = data || this.getAllData();
         for(var i = 0; i < dataInner.length; i++) {
             if(value == dataInner[i]["value"]) {
                 return dataInner[i];

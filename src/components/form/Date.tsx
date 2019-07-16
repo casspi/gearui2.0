@@ -167,6 +167,7 @@ export default class Date<P extends typeof props, S extends state> extends FormT
             delete props.value;
             delete props.defaultValue
         }
+        delete props.validateTempId;
         let type = this.props.type;
         if (type == null || type == "date") {
             return <DatePicker locale={locale} {...props}></DatePicker>;

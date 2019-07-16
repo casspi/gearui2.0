@@ -3,6 +3,7 @@ import * as React from 'react';
 import {Popover,Icon as AntdIcon,Select,Spin as AntdSpin} from 'antd';
 import { default as Http} from '../../utils/http';
 import UUID from '../../utils/uuid';
+import { relative } from "path";
 export declare type connector = 'Bezier' | 'Straight' | 'Flowchart';//贝塞尔曲线、直线、90度折线
 export var props = {
     ...Tag.props,
@@ -54,7 +55,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
     //     super(...arg);
     // };
     protected cacheData:any;//缓存数据
-    
+    warpId = UUID.get();
     getInitialState():state{
         return {
             leftData: [],
@@ -215,49 +216,51 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         let selectProps = {
             
         };
-        return <AntdSpin spinning={this.state.loading} style={{"minHeight":"21px"}} delay={100}>
-            <div {...props}>
-                {this.props.title?<h3>{this.props.title}</h3>:null}
-                <div className="list-warp">
-                        <dl key="left" className="left-list list" style={{width:this.state.leftListWidth}}>
-                            <dt><h4 className="left-list-title"><span>{this.props.leftTitle||'左侧列表'}</span></h4></dt>
-                            <dd className="plumblist-table">
-                                <div className="plumblist-col plumblist-table-th">{this.state.leftDataIndex.map((item:any)=>
-                                            <span key={UUID.get()}>{item}</span>
-                                )}</div> 
-                                {leftData.length>0?this.parserList(leftData,'left'):"暂无数据"}
+        return <div {...props}>
+                    {this.props.title?<h3>{this.props.title}</h3>:null}
+                    <div className="list-warp" id={this.warpId}>
+                            <dl key="left" className="left-list list" style={{width:this.state.leftListWidth}}>
+                                <dt><h4 className="left-list-title"><span>{this.props.leftTitle||'左侧列表'}</span></h4></dt>
+                                <dd className="plumblist-table">
+                                    <div className="plumblist-col plumblist-table-th">{this.state.leftDataIndex.map((item:any)=>
+                                                <span key={UUID.get()}>{item}</span>
+                                    )}</div> 
+                                    {leftData.length>0?this.parserList(leftData,'left'):"暂无数据"}
 
-                            </dd>
-                        </dl>
-                        <dl key="right" className="right-list list" style={{width:this.state.rightListWidth}}>
-                            <dt>
-                                <h4 className="right-list-title">
-                                    <span>{this.props.rightTitle||'右侧列表'}</span>
-                                    <span className="list-title-select">
-                                        {this.state.selectData.length>0?<Select value={this.state.defaultSelectValue} onSelect={this.onSelect.bind(this)} style={{ width: "50%" }} {...selectProps}>
-                                            {this.state.selectData.map((item)=>{
-                                                return <Select.Option  key={item.value}>{item.label}</Select.Option>
-                                            })}
-                                        </Select>:null}
-                                    </span>
-                                </h4>
-                            </dt>
-                            <dd className="plumblist-table">
-                                <div className="plumblist-col plumblist-table-th">
-                                    {this.state.rightDataIndex.map((item:any)=>
-                                        <span key={UUID.get()}>{item}</span>
-                                    )}
-                                </div>
-                                {rightData.length>0?this.parserList(rightData,'right'):"暂无数据"}    
-                            </dd>
-                        </dl>
+                                </dd>
+                            </dl>
+                            <dl key="right" className="right-list list" style={{width:this.state.rightListWidth}}>
+                                <dt>
+                                    <h4 className="right-list-title">
+                                        <span>{this.props.rightTitle||'右侧列表'}</span>
+                                        <span className="list-title-select">
+                                            {this.state.selectData.length>0?<Select value={this.state.defaultSelectValue} onSelect={this.onSelect.bind(this)} style={{ width: "50%" }} {...selectProps}>
+                                                {this.state.selectData.map((item)=>{
+                                                    return <Select.Option  key={item.value}>{item.label}</Select.Option>
+                                                })}
+                                            </Select>:null}
+                                        </span>
+                                    </h4>
+                                </dt>
+                                <dd className="plumblist-table">
+                                    <div className="plumblist-col plumblist-table-th">
+                                        {this.state.rightDataIndex.map((item:any)=>
+                                            <span key={UUID.get()}>{item}</span>
+                                        )}
+                                    </div>
+                                    {rightData.length>0?this.parserList(rightData,'right'):"暂无数据"}    
+                                </dd>
+                            </dl>
+                    </div>
+                    {/* <div className="plumb-btn-bar">
+                        <Button.default onClick={this.save.bind(this)}>保存</Button.default>
+                        <Button.default onClick={this.reset.bind(this)}>重置</Button.default>
+                    </div>   */}
                 </div>
-                {/* <div className="plumb-btn-bar">
-                    <Button.default onClick={this.save.bind(this)}>保存</Button.default>
-                    <Button.default onClick={this.reset.bind(this)}>重置</Button.default>
-                </div>   */}
-            </div>
-        </AntdSpin>
+                
+            {/* </div> */}
+            // <AntdSpin spinning={this.state.loading} style={{"minHeight":"21px"}} delay={100}>
+        /* </AntdSpin> */
     }
     onSelect(key:any,option:any){
         let url:string="";
@@ -352,9 +355,29 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         })
     }
     dragLinks(){
+        console.log('dragLinks')
         let jsPlumb:any = window.jsPlumb;
         let _this = this;
         jsPlumb.ready(function () {
+            // jsPlumb.setContainer(G.G$("#" + _this.warpId))//(G.G$(".list-warp"))////
+            // G.G$("#" + _this.warpId).mousedown(function(e){
+            //     G.G$("#" + _this.warpId).mousemove(function(){
+            //         let mouseX1 = e.pageX - G.G$("#" + _this.warpId).offset().left;
+            //         let mouseY1 = e.pageY - G.G$("#" + _this.warpId).offset().top;
+            //         console.log(mouseX1)
+            //         console.log(mouseY1)
+            //     })
+            // });
+            // G.G$(".plumblist-warp").mousedown(function(){
+            //     G.G$(this).mousemove(function(e:any){
+            //         console.log(e)
+            //     })
+
+            // })
+            // G.G$(".plumblist-warp").scroll(function(e:any) {
+            //     console.log(e)
+            // }) 
+
             // console.log(G.G$('.jtk-endpoint'))
             //jsPlumb是根据元素id取绘制，所以每次更新都需要重新绘制，所以删除所有的节点和线
             jsPlumb.deleteEveryEndpoint();//删除所有的点
@@ -363,8 +386,12 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             // console.log(_this.state.leftData);
             // console.log(_this.state.rightData);
             // let myJsPlumb = jsPlumb.getInstance()
-           
+            // jsPlumb.getInstance({
+            //     Container: "#plumb",//_this.warpId,
+            //     DragOptions: { cursor: 'pointer', zIndex: 2000 },
+            // });
             var common = {
+                Container:_this.warpId,
                 connector: [_this.state.connector],
                 maxConnections: -1,
                 endpointStyle: { radius : _this.state.pointRadius, fill : _this.state.pointColor},
@@ -416,6 +443,9 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                         uuid: item.id,
                         maxConnections: sTargetMax
                     },common)
+                    // endpoints.bind('mousedown',function(endpoint:any,originalEvent:any){
+                    //     console.log(originalEvent)
+                    // })
                 });
             }
 
@@ -437,6 +467,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             jsPlumb.unbind('connection');
             jsPlumb.unbind('beforeDrop');
             jsPlumb.unbind('connectionDetached');
+            jsPlumb.unbind('connectionAborted');
 
             jsPlumb.bind("connection", function (connInfo:any, originalEvent:any) {
                 //连线时动作
@@ -448,11 +479,16 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
                 }
                 //修改数据
                 _this.addLinks(conn.sourceId,conn.targetId);
+                G.G$(".list-warp").scrollTop(0)
+                
             })
+            // jsPlumb.bind('beforeDrop', function (conn:any) {
+            //        G.G$(".list-warp").scrollTop(0);
+            // })
             _this.state.leftData.map((item:any,i:number)=>{
                 if(item.targetArr){
                     item.targetArr.map((t:any,i:number)=>{  
-                        if(sTargetMax==1 && tTargetMax==1 && i==1){//如果只能1队1
+                        if(sTargetMax==1 && tTargetMax==1 && i==1){//如果只能1对1
                             _this.linkNode(item.id,t,common)
                         }else{
                             _this.linkNode(item.id,t,common)
@@ -464,6 +500,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             //连接线点击事件
             jsPlumb.bind('dblclick', function (conn:any, originalEvent:any) {
                 // G.messager.confirm({message:"确定要删除连接线吗？",callback:()=>{
+                    G.G$(".list-warp").scrollTop(0)
                     _this.setState({
                         leftData: _this.deleteLinks(conn.sourceId,conn.targetId)
                     })
@@ -481,10 +518,14 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             //     }
             // });
             jsPlumb.bind("beforeDetach",function(info:any){//手动拖拽？取消连接时删除对应数据
+                G.G$(".list-warp").scrollTop(0)
                 _this.setState({
                     leftData: _this.deleteLinks(info.sourceId,info.targetId)
                 }) 
 
+            })
+            jsPlumb.bind('connectionAborted',function(){//在连接到端点或目标元素之前拖动新连接但被放弃时触发
+                G.G$(".list-warp").scrollTop(0)
             })
             // //取消连接
             // jsPlumb.bind("connectionDetached", function (conn:any, originalEvent:any) {   
@@ -507,9 +548,6 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
             //     console.log( G.G$(document).find('.jtk-overlay'))
             //     G.G$(document).find('.jtk-overlay').hide(2000)
             // })
-            G.G$(document).find('.jtk-endpoint').bind('onmousedown',function(){
-                return false
-            })
             jsPlumb.fire();
         })
     }

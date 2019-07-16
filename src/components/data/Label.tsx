@@ -1,14 +1,15 @@
 import * as React from 'react';
-import { Input } from 'antd';
 import * as Icon from '../basic/Icon';
-import * as Tag from '../Tag'
+import * as Tag from '../Tag';
+import * as DicUtil from "../../utils/DicUtil"
 export var props = {
     ...Tag.props,
     icon: GearType.String,
     prompt: GearType.String,
     format: GearType.String,
     value: GearType.String,
-    isvisible: GearType.Any
+    isvisible: GearType.Any,
+    dictype: GearType.String
 };
 
 export interface state extends Tag.state {
@@ -39,7 +40,7 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
     }
 
     render() {
-       
+       console.log(this.state.value)
         let value: any = this.state.value;
         if("richtext" == this.state.format){
             if(value){
@@ -64,6 +65,12 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
             return <span key="text" {...props} dangerouslySetInnerHTML={{__html:value}}></span>;
     }
  
+    // afterRender(){
+    //     if(this.props.dictype){
+    //         DicUtil. ({dictype: this.props.dictype})
+    //     }
+    // }
+
     getValue() {
         return this.state.value;
     }

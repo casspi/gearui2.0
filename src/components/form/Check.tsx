@@ -83,6 +83,7 @@ export default class Check<P extends typeof props, S extends state> extends Form
         delete props.labelText;
         delete props.validation;
         delete props.indeterminate;
+        delete props.validateTempId;
         if(this.form){
             delete props.value;
         }
@@ -318,14 +319,22 @@ export default class Check<P extends typeof props, S extends state> extends Form
 
     // 值是否被选中
     isChecked(val: any){
-        let options = this.state.options;
-        if(options && options.length>0){
-            for(let i=0;i<options.length;i++){
-                if(options[i].value==val)
+        // let options = this.state.options;
+        // if(options && options.length>0){
+        //     for(let i=0;i<options.length;i++){
+        //         if(options[i].value==val)
+        //             return true;
+        //     }
+        // }
+        // return false; 
+        let values = this.state.value;
+        if(values && values.length>0){
+            for(let i=0;i<values.length;i++){
+                if(values[i]==val)
                     return true;
             }
-        }
-        return false;         
+        }   
+        return false;     
     }
 
     // 是否全选了

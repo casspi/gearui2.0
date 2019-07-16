@@ -21,7 +21,7 @@
       .ant-modal-confirm .ant-modal-confirm-btns{display: flex;float: none;flex-direction: row-reverse;justify-content: space-evenly}
       .ant-modal-confirm .ant-modal-confirm-btns button + button{margin-left: 0;}
     </style>
-    <!-- <script src="./jsplumb.js"></script> -->
+    <!-- <script src="https://jsplumbtoolkit.com/community/demo/sourcesAndTargets/lib/jsplumb.js"></script> -->
     <!--
       Notice the use of %PUBLIC_URL% in the tags above.
       It will be replaced with the URL of the `public` folder during the build.
@@ -60,8 +60,11 @@
         // G("#www").doRender();
         G("#d2-w").remove()
       }
-      function setUrl(url){
-        return url
+      function test(e){
+        alert(e)
+      }
+      function setUrl(){
+        return "hhttp://www.baidu.com"
 
       }
       function reset(){
@@ -102,94 +105,107 @@
     </noscript>
     <!-- <input type="file">
     <input id="r1" type="range" min="0" max="100" value="10"/> -->
-    <form ctype="form" id="form1">
-        <!-- <g-radio readonly="true" disabled="true" required="true"></g-radio> -->
-        <!-- <g-time id="time"   required="true"></g-time>
-          <g-inputtag id='inputtag'  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" async="true"></g-inputtag>
-        <g-text disabled="true" required="true"></g-text>
-        <span ctype="datetime" id="createTime" name="createTime" type="range" width="400"></span>
-          <g-upload name="picture"></g-upload>  
-          <g-check name="check">11</g-check>
-          <g-file ></g-file>
-          <span name="type" ctype="select" width="190" id="sampleType" name="sampleType"></span>
-         <div id="date-w">
-          </div>
-          
-          <div id="www"></div>  -->
-          <!-- <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag>
-          <g-select id="se1" required="true" onChange="selectChange(arguments[0],arguments[1],this)" name="s1"  url="http://10.10.10.6:81/example/Select/data" width="300"></g-select>
-          <g-text name="c5" required="true"></g-text> -->
-          <!-- <div id="d2-w">
-            <div>
+    <!-- <div onclick="alert(this)">test</div> -->
+    <div id="testDiv">
+      <span ctype="listaction" actionType="batchAction" url="setUrl()">listaction</span>
+      <form ctype="form" id="form1">
+          <g-hidden name="hidden" value="999"></g-hidden>
+          <g-text required="true" width="150" name="text"></g-text>
+          <g-check id="c1"  label="99"  name="text"></g-check>
+          <g-radio  required="true" name="text"></g-radio>
+          <g-text id="source" value="101" width="400"></g-text>
+          <g-text name="e22" equals="#source" prompt="与指定控件值相同" invalidMessage="输入值必须与前一个控件相同" width="400"></g-text>
+          <!-- <g-time id="time"   required="true"></g-time>
+            <g-inputtag id='inputtag'  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" async="true"></g-inputtag>
+          <g-text disabled="true" required="true"></g-text>
+          <span ctype="datetime" id="createTime" name="createTime" type="range" width="400"></span>
+            <g-upload name="picture"></g-upload>  
+            <g-file ></g-file>
+            <span name="type" ctype="select" width="190" id="sampleType" name="sampleType"></span>
+           <div id="date-w">
+            </div>
+            
+            <div id="www"></div>  -->
+            <!-- <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag>
+            <g-select id="se1" required="true" onChange="selectChange(arguments[0],arguments[1],this)" name="s1"  url="http://10.10.10.6:81/example/Select/data" width="300"></g-select>
+            <g-text name="c5" required="true"></g-text> -->
+            <!-- <div id="d2-w">
               <div>
-                <g-date name="date" id="d0" required="true" value="2019-06-09"></g-date>
-              </div>
-            </div> 
-            <g-datetime   required="true" value="2019-05-09" type="date" name="d1n" id="d2"></g-datetime>
-          </div>
-          <g-combotree editable="true" width="200" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree> -->
-          <!-- <g-select id="s1" width="200" lower="s2" url="http://10.10.10.6:81/example/source?name=Select&type=element&id=example"></g-select>
-          <g-select id="s2" width="200" upper="s1"></g-select> -->
-          <!-- <g-autocomplete id="auto1" value="110106" name="autocomplete" async="true"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" width="200" prompt="输入内容必须在选项内"></g-autocomplete> -->
-        <!-- <g-text value="test text"></g-text>       -->
-          <!-- <g-checktag id="checktag1" name="c1" dictype="checkboxJson1"  value="ws,zs"></g-checktag> -->
-        <g-datetime  value="2019-05-09" type="range" name="d1" id="d1"></g-datetime>
-        <g-textarea  name="textarea"></g-textarea>
-        <g-component value="{ctype:'text',value:'文本框',id:'text',required:true,width:'300px'}"></g-component>
-        <g-submit>提交</g-submit>
-        <g-button onClick="reset()">重置</g-button>  
-    </form>
-    <!-- <g-link url="http://www.baidu.com"><i class="iconfont icon-quanbu "></i></g-link> -->
+                <div>
+                  <g-date name="date" id="d0" required="true" value="2019-06-09"></g-date>
+                </div>
+              </div> 
+              <g-datetime   required="true" value="2019-05-09" type="date" name="d1n" id="d2"></g-datetime>
+            </div>
+            <g-combotree editable="true" width="200" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree> -->
+            <!-- <g-select multiple="true" name="s1" width="200" value="110106,110102" url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" lower="s2" ></g-select> -->
+            <!-- <g-select name="s2" width="200" upper="s1"></g-select> -->
+            <g-autocomplete required="true" id="test" value="{value:'110106',text:'jhjhjjhj'}" name="autocomplete" async="true"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" width="200" prompt="输入内容必须在选项内"></g-autocomplete>
+            <g-text id="text" value="test text"></g-text>      
+            <g-textarea id="textarea"  name="textarea"></g-textarea>
+            <!-- <g-checktag id="checktag1" name="c1" dictype="checkboxJson1"  value="ws,zs"></g-checktag> -->
+            <!-- <g-datetime  value="2019-05-09" type="range" name="d1" id="d1"></g-datetime>
+              <g-component value="{ctype:'text',value:'文本框',id:'text',required:true,width:'300px'}"></g-component> -->
+              <g-submit>提交</g-submit>
+              <g-button onClick="reset()">重置</g-button>  
+            </form>
+    </div>
     <script>
+
       function dataConvert(status){
         return "<img src="+status+" />"
       }
+      function test(data){
+        console.log(data)
+      }
     </script>
-   <!--<div ctype="ajaxlist" id="result" url="./datalist.json">
-      <div ctype="column" label="操作" class="actiontd">
+   <div ctype="ajaxlist" id="result" url="./datalist.json" onLoadSuccess="test(arguments[0])">
+    <g-column label="任务ID分组ID分组ID分组ID分组ID" name="taskId" width="150" ellipsis="true"></g-column>
+    <g-column label="任务名称" name="taskName" width="250"></g-column>
+    <g-column label="任务类型" name="readType" width="100"></g-column>
+    <g-column label="任务状态" name="statusCn" width="100"></g-column>
+    <g-column label="分组ID" name="groupIds" width="100"></g-column>
+    <div ctype="column" label="操作" class="actiontd">
         <g-label >{#(dataConvert(status))}</g-label>
-      </div>
-      <g-column label="任务ID分组ID分组ID分组ID分组ID" name="taskId" width="150" ellipsis="true"></g-column>
-      <g-column label="任务名称" name="taskName" width="250"></g-column>
-      <g-column label="任务类型" name="readType" width="100"></g-column>
-      <g-column label="任务状态" name="statusCn" width="100"></g-column>
-      <g-column label="分组ID" name="groupIds" width="100"></g-column>
-      <g-link url="http://www.baidu.com"><i class="iconfont icon-quanbu "></i></g-link>
-      <g-link  id="id{(setUrl(status))}"name="gg" type="link" target="_blank"
-        visible="{(status != '03' || status!='21')}"
-        url="/read/task/getInstructions?taskId={taskId}">查看指令状态
-      </g-link>
-      <g-link type="link" target="_blank"
-        url="/read/task/getTask?taskId={taskId}">查看任务信息
-      </g-link>
-      <g-text name="text"  width="100"></g-text>
-      <g-dialogaction type="button"  visible="{(status != '03' || status!='21')}">dialog</g-dialogaction>
-      <span ctype="button" buttonStyle="primary" icon="arrow-right">
-        查看
-      </span>
-      <span ctype="label"  class="{status}">9999</span>
-      <g-ajaxaction name="gg" type="link" visible="{(status != '21')}"
-        url="/read/task/revoke?taskId={taskId}" confirm="你确定要撤销这条读取任务吗？">撤销
-      </g-ajaxaction> 
-    
-  </div>-->
+        <g-link url="http://www.baidu.com"><i class="iconfont icon-quanbu "></i></g-link>
+        <g-link  id="id{(status)}"name="gg" type="link" target="_blank"
+          visible="{(status != '03')}"
+          url="/read/task/getInstructions?taskId={taskId}">查看指令状态
+        </g-link>
+        <g-link type="link" target="_blank"
+          url="/read/task/getTask?taskId={taskId}">查看任务信息
+        </g-link>
+        <g-text name="text"  width="100"></g-text>
+        <g-dialogaction type="button"  visible="{(status != '03' || status!='21')}">dialog</g-dialogaction>
+        <span ctype="button" buttonStyle="primary" icon="arrow-right">
+          查看
+        </span>
+        <span ctype="label"  class="{status}">9999</span>
+        <g-ajaxaction type="link" visible="{(status != '21')}"
+          url="/read/task/revoke?taskId={taskId}" confirm="你确定要撤销这条读取任务吗？">撤销
+        </g-ajaxaction>
+        <span ctype="label" visible="{(status!='03'?true:false)}">test</span>
+    </div>
+      
+  </div>
   <!-- <div style="overflow:hidden;height: 2000px">
     <div class="atest">
       <p>99999999999999999999999999999999999</p>
     </div>
   </div> -->
   <!-- <g-form id="editlist-form1">
-    <g-editlist id="editlist1" footerControl="true" editable="false" editcell="false" control="save,reset,add,delete,up,down,clear" url="http://localhost:8080/example/webview/definition/Editlist/data?page=10&key=0&pageSize=10&currentPage=1" rowControl="true">
-      <g-column label="姓名" width="100"  name="name" editctype="text" onChange="change(arguements[0],arguments[1])" required="{(name==='乔国瑞'?'true':'false')}"></g-column>
+    <g-editlist id="editlist1" footerControl="true" editable="false" editcell="false" control="save,reset,add,delete,up,down,clear" url="http://10.10.10.6:81/example/webview/definition/Editlist/data?pageSize=10&currentPage=1" rowControl="true">
+      <g-column label="姓名" width="100" readonly="{(name==='乔国瑞')}"  name="name" editctype="text" onChange="change(arguements[0],arguments[1])" required="{(name==='乔国瑞'?'true':'false')}"></g-column>
       <g-column label="选项" width="100">
         <g-label>{(name==='乔国瑞'?'true':'false')}</g-label>
       </g-column>
-      <g-column label="单位" width="200" id="unitId1"   name="unitId" required="true" onChange="onChangeUnit(this,arguments[0],arguments[1])" editctype="select" url="http://localhost:8080/dictionary/tree?type=DIC_UNIT_TEST"/></g-column>				
+      <g-column label="单位" width="200" id="unitId1"  readonly="{(name==='乔国瑞')}" async="true" mustMatch="true"   name="unitId" required="true"  editctype="autocomplete" url="http://10.10.10.6:81/example/Autocomplete/query"/></g-column>				
     </g-editlist>
   </g-form> -->
+  <!-- <g-plumblist id="plumb" height="500" leftTitle="左列表"  rightTitle="右列表" pointColor="red" leftCellWidth="100,160,170" rightCellWidth="219,219" pointRadius="4" lineColor="#f97" lineWidth="1.5" width="1200" linkType="4" class="my-plumb" url="./plumbData.json"  leftListWidth="440" rightListWidth="440" showLabel="false" connector="Straight"></g-plumblist>  -->
   <g-button id="btn111">按钮</g-button>
   <g-dialogaction dialogWidth="600"  dialogHeight="1200" url="./index.html">弹框</g-dialogaction>
-  <g-icon type="amazon-circl"></g-icon>
+  <!-- <span ctype="label"  value="<a>999</a>"></span> -->
   <script> 
     let getUrl = function() {
       return "./test.html"
@@ -258,16 +274,16 @@
     //   })
     // })
    
-    G('#btn111').onClick(()=>{
-      G.messager.confirm({centered:false,top:100})
-    })
+    // G('#btn111').onClick(()=>{
+    //   G.messager.confirm({centered:false,top:100})
+    // })
     //G('#d2-w').remove()
     // G("#checktag1").addValue('zw')
     // G("#checktag1").addValue('zs')
     // G('#checktag1').setValue("ls")
-    G(".root").append("<g-button id='test'>append</g-button>");
-    G(".root").append("<g-button id='test2'>appendaaa</g-button>");
-    G("#form1").setMethod("post");
+    // G(".root").append("<g-button id='test'>append</g-button>");
+    // G(".root").append("<g-button id='test2'>appendaaa</g-button>");
+    // G("#form1").setMethod("post");
     // G("#form1").submit();
       // G("#test").onClick(function(){
       //   // alert('test---')

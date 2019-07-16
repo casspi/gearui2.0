@@ -74,6 +74,7 @@ export default class Timepicker<P extends typeof props,S extends state> extends 
             delete props.value;
             delete props.defaultValue
         }
+        delete props.validateTempId;
         return <AntdTimePicker {...props}></AntdTimePicker>;
     }
 

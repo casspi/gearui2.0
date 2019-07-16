@@ -58,6 +58,7 @@ export interface state extends Tag.state {
     rules?: Array<Validator>;
     readOnly?: boolean;
     labelText?: string;
+    validateTempId?:string;
 };
 export default abstract class FormTag<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
@@ -119,6 +120,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         delete state.labelText;
         delete state.validation;
         delete state.value;
+        delete state.validateTempId;
         return state;
     }
     getInitialState(): state {
@@ -130,8 +132,9 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             readOnly: this.props.readOnly,
             value: this.props.value,
             labelText: this.props.labelText,
-            name: this.props.name,
-            id: this.props.id || this.props.name || UUID.get() 
+            name: this.props.name || this.props.id,
+            id: this.props.id,
+            validateTempId: UUID.get()  
         };
     }
 
@@ -175,6 +178,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         }
         return true;
     }
+
 
     enableValidation(params: any) {
         if(this.form) {
@@ -239,7 +243,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     reset(){
         if(this.form) {
-            this.form.reset(this.state.id || this.state.name);
+            this.form.reset(this.state.id);
         }else{
             this.setValue(this.props.value)
         }

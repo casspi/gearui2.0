@@ -315,14 +315,22 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         let jdom = G.G$(this.realDom);
         return jdom.detach.call(jdom,...args);
     }
+    
     // each(...args:any[]){
     //     let jdom = G.G$(this.realDom);
     //     return jdom.each.call(jdom,...args);
     // }
+
     empty(...args:any[]){
+        let cacheHtmlElement = G.G$(G.cacheHtml);
+        let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.data('vmdom').ast.id+"']");
+        console.log(cacheElement)
+        cacheElement.empty()
+        G.cacheHtml = cacheHtmlElement.prop("outerHTML");
         let jdom = G.G$(this.realDom);
         return jdom.empty.call(jdom,...args);
     }
+
     end(...args:any[]){
         let jdom = G.G$(this.realDom);
         return jdom.end.call(jdom,...args);

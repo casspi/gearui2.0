@@ -233,7 +233,7 @@ export default class Validator {
                         let form: any = srcEle.form;
                         if(form) {
                             srcEle.onChange(function(newValue: any, oldValue: any){
-                                form.validateField(props.name||props.id);
+                                form.validateField(props.id);
                             });
                         }
                     }

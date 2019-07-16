@@ -916,7 +916,9 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         if(props.editctype){
             ((column, props)=>{
                 column.render = (text: any,record: any,rowIndex:number)=>{
+                    // console.log(props)
                     let newProps = ObjectUtil.parseDynamicProps(props, record);
+                    // console.log(newProps)
                     let editCType: string = newProps.editctype||  newProps.editCType  ||"";
                     let lower: string = newProps.lower ? newProps.lower + record.key : "";
                     let upper: string = newProps.upper ? newProps.upper + record.key : "";

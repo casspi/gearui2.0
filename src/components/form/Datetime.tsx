@@ -366,6 +366,7 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
             delete props.value
             delete props.defaultValue
         }
+        delete props.validateTempId;
         if (type == null || type == "date") {
             return <DatePicker locale={locale} {...props}></DatePicker>
             // return <LocaleProvider locale={locale}><DatePicker locale={locale} {...props}></DatePicker></LocaleProvider>;

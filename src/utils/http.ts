@@ -145,6 +145,8 @@ export default class Http {
                         return Promise.resolve(new HttpResponse(true, statusText, status, data));
                     }else if(dataStatus == Message.NOLOGIN) {
                         return Promise.resolve(new HttpResponse(true, statusText, dataStatus, data));
+                    }else if(dataStatus == Message.FAILED) {
+                        return Promise.resolve(new HttpResponse(true, statusText, dataStatus, data));
                     }else {
                         let msg = data.message || statusText;
                         return Promise.reject(new HttpResponse(false, msg, dataStatus));

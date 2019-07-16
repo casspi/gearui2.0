@@ -295,6 +295,7 @@ export default class Time<P extends typeof props & TimePickerProps,S extends sta
         let props:any = this.getProps();
         delete props.invalidType;
         delete props.labelText;
+        delete props.validateTempId;
         if(this.form){
             delete props.value;
             delete props.defaultValue

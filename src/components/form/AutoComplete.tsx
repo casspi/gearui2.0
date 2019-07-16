@@ -46,7 +46,14 @@ interface OptionData {
 export default class AutoComplete<P extends typeof props & InputProps, S extends state & InputProps> extends Text.default<P, S> {
 
     getInitialState(): state {
+        let value:any; 
+        if(typeof this.props.value == 'string'){
+            value = this.props.value
+        }else{
+            value = ""
+        }
         return {
+            value:value,
             mustMatch: this.props.mustMatch === false ? false : true,
             rows: this.props.rows,
             options: [],
@@ -105,9 +112,9 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 }              
             },
             onBlur: (e: any) => {
-                debugger;
                 if(this.state.mustMatch == true){
                     // 当文本框失去焦点时，检查文本框中的值是否在选项内
+                    console.log(this.state.options)
                     let options = this.state.options;
                     let matched: boolean = false;
                     if(options && options.length > 0){
@@ -252,7 +259,9 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
     }
 
     getAutoCompleteProps(): any {
+        console.log(this.state.readOnly)
         return G.G$.extend({},this.state,{
+            disabled: this.state.readOnly === true || this.state.disabled === true,
             allowClear: false,
             className: "autocomplete-control" + (this.state.className ? " " + this.state.className : ""),
             style: { width: this.state.style ? this.state.style.width : null,height: this.state.style ? this.state.style.height : null},
@@ -450,14 +459,29 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 this.match(this.props.value);
             }
         };
+        if(typeof this.props.value == "object"){
+            this.setState({
+                options:[{value:this.props.value.value,text:this.props.value.text}],
+                searchOptions:[{value:this.props.value.value,text:this.props.value.text}]
+            },()=>{
+                this.setState({
+                    value: this.props.value.value
+                },()=>{
+                    this.triggerChange(this.props.value.value)
+                })
+            })
+        }
         if(this.props.async == true){
-            // 异步查询根据默认值加载数据
-            this.loadData(this.getValue(), callback);
+            if(typeof this.props.value == "string"){
+                // 异步查询根据默认值加载数据
+                this.loadData(this.getValue(), callback);
+            }
         }
         else{
             // 非异步查询第一次时载入所有数据放到内存，以后根据内存中数据进行过滤
             this.loadData(null, callback);
         }
+
     }
 
     makeJsx() {
@@ -466,6 +490,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         let inputProps:any = this.getInputProps();
         delete textareaProps.labelText;
         delete inputProps.labelText;
+        delete inputProps.validateTempId;
         if(this.state.controlType == "textarea") {
             input = <AntdTextArea {...textareaProps}></AntdTextArea>;
         }else {
@@ -476,6 +501,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             // delete acprops.value;
             delete acprops.defaultValue;
         }
+        delete acprops.validateTempId;
         if(this.state.mustMatch == true){
             let hiddenProps = {
                 key: this.getKey(),
@@ -495,6 +521,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             this.setState({
                 value
             }, () => {
+                console.log(this.state.options)
                 this.triggerChange(value, callback);
                 if(callback){
                     callback.call(this)
@@ -539,12 +566,12 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         //     super.reset();
         // }else{
         // }
-            super.reset();
-            this.setState({
-                value:this.props.value || ""
-            },()=>{
-                this.loadData();
-            })
+        super.reset();
+        this.setState({
+            value:this.props.value || ""
+        },()=>{
+            this.loadData();
+        })
     }
 
     clear(){
@@ -572,6 +599,10 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             // 设置了格式化函数后设用该方法对当前的默认选项进行格式化
             this.setDefaultOptions();
         }
+    }
+
+    afterUpdate(){
+        console.log(this.state.options)
     }
 
 }

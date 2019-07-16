@@ -21038,16 +21038,22 @@ tr.ant-table-expanded-row:hover {
   border: 1px solid #ebedf0;
   text-align: center;
   border-radius: 2px;
-  display: flex;flex-direction: column;
+  display: flex;
+  flex-direction: column;
+  position: relative; 
+  overflow-y: hidden
 }
 .plumblist-warp h3{line-height:30px;font-weight: 600;font-size: 16px}
-.plumblist-warp .list-warp{display: flex;justify-content: space-between}
+.plumblist-warp .list-warp{position: relative;overflow-y: auto}
 .plumblist-warp .list{
   border:1px solid #d9d9d9;
   min-height:400px;
   border-radius: 4px;
-  overflow-y: auto;
+  /* overflow-y: auto; */
 }
+.plumblist-warp .left-list{float: left;}
+.plumblist-warp .right-list{float: right;}
+.plumblist-warp .list-warp:after{content: "";clear: both;}
 .plumblist-warp .left-list-title,.plumblist-warp .right-list-title{
   height: 48px;line-height: 48px;background: #1c3057;
   color:#ddd;font-size: 16px

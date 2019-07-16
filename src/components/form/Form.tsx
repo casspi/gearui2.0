@@ -17,6 +17,7 @@ import { Validator } from "../../validator";
 import Http, { methods } from '../../utils/http';
 import * as Hidden from './Hidden';
 import { Label } from "../data";
+import LengthValidator from '../../validator/lengthValidator';
 export var props = {
     //是否验证隐藏控件，在validator中使用
     validateHidden: GearType.Boolean,
@@ -179,12 +180,29 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         // console.log(params)
         // console.log(this.props.form.getFieldsValue())
         this.props.form.setFieldsValue(params);
+        let gearEle = G.$("#" + name);
+        if(!(gearEle instanceof Tag.default)){
+            gearEle = G.$("[name='"+ name +"']")
+        }
+        if(gearEle instanceof Tag.default) {
+            gearEle.setState({
+                validateTempId: UUID.get()
+            });
+        }
         this.validateField(name, callback);
     }
     
     public setFieldsValue(params:any,callback?:Function){
         setTimeout(()=>{
             this.props.form.setFieldsValue(params);
+            for(let key in params) {
+                let gearEle = G.$("#" + key);
+                if(gearEle instanceof Tag.default) {
+                    gearEle.setState({
+                        validateTempId: UUID.get()
+                    });
+                }
+            }
             // this.validateField([""], callback);
         },0)
     }
@@ -195,6 +213,16 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         this.props.form.validateFieldsAndScroll([name],{force:true},(err, values) => {
             if(!err) {
                 result = true;
+            }else{
+                let gearEle = G.$("#" + name);
+                if(!(gearEle instanceof Tag.default)){
+                    gearEle = G.$("[name='"+ name +"']")
+                }
+                if(gearEle instanceof Tag.default) {
+                    gearEle.setState({
+                        validateTempId: UUID.get()
+                    });
+                }
             }
             if(callback) {
                 callback.call(this);
@@ -224,11 +252,37 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     /**
      * 重置控件的值
      */
+    // reset(name?: string) {
+    //     if(name) {
+    //         this.props.form.resetFields([name]);
+    //     }else {
+    //         this.props.form.resetFields();
+    //     }
+    // }
     reset(name?: string) {
         if(name) {
+            // let filed = this.props.form.getFieldsValue([name]);
             this.props.form.resetFields([name]);
+            let gearEle = G.$("#" + name);
+            if(!(gearEle instanceof Tag.default)){
+                gearEle = G.$("[name='"+ name +"']")
+            }
+            if(gearEle instanceof Tag.default) {
+                gearEle.setState({
+                    validateTempId: UUID.get()
+                });
+            }
         }else {
+            let fields = this.props.form.getFieldsValue();
             this.props.form.resetFields();
+            for(let key in fields) {
+                let gearEle = G.$("#" + key);
+                if(gearEle instanceof Tag.default) {
+                    gearEle.setState({
+                        validateTempId: UUID.get()
+                    });
+                }
+            }
         }
     }
 
@@ -443,6 +497,30 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         });    
     }
 
+    // validate():boolean {
+    //     let values = this.props.form.getFieldsValue();
+    //     let fieldsname:any[] = [];
+    //     for( let key in values){
+    //         fieldsname.push(key)
+    //         // console.log(fieldsname)
+    //     }
+    //     let noSubmitArr:any = this.noSubmitArr;
+    //     if(noSubmitArr.length > 0){//过滤不需提交的
+    //         for (let i=0;i<noSubmitArr.length;i++){
+    //             fieldsname = fieldsname.filter(o=>o!=noSubmitArr[i])
+    //         }
+    //     }
+    //     let result = false;
+    //     if(this.state.validate == true) {
+    //         this.props.form.validateFieldsAndScroll(fieldsname.length>0?fieldsname:[],{force:true},(err, values) => {
+    //             if (!err) {
+    //                 result = true; 
+    //             }
+    //         });
+    //         return result;
+    //     }
+    //     return true;
+    // }
     validate():boolean {
         let values = this.props.form.getFieldsValue();
         let fieldsname:any[] = [];
@@ -461,6 +539,15 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             this.props.form.validateFieldsAndScroll(fieldsname.length>0?fieldsname:[],{force:true},(err, values) => {
                 if (!err) {
                     result = true; 
+                }else {
+                    for(let key in err) {
+                        let gearEle = G.$("#" + key);
+                        if(gearEle instanceof Tag.default) {
+                            gearEle.setState({
+                                validateTempId: UUID.get()
+                            });
+                        }
+                    }
                 }
             });
             return result;
@@ -771,6 +858,16 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     load(data: any) {
         this.props.form.setFieldsValue(data);
+        // let fields = this.props.form.getFieldsValue();
+        // this.props.form.resetFields();
+        for(let key in data) {
+            let gearEle = G.$("#" + key);
+            if(gearEle instanceof Tag.default) {
+                gearEle.setState({
+                    validateTempId: UUID.get()
+                });
+            }
+        }
     }
     enableValidation() {
         this.setState({

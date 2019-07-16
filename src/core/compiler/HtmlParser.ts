@@ -1,4 +1,5 @@
 import CompilerUtil from './CompilerUtil';
+import { UUID } from 'src/utils';
 // Regular Expressions for parsing tags and attributes
 const attribute = /^\s*([^\s"'<>\/=]+)(?:\s*(=)\s*(?:"([^"]*)"+|'([^']*)'+|([^\s"'=<>`]+)))?/;
 // could use https://www.w3.org/TR/1999/REC-xml-names-19990114/#NT-QName
@@ -232,9 +233,13 @@ export default class HtmlParser {
             }
             this.cacheHtml += this.advance(start[0].length)
             let end, attr;
+            let hasId = false;
             while (!(end = this.html.match(startTagClose)) && (attr = this.html.match(attribute))) {
                 if(attr[1] == "ctype") {
                     match.ctype = attr[3];
+                }
+                if(attr[1] == "id") {
+                    hasId = true;
                 }
                 if(match.tagName == "input" && attr[1] == "type") {
                     inputType = attr[3];
@@ -243,6 +248,12 @@ export default class HtmlParser {
                 match.attrs.push(attr);
             }
             if (end) {
+                if(!hasId) {
+                    let id = UUID.get();
+                    let attrInner = ["id=\"" + id + "\"","id","=",id];
+                    match.attrs.push(attrInner);
+                    this.cacheHtml += " id=\"" + id + "\"";
+                }
                 this.cacheHtml += " " + Constants.HTML_PARSER_DOM_INDEX + "=\"{" + Constants.HTML_PARSER_DOM_INDEX + "}\"";
                 match.unarySlash = end[1];
                 this.cacheHtml += this.advance(end[0].length);

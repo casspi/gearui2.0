@@ -1219,7 +1219,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             dataSource: datainner.dataList,
             columns: datainner.columns||this.state.columns
         },()=>{
-            this.doEvent("loadSuccess");
+            console.log(datainner)
+            this.doEvent("loadSuccess",datainner);
             this._loadSuccess();
         });
         return true;

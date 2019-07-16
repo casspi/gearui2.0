@@ -94,6 +94,8 @@ export default class ListAction<P extends typeof props, S extends state> extends
                     type:"danger",
                     callback:(r: any) => {
                         if(r){
+                            //点击了确认
+                            this.doEvent("before");
                             let fn = async () => {
                                 let result = await Http.ajax(method, url, param);
                                 if(result.success) {
@@ -106,7 +108,7 @@ export default class ListAction<P extends typeof props, S extends state> extends
                                             if(refreshList){
                                                 list.refresh();
                                             }
-                                            this.doEvent("afterSuccess");
+                                            this.doEvent("success");
                                         }else{
                                             let message = data.message || "操作失功，消息代码“"+data.status+"”！"
                                             G.messager.error("错误",message);
@@ -165,6 +167,7 @@ export default class ListAction<P extends typeof props, S extends state> extends
                                             path = rd.url;
                                         }
                                         Http.triggerHyperlink(path);
+                                        this.doEvent("success");
                                     }else{
                                         G.messager.error("错误","返回消息格式不正确！");
                                     }
@@ -189,6 +192,7 @@ export default class ListAction<P extends typeof props, S extends state> extends
                         type:"danger",
                         callback:(r: any)=>{
                             if(r){
+                                this.doEvent("before");
                                 fun.call(this);
                             }
                         }}
@@ -204,5 +208,17 @@ export default class ListAction<P extends typeof props, S extends state> extends
             G.messager.alert("提示消息","请使用“listid”属性指定正确的数据列表！");
         }
     }    
+
+    onBefore(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("before",fun);
+        }
+    }
+
+    onSuccess(fun:Function) {
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("success",fun);
+        }
+    }
 
 }
