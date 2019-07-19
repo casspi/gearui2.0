@@ -10,7 +10,7 @@ export var props = {
     style: GearType.CssProperties,
     width: GearType.Any,
     height: GearType.Number,
-    disabled: GearType.Boolean,
+    disabled: GearType.Any,
     visible: GearType.Any,
     remove: GearType.Boolean,//删除该组件节点
     class: GearType.String,

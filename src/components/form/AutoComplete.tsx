@@ -259,7 +259,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
     }
 
     getAutoCompleteProps(): any {
-        console.log(this.state.readOnly)
         return G.G$.extend({},this.state,{
             disabled: this.state.readOnly === true || this.state.disabled === true,
             allowClear: false,
@@ -365,7 +364,8 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             }else{
                 let fn = async ()=> {
                     // 如果不是异步查询，则设置查询上线为0，表示返回所有记录
-                    let result = await Http.ajax("get",url, {q: value,limit: this.props.async == false ? 0 : this.state.limit});
+                    
+                    let result = await Http.ajax("get",url, {q: value.toLowerCase(),limit: this.props.async == true ? this.state.limit : 0});
                     if(result.success) {
                         let message = result.data;
                         if(message && message.data && typeof message.data == "object"){
@@ -376,6 +376,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                                 return ele;
                             });
                         }
+                        // console.log(options)
                         this.setState({
                             options: options,
                             searchOptions: options
@@ -471,6 +472,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 })
             })
         }
+        debugger
         if(this.props.async == true){
             if(typeof this.props.value == "string"){
                 // 异步查询根据默认值加载数据
@@ -479,7 +481,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         }
         else{
             // 非异步查询第一次时载入所有数据放到内存，以后根据内存中数据进行过滤
-            this.loadData(null, callback);
+            this.loadData("", callback);
         }
 
     }

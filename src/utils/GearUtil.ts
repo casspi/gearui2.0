@@ -406,6 +406,8 @@ export default class GearUtil {
         // disabled属性在浏览器中，设置为true时，该属性值为“disabled”
         if(props["disabled"] && (props["disabled"]==true || props["disabled"]=="disabled" || props["disabled"]=="true")){
             props["disabled"] = true;
+        }else if(props["disabled"].indexof('{(')>-1 && props["disabled"].indexof(')}')>-1){//disabled支持动态表达式
+           
         }else{
             props["disabled"] = false;
         }

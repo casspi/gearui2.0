@@ -100,7 +100,7 @@ export default class Number<P extends typeof props, S extends state> extends For
 
     protected _formatter(value: any) {
         let re = this.doEvent("formatter", value);
-        if (re && re.length > 0) {
+        if (re instanceof Array && re.length > 0) {
             return re[0];
         }
         let formatter = this.props.onFormatter;

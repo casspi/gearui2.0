@@ -946,7 +946,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
                         cannotControl: record.cannotControl,
                         name: name,
                         form: this.form,
-                        required: newProps.required==="true"?true:false,
+                        required: (newProps.required==="true" || newProps.required===true)?true:false,
                         ref:(ele: any) => {
                             let cells = this.cells[record.key]||{};
                             if(ele != null) {

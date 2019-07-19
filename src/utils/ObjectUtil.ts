@@ -596,14 +596,16 @@ export default class ObjectUtil {
             }else if(key=="readOnly"){
                 propsNew['readOnly'] = valueInProps=='true'?true:false;
             }
-            else if(valueInProps == "false"){
+            else if(valueInProps == "false" || valueInProps === false){
                 propsNew[key] = false
-            }else if(valueInProps == "true"){
+            }else if(valueInProps == "true" || valueInProps === true){
                 propsNew[key] = true
             }
             // else if(key == 'required'){
             //     console.log(valueInProps)
             //     propsNew['required'] = valueInProps=='true'?true:false;
+            //     console.log(propsNew['required'])
+            //     console.log(propsNew)
             // }
             else{
                 if(typeof valueInProps == 'string'){

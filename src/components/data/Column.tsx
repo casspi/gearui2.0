@@ -235,7 +235,7 @@ export default class Column<T> {
         if(!(ObjectUtil.isExtends(child.type, "Column"))) {
             let childProps =G.G$.extend({},child.props);
             childProps = this.parseRegexColumnValue(childProps,record);
-            // console.log(record)
+            // console.log(childProps)
             let style = childProps.style instanceof String ? GearJson.fromStyle(childProps.style || "") : new GearJson(childProps.style);
             if(ellipsisSpanWidth > 0) {
                 style.put("width", ellipsisSpanWidth+"");

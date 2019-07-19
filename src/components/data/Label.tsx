@@ -1,7 +1,7 @@
 import * as React from 'react';
 import * as Icon from '../basic/Icon';
 import * as Tag from '../Tag';
-import * as DicUtil from "../../utils/DicUtil"
+import DicUtil from "../../utils/DicUtil";
 export var props = {
     ...Tag.props,
     icon: GearType.String,
@@ -9,7 +9,10 @@ export var props = {
     format: GearType.String,
     value: GearType.String,
     isvisible: GearType.Any,
-    dictype: GearType.String
+    dictype: GearType.Or(GearType.Object, GearType.Function, GearType.String),
+    async: GearType.Boolean,
+    showHtmlStr:GearType.Boolean,//是否显示为html字符串
+
 };
 
 export interface state extends Tag.state {
@@ -18,6 +21,10 @@ export interface state extends Tag.state {
     format?: string;
     value?: string;
     isvisible?:any;
+    options?:any;
+    async?:any;
+    dictype?: object | string | Function;
+    showHtmlStr?:boolean
 }
 export default class Label<P extends typeof props, S extends state> extends Tag.default<P, S> {
     constructor(props:any){
@@ -29,7 +36,10 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
             format: this.props.format,
             prompt: this.props.prompt,
             icon: this.props.icon,
-            isvisible:this.props.isvisible,
+            isvisible: this.props.isvisible,
+            async: this.props.async === true?true:false,
+            dictype: this.props.dictype,
+            showHtmlStr: this.props.showHtmlStr===true?true:false
         };
     }
 
@@ -40,7 +50,6 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
     }
 
     render() {
-       console.log(this.state.value)
         let value: any = this.state.value;
         if("richtext" == this.state.format){
             if(value){
@@ -55,21 +64,95 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
         }
         let props:any = this.getProps();
         delete props.value;
-        if(this.state.icon){
-            var iconProps: any = {
-                key:"icon",
-                type: this.state.icon,
-            };
-            return <span {...props}><Icon.default {...iconProps}/><span key="text" dangerouslySetInnerHTML={{__html:value}}></span></span>;
-        }else
-            return <span key="text" {...props} dangerouslySetInnerHTML={{__html:value}}></span>;
+        delete props.showHtmlStr;
+        if(!this.state.showHtmlStr){
+            if(this.state.icon){
+                var iconProps: any = {
+                    key:"icon",
+                    type: this.state.icon,
+                };
+                return <span {...props}><Icon.default {...iconProps}/><span key="text" dangerouslySetInnerHTML={{__html:value}}></span></span>;
+            }else
+                return <span key="text" {...props} dangerouslySetInnerHTML={{__html:value}}></span>;
+        }else{//显示html字符串
+            value = [value]
+            let style = G.G$.extend({},props.style,{
+                whiteSpace:'pre-wrap',
+                display: 'block'
+            })
+            return <span key="text" {...props} style={style} >{value}</span>
+        }
     }
  
-    // afterRender(){
-    //     if(this.props.dictype){
-    //         DicUtil. ({dictype: this.props.dictype})
-    //     }
-    // }
+    afterRender(){
+        if(this.state.dictype){
+            if(!this.state.async){
+                let dictype = this.state.dictype;
+                let fn = async () => {
+                    let result = await DicUtil.getDic({dictype});
+                    if(result.success) {
+                        let dic = result.data;
+                        if(dic) {
+                            this.setState({
+                                options: dic
+                            },()=>{
+                                this.formatValue(this.state.value)
+                            });
+                        }
+                    }
+                }
+                fn();
+            }else{
+                this.formatValue(this.state.value)
+            }
+            
+        }
+    }
+
+    getValueByCode(values:any[]){//通过code去字典中查询
+        let method = 'post';
+        let dictype = this.state.dictype;
+        let resData:any[] = []
+        DicUtil.getDataByCode(dictype,values,(message:any)=>{
+            // console.log(message)
+            if(message.status==0 && message.data){
+                resData = message.data
+            }
+        },method)
+        return resData
+    }
+
+    formatValue(value:any,callback?:Function){//从字典中匹配数据
+        let options:any[]; 
+        if(!this.state.async){
+            options = this.state.options
+        }else{
+            options = this.getValueByCode(value);
+        }
+        let newValue:any = value;
+        let fun = (options:any)=>{
+            for(let i=0;i<options.length;i++){
+                if(value == options[i].value){
+                    newValue = options[i].label || options[i].text;
+                    break;
+                }
+                if(options[i].children && options[i].children.length>0){
+                    fun(options[i].children)
+                }
+            }
+        }
+        if(this.state.dictype && options.length>0){
+            fun(options)
+            this.setState({
+                value: newValue
+            },()=>{
+                if(callback){
+                    callback()
+                }
+            });
+        }
+        
+    }
 
     getValue() {
         return this.state.value;
@@ -80,12 +163,16 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
     }
     
     setValue(value: string,callback?:Function) {
-        this.setState({
-            value
-        },()=>{
-            if(callback){
-                callback()
-            }
-        });
+        if(this.state.dictype){
+            this.formatValue(value,callback)
+        }else{
+            this.setState({
+                value
+            },()=>{
+                if(callback){
+                    callback()
+                }
+            });
+        }
     }
 }

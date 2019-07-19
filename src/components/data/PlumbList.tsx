@@ -355,7 +355,7 @@ export default class PlumbList<P extends typeof props, S extends state> extends 
         })
     }
     dragLinks(){
-        console.log('dragLinks')
+        this.find(".list-warp").scrollTop(0);
         let jsPlumb:any = window.jsPlumb;
         let _this = this;
         jsPlumb.ready(function () {

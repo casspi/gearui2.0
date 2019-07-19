@@ -526,14 +526,21 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         let fieldsname:any[] = [];
         for( let key in values){
             fieldsname.push(key)
-            // console.log(fieldsname)
         }
         let noSubmitArr:any = this.noSubmitArr;
-        if(noSubmitArr.length > 0){//过滤不需提交的
+        //过滤不需提交的
+        if(noSubmitArr.length > 0){
             for (let i=0;i<noSubmitArr.length;i++){
                 fieldsname = fieldsname.filter(o=>o!=noSubmitArr[i])
             }
         }
+        // for(let i=0;i<fieldsname.length;i++){//过滤掉被删除的 remove掉的
+        //     fieldsname = fieldsname.filter((o:any)=>{
+        //         if(G.$("#"+o) instanceof Tag.default){
+        //             return o
+        //         }
+        //     })
+        // }
         let result = false;
         if(this.state.validate == true) {
             this.props.form.validateFieldsAndScroll(fieldsname.length>0?fieldsname:[],{force:true},(err, values) => {
