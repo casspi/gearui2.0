@@ -123,33 +123,68 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
     }
 
     formatValue(value:any,callback?:Function){//从字典中匹配数据
-        let options:any[]; 
+        let values = this.getPropStringArrayValue(value) || [];
+        let options:any[] = []; 
         if(!this.state.async){
             options = this.state.options
         }else{
-            options = this.getValueByCode(value);
-        }
-        let newValue:any = value;
-        let fun = (options:any)=>{
-            for(let i=0;i<options.length;i++){
-                if(value == options[i].value){
-                    newValue = options[i].label || options[i].text;
-                    break;
-                }
-                if(options[i].children && options[i].children.length>0){
-                    fun(options[i].children)
-                }
+            for(let i=0;i<values.length;i++){
+                options = options.concat(this.getValueByCode(values[i]));
             }
         }
-        if(this.state.dictype && options.length>0){
-            fun(options)
-            this.setState({
-                value: newValue
-            },()=>{
-                if(callback){
-                    callback()
+        if(values.length>0 && values.length===1){
+            let newValue:any = values[0];
+            let fun = (options:any)=>{
+                for(let i=0;i<options.length;i++){
+                    if(values[0] == options[i].value){
+                        newValue = options[i].label || options[i].text;
+                        break;
+                    }
+                    if(options[i].children && options[i].children.length>0){
+                        fun(options[i].children)
+                    }
                 }
-            });
+            }
+            if(this.state.dictype && options.length>0){
+                fun(options)
+                this.setState({
+                    value: newValue
+                },()=>{
+                    if(callback){
+                        callback()
+                    }
+                });
+            }
+        }else if(values.length>1){
+            let newValue:any = "";
+            let fun = (options:any,value:any)=>{
+                for(let i=0;i<options.length;i++){
+                    if(value == options[i].value){
+                        newValue += "，"+(options[i].label || options[i].text);
+                        break;
+                    }
+                    if(options[i].children && options[i].children.length>0){
+                        fun(options[i].children,value)
+                    }
+                }
+            }
+            if(this.state.dictype && options.length>0){
+                for(let i=0;i<values.length;i++){
+                    fun(options,values[i]);
+                }
+                if(newValue){
+                    newValue = newValue.substring(1);
+                }
+                this.setState({
+                    value: newValue || value
+                },()=>{
+                    if(callback){
+                        callback()
+                    }
+                });
+            }
+
+
         }
         
     }

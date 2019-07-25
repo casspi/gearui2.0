@@ -277,7 +277,14 @@ export default class Tabs<P extends typeof props,S extends state> extends HtmlTa
                 this.setState({
                     tabs: tabs
                 },() => {
-                    this.find('.tab-content .tab-panel').hide().eq(currentIndex).show()
+                    // console.log(this.find('.tab-content .tab-panel'))
+                    // console.log(this.find('.tab-content .tab-panel').hide().eq(currentIndex))
+                    this.find('.tab-content .tab-panel').each(function(i,e){
+                        if(e && e.hide){
+                            e.hide();
+                        }
+                    })
+                    this.find('.tab-content .tab-panel').eq(currentIndex).show()
                     this.doEvent("afterSelect", tab);
                 });
             }

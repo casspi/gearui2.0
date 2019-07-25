@@ -114,7 +114,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             onBlur: (e: any) => {
                 if(this.state.mustMatch == true){
                     // 当文本框失去焦点时，检查文本框中的值是否在选项内
-                    console.log(this.state.options)
+                    // console.log(this.state.options)
                     let options = this.state.options;
                     let matched: boolean = false;
                     if(options && options.length > 0){
@@ -364,7 +364,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             }else{
                 let fn = async ()=> {
                     // 如果不是异步查询，则设置查询上线为0，表示返回所有记录
-                    
+                    value = value || "";
                     let result = await Http.ajax("get",url, {q: value.toLowerCase(),limit: this.props.async == true ? this.state.limit : 0});
                     if(result.success) {
                         let message = result.data;
@@ -472,7 +472,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 })
             })
         }
-        debugger
         if(this.props.async == true){
             if(typeof this.props.value == "string"){
                 // 异步查询根据默认值加载数据
@@ -523,8 +522,8 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             this.setState({
                 value
             }, () => {
-                console.log(this.state.options)
-                this.triggerChange(value, callback);
+                // console.log(this.state.options)
+                this.triggerChange(value);
                 if(callback){
                     callback.call(this)
                 }
@@ -601,10 +600,6 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             // 设置了格式化函数后设用该方法对当前的默认选项进行格式化
             this.setDefaultOptions();
         }
-    }
-
-    afterUpdate(){
-        console.log(this.state.options)
     }
 
 }

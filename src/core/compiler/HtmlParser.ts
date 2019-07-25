@@ -189,6 +189,13 @@ export default class HtmlParser {
                         let charStr = this.options.chars(text);
                         this.cacheHtml += charStr;
                     }
+                    if(endTag) {//解决如：<textarea>标签后面内容不解析bug
+                        //</textarea> </script> </style>
+                        if(endTag.toLowerCase() == "</textarea>" || endTag.toLowerCase() == "</script>"  || endTag.toLowerCase() == "</style>") {
+                            return ` ${endTag}`;
+                        }
+                    }                                                                                                                                                                                             
+                    
                     return endTag;
                 })
                 this.index += this.html.length - rest.length;

@@ -55,6 +55,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
         delete props.invalidType;
         delete props.labelText;
         delete props.validation;
+        delete props.validateTempId;
         if(this.form){
             delete props.value;
         }
@@ -195,7 +196,7 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
         
     }
 
-    setValue(values: any,afterrender?:any){
+    setValue(values: any,args?:any){
         if(values instanceof Array == false && typeof values=="string"){
             values = [values];
         }
@@ -211,17 +212,21 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
                         return option;
                     })
                 },()=>{
-                    super.setValue(this.getValue());
+                    super.setValue(this.getValue(),()=>{
+                        if(args instanceof Function){
+                            args()
+                        }
+                    });
                 });
             }
             fns();
-            if(afterrender!==true){
+            if(args!==true && !(args instanceof Function)){//不是回调函数，不是afterrender中
                 this.waitSetValue.push(fns)//push到异步列表中，初始化afterrender调用
             }
         }
     }
 
-    addValue(value:string){
+    addValue(value:string,callback?:Function){
         if(value){
             let fn =()=>{
                 this.setState({
@@ -230,6 +235,12 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
                             option.checked = true;
                         return option;
                     })
+                },()=>{
+                    super.setValue(this.getValue(),()=>{
+                        if(callback){
+                            callback()
+                        }
+                    });
                 });
             } 
             fn();
@@ -243,6 +254,8 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
                 option.checked = true;
                 return option;
             })
+        },()=>{
+            super.setValue(this.getValue());
         });        
     }
 
@@ -252,6 +265,8 @@ export default class CheckTag<P extends typeof props, S extends state> extends F
                 option.checked = false;
                 return option;
             })
+        },()=>{
+            super.setValue(this.getValue());
         }); 
     }
 

@@ -534,12 +534,13 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 fieldsname = fieldsname.filter(o=>o!=noSubmitArr[i])
             }
         }
-        // for(let i=0;i<fieldsname.length;i++){//过滤掉被删除的 remove掉的
-        //     fieldsname = fieldsname.filter((o:any)=>{
-        //         if(G.$("#"+o) instanceof Tag.default){
-        //             return o
-        //         }
-        //     })
+        // for(let i=0;i<fieldsname.length;i++){
+            //过滤掉被删除的 remove掉的
+            fieldsname = fieldsname.filter((o:any)=>{
+                if(G.$("#"+o) instanceof Tag.default){
+                    return o
+                }
+            })
         // }
         let result = false;
         if(this.state.validate == true) {

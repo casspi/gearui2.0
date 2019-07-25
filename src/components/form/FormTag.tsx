@@ -152,9 +152,9 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
                 value
             }, () => {
                 this.triggerChange(value, callback);
-                if(callback){
-                    callback.call(this)
-                }
+                // if(callback){
+                //     callback.call(this)
+                // }
             });            
         }else {
             this.setState({

@@ -7,7 +7,7 @@ export default class IpValidator extends Validator {
     pattern:any = this.pattern || /^(?:(?:1[0-9][0-9]\.)|(?:2[0-4][0-9]\.)|(?:25[0-5]\.)|(?:[1-9][0-9]\.)|(?:[0-9]\.)){3}(?:(?:1[0-9][0-9])|(?:2[0-4][0-9])|(?:25[0-5])|(?:[1-9][0-9])|(?:[0-9]))$/;
 
     validator = (rule: any,value:string,callback: any) => {
-        if(value != null && value.trim() != "") {
+        if(value != null) {
             if(this.pattern.test(value)) {
                 let minInt = -1;
                 if(StringUtil.isIp(this.min)) {
