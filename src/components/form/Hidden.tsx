@@ -40,17 +40,4 @@ export default class Hidden<P extends typeof props & InputProps, S extends (stat
         return <input type={"hidden"} {...props}></input>;
     }
 
-    //禁用
-    disable() {
-        this.setState({
-            disabled: true
-        });
-    }
-
-    //启用
-    enable() {
-        this.setState({
-            disabled: false
-        });
-    }
 }

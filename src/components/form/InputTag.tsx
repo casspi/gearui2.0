@@ -1,4 +1,4 @@
-import { Button as AntdButton, Spin as AntdSpin } from 'antd';
+import { Button as AntdButton, Spin as AntdSpin, message } from 'antd';
 import * as React from 'react';
 import * as FormTag from './FormTag';
 import * as AutoComplete from './AutoComplete';
@@ -6,7 +6,7 @@ import * as Text from './Text';
 import { methods } from '../../utils/http';
 import * as SelectedTag from './SelectedTag';
 import DicUtil from '../../utils/DicUtil';
-import { UUID } from '../../utils';
+import { UUID ,Http} from '../../utils';
 
 export var props = {
     ...FormTag.props,
@@ -149,7 +149,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             controlType: this.state.controlType,
             dropdownWidth: this.state.dropdownWidth || 150,
             async: this.state.async,
-            limit: this.props.limit,
+            limit: this.props.limit || 10,
             rows: this.state.rows,
             style: { width: this.state.inputWidth || 150,display:this.state.inputVisible?"":"none"},
             // onMatchFormat: (option: any) => {
@@ -202,16 +202,17 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                     if(this.state.repeatAble == false){
                         // 如果不允许重复，先检查值是否已经存在了
                         if(this.existValue(value)==false){
-                            if((this.state.mustMatch && this.state.dictype )){
-                                this._addValue(value, text);
-                            }else{
-                                this._addValue(value, value);
-                            }
+                            this._addValue(value, text);
+                            // if((this.state.mustMatch && this.state.dictype )){
+                            //     this._addValue(value, text);
+                            // }else{
+                            //     this._addValue(value, value);
+                            // }
                         }else{
                             G.messager.simple.info("输入值已存在于选中项中！");
                         }
                     }else{
-                        if((this.state.mustMatch && this.state.dictype)){
+                        if((this.state.mustMatch && (this.state.dictype || this.state.url))){
                             this._addValue(value, text);
                         }else{
                             this._addValue(value, value);
@@ -261,7 +262,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
             dropdownWidth: this.props.dropdownWidth,
             prompt: this.props.prompt,
             readOnly: this.props.readonly,
-            limit:this.props.limit,
+            limit:this.props.limit || 10,
             async: this.props.async == true ? true : false,
         };
     }
@@ -483,12 +484,11 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         return v;
     }
 
-    getValueByCode(values:any[]){
+    getValueByCode(values:any[],dic?:any){
         let method = this.state.method || 'post';
-        let dictype = this.state.dictype;
+        let dictype = this.state.dictype || dic;
         let resData:any[] = []
         DicUtil.getDataByCode(dictype,values,(message:any)=>{
-            // console.log(message)
             if(message.status==0 && message.data){
                 resData = message.data
             }
@@ -507,6 +507,30 @@ export default class InputTag<P extends typeof props, S extends state> extends F
                     if( this.state.dictype && this.state.mustMatch) {
                         let resVal = this.getValueByCode(values[i]);
                         if(resVal.length>0){
+                            v.push({
+                                key:UUID.get(),
+                                value: resVal[0].value,
+                                text: resVal[0].text || resVal[0].label || resVal[0].value
+                            });
+                        }
+                    }else if(this.state.url && this.state.mustMatch){
+                        let url:any = this.state.url;
+                        if(url.indexOf('/dictionary/query')>-1){
+                            url = url.replace("/dictionary/query","/dictionary/data") 
+                        }else if(url.indexOf('/dictionary/tree')>-1){
+                            url = url.replace("/dictionary/tree","/dictionary/data") 
+                        }
+                        if(url.indexOf('http://')<0){
+                            url = Http.getRootPath() + url;
+                        }
+                        let resVal:any;
+                        //根据URL去查询
+                        G.G$.ajax({url: url,async: false,dataType: 'json',data: {code:values[i]},traditional:true}).done(function(message){
+                            if(message.status==0 && message.data){
+                                resVal = message.data
+                            }
+                        })
+                        if(resVal && resVal.length>0){
                             v.push({
                                 key:UUID.get(),
                                 value: resVal[0].value,
@@ -617,19 +641,6 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         });
     }
 
-    //禁用
-    disable() {
-        this.setState({
-            disabled: true
-        });
-    }
-
-    //启用
-    enable() {
-        this.setState({
-            disabled: false
-        });
-    }  
 
     reset(){
         super.reset();

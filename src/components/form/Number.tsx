@@ -61,18 +61,6 @@ export default class Number<P extends typeof props, S extends state> extends For
         });
     }
 
-    enable() {
-        this.setState({
-            disabled: false
-        });
-    }
-
-    disable() {
-        this.setState({
-            disabled: true
-        });
-    }
-
     makeJsx() {
         let props: any = this.getProps();
         delete props.invalidType;

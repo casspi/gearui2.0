@@ -125,21 +125,6 @@ export default class Textarea<P extends typeof props,S extends state> extends Fo
         });
         this.triggerChange({ value });
     }
-    
-
-    //禁用
-    disable() {
-        this.setState({
-            disabled: true
-        });
-    }
-
-    //启用
-    enable() {
-        this.setState({
-            disabled: false
-        });
-    }
 
     //只读
     readonly(readonly:boolean) {

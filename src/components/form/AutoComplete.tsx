@@ -134,6 +134,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                     if(matched == false){
                         // 如果当前选项为空，说明没有任何能匹配上的
                         this._change("");
+                        // this._setValue("");
                         this.setState({searchOptions: []});
                     }
                 }        
@@ -254,15 +255,16 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
     //当选中值时触发
     protected _select(value: any,option: any){
         //执行自定义注册的事件
-        this.doEvent("select", value, option);
-        this.match(value);
+        this.match(value,()=>{
+            this.doEvent("select", value, option);
+        });
     }
 
     getAutoCompleteProps(): any {
         return G.G$.extend({},this.state,{
             disabled: this.state.readOnly === true || this.state.disabled === true,
             allowClear: false,
-            className: "autocomplete-control" + (this.state.className ? " " + this.state.className : ""),
+            className: "autocomplete-control",
             style: { width: this.state.style ? this.state.style.width : null,height: this.state.style ? this.state.style.height : null},
             size: this.state.size,
             dataSource: this.getOptionJsxs(),
@@ -505,12 +507,14 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         delete acprops.validateTempId;
         if(this.state.mustMatch == true){
             let hiddenProps = {
+                disabled: this.state.disabled,
                 key: this.getKey(),
                 type: "hidden",
                 value: this.state.value || "",
                 name: this.state.name || this.props.id
             };
-            return <span><AntdAutoComplete {...acprops}>{input}</AntdAutoComplete><input {...hiddenProps}/></span>;
+            delete acprops.id;
+            return <span ref={ele=>this.ref=ele} id={this.state.id} className={this.state.className}><AntdAutoComplete {...acprops}>{input}</AntdAutoComplete><input {...hiddenProps}/></span>;
         }else {
             return <AntdAutoComplete {...acprops}>{input}</AntdAutoComplete>;
         }
@@ -546,9 +550,9 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             }, () => {
                 this.search(value)//匹配到合适选项
                 this.triggerChange(value, callback);
-                if(callback){
-                    callback.call(this)
-                }
+                // if(callback){
+                //     callback.call(this)
+                // }
             });            
         }else {
             this.setState({

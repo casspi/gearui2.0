@@ -28,6 +28,7 @@ export default class Parser {
             }
         }else {
             if(el != document.body) {
+                // parent = el.parentElement;
                 let elJ = G.G$(el);
                 html = elJ.prop("outerHTML");
                 if(noParent != true) {

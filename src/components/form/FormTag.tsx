@@ -179,27 +179,36 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         return true;
     }
 
-
-    enableValidation(params: any) {
+    //开启验证
+    enableValidation(params: any,callback?:Function) {
         if(this.form) {
             let state = this.state;
             let newState = G.G$.extend({},state, {
                 validation: true
             });
             if(params){
-                let _validateProps = G.G$.extend(this.props,params);
+                let _validateProps = G.G$.extend({},this.props,params);
                 newState = G.G$.extend({},newState, {
                     rules: Validator.getValidators(_validateProps, this.constructor)
                 });
             }
-            this.setState(newState);
+            this.setState(newState,()=>{
+                if(callback){
+                    callback()
+                }
+            });
         }
     }
-
-    disableValidation() {
+    //关闭验证
+    disableValidation(callback?:Function) {
         if(this.form) {
             this.setState({
                 validation: false
+            },()=>{
+                this.triggerChange(this.state.value)//响应一次，关闭现有错误提示
+                if(callback){
+                    callback()
+                }
             });
         }
     }
@@ -208,7 +217,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
      * 添加一个验证器
      * @param rule 
      */
-    addValidatorRule(rule: Validator) {
+    addValidatorRule(rule: Validator,callback?:Function) {
         if(this.form) {
             if(rule instanceof Validator) {
                 let rules = this.state.rules;
@@ -216,6 +225,10 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
                     rules.push(rule);
                     this.setState({
                         rules
+                    },()=>{
+                        if(callback){
+                            callback()
+                        }
                     });
                 }
             }else {
@@ -286,36 +299,37 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     makeJsx(): React.ReactNode {return null;}
     render() {
-        console.log('formtag ------ render')
-        if(this.form){
-            if(this.state.disabled===true){//disabled 就不验证
-                let arr:any = this.form.noSubmitArr
-                if(arr.indexOf(this.state.id)<0){//不含有则push
-                    arr.push(this.state.id);
-                }
-                this.form.noSubmitArr = arr;
-            }else{
-                let arr:any = this.form.noSubmitArr
-                arr = arr.filter((o:any)=>o != this.state.id)//含有则去除
-                this.form.noSubmitArr = arr;
-            }
-        }
+        // console.log('formtag ------ render')
+        // if(this.form){
+        //     if(this.state.disabled===true){//disabled 就不验证
+        //         let arr:any = this.form.noSubmitArr
+        //         if(arr.indexOf(this.state.id)<0){//不含有则push
+        //             arr.push(this.state.id);
+        //         }
+        //         this.form.noSubmitArr = arr;
+        //     }else{
+        //         let arr:any = this.form.noSubmitArr
+        //         arr = arr.filter((o:any)=>o != this.state.id)//含有则去除
+        //         this.form.noSubmitArr = arr;
+        //     }
+        // }
         let name: any = this.state.id;
         let ele: React.ReactNode = this.makeJsx();
-        // console.log(this.state.rules)
-        if(this.form) {
-            // console.log(this.initValue)
-            let formUtils: WrappedFormUtils = this.form.props.form;
-            let rules: any = this.state.rules;
-            let formTag = formUtils.getFieldDecorator(name, {
-                initialValue: this.initValue,
-                rules: this.isValidation() ? rules : [],
-            })(ele);
-            // console.log(this.state.id)
-            // console.log(G.G$(this.state.id))
-            return this.getFormItem(formTag);
-        }else {
-            return Tooltip.addTooltip(ele,this.state.title,this.state.titleAlign);
+        if(this.state.id === null){//被remove、empty时(将id设置为null)，去除formitem
+            return null
+        }else{
+            if(this.form) {
+                let formUtils: WrappedFormUtils = this.form.props.form;
+                //禁用的关闭验证-清除验证规则
+                let rules: any = this.state.disabled===true? []:this.state.rules;
+                let formTag = formUtils.getFieldDecorator(name, {
+                    initialValue: this.initValue,
+                    rules: this.isValidation() ? rules : [],
+                })(ele);
+                return this.getFormItem(formTag);
+            }else {
+                return Tooltip.addTooltip(ele,this.state.title,this.state.titleAlign);
+            }
         }
     }
 
@@ -389,5 +403,6 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
         }
         return this.state.invalidType;
     } 
+
     
 }

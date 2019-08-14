@@ -40,29 +40,44 @@ export default class G {
         let el = renderOptions.el;
         let parser = new Parser();
         let astMsg  = parser.parse(el);
-        
+        astMsg.parent = renderOptions['parent'] || astMsg.parent;
         let render = new Render();
         if(this.cacheHtml && this.cacheHtml != "") {
-            this.cacheHtml = "<span>" + this.cacheHtml + astMsg.cacheHtml + "</span>";
+            if(renderOptions['parentAst']) {
+                let cacheHtmlElement = this.G$(this.cacheHtml);
+                let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+renderOptions['parentAst'].id+"']");
+                cacheElement.append(astMsg.cacheHtml);
+                this.cacheHtml = cacheHtmlElement.prop("outerHTML");
+
+            }else {
+                this.cacheHtml = "<span>" + this.cacheHtml + astMsg.cacheHtml + "</span>";
+            }
+
         }else {
             this.cacheHtml = astMsg.cacheHtml;
         }
         if(this.cacheAst) {
-            this.cacheAst = <any>{
-                type: 1,
-                tag: "span",
-                id: UUID.get(),
-                children: [this.cacheAst, astMsg.ast],
-                tagClass: "span",
-                html:function():JQuery<HTMLElement>|undefined {
-                    let id = this.id;
-                    if(id) {
-                        let cacheHtml = G.G$(G.cacheHtml).find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+id+"']");
-                        if(cacheHtml && cacheHtml.length > 0) {
-                            return cacheHtml;
+            if(renderOptions['parentAst']) {
+                astMsg.ast.parent = renderOptions['parentAst'];
+                renderOptions['parentAst'].children = renderOptions['parentAst'].children || [];
+                renderOptions['parentAst'].children.push(astMsg.ast);
+            }else {
+                this.cacheAst = <any>{
+                    type: 1,
+                    tag: "span",
+                    id: UUID.get(),
+                    children: [this.cacheAst, astMsg.ast],
+                    tagClass: "span",
+                    html:function():JQuery<HTMLElement>|undefined {
+                        let id = this.id;
+                        if(id) {
+                            let cacheHtml = G.G$(G.cacheHtml).find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+id+"']");
+                            if(cacheHtml && cacheHtml.length > 0) {
+                                return cacheHtml;
+                            }
                         }
+                        return undefined;
                     }
-                    return undefined;
                 }
             }
         }else{

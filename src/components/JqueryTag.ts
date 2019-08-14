@@ -322,11 +322,49 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
     // }
 
     empty(...args:any[]){
+        //--------
         let cacheHtmlElement = G.G$(G.cacheHtml);
         let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.data('vmdom').ast.id+"']");
-        console.log(cacheElement)
         cacheElement.empty()
         G.cacheHtml = cacheHtmlElement.prop("outerHTML");
+        //含有表单时，清除验证规则
+        if(this.ast){
+            let fn = (vmdom:any)=>{
+                if(vmdom && vmdom.form){
+                    vmdom.setState({
+                        rules: [],
+                        // id: null
+                    })
+                }else if(vmdom && vmdom.ast.children.length>0){
+                    for(let i = 0,len = vmdom.ast.children.length;i<len;i++){
+                        fn(vmdom.ast.children[i].vmdom)
+                    }    
+                }else{
+                    let jqArr =  G.G$(this.realDom).find('.ant-form-item-children>span').children();
+                    for(let i=0;i<jqArr.length;i++){
+                        let gdom:any = G.$(jqArr[i]);
+                        if(gdom.length>0 && gdom.form){
+                            gdom.setState({
+                                rules: [],
+                                // id: null
+                            })
+                        }
+                    }
+                }
+            }
+            fn(this.ast.vmdom);
+        }else{
+            let jqArr = G.G$(this).find('.ant-form-item-children>span').children();
+            for(let i=0;i<jqArr.length;i++){
+                let gdom:any = G.$(jqArr[i]);
+                if(gdom.length>0 && gdom.form){
+                    gdom.setState({
+                        rules: [],
+                        // id: null
+                    })
+                }
+            }
+        }
         let jdom = G.G$(this.realDom);
         return jdom.empty.call(jdom,...args);
     }
@@ -703,6 +741,19 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
             cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.ast.id+"']").remove();
             G.cacheHtml = cacheHtmlElement.prop("outerHTML");
             delete G.cacheAstMap[this.ast.id];
+            let fn = (vmdom:any)=>{
+                if(vmdom && vmdom.form){
+                    vmdom.setState({
+                        rules:[],
+                        // id:null
+                    })
+                }else if(vmdom && vmdom.ast.children.length>0){
+                    for(let i = 0,len = vmdom.ast.children.length;i<len;i++){
+                        fn(vmdom.ast.children[i].vmdom)
+                    }    
+                }
+            }
+            fn(this.ast.vmdom);
             let parent = this.ast.parent;
             if(parent) {
                 let parentChildren = parent.children;
@@ -711,6 +762,17 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                     if(index > -1) {
                         parentChildren.splice(index, 1);
                     }
+                }
+            }
+        }else{//原生dom（未经过框架渲染） jq方法remove
+            let jqArr = G.G$(this).find('.ant-form-item-children span').children();
+            for(let i=0;i<jqArr.length;i++){
+                let gdom:any = G.$(jqArr[i]);
+                if(gdom.length>0 && gdom.form){
+                    gdom.setState({
+                        rules:[],
+                        // id: null
+                    })
                 }
             }
         }
@@ -1010,11 +1072,26 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
         }
     }
 
-    doRender(callback?:Function) {
+    doRender(callback?:Function) { 
         if(this.ast) {
+            // let children = G.G$(this.realDom).html();
+            // children = children.replace(/&gt;/g,">").replace(/&lt;/g,"<");
+            // G.G$(this.realDom).html(children);
+            // G.render({
+            //     el: this.realDom,
+            //     mounted: ()=>{
+            //         window.G.parsed = true;
+            //         //渲染结束后执行排队中的function
+            //         window.G.doWaitFuns();
+            //         if(callback){
+            //             callback()
+            //         } 
+            //     }
+            // });
+            // 
             //当前的ast对象存在，需要更新对应的节点的父节点。
             let html = this.ast.html();
-            if(html) {
+            if(html && html.html()) {
                 let parser = new Parser();
                 let astMsg: ParseResult  = parser.parse(html.html());
                 let asts = astMsg.ast.children;
@@ -1026,13 +1103,42 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 this.setState({
                     children
                 },() => {
+                    if(callback){
+                        callback()
+                    } 
+                });
+            }else{//支持jQuery append 后手动doRender渲染
+                let children = G.G$(this.realDom).html();
+                children = children.replace(/&gt;/g,">").replace(/&lt;/g,"<");
+                G.G$(this.realDom).html(children);
+                G.render({
+                    el: this.realDom,
+                    mounted: ()=>{
+                        window.G.parsed = true;
+                        //渲染结束后执行排队中的function
+                        window.G.doWaitFuns();
+                        if(callback){
+                            callback()
+                        } 
+                    }
                 });
             }
         }else {
             //如果ast对象不存在，则代表当前节点是新加入的节点，需要从父节点开始渲染
             let parent = this.realDom.parentElement;
             if(parent) {
-                G.$(parent).doRender(callback);
+                if(G.$(parent).length>0){
+                    G.$(parent).doRender(callback);
+                }else{
+                    G.render({
+                        el: this.realDom,
+                        mounted: ()=>{
+                            window.G.parsed = true;
+                            //渲染结束后执行排队中的function
+                            window.G.doWaitFuns();
+                        }
+                    });
+                }
             }else {
                 G.render({
                     el: document.body,
@@ -1040,6 +1146,9 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                         window.G.parsed = true;
                         //渲染结束后执行排队中的function
                         window.G.doWaitFuns();
+                        if(callback){
+                            callback()
+                        } 
                     }
                 });
             }

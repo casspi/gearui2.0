@@ -369,6 +369,10 @@ export default class HtmlParser {
 
     // 解析属性值
     private parseAttributeValue(name:string,value:string, typeConstractor?: any,htmlTag?: boolean){
+        // if(name=="value"){
+        //     console.log(value);
+        //     debugger
+        // }
         // 解析value中的表达式 G{xxx} ，对表达式中的函数或变量进行解析处理
         value = value.replace(/\G\{([^\}]+)\}/g,function(match,m1){
             // 获得表达式，如果表达式是以“();”结尾的，去除之
@@ -443,10 +447,9 @@ export default class HtmlParser {
         }else {
             // let type = typeConstractor;
             let type = this.getAttributeValueType(name,value)
-            // if(name=='value'){
-            //     console.log(type)
-            //     // type = 'object'
-            // }
+            if(value.indexOf('::')>-1){
+                value = value.split('::')[0];
+            }
             //回调函数
             try {
                 if(type == 'function') {//|| type.indexOf("_g_function")>-1

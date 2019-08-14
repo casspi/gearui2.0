@@ -108,14 +108,10 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             onChange: (value:any) => {
                 value = value||[];
                 let oldValue = this.getValue();
-                this.setValue(
-                    value
-                );
-                // if(this.props.onchange) {
-                //     this.props.onchange.call(this);
-                // }
-                this._onChange();
-                this.doEvent("change",value,oldValue);
+                this.setValue(value, ()=>{
+                    this._onChange();
+                    this.doEvent("change",value,oldValue);
+                });
                 this.triggerChange({value});
                 this.clearChild();
             },
@@ -126,16 +122,23 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
                 }
                 let oldValue = this.getValue();
                 if(value != oldValue) {
-                    this.select(value);
+                    this.select(value,()=>{
+                        this._onSelect();
+                        let label = this.getTextByValue(value);
+                        this.doEvent("select",{value,label});
+                    });
+                }else {
+                    this._onSelect();
+                    let label = this.getTextByValue(value);
+                    this.doEvent("select",{value,label});
                 }
-                this._onSelect();
-                let label = this.getTextByValue(value);
-                this.doEvent("select",{value,label});
+
             },
             onDeselect: (value:any) => {
-                this.unselect(value);
-                this._onUnselect();
-                this.doEvent("unSelect",value);
+                this.unselect(value,()=>{
+                    this._onUnselect();
+                    this.doEvent("unSelect",value);
+                });
             },
             onBlur: () => {
                 this._onHidePanel();
@@ -228,13 +231,17 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
     }
 
    // 选择
-   select(value:any) {
+   select(value:any, fun?: any) {
         this.triggerChange(value);
-        this.setState({value:value});
+        this.setState({value:value},()=>{
+            if(fun) {
+                fun();
+            }
+        });
     }
 
     // 取消选择
-    unselect(value:any) {
+    unselect(value:any,fun?: any) {
         if(this.props.mode == "tags" || this.props.mode == "multiple" || this.props.multiple == true) {
             let valued:any = this.getValue();
             if(valued instanceof Array) {
@@ -244,9 +251,9 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             }else {
                 valued = [];
             }
-            this.setValue(valued);
+            this.setValue(valued,fun);
         }else {
-            this.setValue(null);
+            this.setValue(null,fun);
         }
     }
 
@@ -868,17 +875,6 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         return text;
     }
 
-    disable() {
-        this.setState({
-            disabled: true
-        });
-    }
-
-    enable() {
-        this.setState({
-            disabled: false
-        });
-    }
 
     onBeforeSelect(fun:Function) {
         if(fun && G.G$.isFunction(fun)) {

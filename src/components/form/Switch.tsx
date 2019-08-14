@@ -211,20 +211,6 @@ export default class Switch<P extends typeof props,S extends state> extends Form
         this._readonly = readonly || true;
     }
 
-    //禁用
-    disable() {
-        this.setState({
-            disabled: true
-        });
-    }
-
-    //启用
-    enable() {
-        this.setState({
-            disabled: false
-        });
-    }    
-
     //是否选中
     isChecked(){
         return this.state.checked || false;

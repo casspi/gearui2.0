@@ -287,6 +287,10 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         G.$("#" + this.warpDivId).remove();
         this.setState({
             destory: true
+        },()=>{
+            if(window['_dialogAfterClose'] && G.G$.isFunction(window['_dialogAfterClose'])){
+                window['_dialogAfterClose'](this)
+            }
         });
         delete window._dialog[this.props.id];
     }
@@ -314,6 +318,9 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
     // }
 
     afterRender() {
+        if(window['_dialogAfterShow'] && G.G$.isFunction(window['_dialogAfterShow'])){
+            window['_dialogAfterShow'](this)
+        }
         if(this.state.dragable) this.dragEvent();//绑定拖拽事件
         this.getChildren()
     }    
@@ -551,6 +558,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
         // 为对话框分配一个ID
         let id:string = param.id || UUID.get();
         let props: any = G.G$.extend({},param,{
+            id:id,
             loadType:param.loadType || 'iframe'
         });
         if(props.controlBar == false) {

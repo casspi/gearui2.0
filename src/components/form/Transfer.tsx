@@ -592,20 +592,6 @@ export default class Transfer<P extends (typeof props) & AntdTransferProps,S ext
         return texts;        
     }
 
-    //禁用
-    disable() {
-        this.setState({
-            disabled: true
-        });
-    }
-
-    //启用
-    enable() {
-        this.setState({
-            disabled: false
-        });
-    }
-    
     onLeftTreeCheck(fun:Function){
         if(fun && G.G$.isFunction(fun)) {
             this.bind("leftTreeCheck",fun);

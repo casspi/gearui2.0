@@ -92,6 +92,7 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
         </AntdTooltip>
         :<AntdPagination {...props}></AntdPagination>;
     }
+
     getPageSize() {
         return this.state.pageSize ||10;
     }
@@ -106,6 +107,12 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
     timer:any;
     protected _onChange(page: string, pageSize: string) {
         let ret = this.doEvent("beforeChange",page,pageSize);
+        if(ret && ret instanceof Array){
+            for(var i=0;i<ret.length;i++){
+                if(ret[i]==false)
+                    return;
+            }
+        }
         if(this.props.showJumpertips!==false&&this.props.showQuickJumper!==false){
             let total:any=this.state.total;
             let value:any = G.G$(this.realDom).find('.ant-pagination-options-quick-jumper input').val();
@@ -120,12 +127,6 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
                         })
                     },3500)
                 })
-            }
-        }
-        if(ret && ret instanceof Array){
-            for(var i=0;i<ret.length;i++){
-                if(ret[i]==false)
-                    return;
             }
         }
         this.setState({

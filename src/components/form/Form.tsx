@@ -18,6 +18,7 @@ import Http, { methods } from '../../utils/http';
 import * as Hidden from './Hidden';
 import { Label } from "../data";
 import LengthValidator from '../../validator/lengthValidator';
+import moment from "moment";
 export var props = {
     //是否验证隐藏控件，在validator中使用
     validateHidden: GearType.Boolean,
@@ -57,17 +58,14 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     private addedOtherParam = false;
     private addedParam = false;
-
+    
+    fieldsname:any[] = []
     noSubmitArr?:any[] = [];
 
     constructor(props: P, context: {}) {
         super(props, context);
     }
-
-    afterReceiveProps(nextProps: P) {
-        return {};
-    }
-
+    
     getInitialState(): state {
         
         return {
@@ -101,8 +99,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
 
     private getChildren() {
         let children:any = this.props.children;
-        // children.push(<div className={"hidden-warp"} key="hidden-warp">{this.state.hiddenValue}</div>)
-        // console.log(children)
         let methodParam = this.getMethodParam();
         if(methodParam != null) {
             if(children instanceof Array) {
@@ -116,7 +112,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
         
     render() {
-        console.log('from-------render')
+        // console.log('from-------render')
         let props:any = this.getProps();
         delete props.otherParams;
         delete props.formTagStates;
@@ -291,22 +287,26 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         //先删除所有的隐藏域
         this.removeAllHiddens(true);
         //获取当前修改过的字段的数据---暂时未实现
-        let values: any = this.props.form.getFieldsValue();
+        let values: any = this.props.form.getFieldsValue(this.fieldsname);
+        // let t1 = moment().format('X');
+        // console.log('隐藏域开始：'+t1)
+        // let count = 0;
         for(let key in values) {
-            // console.log(G.$('#'+key))
+            // count++
+            // let t11 = moment().format('X');
+            // console.log('获取一个组件开始：'+t11)
             let gearObjs = G.$("#" + key)//G.$("[name='" + key + "']");
             if((gearObjs.length == null || gearObjs.length <=0 || gearObjs.eq == null) && !(gearObjs instanceof Tag.default)) {
-                //gearObjs = gearObjs.parent()
                 gearObjs = G.$("[name='" + key + "']");
                 if((gearObjs.length == null || gearObjs.length <=0 || gearObjs.eq == null) && !(gearObjs instanceof Tag.default)) {
                     gearObjs = gearObjs.parent();
                 }
             } 
+            
             if(gearObjs.length && gearObjs.length > 1 && gearObjs.eq) {
                 for(let i=0; i < gearObjs.length; i++) {
                     let gearObj = gearObjs.eq(i);
                     if(!(gearObj instanceof Tag.default)) {
-                        //gearObjs = gearObjs.parent()
                         gearObj = G.$("[name='" + key + "']");
                         if(!(gearObj instanceof Tag.default)) {
                             gearObj = gearObj.parent();
@@ -317,12 +317,19 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             }else {
                 this.addParamsValueFormat(gearObjs[0], values, key);
             }
+            // let t21 = moment().format('X');
+            // console.log('获取一个组件结束：'+t21)
+            // console.log('获取一个组件用时:'+(t21-t11))
         }
+        // let t2 = moment().format('X');
+        // console.log('隐藏域结束：'+t2)
+        // console.log('添加隐藏域用时:'+(t2-t1));
+        // console.log(count)
     }
 
     private addParamsValueFormat(gearObj: any, values: any, key: any) {
+        
         // text、number、file控件，直接使用自身传值
-        // if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default)){
         if(gearObj instanceof Tag.default && !(gearObj instanceof Text.default || gearObj instanceof Hidden.default || gearObj instanceof Number.default || gearObj instanceof File.default || gearObj instanceof Label.default|| gearObj instanceof Time.default ||  gearObj instanceof Radio.default || gearObj instanceof Textarea.default)){
         
             let name = gearObj.props.name || gearObj.props.id;
@@ -340,6 +347,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 }else{
                     this.addHiddenValue(name,value, true);
                 }
+               
             }
         }
     }
@@ -522,26 +530,23 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     //     return true;
     // }
     validate():boolean {
+        // let t1 = moment().format('X')
+        // console.log(t1)
         let values = this.props.form.getFieldsValue();
         let fieldsname:any[] = [];
         for( let key in values){
             fieldsname.push(key)
         }
+        // console.log(fieldsname)
         let noSubmitArr:any = this.noSubmitArr;
-        //过滤不需提交的
+        // console.log(noSubmitArr)
+        // //过滤不需提交的
         if(noSubmitArr.length > 0){
             for (let i=0;i<noSubmitArr.length;i++){
-                fieldsname = fieldsname.filter(o=>o!=noSubmitArr[i])
+                fieldsname = fieldsname.filter(o=>o!=noSubmitArr[i]);
             }
         }
-        // for(let i=0;i<fieldsname.length;i++){
-            //过滤掉被删除的 remove掉的
-            fieldsname = fieldsname.filter((o:any)=>{
-                if(G.$("#"+o) instanceof Tag.default){
-                    return o
-                }
-            })
-        // }
+        this.fieldsname = fieldsname;
         let result = false;
         if(this.state.validate == true) {
             this.props.form.validateFieldsAndScroll(fieldsname.length>0?fieldsname:[],{force:true},(err, values) => {
@@ -558,8 +563,14 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                     }
                 }
             });
+            // let t2 = moment().format('X')
+            // console.log(t2)
+            // console.log((t2-t1))
             return result;
         }
+        // let t2 = moment().format('X')
+        // console.log(t2)
+        // console.log(t2-t1)
         return true;
     }
 
@@ -589,7 +600,6 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
                 // 如果param是对象，则从对象中获取callback属性
                 callback = param.callback;
         }
-        // console.log(this.props.form.getFieldsValue())
         let validResult = this.validate();
         if(validResult == true) {
             let bsub:any = this.doEvent("beforeSubmit");
@@ -777,6 +787,8 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     
     //获取所有的条件
     getParamsAsFormData() {
+        // let T1 = moment().format('X')
+        // console.log(T1)
         this.addParams();
         this.addOtherParams();
         let formData: FormData|undefined;
@@ -788,6 +800,9 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         }else {
             formData = this.serializeArray();
         }
+        // let T2 = moment().format('X')
+        // console.log(T2)
+        // console.log("获取formData 用时："+(T2-T1))
         return formData;
     }
 

@@ -293,13 +293,25 @@ export default class Tag<P extends typeof props, S extends state> extends Jquery
     }
 
     //禁止选择
-    disable() {
-        this.setState({ disabled: true });
+    disable(callback?:Function) {
+        this.setState({ 
+            disabled: true 
+        },()=>{
+            if(callback){
+                callback()
+            }
+        });
     }
 
     //开放选择
-    enable() {
-        this.setState({ disabled: false });
+    enable(callback?:Function) {
+        this.setState({ 
+            disabled: false 
+        },()=>{
+            if(callback){
+                callback()
+            }
+        });
     }
 
     isEnable() {

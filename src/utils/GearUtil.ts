@@ -624,7 +624,7 @@ export default class GearUtil {
                 }
             }
         }
-        debugger
+        // debugger
         if(!props["id"]){
             props["id"] = UUID.get();
         }

@@ -61,6 +61,7 @@ export default class File<P extends typeof props, S extends state> extends FormT
         delete state.invalidType;
         delete state.labelText;
         delete state.validation;
+        delete state.validateTempId
         let inputProps:any = this.getInputProps();
         let fileProps:any = this.getFileInputProps();
         if(this.form){
@@ -84,12 +85,7 @@ export default class File<P extends typeof props, S extends state> extends FormT
         return this.state.value;
     }
 
-    //禁用
-    disable() {
-        this.setState({
-            disabled: true
-        });
-    }
+    
     onChange(fun:Function){
         if(fun && G.G$.isFunction(fun)) {
             this.bind("change",fun);
@@ -97,12 +93,7 @@ export default class File<P extends typeof props, S extends state> extends FormT
             this.find("input").change();
         }     
     }
-    //启用
-    enable() {
-        this.setState({
-            disabled: false
-        });
-    } 
+    
     
     // 清除选中值
     clear(){

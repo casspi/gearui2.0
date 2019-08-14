@@ -1,7 +1,6 @@
 import { Tag as AntdTag} from 'antd';
 import * as React from 'react';
 import * as FormTag from './FormTag';
-import UUID from '../../utils/uuid';
 
 export var props = {
     ...FormTag.props,

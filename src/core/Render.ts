@@ -55,13 +55,21 @@ export default class Render {
             // let render_render_end = time44.getTime();
             // console.log('render_renderstart:'+render_render_end)
             // console.log('render_render-count:'+(render_render_end-render_render_start));
+            let vmdoms: any = [];
+            console.log(asts);
+            for(let i = 0;i < asts.length; i++) {
+                let ast = asts[i];
+                if(ast && ast.vmdom) {
+                    vmdoms.push(ast.vmdom);
+                }
+            }
             if(callback) {
                 let childrenTags: any = [];
                 let children = G.G$(parent).children();
                 children.each((index, ele)=>{
                     childrenTags.push(G.$(ele));
                 });
-                callback.call(window, childrenTags);
+                callback.call(window, childrenTags, vmdoms);
             }
         });
         
