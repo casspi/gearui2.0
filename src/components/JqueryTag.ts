@@ -196,6 +196,24 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 let parser = new Parser();
                 let astMsg: ParseResult  = parser.parse.call(parser, ...args, true);
                 let html = G.G$(astMsg.cacheHtml).html();
+                if(html && html.match(/<style[^>]*>(.*?)<\/style>/g)){
+                    let matchRes = html.match(/<style[^>]*>(.*?)<\/style>/g);
+                    if(matchRes && matchRes.length>0){
+                        for(let i=0;i<matchRes.length;i++){
+                            var style = document.createElement("style");
+                            style.type = "text/css";
+                            try{
+                            　　style.appendChild(document.createTextNode(matchRes[i].replace(/<style[^>]*>/g,"").replace(/<\/style>/g,"")));
+        
+                            }catch(ex){
+                            　　style.styleSheet.cssText = matchRes[i].replace(/<style[^>]*>/g,"").replace(/<\/style>/g,"");//针对IE
+        
+                            }
+                            var head = document.getElementsByTagName("head")[0];
+                            head.appendChild(style);
+                        }
+                    }
+                }
                 let cacheHtmlElement = G.G$(G.cacheHtml);
                 let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.data('vmdom').ast.id+"']");
                 cacheElement.append(html);
