@@ -190,7 +190,6 @@ export default class GUpload<P extends typeof props,S extends state> extends For
 
     makeJsx () {
         let props = this.getUploadProps();
-        console.log(props.action)
         let wProps:any = this.getProps();
         return<LocaleProvider locale={zhCN}>
                 <Wrapper {...wProps}>

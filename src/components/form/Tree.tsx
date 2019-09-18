@@ -6,6 +6,7 @@ import { TreeProps as AntdTreeProps, AntTreeNode } from 'antd/lib/tree';
 import { Http, UUID } from '../../utils';
 import { methods } from '../../utils/http';
 import DicUtil from '../../utils/DicUtil';
+import Combotree from './Combotree';
 const AntdTreeNodeJsx = AntdTree.TreeNode;
 export var props = {
     ...FormTag.props,
@@ -104,6 +105,7 @@ export interface TreeNode {
     collapse:Function;
     expand:Function;
     label: string;
+    setDisabled: Function;
 }
 export default class Tree<P extends (typeof props) & AntdTreeProps, S extends state & AntdTreeProps> extends FormTag.default<P, S> {
 
@@ -386,6 +388,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 }
                 this.doEvent("collapse",ele);
             };
+
             // 为了让后台可以控制是否叶子节点，这里将“ele.children.length == 0”这个判断去除
             if(ele.children == null) {
                 ele.isLeaf = true;
@@ -393,6 +396,24 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 ele.isLeaf = false;
             }
 
+            //特殊需求，多选时父节点选中时不可选中子节点
+            if(this.props['childDisable']===true){
+                if(ele && ele.checked){
+                    if(ele.children && ele.children.length>0){
+                        ele.children.map((childEle:any)=>{
+                            childEle.disabled = true;
+                            childEle.disableCheckbox = true;
+                        })
+                    }
+                }else{
+                    if(ele.children && ele.children.length>0){
+                        ele.children.map((childEle:any)=>{
+                            childEle.disabled = false;
+                            childEle.disableCheckbox = false;
+                        })
+                    }
+                }
+            }
             let disabled = ele.disabled;
             let disableCheckbox = ele.disableCheckbox;
             let children = ele.children;
@@ -453,7 +474,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             /** 点击复选框触发 */
             onCheck: (checkedKeys: Array<string>, e: any) => {
                 let node = e.node.props.nodeEle;
-                let eventRe = this.doEvent("beforeSelect");
+                let eventRe = this.doEvent("beforeSelect",node);
                 if(eventRe instanceof Array && eventRe[0] == false) {
                     return;
                 }
@@ -478,7 +499,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
             /** 点击树节点触发 */
             onSelect: (selected: Array<string>, e: any) => {
                 let node = e.node.props.nodeEle;
-                this._triggerOnSelect(node,e);            
+                this._triggerOnSelect(node,e);
             },
             /** filter some AntTreeNodes as you need. it should return true */
             filterAntTreeNode: (node: AntTreeNode) => {
@@ -1205,9 +1226,15 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         });
         return nodes;
     }
+    
     getDataById(id: any) {
         return this.getNode(id);
     }
+
+    getData(id: any) {
+        return this.getNode(id);
+    }
+
     getRoot() {
         return this.state.options[0];
     }
@@ -1269,7 +1296,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         }
         return re;
     }
-    select(id: any) {
+    select(id: any,callBack?:Function) {
         var node = this.getNode(id);
         if(node)
             node.select();
@@ -1636,9 +1663,11 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         if(rebe == false) {
             return;
         }
-        let re = this.doEvent("beforeSelect");
-        if(re instanceof Array && re[0] == false) {
-            return;
+        if(!(this instanceof Combotree)){
+            let re = this.doEvent("beforeSelect",node);
+            if(re instanceof Array && re[0] == false) {
+                return;
+            }
         }
         if(e){
             if(e.selected == true) {
@@ -1649,7 +1678,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         this.doEvent("select",node);
         Tree.onSelect.call(this,node);
         //根据关联关系，更新父子数据
-        this.updateReftree()
+        this.updateReftree();
     }
 
     // 在选中节点之前触发

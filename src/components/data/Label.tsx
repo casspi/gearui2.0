@@ -73,6 +73,9 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
                 };
                 return <span {...props}><Icon.default {...iconProps}/><span key="text" dangerouslySetInnerHTML={{__html:value}}></span></span>;
             }else
+                if(this.props.children){
+                    return <span key="text" {...props}>{value}</span>
+                }
                 return <span key="text" {...props} dangerouslySetInnerHTML={{__html:value}}></span>;
         }else{//显示html字符串
             value = [value]

@@ -1,4 +1,5 @@
 import * as Tag from "../Tag";
+import * as Formtag from "../form/FormTag";
 import * as Text from "../form/Text";
 import * as Number from "../form/Number";
 import * as File from "../form/File";
@@ -273,8 +274,10 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
             this.props.form.resetFields();
             for(let key in fields) {
                 let gearEle = G.$("#" + key);
-                if(gearEle instanceof Tag.default) {
+                if(gearEle instanceof Formtag.default) {
+                    // console.log(gearEle.initValue)
                     gearEle.setState({
+                        value:gearEle.initValue,
                         validateTempId: UUID.get()
                     });
                 }

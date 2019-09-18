@@ -23,7 +23,9 @@ export var props = {
     showCheckedStrategy: GearType.Enum<'SHOW_ALL' | 'SHOW_PARENT' | 'SHOW_CHILD'>(),
     refid:GearType.String,
     //汉字转拼音字符集url
-    pinyinUrl:GearType.String
+    pinyinUrl:GearType.String,
+    //特殊需求，多选时父节点选中时不可选中子节点
+    childDisable:GearType.Boolean
 };
 export interface state extends Tree.state {
 
@@ -65,11 +67,25 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                         return;
                     }
                 }
-                this.doEvent("beforeSelect",node);
-                this.select(value);
+                let re = this.doEvent("beforeSelect",node);
+                if(re instanceof Array && re[0] == false) {
+                    return;
+                }
+                this.select(value,()=>{
+                     //特殊需求，多选时父节点选中时，不可选中子节点
+                    if(this.props.childDisable===true && node && node.children && node.children.length>0){
+                        node.children.map((childEle:any)=>{
+                            if(childEle.id){
+                                this.unSelect(childEle.id);
+                            }
+                        })
+                    }
+                });
                 this._onSelect(node);
                 Tree.default.onSelect.call(this,node);
                 this.doEvent("select",node);
+
+               
             },
             onChange: (value: any, label: any) => {
                 if(this.props.multiple != true && value != null && value != "") {
@@ -87,7 +103,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                 // 当前值
                 let oldValue = this.getValue();
                 if(value != null) {
-                    this._onChange(value);
+                    this._onChange(value,oldValue);
                     Combotree.onChange.call(this,value,oldValue);
                 }else {
                     if(this.childTree instanceof Tree.default) {
@@ -98,9 +114,11 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                     }
                     this.setState({
                         value: undefined
+                    },()=>{
+                        this.doEvent("change",value,oldValue);
                     });
                 }
-                this.doEvent("change",value,oldValue);
+                
                 this.triggerChange(value);
             },
             onSearch: (value: any) => {
@@ -295,7 +313,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         return text;
     }
     
-    select(id: any) {
+    select(id: any,callBack:Function) {
         super.select(id);
         let valueOld: any = [];
         if(this.props.multiple) {
@@ -309,7 +327,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                 valueOld.push(id);
             }
         }
-        this.setValue(valueOld);
+        this.setValue(valueOld,callBack);
     }
 
     unSelect(id: any) {
@@ -330,9 +348,11 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         this.setValue(valueOld);
     }
 
-    protected _onChange(value: any) {
+    protected _onChange(value: any,oldValue:any) {
         this.setState({
             value: value
+        },()=>{
+            this.doEvent("change",value,oldValue);
         });
     };
     onChange(fun:Function) {
@@ -377,5 +397,5 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             this.setValue(this.props.value)
         }
     }
-    
+
 }

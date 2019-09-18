@@ -217,6 +217,17 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 let cacheHtmlElement = G.G$(G.cacheHtml);
                 let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.data('vmdom').ast.id+"']");
                 cacheElement.append(html);
+                
+                //插入脚本
+                let jsReg = new RegExp(/<script.*?>([\s\S]+?)<\/script>/img);
+                // console.log(jsReg)
+                let scriptCode = '';
+                html.replace(jsReg,function(str:any,js:any){
+                    scriptCode=str;
+                    return scriptCode
+                })
+                scriptCode = scriptCode.replace(/<script.*?>/,"").replace('</script>',"")
+
                 G.cacheHtml = cacheHtmlElement.prop("outerHTML");
                 let asts = astMsg.ast.children;
                 let children: any = this.data('vmdom').tempChildren || this.data('vmdom').state.children;
@@ -233,6 +244,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                     children
                 },() => {
                     this.data('vmdom').tempChildren = null;
+                    eval(scriptCode);
                 });
             }else {
                 let jdom = G.G$(this.realDom);

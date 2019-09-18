@@ -9,9 +9,6 @@ export interface state extends FormTag.state {
 };
 export default class Hidden<P extends typeof props & InputProps, S extends (state & InputProps)> extends FormTag.default<P, S> {
 
-    constructor(props: P, context: {}) {
-        super(props, context);
-    }
 
     getInitialState():state & InputProps {
         return {

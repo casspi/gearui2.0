@@ -27,6 +27,7 @@ export var props = {
     defaultExpandAllRows:GearType.Boolean,
     sequenceWidth:GearType.Any,//排序列宽度,
     showHeader:GearType.Boolean,//是否显示表头
+    checkAllTitle:GearType.String,//全选框提示语
 };
 
 export interface state extends Tag.state, TableProps<any> {
@@ -433,7 +434,6 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             columns: this.getColumnsFromState(),
             pagination: this.state.pagination,
             expandedRowRender: this.haveEvent("expandedrow")?(record: any)=>{
-                console.log('expandedRowRender')
                 this._expandRecord = record;
                 if(this.expandedRowCached[record.key] == null){
                     let re = this.doEvent("expandedrow",record);
@@ -850,6 +850,12 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             if(uColums[i].dataIndex){
                 this.defaultRecord[uColums[i].dataIndex] = null;
             }
+        }
+        //给全选按钮增加提示语
+        let checkAllLabel = this.find('.ant-table-thead .ant-checkbox-wrapper');
+        let checkAllTitle = this.props.checkAllTitle ? this.props.checkAllTitle:'符合查询条件的所有数据'
+        if(checkAllLabel.length>0){
+            checkAllLabel.attr('title',checkAllTitle)
         }
     }
 

@@ -296,7 +296,7 @@ export default class Validator {
             let v:Validator = validatorsArray[i];
             if(v.validator){
                 let vfun = v.validator;
-                let form: any = props.form;
+                let form: any = clazz.form;
                 if(form){
                     // 根据表单上的设置来处理，默认设置为不验证隐藏的控件
                     let validateHidden = form.validateHidden();

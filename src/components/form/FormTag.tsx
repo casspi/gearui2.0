@@ -64,11 +64,10 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     protected cannotUpdate:GearArray<keyof S> = new GearArray<keyof state>(["name","id"]);
     protected form: Form.Form<typeof Form.props & FormComponentProps, Form.state>;
-    protected initValue=this.state.value;
+    public initValue=this.state.value;
     // protected itemId = (this.props.id || UUID.get()) + "_item-id"
     constructor(props:any, context: {}){
-        super(props);
-        this.setForm(this.ast);
+        super(props, context);
     }
 
     private setForm(ast: ASTElement) {
@@ -125,6 +124,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
     getInitialState(): state {
         let props = G.G$.extend({},this.props)
+        this.setForm(this.ast);//2019-09-17 调整到此处调用 保证下面可以获取到form
         return {
             rules: Validator.getValidators(props,this),
             validation: this.props.validation!=false,
