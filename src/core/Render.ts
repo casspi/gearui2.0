@@ -56,7 +56,7 @@ export default class Render {
             // console.log('render_renderstart:'+render_render_end)
             // console.log('render_render-count:'+(render_render_end-render_render_start));
             let vmdoms: any = [];
-            console.log(asts);
+            // console.log(asts);
             for(let i = 0;i < asts.length; i++) {
                 let ast = asts[i];
                 if(ast && ast.vmdom) {

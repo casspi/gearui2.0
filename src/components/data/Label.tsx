@@ -71,9 +71,12 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
                     key:"icon",
                     type: this.state.icon,
                 };
+                if(this.props.children && this.state.format != 'richtext'){//富文本情况下value是string，不为react dom
+                    return <span {...props}><Icon.default {...iconProps}/><span key="text">{value}</span></span>;
+                }
                 return <span {...props}><Icon.default {...iconProps}/><span key="text" dangerouslySetInnerHTML={{__html:value}}></span></span>;
             }else
-                if(this.props.children){
+                if(this.props.children && this.state.format != 'richtext'){//富文本情况下value是string，不为react dom
                     return <span key="text" {...props}>{value}</span>
                 }
                 return <span key="text" {...props} dangerouslySetInnerHTML={{__html:value}}></span>;

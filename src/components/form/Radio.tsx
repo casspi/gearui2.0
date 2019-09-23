@@ -196,8 +196,8 @@ export default class Radio<P extends typeof props &  RadioProps,S extends state 
     }
 
     // 取消选中
-    unChecked(){
-        this.setValue("");
+    unChecked(callback?:Function){
+        this.setValue("",callback);
     }
 
     //获取值
@@ -230,9 +230,13 @@ export default class Radio<P extends typeof props &  RadioProps,S extends state 
     // }    
 
     //赋值
-    setValue(val:any) {
+    setValue(val:any,callback?:Function) {
         this.triggerChange(val);
-        this.setState({ value: val });
+        this.setState({ value: val },()=>{
+            if(callback){
+                callback()
+            }
+        });
     } 
 
     focus(...args:any[]) { 

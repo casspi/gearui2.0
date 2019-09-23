@@ -325,9 +325,6 @@ export default class HtmlParser {
                 // let type = this.getAttributeValueType(name,valueNew);
                 name = window.getPossibleStandardTagName(args[1]);
                 valueNew = this.parseAttributeValue(name, valueNew);
-                if(name==='url'){
-                    console.log(valueNew)
-                }
             }else {
                 name = window.getPossibleStandardName(args[1]);
                 valueNew = this.formatDomProperties(name, valueNew);
@@ -372,10 +369,6 @@ export default class HtmlParser {
 
     // 解析属性值
     private parseAttributeValue(name:string,value:string, typeConstractor?: any,htmlTag?: boolean){
-        if(name=="url"){
-            console.log(value);
-            debugger
-        }
         // 解析value中的表达式 G{xxx} ，对表达式中的函数或变量进行解析处理
         value = value.replace(/\G\{([^\}]+)\}/g,function(match,m1){
             // 获得表达式，如果表达式是以“();”结尾的，去除之
@@ -465,8 +458,12 @@ export default class HtmlParser {
                         let valueInner = values[i];
                         let methodName = valueInner.replace(/\([\.|$|\w]{0,}\);?/,"");
                         methodName = methodName.replace(/^javascript:/,"")//防止老版中，如：link属性也会有javascript:fun()写法
-                        if(methodName != 'alert' &&window[methodName] && window[methodName] instanceof Function) {
-                            funs.push(window[methodName]);
+                        if(window[methodName] && window[methodName] instanceof Function) {
+                            if(methodName === 'alert'){//alert()特殊处理
+                                funs.push(valueInner)
+                            }else{
+                                funs.push(window[methodName]);
+                            }
                         }
                     }
                     if(funs.length == 1) {

@@ -374,7 +374,6 @@ export default class G {
             let finded = false;
             let doms:JQuery<HTMLElement>|undefined = undefined;
             let vmdoms = this.findVmDomFromCacheAst(selector, (html instanceof JqueryTag) ? html : undefined);
-            // debugger
             // console.log(vmdoms)
             if(vmdoms.length > 0) {
                 if(vmdoms[0] == -1) {

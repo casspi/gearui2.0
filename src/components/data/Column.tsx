@@ -7,7 +7,6 @@ import * as Date from '../form/Date';
 import * as Datetime from '../form/Datetime';
 import * as Combotree from '../form/Combotree';
 import { UUID, ObjectUtil } from '../../utils';
-import * as Tag from '../Tag'
 export interface TableColumns {
     //字段名称
     name: string;
@@ -118,6 +117,7 @@ export default class Column<T> {
             this.index = index;
             this.rowSpan = props.rowSpan;
             this.ref = props.name;
+            this.align = props.align || "left";
             if(props.fixed) {
                 this.fixed = props.fixed;
             }

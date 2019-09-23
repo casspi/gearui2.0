@@ -134,6 +134,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
 
     render() {
+        console.log(this.props.id)
         let props = this.getProps();
         let reactEle = this.reactEle;
         console.log("cell ---------------render")

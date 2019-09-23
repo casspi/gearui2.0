@@ -462,7 +462,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 this.match(this.props.value);
             }
         };
-        if(typeof this.props.value == "object"){
+        if(Object.prototype.toString.call(this.props.value) === "[object Object]"){
             this.setState({
                 options:[{value:this.props.value.value,text:this.props.value.text}],
                 searchOptions:[{value:this.props.value.value,text:this.props.value.text}]
@@ -495,9 +495,9 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         delete inputProps.labelText;
         delete inputProps.validateTempId;
         if(this.state.controlType == "textarea") {
-            input = <AntdTextArea {...textareaProps}></AntdTextArea>;
+            input = <AntdTextArea key="textarea" {...textareaProps}></AntdTextArea>;
         }else {
-            input= <AntdInput {...inputProps}></AntdInput>;
+            input= <AntdInput key="input" {...inputProps}></AntdInput>;
         }
         let acprops = this.getAutoCompleteProps();  
         if(this.form){

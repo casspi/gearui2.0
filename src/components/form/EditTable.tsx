@@ -403,6 +403,7 @@ export default class EditTable<P extends typeof props & TableProps<any>, S exten
         if(this.doJudgementEvent("beforeSave")==false)
             return;
         let validated = this.validate();
+        console.log(validated)
         if(validated != true) {
             return;
         }

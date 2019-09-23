@@ -27,7 +27,6 @@ export default class Content<P extends typeof props, S extends state> extends Ta
     }
 
     render() {
-        // debugger
         return <div {...this.getProps()}>{this.state.children}</div>;
     }
 
