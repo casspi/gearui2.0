@@ -280,6 +280,7 @@ export default class InputTag<P extends typeof props, S extends state> extends F
         delete _props.invalidType;
         delete _props.labelText;
         delete _props.validation;
+        delete _props.validateTempId;
         if(this.form){
             delete _props.value
         }

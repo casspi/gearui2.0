@@ -134,10 +134,8 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
     }
 
     render() {
-        console.log(this.props.id)
         let props = this.getProps();
         let reactEle = this.reactEle;
-        console.log("cell ---------------render")
         let cellText:any = (reactEle && reactEle['props'] && reactEle['props'].ctype=="file" && props.showLink)?<a key="fileLink" download href={props.label || " "}  className={"cell-value"}>{props.label || " "}</a>:<span key="cellText" className={"cell-value"}>{props.label || " "}</span>;
         if(!(cellText instanceof Array)){
             cellText = [cellText]

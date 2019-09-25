@@ -87,7 +87,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     //当前展开的记录行
     private _expandRecord = null;
     protected defaultRecord = {};
-    
+  
     constructor(props:P, context?: {}){
         super(props, context)
     }

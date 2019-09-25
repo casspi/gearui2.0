@@ -18,7 +18,7 @@ export default class Int<P extends typeof props, S extends state> extends Number
                 value = parseFloat(value);
             }
         }else {
-            value = 0;
+            value = null;
         }
         let min:any = this.props.min;
         if(min && ObjectUtil.isInteger(min)) {
@@ -63,6 +63,18 @@ export default class Int<P extends typeof props, S extends state> extends Number
                     callback()
                 }
             });
+        }else if(typeof value === 'string'){
+            if(value===''){
+                this.setState({
+                    value:value
+                },()=>{
+                    this.triggerChange(value);
+                    if(callback){
+                        callback()
+                    }
+                });
+            }
+           
         }
     }
 }
