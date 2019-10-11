@@ -146,7 +146,21 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
         let jsStr = "";
         let jsReg = new RegExp(/<script.*?>([\s\S]+?)<\/script>/img);
         let htmlStr:any;
-        if(data.status !=null){
+        if(obj.props.dataType == "html"){
+            G.G$(obj.realDom).find('script').remove();           
+            data=data.data?data.data:data;
+            data.replace(jsReg,function(str:any,js:any){
+                jsStr=str
+            })
+            htmlStr =  data.replace(jsReg,"");
+            // let parser =new Parser();
+            // htmlStr = parser.parseToReactInstance(htmlStr)
+            obj.setState({
+                children: htmlStr
+            });
+            // G.G$(obj.realDom).children().append(jsStr)
+        }
+        if(data && data.status !=null){
             if(data.data) {
                 obj.setState({
                     children: data.data
@@ -156,19 +170,6 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
                     children: []
                 });
             }
-        }else if(obj.props.dataType == "html"){
-            G.G$(obj.realDom).find('script').remove();           
-            data=data.data?data.data:data;
-            data.replace(jsReg,function(str:any,js:any){
-                jsStr=str
-            })
-            htmlStr =  data.replace(jsReg,"");
-            let parser =new Parser();
-            htmlStr = parser.parseToReactInstance(htmlStr)
-            obj.setState({
-                children: htmlStr
-            });
-            G.G$(obj.realDom).children().append(jsStr)
         }else{
             obj.setState({
                 children: data
@@ -190,7 +191,11 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
     }
 
     render() {
-        return <AntdSpin spinning={this.state.loading} style={{"minHeight":"21px"}}><div ref={this.state.ref}>{this.state.children}</div></AntdSpin>;
+        if(this.props.dataType == 'html'){
+            return <AntdSpin spinning={this.state.loading} style={{"minHeight":"21px"}}><div ref={this.state.ref} dangerouslySetInnerHTML={{__html:this.state.children}}></div></AntdSpin>;
+        }else{
+            return <AntdSpin spinning={this.state.loading} style={{"minHeight":"21px"}}><div ref={this.state.ref}>{this.state.children}</div></AntdSpin>;
+        }
     }
 
     setLoading(loading?: boolean) {

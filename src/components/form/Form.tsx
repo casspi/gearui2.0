@@ -113,7 +113,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
         
     render() {
-        // console.log('from-------render')
+        console.log('from-------render')
         let props:any = this.getProps();
         delete props.otherParams;
         delete props.formTagStates;

@@ -35,6 +35,7 @@ import * as Text from './Text';
 import * as Url from './Url';
 import * as Select from './Select';
 import * as Color from './Color';
+import * as EditTable2 from './EditTable2';
 export {
 	Datetime,
 	EditTable,
@@ -73,4 +74,5 @@ export {
 	Url,
 	Select,
 	Color,
+	EditTable2,
 }

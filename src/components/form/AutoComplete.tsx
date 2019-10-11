@@ -450,7 +450,7 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                     let options = this.state.options;
                     if(options && options.length==1){
                         let option = options[0];
-                        this.setValue(option.value);
+                        this.setValue(option.value || option.text);
                     }else{
                         if(ObjectUtil.isEmpty(this.getValue())) {
                             this.clear();
@@ -604,6 +604,18 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             // 设置了格式化函数后设用该方法对当前的默认选项进行格式化
             this.setDefaultOptions();
         }
+    }
+
+    setUrl(url:string,callback?:Function){
+        this.setState({
+            value: "",
+            url
+        },()=>{
+            this.loadData(this.props.value)
+            if(callback){
+                callback()
+            }
+        })
     }
 
 }

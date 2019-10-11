@@ -112,7 +112,8 @@ export default class Number<P extends typeof props, S extends state> extends For
 
     protected _change(value: any) {
         let oldValue = this.getValue();
-        this.setValue(value);
-        this.doEvent("change", value, oldValue);
+        this.setValue(value,()=>{
+            this.doEvent("change", value, oldValue);
+        });
     }
 }
