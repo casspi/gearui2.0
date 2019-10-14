@@ -46,6 +46,7 @@
 						value: "zw"
 					}
 				];
+        // let DIC_AREA = [{"value":"110000","label":"北京市","properties":{},"children":[{"value":"110101","label":"东城区","properties":{}},{"value":"110102","label":"西城区","properties":{}},{"value":"110105","label":"朝阳区","properties":{}},{"value":"110106","label":"丰台区","properties":{}},{"value":"110107","label":"石景山区","properties":{}},{"value":"110108","label":"海淀区","properties":{}},{"value":"110109","label":"门头沟区","properties":{}},{"value":"110111","label":"房山区","properties":{}},{"value":"110112","label":"通州区","properties":{}},{"value":"110113","label":"顺义区","properties":{}},{"value":"110114","label":"昌平区","properties":{}},{"value":"110115","label":"大兴区","properties":{}},{"value":"110116","label":"怀柔区","properties":{}},{"value":"110117","label":"平谷区","properties":{}},{"value":"110228","label":"密云县","properties":{}},{"value":"110229","label":"延庆县","properties":{}}]}]
       function executeQuery(){
         // G("#se1").setValue('l2')
         // G("#d1").setValue(null)
@@ -99,6 +100,21 @@
     <title>React App</title>
   </head>
   <body>
+      <!-- <g-dialogaction dialogWidth="600" id="d11" dialogHeight="1200" url="./index.html">弹框</g-dialogaction>
+      <g-dialogaction dialogWidth="600"  dialogHeight="1200" url="./index.html">弹框</g-dialogaction> -->
+      <!-- <g-form> -->
+        <g-edittable2 id='edittable2' url="./datalist.json">
+          <div label="姓名" dataIndex="name" editctype="text" width="100">
+            <span class="" ctype="time"></span>
+          </div>
+          <div label="ID" dataIndex="id" editctype="text" width="100"></div>
+          <div label="标题" dataIndex="mobile" editctype="telephone" dictype="LEVEI" width="200"></div>
+        </g-edittable2>
+        <div>
+          <g-button onClick="G('#edittable2').addRow()">添加行</g-button>
+          <g-button onClick="G('#edittable2').delRow()">删除行</g-button>
+        </div>
+      <!-- </g-form> -->
     <!-- <div id="warpbox" >
       <div id="box1" draggable="true" style="width: 150px;height: 150px;background: #f77">"上网位置标签","value":"1"},{"label":"应用类型标签","value":"2"},{"</div>
       <div id="box2" style="width:150px;height: 150px;background: #f11"></div>
@@ -152,18 +168,20 @@
       <!-- <div style="width:990px" >
         <span total="100" pageSize="5" ctype="pagination"></span>
       </div> -->
-      <form ctype="form" invalidType="fixed" ajax="false" enterSubmit="true">
+      <!-- <form ctype="form" invalidType="fixed" ajax="false" enterSubmit="true">
         <div id="box1"></div>
         <div> 
             <span ctype="select" name="test" width="150"></span>
         </div>
-      </form>
+      </form> -->
       <form ctype="form" id="form1" style="">
-        <g-inputtag width="440" mustmacth="true" async="true" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA"></g-inputtag>
+        <g-autocomplete id="autocomplete111" width="300" name="autocomplete111" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" value="210000"  async="true" dictype="DIC_AREA"></g-autocomplete>
+        <!-- <g-inputtag width="440" mustmacth="true" async="true" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA"></g-inputtag> -->
         <!-- <g-check target="ec3" label="全选" checked="false" ></g-check>
           <g-check id="ec3" dictype="checkboxJson1"></g-check>
           <span id="ec3_panel"></span> -->
-          <g-text id="source" required="true"  width="400"></g-text>
+          <!-- <input type="hidden" value='999' name="uyuiuyu"> -->
+          <!-- <g-text id="source" required="true"  width="400"></g-text> -->
           <!-- 
             <g-text id="source" value="101" width="400"></g-text>
             <g-text name="e22" equals="#source" prompt="与指定控件值相同" invalidMessage="输入值必须与前一个控件相同" width="400"></g-text> -->
@@ -189,19 +207,19 @@
             </div>
             
             <div id="www"></div>  -->
-            <!-- <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag> -->
+            <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag>
             
             <!-- <g-combotree id="cc1" childDisable="true"  required="true" multiple="true" label="URL"  url="http://10.10.10.6:81/example/Combotree/data" width="300"></g-combotree>
             <g-text name="c5" required="true"></g-text> -->
-            <div id="d2-w" style="display:none">
+            <!-- <div id="d2-w" style="display:none">
               <div>
                 <div>
                   <g-date name="date" required="true" id="d0" ></g-date>
                 </div>
               </div> 
               <g-datetime   type="date" name="d1n" id="d2"></g-datetime>
-            </div>
-            <!-- <g-combotree editable="true" width="200" url="http://10.10.10.6:81/example/Combotree/data"></g-combotree> -->
+            </div> -->
+            <g-combotree editable="true" width="200" url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA"></g-combotree>
             <!-- <div id="warp">
               <g-check id="check" required="true"></g-check>
             </div>  -->
@@ -212,10 +230,9 @@
             </div>
             <g-text required="true" id="t2" name="t2" regexp="^[0-9]+$"></g-text> -->
             <div>
-                <g-select  required="true" name="s1" width="200"  url="http://10.10.10.6:81/example/Combotree/data" lower="s2" ></g-select>
-                <g-select   id="s2" required="true"  width="200"  ></g-select>
+                <g-select  required="true" name="s1" width="200"  url="http://localhost:8080/example/Select/data"></g-select>
+                <!-- <g-select   id="s2" required="true"  width="200"  ></g-select> -->
               <!-- <g-combotree childDisable="true"  mustMatch="true" multiple="true" required="true" id="autocompleteid"  name="autocomplete"   dictype="LEVEI" width="200" prompt="输入内容必须在选项内"></g-combotree> -->
-
             </div>
             <div id="testBox" >
             </div>
@@ -236,27 +253,27 @@
     <!-- <g-spin spinning="true" delay="3"></g-spin> -->
     
     <!-- <div class="root"></div>           -->
-    <script>
-      function dataTest(status){
-				if(status=="03"){
-          return "<span class='icon1'>icon1</span>"   
-				}else {
-          return "<span class='icon2'>icon2</span>"   
-				}
-			}
+    <!-- <script>
+      function testClick(e){
+        console.log(e.props['data-taskid'])
+      }
     </script>
     <div ctype="ajaxlist" id="result" sequence="false" url="./datalist.json" onLoadSuccess="test(arguments[0])">
       <div ctype="column" width="50">
-          <g-label>{(dataTest(status))}</g-label>  
+          <g-button data-taskid="{taskId}" onClick="{testClick(this)}">testButton</g-button>
+          <g-label title="{status}">{(dataTest(status))}</g-label>  
       </div>    
-      <!-- <g-column label="任务ID" name="taskId" width="150" ellipsis="true"></g-column>
+
+      <g-column label="任务ID" name="taskId" width="150" ellipsis="true"></g-column>
+      
+      
       <g-column label="任务名称" name="taskName" width="250">
       </g-column>
       <g-column label="任务类型" name="readType" width="100"></g-column>
       <g-column label="任务状态" name="statusCn" width="100"></g-column>
       <g-column label="分组ID" name="groupIds" width="100"  className="className11"></g-column>
     
-      <div ctype="column" label="操作" class="actiontd">
+      <div ctype="column" label="hehe" class="actiontd" name="hehe_o" ordercolumn="hehe_o">
           
         <g-check name="text" disabled="{(status=='031'?'true':'false')}"></g-check>
       </div>
@@ -277,12 +294,14 @@
           </span>
           <span ctype="label"  class="{status}">9999</span>
           <g-ajaxaction type="link" visible="{(status != '21')}"
+          data-taskid="{taskId}"
+          onBeforeProcess="{testClick(this)}"
             url="/read/task/revoke?taskId={taskId}" confirm="你确定要撤销这条读取任务吗？">撤销
           </g-ajaxaction>
           <span ctype="label" visible="{(status!='03'?true:false)}">test</span>
-      </div> -->
+      </div>
       
-  </div>
+  </div> -->
   
   <!-- <g-form id="editlist-form1">
     <g-editlist id="editlist1" footerControl="true" editable="false" editcell="false" control="save,reset,add,delete,up,down,clear" url="http://10.10.10.6:81/example/webview/definition/Editlist/data?pageSize=10&currentPage=1" rowControl="true">
@@ -299,7 +318,7 @@
   </g-form> -->
   <!-- <g-plumblist id="plumb" height="500" leftTitle="左列表"  rightTitle="右列表" pointColor="red" leftCellWidth="100,160,170" rightCellWidth="219,219" pointRadius="4" lineColor="#f97" lineWidth="1.5" width="1200" linkType="4" class="my-plumb" url="./plumbData.json"  leftListWidth="440" rightListWidth="440" showLabel="false" connector="Straight"></g-plumblist>  -->
   <!-- <g-button id="btn111">按钮</g-button>
-  <g-dialogaction dialogWidth="600"  dialogHeight="1200" url="./index.html">弹框</g-dialogaction> -->
+   -->
   <!-- <span ctype="label"  value="<a>999</a>"></span> -->
   
     <!-- <g-processingrules lineColor="#f60"  url="./flowChart.json"></g-processingrules> -->
@@ -342,12 +361,12 @@
   </body>
   <script>
   G(function() {
-    G("#result").onExpandRow(function(data){
-      console.log(data);
-      G("#result").setScrollx({x:500})
-      // 这里注意必须有返回值，并且返回值应是由html标签包含的，比如下面
-      return "<span>查看详情："+data+"</span>";
-    });
+    // G("#result").onExpandRow(function(data){
+    //   console.log(data);
+    //   // G("#result").setScrollx({x:500})
+    //   // 这里注意必须有返回值，并且返回值应是由html标签包含的，比如下面
+    //   return "<span>查看详情："+data+"</span>";
+    // });
    
    
    
@@ -359,7 +378,6 @@
 
 
 
-    G('#testBox').append('<div><g-text width="150"></g-text><g-button id="test">button</g-button></div>')
     
     
     

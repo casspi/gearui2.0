@@ -527,11 +527,21 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 		let tdList:any[] = [];
 		thData.map((props:any,index:number)=>{
 			console.log(props)
-			let editProps:any = G.G$.extend({},props)
+			let editProps:any = G.G$.extend({},props,{
+				id:props.id+index+rowIndex,
+				value:rowData[props.dataindex],
+				onClick:()=>{
+					return  false
+				},
+				onChange:(e:any)=>{
+					console.log(e)
+				}
+			})
 			delete editProps.children;
+			console.log(rowData)
 			tdList.push(<td width={props.width} key={"td"+rowIndex+"_"+index}>
-				<span>{rowData[props.dataindex]}</span>
-				<span><Text.default {...editProps} onChange={this.cellChange()}></Text.default></span>
+				{rowData.editAble?<span>{GearUtil.newInstanceByType(editProps.editctype, editProps, this)}</span>:
+								<span>{rowData[props.dataindex]}</span>}
 			</td>)
 		})
 		return tdList;
@@ -543,7 +553,7 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 		let thData:any = this.state.theadData;		
         data.map((item:any,index:number)=>{
             tbody.push(
-                <tr key={'tobody-tr'+index}>{
+                <tr key={'tobody-tr'+index}  onClick={this.trClick.bind(this,item.id,item.editAble)}>{
 					this.parseTd(thData,item,index)
 				}</tr>
             )
@@ -556,13 +566,16 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 			let fun = async () => {
 				// let result = await Http.default.post(this.props.url);
 				let data = {"status":0,"data":[{"preId":"qiaogr","id":"qiaogr","nameControl":{"ctype":"text","value":"乔国瑞","required":true},"data":[{"value":"0","label":"男性"},{"value":"1","label":"女性"}],"name":"乔国瑞","mobile":"13817232524","email":"qiaogr@mail.taiji.com.cn","unitName":"公安SUB","unitId":"0101","groupName":"应用平台部","groupId":"01010101"},{"preId":"hechao","id":"hechao","nameControl":{"ctype":"text","value":"贺超","required":true},"data":[{"value":"0","label":"男性"},{"value":"1","label":"女性"}],"name":"贺超","mobile":"18621965668","email":"hechao@mail.taiji.com.cn","unitName":"公安SUB","unitId":"0101","groupName":"应用平台部","groupId":"01010101"},{"preId":"liwei","id":"liwei","nameControl":{"ctype":"text","value":"李伟","required":true},"data":[{"value":"0","label":"男性"},{"value":"1","label":"女性"}],"name":"李伟","mobile":"18916096186","email":"liweia@mail.taiji.com.cn","unitName":"公安SUB","unitId":"0101","groupName":"数据平台部","groupId":"01010102"},{"preId":"liugc","id":"liugc","nameControl":{"ctype":"text","value":"刘广仓","required":true},"data":[{"value":"0","label":"男性"},{"value":"1","label":"女性"}],"name":"刘广仓","mobile":"15821647520","email":"liugc@mail.taiji.com.cn","unitName":"公安SUB","unitId":"0101","groupName":"大项目产品线","groupId":"01010202"},{"preId":"dinglq","id":"dinglq","nameControl":{"ctype":"text","value":"丁立清","required":true},"data":[{"value":"0","label":"男性"},{"value":"1","label":"女性"}],"name":"丁立清","mobile":"18621062061","email":"dinglq@mail.taiji.com.cn","unitName":"公安SUB","unitId":"0101","groupName":"数据平台部","groupId":"01010102"},{"preId":"wangcheng","id":"wangcheng","nameControl":{"ctype":"text","value":"王诚","required":true},"data":[{"value":"0","label":"男性"},{"value":"1","label":"女性"}],"name":"王诚","mobile":"13011235742","email":"wangcheng@mail.taiji.com.cn","unitName":"公安SUB","unitId":"0101","groupName":"应用平台部","groupId":"01010101"}]};
+				let mapData = data.data.map(function(item:any){
+					item['editAble'] = false;
+					return item;
+				})
 				if(true) {
-					console.log(data);
 					this.setState({
-						dataList:data.data
+						dataList: mapData
 					})
 				}else {
-					console.log(data)
+					console.log(mapData)
 				}
 			};
 			fun();
@@ -575,9 +588,28 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 		console.log()
 	}
 
+	trClick(id:string,editAble:boolean){
+		if(editAble){
+			return 
+		}
+		let dataMap = this.state.dataList;
+		dataMap = dataMap.map((item:any)=>{
+			if(id===item.id){
+				item.editAble = true;
+			}else{
+				item.editAble = false;
+			}
+			return item;
+		})
+		this.setState({
+			dataList:dataMap
+		})
+	}
 }
 // import * as React from 'react';
 // import { Table, Input, InputNumber, Popconfirm, Form } from 'antd';
+import Item from '../../beans/Item';
+import EditTable from './EditTable';
 // console.log(InputNumber)
 // const data:any[] = [];
 // for (let i = 0; i < 100; i++) {
