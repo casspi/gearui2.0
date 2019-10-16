@@ -21085,3 +21085,12 @@ tr.ant-table-expanded-row:hover {
 .plumb-btn-bar{text-align: right;margin-top: 15px;}
 
 
+/* 渲染前显示原生dom 影响观感 */
+[g-cloak]{display: none;}
+
+/* editable2样式 */
+.edittable-tr{height: 40px}
+.edittable-tr.selected-tr,.edittable-tr.selected-tr .ant-input-affix-wrapper{background: #ddd}
+
+
+

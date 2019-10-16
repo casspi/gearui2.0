@@ -107,12 +107,14 @@
           <div label="姓名" dataIndex="name" editctype="text" width="100">
             <span class="" ctype="time"></span>
           </div>
-          <div label="ID" dataIndex="id" editctype="text" width="100"></div>
+          <div label="ID" dataIndex="preId" editctype="text" width="100"></div>
           <div label="标题" dataIndex="mobile" editctype="telephone" dictype="LEVEI" width="200"></div>
+          <div label="单位" dataIndex="unitId" editctype="select" dictype="LEVEI" width="150"></div>
         </g-edittable2>
         <div>
           <g-button onClick="G('#edittable2').addRow()">添加行</g-button>
           <g-button onClick="G('#edittable2').delRow()">删除行</g-button>
+          <g-button onClick="G('#edittable2').save()">保存</g-button>
         </div>
       <!-- </g-form> -->
     <!-- <div id="warpbox" >
@@ -196,17 +198,17 @@
           <g-check required="true" dictype="LEVEI" id="check"></g-check>
           <g-file ></g-file>
            <g-radio  required="true" name="text"></g-radio>
-          <g-upload id="upload" name="upload" fileListMax="10"></g-upload> -->
+          <g-upload  name="upload" fileListMax="10"></g-upload> -->
           <!-- <g-time id="time"   required="true"></g-time>
             <g-inputtag id='inputtag'  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" async="true"></g-inputtag>
           <g-text disabled="true" required="true"></g-text>
           <span ctype="datetime" id="createTime" name="createTime" type="range" width="400"></span>
-            <g-upload name="picture"></g-upload>  
-            <span name="type" ctype="select" width="190" id="sampleType" name="sampleType"></span>
-           <div id="date-w">
-            </div>
-            
-            <div id="www"></div>  -->
+          <span name="type" ctype="select" width="190" id="sampleType" name="sampleType"></span>
+          <div id="date-w">
+          </div>
+          
+          <div id="www"></div>  -->
+          <g-upload id="upload" name="picture"></g-upload>  
             <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag>
             
             <!-- <g-combotree id="cc1" childDisable="true"  required="true" multiple="true" label="URL"  url="http://10.10.10.6:81/example/Combotree/data" width="300"></g-combotree>
@@ -253,21 +255,24 @@
     <!-- <g-spin spinning="true" delay="3"></g-spin> -->
     
     <!-- <div class="root"></div>           -->
-    <!-- <script>
+    <script>
       function testClick(e){
         console.log(e.props['data-taskid'])
       }
     </script>
-    <div ctype="ajaxlist" id="result" sequence="false" url="./datalist.json" onLoadSuccess="test(arguments[0])">
+    <div ctype="ajaxlist" g-cloak id="result" sequence="false" url="./datalist.json" onLoadSuccess="test(arguments[0])">
       <div ctype="column" width="50">
           <g-button data-taskid="{taskId}" onClick="{testClick(this)}">testButton</g-button>
           <g-label title="{status}">{(dataTest(status))}</g-label>  
       </div>    
 
-      <g-column label="任务ID" name="taskId" width="150" ellipsis="true"></g-column>
+      <g-column label="任务ID" name="taskId" width="150" ellipsis="true">
+        <g-label title="{status}">{status}</g-label> 
+      </g-column>
       
       
-      <g-column label="任务名称" name="taskName" width="250">
+      <g-column label="任务名称" width="250">
+          <g-label title="{taskName}">{taskName}</g-label> 
       </g-column>
       <g-column label="任务类型" name="readType" width="100"></g-column>
       <g-column label="任务状态" name="statusCn" width="100"></g-column>
@@ -301,7 +306,7 @@
           <span ctype="label" visible="{(status!='03'?true:false)}">test</span>
       </div>
       
-  </div> -->
+  </div>
   
   <!-- <g-form id="editlist-form1">
     <g-editlist id="editlist1" footerControl="true" editable="false" editcell="false" control="save,reset,add,delete,up,down,clear" url="http://10.10.10.6:81/example/webview/definition/Editlist/data?pageSize=10&currentPage=1" rowControl="true">
@@ -405,10 +410,10 @@
     // G("#source").setValue("test",function(){
     //   console.log(G("#source").getValue())
     // });
-    // G("#upload").onBeforeUpload(function(a1,a2){
-    //     console.log(a1);
-    //     console.log(a2);
-    // })
+    G("#upload").onBeforeUpload(function(a1,a2){
+        console.log(a1);
+        console.log(a2);
+    })
     // G(".s11").each(function(){
     //   console.log(G(this))
     //   G(this).onSelect(function(node){

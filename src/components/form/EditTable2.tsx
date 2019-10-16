@@ -471,6 +471,7 @@ export interface state  extends Tag.state {
 };
 export default class EditTable2<P extends typeof props, S extends state> extends Tag.default<P, S> {
 
+	defaultRecord:any;
 
 	getInitialState():state{
 		console.log(this.props.children);
@@ -508,6 +509,11 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 				return child.props
 			}
 		})
+		let record = {}
+		for (let i in childrenArr){
+			record[i['dataindex']] = null; 
+		}
+		this.defaultRecord = record;
 		return childrenArr; 
 	}
 
@@ -526,19 +532,25 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 	parseTd(thData:any[],rowData:any,rowIndex:number){
 		let tdList:any[] = [];
 		thData.map((props:any,index:number)=>{
-			console.log(props)
+			// console.log(props)
 			let editProps:any = G.G$.extend({},props,{
 				id:props.id+index+rowIndex,
 				value:rowData[props.dataindex],
 				onClick:()=>{
 					return  false
 				},
-				onChange:(e:any)=>{
-					console.log(e)
+				onChange:(value: any,oldValue: any)=>{
+					let data = this.state.dataList;
+					data = data.map((item:any)=>{
+						if(rowData.id===item.id){
+							rowData[props.dataindex] = value
+						};
+						return item;
+					})
 				}
 			})
 			delete editProps.children;
-			console.log(rowData)
+			// console.log(rowData)
 			tdList.push(<td width={props.width} key={"td"+rowIndex+"_"+index}>
 				{rowData.editAble?<span>{GearUtil.newInstanceByType(editProps.editctype, editProps, this)}</span>:
 								<span>{rowData[props.dataindex]}</span>}
@@ -553,7 +565,7 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 		let thData:any = this.state.theadData;		
         data.map((item:any,index:number)=>{
             tbody.push(
-                <tr key={'tobody-tr'+index}  onClick={this.trClick.bind(this,item.id,item.editAble)}>{
+                <tr key={'tobody-tr'+index} className={`edittable-tr ${item.editAble?"selected-tr":" "}`} onClick={this.selectRow.bind(this,item)}>{
 					this.parseTd(thData,item,index)
 				}</tr>
             )
@@ -573,6 +585,8 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 				if(true) {
 					this.setState({
 						dataList: mapData
+					},()=>{
+					
 					})
 				}else {
 					console.log(mapData)
@@ -588,13 +602,13 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 		console.log()
 	}
 
-	trClick(id:string,editAble:boolean){
-		if(editAble){
+	selectRow(row:any){
+		if(row.editAble){
 			return 
 		}
 		let dataMap = this.state.dataList;
 		dataMap = dataMap.map((item:any)=>{
-			if(id===item.id){
+			if(row.id===item.id){
 				item.editAble = true;
 			}else{
 				item.editAble = false;
@@ -603,6 +617,43 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 		})
 		this.setState({
 			dataList:dataMap
+		})
+	}
+
+	getData(){
+		return this.state.dataList;
+	}
+
+
+	addRow(){
+		let dataSource:any = this.getData()||[];
+        let dataClone:any = {};
+        if(dataSource instanceof Array && dataSource.length > 0) {
+            dataClone = G.G$.extend({},dataSource[dataSource.length - 1]);
+        }else if(dataSource instanceof Array && dataSource.length == 0){
+            dataClone = G.G$.extend({},this.defaultRecord)
+        }
+        for(let key in dataClone) {
+            dataClone[key] = null;
+		}
+		// dataClone.editAble = true;
+		dataClone.id = 'record_'+UUID.get()
+		dataSource.push(dataClone)
+		this.setState({
+			dataList:dataSource
+		},()=>{
+			this.selectRow(dataClone)
+		})
+	}
+
+	save(){
+		let data = this.state.dataList;
+		data = data.map((item:any)=>{
+			item.editAble = false;
+			return item
+		});
+		this.setState({
+			dataList: data
 		})
 	}
 }
