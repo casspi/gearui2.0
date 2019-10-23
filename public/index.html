@@ -93,15 +93,24 @@
         console.log(e);
         console.log(G("#form1"))        
       }
-      
+      function addItem(){
+        let count = 1;
+        G('.rule-lists').append('<div class="rule-item row m-b-md ruleBox"><div class="col-xs-2 control-label">规则</div><div class="col-xs-7 ant-form-inline-block">'+
+        '<g-select required="true" prompt="请选择" width="110"  id="dataItemRelTable['+ count+'].dataItem" name="dataItemRelTable['+ count+'].dataItem"  style="float:left;margin-left:0px;margin-right:3px;" class="dataItem" ></g-select>' +
+        '<g-select required="true" prompt="请选择" width="135" dictype="DIC_SYMBOL_TYPE" id="dataItemRelTable['+ count+'].symbolType" name="dataItemRelTable['+ count+'].symbolType" style="float:left;margin-left:0px;margin-right:3px;" class="symbolType" ></g-select>' +
+        '<g-text required="true" width="135" id="dataItemRelTable['+ count+'].dataItemValue" name="dataItemRelTable['+ count+'].dataItemValue" style="float:left;margin-left:0px;margin-right:3px;" class="dataItemValue" ></g-text>' +
+        '<g-select  prompt="请选择" width="135" dictype="DIC_REL_RULE" id="SELECT3" name="dataItemRelTable['+ count+'].relRule" style="float:left;margin-left:0px;margin-right:3px;" class="relRule" ></g-select>'+
+        '</div><div class="col-xs-2"><span ctype="button" buttonStyle="primary" class="ant-btn-fill btn-del-item m-l">-</span><span ctype="button"  buttonStyle="primary" class="ant-btn-fill btn-add-item m-l">+</span></div></div>');
+      }
      
     </script>
     
     <title>React App</title>
   </head>
   <body>
-      <!-- <g-dialogaction dialogWidth="600" id="d11" dialogHeight="1200" url="./index.html">弹框</g-dialogaction>
-      <g-dialogaction dialogWidth="600"  dialogHeight="1200" url="./index.html">弹框</g-dialogaction> -->
+      <h1 id="test">test</h1>
+      <g-dialogaction dialogWidth="60%" id="d11" dialogHeight="50%" url="./index.html">弹框</g-dialogaction>
+      <!-- <g-dialogaction dialogWidth="600"  dialogHeight="1200" url="./index.html">弹框</g-dialogaction> -->
       <!-- <g-form> -->
         <g-edittable2 id='edittable2' url="./datalist.json">
           <div label="姓名" dataIndex="name" editctype="text" width="100">
@@ -176,16 +185,28 @@
             <span ctype="select" name="test" width="150"></span>
         </div>
       </form> -->
-      <form ctype="form" id="form1" style="">
-        <g-autocomplete id="autocomplete111" width="300" name="autocomplete111" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" value="210000"  async="true" dictype="DIC_AREA"></g-autocomplete>
+      <div class="ant-spin ant-spin-lg ant-spinning">
+        <span class="ant-spin-dot">
+          <i></i>
+          <i></i>
+          <i></i>
+          <i></i>
+        </span>
+      </div>
+      <form ctype="form" id="form1"  style="">
+        <!-- <g-autocomplete id="autocomplete111" width="300" name="autocomplete111" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" value="210000"  async="true" dictype="DIC_AREA"></g-autocomplete> -->
         <!-- <g-inputtag width="440" mustmacth="true" async="true" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA"></g-inputtag> -->
         <!-- <g-check target="ec3" label="全选" checked="false" ></g-check>
           <g-check id="ec3" dictype="checkboxJson1"></g-check>
           <span id="ec3_panel"></span> -->
           <!-- <input type="hidden" value='999' name="uyuiuyu"> -->
-          <!-- <g-text id="source" required="true"  width="400"></g-text> -->
+          <script>
+            function checkValue(text){
+              text.setValue(text.getValue().replace(/(^\s*)|(\s*$)/g,""))
+            }
+          </script>
+          <g-text id="code" onKeyUp="checkValue(this)" required="true"  width="400"></g-text>
           <!-- 
-            <g-text id="source" value="101" width="400"></g-text>
             <g-text name="e22" equals="#source" prompt="与指定控件值相同" invalidMessage="输入值必须与前一个控件相同" width="400"></g-text> -->
           <!-- <g-date name="d7" type="range" start="2017/09/09"  format="YYYY/MM/DD" abledate="2017/09/03,2017/09/25"></g-date>
           <g-datetime name="d7" type="range" value="2017-10-08 11:10:9"  format="YYYY-MM-DD HH:mm:ss" ></g-datetime>
@@ -209,7 +230,7 @@
           
           <div id="www"></div>  -->
           <g-upload id="upload" name="picture"></g-upload>  
-            <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag>
+            <!-- <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag> -->
             
             <!-- <g-combotree id="cc1" childDisable="true"  required="true" multiple="true" label="URL"  url="http://10.10.10.6:81/example/Combotree/data" width="300"></g-combotree>
             <g-text name="c5" required="true"></g-text> -->
@@ -221,7 +242,7 @@
               </div> 
               <g-datetime   type="date" name="d1n" id="d2"></g-datetime>
             </div> -->
-            <g-combotree editable="true" width="200" url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA"></g-combotree>
+            <!-- <g-combotree editable="true" width="200" url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA"></g-combotree> -->
             <!-- <div id="warp">
               <g-check id="check" required="true"></g-check>
             </div>  -->
@@ -232,12 +253,14 @@
             </div>
             <g-text required="true" id="t2" name="t2" regexp="^[0-9]+$"></g-text> -->
             <div>
-                <g-select  required="true" name="s1" width="200"  url="http://localhost:8080/example/Select/data"></g-select>
+                <g-select  required="true" name="s1" width="200"  dictype="LEVEI"></g-select>
                 <!-- <g-select   id="s2" required="true"  width="200"  ></g-select> -->
               <!-- <g-combotree childDisable="true"  mustMatch="true" multiple="true" required="true" id="autocompleteid"  name="autocomplete"   dictype="LEVEI" width="200" prompt="输入内容必须在选项内"></g-combotree> -->
             </div>
-            <div id="testBox" >
+            <div id="testBox" class="rule-lists">
             </div>
+            <g-button onClick="addItem()">ADD</g-button>
+            <g-component id="compo"></g-component>
             <!-- <script>
               G(function(){
                 G("#testBox").append("<g-text class='text-bg'></g-text><style>.text-bg{background:red}</style>")
@@ -247,15 +270,15 @@
               <g-checktag required="true" name="c1" dictype="checkboxJson1"  value="ws,zs"></g-checktag> -->
               <!-- <g-datetime  value="2019-05-09" type="range" name="d1" id="d1"></g-datetime>
                 <g-component value="{ctype:'text',value:'文本框',id:'text',required:true,width:'300px'}"></g-component> -->
-                <g-submit>提交</g-submit>
                 <g-button onClick="G('#form1').reset()">重置</g-button>  
               </form>
+              <g-submit>提交</g-submit>
     <!-- </div> -->
     <!-- <textarea name="ahellMsg" style="width:900px;height: 400px;" ></textarea> -->
     <!-- <g-spin spinning="true" delay="3"></g-spin> -->
     
     <!-- <div class="root"></div>           -->
-    <script>
+    <!-- <script>
       function testClick(e){
         console.log(e.props['data-taskid'])
       }
@@ -306,7 +329,7 @@
           <span ctype="label" visible="{(status!='03'?true:false)}">test</span>
       </div>
       
-  </div>
+  </div> -->
   
   <!-- <g-form id="editlist-form1">
     <g-editlist id="editlist1" footerControl="true" editable="false" editcell="false" control="save,reset,add,delete,up,down,clear" url="http://10.10.10.6:81/example/webview/definition/Editlist/data?pageSize=10&currentPage=1" rowControl="true">
@@ -327,7 +350,7 @@
   <!-- <span ctype="label"  value="<a>999</a>"></span> -->
   
     <!-- <g-processingrules lineColor="#f60"  url="./flowChart.json"></g-processingrules> -->
-  <!-- <g-dialogaction id="addBtn" value="添加" type="button" buttonStyle="primary" title="部门信息录入" url="./test1.html" dialogWidth="800" loadType="async" controlBar="true" ></g-dialogaction> -->
+  <g-dialogaction id="addBtn" value="添加" type="button" buttonStyle="primary" title="部门信息录入" url="./test1.html" dialogWidth="800" loadType="async" controlBar="true" ></g-dialogaction>
   <!-- <g-dialogaction id="d1" loadType="async" dialogWidth="600" centered="true" dialogHeight="300" title="弹框一"  url="http://10.10.10.6">弹框一</g-dialogaction> -->
   <!-- <g-dialog centered="false" style="top:300px" dragable="true"></g-dialog> -->
   

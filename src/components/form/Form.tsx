@@ -728,7 +728,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         let data = this.getParamsAsFormData();
         let action: any = this.state.action||""
         let method = this.state.method||"post";
-        if(this.state.method == "put"){
+        if(this.state.method == "put" || this.state.method == "PUT"){
             method = 'post'
         }
         G.G$.ajax({

@@ -1,6 +1,8 @@
 import { message as AntdMessage, Modal as AntdModal } from 'antd';
 import { ObjectUtil} from '../../utils';
 import * as Spin from './Spin';
+import * as Label from '../data/Label';
+import * as React from 'react';
 export default class Messager {
 
     static spin: Spin.default<any, any>;
@@ -45,9 +47,12 @@ export default class Messager {
                     type = args[i];
             }
         }    
+        let labelProps:any = {
+            value:message
+        }
         let param = {
             title: title || "操作提示",
-            content: message,
+            content: <Label.default {...labelProps}></Label.default>,
             okText: "确定",
             style: G.G$.extend({},{top:nTop}),
             // centered: true,

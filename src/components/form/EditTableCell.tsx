@@ -143,7 +143,7 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
         cellText = cellText.filter((o:any)=>typeof o!="string");
         return <div className="edit-table-cell">
                    
-                        <div className="editable-cell-input-wrapper" style={{display: props.editable?"block":"none"}}>
+                    <div className="editable-cell-input-wrapper" style={{display: props.editable?"block":"none"}}>
                         {this.props.editCell ? 
                             <Popover trigger="hover" placement="right" content={<div className="editable-cell-control">
                                 <AntdIcon
@@ -184,6 +184,50 @@ export default class EditTableCell<P extends typeof props, S extends state> exte
                             <span className={"cell-value"}>{cellText}</span>
                         }
                     </div>
+                    {
+                    //     props.editable?
+                    //     <div className="editable-cell-input-wrapper">
+                    //     {this.props.editCell ? 
+                    //         <Popover trigger="hover" placement="right" content={<div className="editable-cell-control">
+                    //             <AntdIcon
+                    //                 style={{ cursor:'pointer'}}
+                    //                 type="check"
+                    //                 title="保存"
+                    //                 className={"editable-cell-icon-save"}
+                    //                 onClick={props.save.bind(this)}
+                    //                 />
+                    //             <AntdIcon
+                    //                 style={{ cursor:'pointer'}}
+                    //                 type="rollback"
+                    //                 title="取消"
+                    //                 className={"editable-cell-icon-reset"}
+                    //                 onClick={props.reset.bind(this)}
+                    //                 />
+                    //         </div>}>
+                    //             <span className={"cell-element"}>{reactEle}</span>
+                    //         </Popover>
+                    //         :
+                    //         <span className={"cell-element"}>{reactEle}</span>
+                    //     }
+                    // </div>:
+                    // <div className="editable-cell-text-wrapper">
+                    //     {this.props.editCell?
+                    //         <Popover trigger="hover" placement="right" content={<div className="editable-cell-control">
+                    //                 <AntdIcon
+                    //                     style={{ cursor:'pointer'}}
+                    //                     type="edit"
+                    //                     title="编辑"
+                    //                     className={"editable-cell-icon-edit"}
+                    //                     onClick={props.edit.bind(this)}
+                    //                     />
+                    //             </div>}>
+                    //             <span className={"cell-value"}>{cellText}</span>
+                    //         </Popover>
+                    //         :
+                    //         <span className={"cell-value"}>{cellText}</span>
+                    //     }
+                    // </div>
+                    }
                 </div>;
     }
 

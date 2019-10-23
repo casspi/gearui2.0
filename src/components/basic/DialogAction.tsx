@@ -7,7 +7,7 @@ export var props = {
     dialogTitle: GearType.String,
     loadType: GearType.Enum<'async' | 'iframe'>(),
     dialogWidth: GearType.Any,
-    dialogHeight: GearType.Number,
+    dialogHeight: GearType.Any,
     maximized: GearType.Boolean,
     controlBar: GearType.Boolean,
     confirmText: GearType.String,
