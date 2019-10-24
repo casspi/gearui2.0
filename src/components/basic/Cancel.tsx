@@ -19,6 +19,9 @@ export default class Cancel<P extends typeof props, S extends state> extends But
         }else{
             Cancel.process.call(this);
         }
+        if(this.props.url){
+            super.clickEvent();
+        }
     }
 
     // 默认的处理过程，可由外部自定义

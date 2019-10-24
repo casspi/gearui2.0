@@ -227,9 +227,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         if(this.form){
             delete props.value;
         }
-        return <span ref={ele=>this.ref=ele} id={props.id}>
-            <AntdInput {...props}   ></AntdInput>
-        </span>;
+        return <AntdInput {...props}   ></AntdInput>
     }
     
     blur(fun: Function){
