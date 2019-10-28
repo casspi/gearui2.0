@@ -299,7 +299,6 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     makeJsx(): React.ReactNode {return null;}
     render() {
-        console.log(this.props)
         // console.log('formtag ------ render')
         // if(this.form){
         //     if(this.state.disabled===true){//disabled 就不验证

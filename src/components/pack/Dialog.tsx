@@ -483,14 +483,9 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                             scriptCode=str;
                         })
                         scriptCode = scriptCode.replace(/<script.*?>/,"").replace('</script>',"");
-                        // let dialog_body_span = UUID.get()
-                        // let r = G.$("<span id='g_dialog_body'>9999</span>", undefined, true);
                         let r = G.$(data, undefined, true);
                         children = r instanceof Array? r:[r];
                         this.setState({children},()=>{
-                            // console.log(G.G$("#g_dialog_body"));
-                            // G.G$("#g_dialog_body").append(data)
-                            // this.doRender()
                             //执行异步加载所需的js代码
                             // console.log(".async-body-"+this.state.id)
                             // G.G$(".async-body-"+this.state.id).load(url)

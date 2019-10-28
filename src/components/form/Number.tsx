@@ -72,6 +72,11 @@ export default class Number<P extends typeof props, S extends state> extends For
         return <AntdInputNumber {...props} />;
     }
 
+    afterRender(){
+        //由于该id和name会渲染到真实input上，此处把组件也绑定到input上方便查找
+        G.G$("#"+this.state.id).data("vmdom", this);
+    }
+
     protected _parser(value: any) {
         let re = this.doEvent("parser", value);
         if (re) {
@@ -116,4 +121,5 @@ export default class Number<P extends typeof props, S extends state> extends For
             this.doEvent("change", value, oldValue);
         });
     }
+    
 }

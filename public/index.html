@@ -112,7 +112,7 @@
       <g-dialogaction dialogWidth="60%" id="d11" dialogHeight="50%" url="./index.html">弹框</g-dialogaction>
       <!-- <g-dialogaction dialogWidth="600"  dialogHeight="1200" url="./index.html">弹框</g-dialogaction> -->
       <!-- <g-form> -->
-        <g-edittable2 id='edittable2' url="./datalist.json">
+        <!-- <g-edittable2 id='edittable2' url="./datalist.json">
           <div label="姓名" dataIndex="name" editctype="text" width="100">
             <span class="" ctype="time"></span>
           </div>
@@ -124,7 +124,7 @@
           <g-button onClick="G('#edittable2').addRow()">添加行</g-button>
           <g-button onClick="G('#edittable2').delRow()">删除行</g-button>
           <g-button onClick="G('#edittable2').save()">保存</g-button>
-        </div>
+        </div> -->
       <!-- </g-form> -->
     <!-- <div id="warpbox" >
       <div id="box1" draggable="true" style="width: 150px;height: 150px;background: #f77">"上网位置标签","value":"1"},{"label":"应用类型标签","value":"2"},{"</div>
@@ -254,7 +254,7 @@
             </div>
             <g-text required="true" id="t2" name="t2" regexp="^[0-9]+$"></g-text> -->
             <div>
-                <g-select  required="true" name="s1" width="200"  dictype="LEVEI"></g-select>
+                <g-select readonly="true" value="l1"  required="true" name="s1" width="200"  dictype="LEVEI"></g-select>
                 <!-- <g-select   id="s2" required="true"  width="200"  ></g-select> -->
               <!-- <g-combotree childDisable="true"  mustMatch="true" multiple="true" required="true" id="autocompleteid"  name="autocomplete"   dictype="LEVEI" width="200" prompt="输入内容必须在选项内"></g-combotree> -->
             </div>
@@ -279,19 +279,20 @@
     <!-- <g-spin spinning="true" delay="3"></g-spin> -->
     
     <!-- <div class="root"></div>           -->
-    <!-- <script>
+    <script>
       function testClick(e){
         console.log(e.props['data-taskid'])
       }
     </script>
     <div ctype="ajaxlist" g-cloak id="result" sequence="false" url="./datalist.json" onLoadSuccess="test(arguments[0])">
-      <div ctype="column" width="50">
-          <g-button data-taskid="{taskId}" onClick="{testClick(this)}">testButton</g-button>
-          <g-label title="{status}">{(dataTest(status))}</g-label>  
-      </div>    
+      <!-- <div ctype="column" width="50"> -->
+          <!-- <g-button data-taskid="{taskId}"  onClick="{testClick(this)}">testButton</g-button> -->
+          <!-- <g-label title="{status}">{(dataTest(status))}</g-label>   -->
+      <!-- </div>     -->
 
       <g-column label="任务ID" name="taskId" width="150" ellipsis="true">
-        <g-label title="{status}">{status}</g-label> 
+        <g-select disabled="{(status=='03'?'true':'false')}" value={status} width="100"></g-select>
+        <!-- <g-label title="{status}">{status}</g-label>  -->
       </g-column>
       
       
@@ -304,7 +305,7 @@
     
       <div ctype="column" label="hehe" class="actiontd" name="hehe_o" ordercolumn="hehe_o">
           
-        <g-check name="text" disabled="{(status=='031'?'true':'false')}"></g-check>
+        <g-check name="text" disabled="{(status=='03'?'true':'false')}"></g-check>
       </div>
       <div ctype="column" label="操作" class="actiontd">
           <g-label>{#(dataConvert(status))}</g-label>
@@ -330,7 +331,7 @@
           <span ctype="label" visible="{(status!='03'?true:false)}">test</span>
       </div>
       
-  </div> -->
+  </div>
   
   <!-- <g-form id="editlist-form1">
     <g-editlist id="editlist1" footerControl="true" editable="false" editcell="false" control="save,reset,add,delete,up,down,clear" url="http://10.10.10.6:81/example/webview/definition/Editlist/data?pageSize=10&currentPage=1" rowControl="true">

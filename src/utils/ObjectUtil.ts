@@ -594,7 +594,7 @@ export default class ObjectUtil {
             if(key=='visible'){//visible需特殊处理
                 propsNew['visible'] = valueInProps=='false'?false:true;
             }else if(key=="readOnly"){
-                propsNew['readOnly'] = valueInProps=='true'?true:false;
+                propsNew['readOnly'] = (valueInProps=='true' || valueInProps===true)?true:false;
             }
             else if(valueInProps == "false" || valueInProps === false){
                 propsNew[key] = false
@@ -635,6 +635,7 @@ export default class ObjectUtil {
                 }
             }
         }
+        console.log(propsNew)
         return propsNew;
     }
      // 判断值是否在数组内

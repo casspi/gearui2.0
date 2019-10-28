@@ -235,7 +235,7 @@ export default class Column<T> {
         if(!(ObjectUtil.isExtends(child.type, "Column"))) {
             let childProps =G.G$.extend({},child.props);
             childProps = this.parseRegexColumnValue(childProps,record);
-            // console.log(childProps)
+            console.log(childProps)
             let style = childProps.style instanceof String ? GearJson.fromStyle(childProps.style || "") : new GearJson(childProps.style);
             if(ellipsisSpanWidth > 0) {
                 style.put("width", ellipsisSpanWidth+"");
@@ -248,7 +248,7 @@ export default class Column<T> {
             let jsxEle = null;
             if(child.type) {
                 jsxEle = React.cloneElement(child, childProps);
-                // console.log(child)
+                console.log(jsxEle)
                 // console.log(child instanceof Text.default)
                 // if(child.type instanceof Text.default){
                 //     jsxEle = React.cloneElement(child, childProps);

@@ -77,4 +77,5 @@ export default class Int<P extends typeof props, S extends state> extends Number
            
         }
     }
+
 }

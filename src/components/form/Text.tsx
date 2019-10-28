@@ -209,6 +209,9 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         if(style != null && G.G$.isEmptyObject(style) == false) {
             this.css(style);
         }
+
+        //由于该id和name会渲染到真实input上，此处把组件也绑定到input上方便查找
+        G.G$("#"+this.state.id).data("vmdom", this);
     }
 
     afterUpdate() {
@@ -227,7 +230,8 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         if(this.form){
             delete props.value;
         }
-        return <AntdInput {...props}   ></AntdInput>
+        return <AntdInput {...props}  >
+        </AntdInput>
     }
     
     blur(fun: Function){
