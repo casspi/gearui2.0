@@ -21091,6 +21091,8 @@ tr.ant-table-expanded-row:hover {
 /* editable2样式 */
 .edittable-tr{height: 40px}
 .edittable-tr.selected-tr,.edittable-tr.selected-tr .ant-input-affix-wrapper{background: #ddd}
+.edittable {border: 1px solid rgba(34, 36, 38, 0.15);border-collapse: collapse}
+.edittable th,.edittable td{border-top: 1px solid rgba(34, 36, 38, 0.15);border-left: 1px solid rgba(34, 36, 38, 0.15)}
 
 
 

@@ -474,7 +474,7 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 	defaultRecord:any;
 
 	getInitialState():state{
-		console.log(this.props.children);
+		// console.log(this.props.children);
 		return G.G$.extend({},{
 			theadData:this.props.children?this.filterTh(this.props.children):[],
 			dataList:[]
@@ -482,6 +482,7 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 	}
 	getProps(){
         return G.G$.extend({},this.state,{
+			className:'edittable '+this.state.className,
             ref: (ele: any)=>{
                 this.ref = ele;
             },
@@ -519,14 +520,14 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 
 	//根据数据解析表头
 	parseThead(data:any[]){
-		console.log(data)
+		// console.log(data)
 		let thead:any[]=[];
         data.map((item:any,index:number)=>{
             thead.push(
                 <td key={UUID.get()}>{item.label}</td>
             )
         })
-        return <tr>{thead}</tr>;
+        return <tr className="edittable-tr edittable-thead-tr">{thead}</tr>;
 	}
 
 	parseTd(thData:any[],rowData:any,rowIndex:number){
@@ -534,33 +535,37 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 		thData.map((props:any,index:number)=>{
 			// console.log(props)
 			let editProps:any = G.G$.extend({},props,{
-				id:props.id+index+rowIndex,
-				value:rowData[props.dataindex],
-				onClick:()=>{
+				id: props.id + rowIndex + index,
+				name: props.dataindex,
+				value: rowData[props.dataindex],
+				onClick: ()=>{
 					return  false
 				},
-				onChange:(value: any,oldValue: any)=>{
-					let data = this.state.dataList;
-					data = data.map((item:any)=>{
-						if(rowData.id===item.id){
-							rowData[props.dataindex] = value
-						};
-						return item;
-					})
-				}
+				// onChange:(value: any,oldValue: any)=>{
+				// 	debugger;
+				// 	let data = this.state.dataList;
+				// 	data = data.map((item:any)=>{
+				// 		if(rowData.id===item.id){
+				// 			rowData[props.dataindex] = value
+				// 		};
+				// 		return item;
+				// 	})
+				// }
 			})
 			delete editProps.children;
+			let editDom = GearUtil.newInstanceByType(editProps.editctype, editProps, this);
+			// console.log(editDom)
 			// console.log(rowData)
 			tdList.push(<td width={props.width} key={"td"+rowIndex+"_"+index}>
-				{rowData.editAble?<span>{GearUtil.newInstanceByType(editProps.editctype, editProps, this)}</span>:
-								<span>{rowData[props.dataindex]}</span>}
+				{rowData.editAble?<span className="td-edit">{editDom}</span>:
+								<span className='td-text'>{rowData[props.dataindex]}</span>}
 			</td>)
 		})
 		return tdList;
 	}
 
 	parseTbody(data:any[]){
-		console.log(data)
+		// console.log(data)
 		let tbody:any[]=[];
 		let thData:any = this.state.theadData;		
         data.map((item:any,index:number)=>{
@@ -569,7 +574,8 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 					this.parseTd(thData,item,index)
 				}</tr>
             )
-        })
+		})
+		console.log(tbody)
         return tbody;
 	}
 

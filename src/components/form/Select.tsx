@@ -83,7 +83,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
 
 
     getProps() {
-        console.log(this.props)
+        // console.log(this.props)
         return G.G$.extend({},super.getProps(),{
             size: this.state.size,
             notFoundContent: this.state.notFoundContent||'无匹配结果',

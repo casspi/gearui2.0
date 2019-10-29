@@ -230,6 +230,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         if(this.form){
             delete props.value;
         }
+        console.log(props)
         return <AntdInput {...props}  >
         </AntdInput>
     }
@@ -238,11 +239,7 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         if (fun && G.G$.isFunction(fun)) {
             this.bind("blur", fun);
         }else{
-            if(this.find("input")){
-                this.find("input").blur();
-            }else{
-                G.G$(this.realDom).find('input').blur()
-            }
+            this.ref.input.blur();
         }
     }
 
@@ -251,11 +248,12 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         if (fun && G.G$.isFunction(fun)) {
             this.bind("focus", fun);
         }else{
-            if(this.ast){//通过其他方式渲染没有ast时
-                this.find("input").focus();
-            }else{
-                G.G$(this.realDom).find('input').focus()
-            }
+            // if(this.ast){//通过其他方式渲染没有ast时
+            //     this.find("input").focus();
+            // }else{
+            //     G.G$(this.realDom).find('input').focus()
+            // }
+            this.ref.input.focus();
         }        
     }
     //鼠标点击事件
@@ -263,14 +261,16 @@ export default class Text<P extends typeof props & InputProps, S extends (state 
         if (fun && G.G$.isFunction(fun)) {
             this.bind("click", fun);
         }else{
-            this.find("input").click();
+            // this.find("input").click();
+            this.ref.input.click();
+
         }         
     }
     onChange(fun:Function) {
         if(fun && G.G$.isFunction(fun)) {
             this.bind("change",fun);
         }else{
-            this.find("input").change();
+            G.G$(this.ref.input).change()
         }     
     }
     getText() {

@@ -147,8 +147,8 @@ export default class AjaxArea<P extends typeof props, S extends state> extends T
         let jsReg = new RegExp(/<script.*?>([\s\S]+?)<\/script>/img);
         let htmlStr:any;
         if(obj.props.dataType == "html"){
-            G.G$(obj.realDom).find('script').remove();           
-            data=data.data?data.data:data;
+            G.G$(obj.realDom).find('script').remove();  
+            data = data.hasOwnProperty("data")?data.data:data;
             data.replace(jsReg,function(str:any,js:any){
                 jsStr=str
             })

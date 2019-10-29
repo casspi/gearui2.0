@@ -33,7 +33,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <script>
-      var LEVEI=[{label:'严重',value:"l1",children:[{label:"我是离开了了了",value:"l11"}]},{label:"错误",value:"l2"}];
+      var LEVEI=[{label:'严重',value:"l1",children:[{label:"我是离开了了了",value:"l11"}]},{label:"错误",value:"l2"},{label:'哈哈哈哈',value:"0101"}];
       var checkboxJson1 = [
 					{
 						label:"张三",
@@ -111,21 +111,22 @@
       <h1 id="test">test</h1>
       <g-dialogaction dialogWidth="60%" id="d11" dialogHeight="50%" url="./index.html">弹框</g-dialogaction>
       <!-- <g-dialogaction dialogWidth="600"  dialogHeight="1200" url="./index.html">弹框</g-dialogaction> -->
-      <!-- <g-form> -->
-        <!-- <g-edittable2 id='edittable2' url="./datalist.json">
+      <g-form id="testF">
+        <g-edittable2 id='edittable2' url="./datalist.json">
           <div label="姓名" dataIndex="name" editctype="text" width="100">
             <span class="" ctype="time"></span>
           </div>
           <div label="ID" dataIndex="preId" editctype="text" width="100"></div>
           <div label="标题" dataIndex="mobile" editctype="telephone" dictype="LEVEI" width="200"></div>
           <div label="单位" dataIndex="unitId" editctype="select" dictype="LEVEI" width="150"></div>
+          <!-- <div label="单位" style="display: none" dataIndex="unitId" editctype="hidden" dictype="LEVEI" width="150"></div> -->
         </g-edittable2>
         <div>
           <g-button onClick="G('#edittable2').addRow()">添加行</g-button>
           <g-button onClick="G('#edittable2').delRow()">删除行</g-button>
           <g-button onClick="G('#edittable2').save()">保存</g-button>
-        </div> -->
-      <!-- </g-form> -->
+        </div>
+      </g-form>
     <!-- <div id="warpbox" >
       <div id="box1" draggable="true" style="width: 150px;height: 150px;background: #f77">"上网位置标签","value":"1"},{"label":"应用类型标签","value":"2"},{"</div>
       <div id="box2" style="width:150px;height: 150px;background: #f11"></div>
@@ -203,10 +204,13 @@
           <!-- <input type="hidden" value='999' name="uyuiuyu"> -->
           <script>
             function checkValue(text){
+              console.log(text)
               text.setValue(text.getValue().replace(/(^\s*)|(\s*$)/g,""))
             }
           </script>
-          <g-text id="code" onKeyUp="checkValue(this)" required="true"  width="400"></g-text>
+          <!-- <g-text id="code" onKeyUp="checkValue(this)" required="true"  width="400"></g-text> -->
+          <g-text id="code1"  required="true"  width="400"></g-text>
+          <g-text id="code2"  required="true"  width="400"></g-text>
           <!-- 
             <g-text name="e22" equals="#source" prompt="与指定控件值相同" invalidMessage="输入值必须与前一个控件相同" width="400"></g-text> -->
           <!-- <g-date name="d7" type="range" start="2017/09/09"  format="YYYY/MM/DD" abledate="2017/09/03,2017/09/25"></g-date>
@@ -279,20 +283,20 @@
     <!-- <g-spin spinning="true" delay="3"></g-spin> -->
     
     <!-- <div class="root"></div>           -->
-    <script>
+    <!-- <script>
       function testClick(e){
         console.log(e.props['data-taskid'])
       }
     </script>
     <div ctype="ajaxlist" g-cloak id="result" sequence="false" url="./datalist.json" onLoadSuccess="test(arguments[0])">
-      <!-- <div ctype="column" width="50"> -->
-          <!-- <g-button data-taskid="{taskId}"  onClick="{testClick(this)}">testButton</g-button> -->
-          <!-- <g-label title="{status}">{(dataTest(status))}</g-label>   -->
-      <!-- </div>     -->
+      <div label="任务ID" name="taskId" ctype="column" width="50">
+          <g-button data-taskid="{taskId}"  onClick="{testClick(this)}">testButton</g-button>
+          <g-label title="{status}">{(dataTest(status))}</g-label>  
+      </div>    
 
       <g-column label="任务ID" name="taskId" width="150" ellipsis="true">
         <g-select disabled="{(status=='03'?'true':'false')}" value={status} width="100"></g-select>
-        <!-- <g-label title="{status}">{status}</g-label>  -->
+        <g-label title="{status}">{status}</g-label> 
       </g-column>
       
       
@@ -331,7 +335,7 @@
           <span ctype="label" visible="{(status!='03'?true:false)}">test</span>
       </div>
       
-  </div>
+  </div> -->
   
   <!-- <g-form id="editlist-form1">
     <g-editlist id="editlist1" footerControl="true" editable="false" editcell="false" control="save,reset,add,delete,up,down,clear" url="http://10.10.10.6:81/example/webview/definition/Editlist/data?pageSize=10&currentPage=1" rowControl="true">
