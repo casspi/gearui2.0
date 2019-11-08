@@ -495,9 +495,9 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
         delete inputProps.labelText;
         delete inputProps.validateTempId;
         if(this.state.controlType == "textarea") {
-            input = <AntdTextArea key="textarea" {...textareaProps}></AntdTextArea>;
+            input = <AntdTextArea key="textarea" autoComplete="off" {...textareaProps}></AntdTextArea>;
         }else {
-            input= <AntdInput key="input" {...inputProps}></AntdInput>;
+            input= <AntdInput key="input" autoComplete="off" {...inputProps}></AntdInput>;
         }
         let acprops = this.getAutoCompleteProps();  
         if(this.form){

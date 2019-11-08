@@ -1333,4 +1333,13 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         return this.searchNodes[key];
     }
 
+    //清空列表(只是前台的数据)
+    clearList(){
+        this.clearAll()
+        this.setState({
+            dataSource:[]
+        });
+
+    }
+
 }

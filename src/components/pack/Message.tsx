@@ -27,15 +27,17 @@ export default class Messager {
     }
 
     // 显示一个消息提示框
-    static alert(title:string,message:string,topOrFun:any,...args: any[]){
+    static alert(title:string,message:string,topOrFunOrType:any,...args: any[]){
         let type;
         let fun: Function;
         let delay;
         let nTop;
-        if (ObjectUtil.isFunction(topOrFun)){//为了支持老的写法，有些第三个参数为top 有些为callback
-            fun = topOrFun;
+        if (ObjectUtil.isFunction(topOrFunOrType)){//为了支持老的写法，有些第三个参数为top 有些为callback
+            fun = topOrFunOrType;
+        }else if(ObjectUtil.isString(topOrFunOrType)){//也可能为type
+            type = topOrFunOrType
         }else{
-            nTop = topOrFun
+            nTop = topOrFunOrType
         }
         if(args){
             for(let i=0;i<args.length;i++){

@@ -196,7 +196,8 @@
       </div>
       <button ctype="cancel" url="http://www.baidu.com" value="quxiao1"></button>
       <form ctype="form" id="form1"  style="">
-        <!-- <g-autocomplete id="autocomplete111" width="300" name="autocomplete111" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" value="210000"  async="true" dictype="DIC_AREA"></g-autocomplete> -->
+        <input type="password" name="ps">
+        <g-autocomplete id="autocomplete111" width="300" name="autocomplete111" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" value="210000"  async="true" dictype="DIC_AREA"></g-autocomplete>
         <!-- <g-inputtag width="440" mustmacth="true" async="true" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA"></g-inputtag> -->
         <!-- <g-check target="ec3" label="全选" checked="false" ></g-check>
           <g-check id="ec3" dictype="checkboxJson1"></g-check>
@@ -275,9 +276,9 @@
               <g-checktag required="true" name="c1" dictype="checkboxJson1"  value="ws,zs"></g-checktag> -->
               <!-- <g-datetime  value="2019-05-09" type="range" name="d1" id="d1"></g-datetime>
                 <g-component value="{ctype:'text',value:'文本框',id:'text',required:true,width:'300px'}"></g-component> -->
+                <g-submit>提交</g-submit>
                 <g-button onClick="G('#form1').reset()">重置</g-button>  
               </form>
-              <g-submit>提交</g-submit>
     <!-- </div> -->
     <!-- <textarea name="ahellMsg" style="width:900px;height: 400px;" ></textarea> -->
     <!-- <g-spin spinning="true" delay="3"></g-spin> -->

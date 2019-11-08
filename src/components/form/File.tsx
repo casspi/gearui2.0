@@ -66,9 +66,11 @@ export default class File<P extends typeof props, S extends state> extends FormT
         let fileProps:any = this.getFileInputProps();
         if(this.form){
             delete state.value;
-            //delete inputProps.value;
+            // delete inputProps.value;
             // delete fileProps.value;
         }
+        console.log(inputProps)
+        console.log(fileProps)
         return <div {...state}>
                 <AntdInput {...inputProps}/>
                 <AntdInput {...fileProps}/>

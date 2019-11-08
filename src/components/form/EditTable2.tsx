@@ -457,7 +457,6 @@ import * as Http from '../../utils/http';
 import * as Form from './Form';
 import ParseHtml from '../../utils/ParseHtml';
 import { GearUtil, UUID } from '../../utils';
-import * as Text from './Text'
 
 export var props = {
 	...Tag.props,
@@ -539,18 +538,19 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 				name: props.dataindex,
 				value: rowData[props.dataindex],
 				onClick: ()=>{
+					console.log('click');
 					return  false
 				},
-				// onChange:(value: any,oldValue: any)=>{
-				// 	debugger;
-				// 	let data = this.state.dataList;
-				// 	data = data.map((item:any)=>{
-				// 		if(rowData.id===item.id){
-				// 			rowData[props.dataindex] = value
-				// 		};
-				// 		return item;
-				// 	})
-				// }
+				onChange:(value: any,oldValue: any)=>{
+					debugger;
+					let data = this.state.dataList;
+					data = data.map((item:any)=>{
+						if(rowData.id === item.id){
+							rowData[props.dataindex] = value
+						};
+						return item;
+					})
+				}
 			})
 			delete editProps.children;
 			let editDom = GearUtil.newInstanceByType(editProps.editctype, editProps, this);
