@@ -15,7 +15,7 @@ import * as Repeat from './Repeat';
 import * as Table from './Table';
 import * as Upload from './Upload';
 import * as PlumbList from './PlumbList';
-// import * as EditTable2 from './EditTable2';
+import * as EditTable2 from './EditTable2';
 export {
     AjaxArea,
     AjaxLoad,
@@ -34,5 +34,5 @@ export {
     Table,
     Upload,
     PlumbList,
-    // EditTable2,
+    EditTable2,
 }
