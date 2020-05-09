@@ -1,6 +1,6 @@
 import * as React from 'react';
 import * as Text from './Text';
-import { AutoComplete as AntdAutoComplete, Input as AntdInput } from 'antd';
+import { AutoComplete as AntdAutoComplete, Input as AntdInput, Tooltip as AntdTooltip } from 'antd';
 import { InputProps } from "antd/lib/input";
 import { ObjectUtil, Http } from '../../utils';
 import Parser from '../../core/Parser';
@@ -9,7 +9,7 @@ const AntdOptGroup = AntdAutoComplete.OptGroup;
 const AntdTextArea = AntdInput.TextArea;
 export var props = {
     ...Text.props,
-    controlType: GearType.String,//是input还是textarea
+    controlType: GearType.String,//是input | textarea
     //是否严格匹配
     mustMatch: GearType.Boolean,
     // 行数
@@ -20,7 +20,8 @@ export var props = {
     popupContainer: GearType.String,
     async: GearType.Boolean,
     dictype: GearType.Or(GearType.Object, GearType.Function, GearType.String),
-    url: GearType.Or(GearType.String, GearType.Function)
+    url: GearType.Or(GearType.String, GearType.Function),
+    toolTipText: GearType.String,//显示气泡提示框的文本
 }
 export interface state extends Text.state {
     controlType?: string;
@@ -31,7 +32,8 @@ export interface state extends Text.state {
     category?: boolean;
     searchOptions?: Array<OptionData>;
     dictype?: object | string | Function,
-    url?: string | Function
+    url?: string | Function,
+    // showToolTip?:boolean
 }
 interface OptionData {
     value?: string;
@@ -62,7 +64,8 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
             limit: this.props.limit || 10,
             category: this.props.category == true,
             dictype: this.props.dictype,
-            url: this.props.url
+            url: this.props.url,
+            // showToolTip:false,
         };
     }
 
@@ -514,9 +517,28 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
                 name: this.state.name || this.props.id
             };
             delete acprops.id;
-            return <span ref={ele=>this.ref=ele} id={this.state.id} className={this.state.className}><AntdAutoComplete {...acprops}>{input}</AntdAutoComplete><input {...hiddenProps}/></span>;
+            if(this.props.toolTipText){
+                return <span ref={ele=>this.ref=ele} id={this.state.id} className={this.state.className}>
+                            <AntdTooltip defaultVisible={false} trigger={'hover'}  placement="topLeft" title={this.props.toolTipText}>
+                                <AntdAutoComplete {...acprops}>{input}</AntdAutoComplete>
+                                <input {...hiddenProps}/>
+                            </AntdTooltip>
+                        </span>;
+            }else{
+                return <span ref={ele=>this.ref=ele} id={this.state.id} className={this.state.className}>
+                            <AntdAutoComplete {...acprops}>{input}</AntdAutoComplete><input {...hiddenProps}/>
+                        </span>;
+
+            }
         }else {
-            return <AntdAutoComplete {...acprops}>{input}</AntdAutoComplete>;
+            if(this.props.toolTipText){
+                return<AntdTooltip defaultVisible={false} trigger={'hover'}  placement="topLeft" title={this.props.toolTipText}>
+                    <AntdAutoComplete {...acprops}>{input}</AntdAutoComplete>
+                </AntdTooltip> 
+            }else{
+                return <AntdAutoComplete {...acprops}>{input}</AntdAutoComplete>
+            }
+            
         }
              
     }
@@ -608,10 +630,11 @@ export default class AutoComplete<P extends typeof props & InputProps, S extends
 
     setUrl(url:string,callback?:Function){
         this.setState({
-            value: "",
+            value:  "",
             url
         },()=>{
-            this.loadData(this.props.value)
+            this.setValue(this.props.value || "")
+            this.loadData()
             if(callback){
                 callback()
             }

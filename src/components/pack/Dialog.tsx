@@ -475,6 +475,7 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                         //     //请求页面含有html body标签会报错，此处截取body内容作为渲染
                         //     html = htmls.replace('<body>',"").replace('</body>',"")
                         // })
+                        
                         //截取异步请求中的<script></script>
                         let jsReg = new RegExp(/<script.*?>([\s\S]+?)<\/script>/img);
                         // console.log(jsReg)
@@ -483,6 +484,25 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                             scriptCode=str;
                         })
                         scriptCode = scriptCode.replace(/<script.*?>/,"").replace('</script>',"");
+
+                        //截取异步请求中的<style></style>
+                        // console.log(data)
+                        let matchRes = data.match(/<style.*?>([\s\S]+?)<\/style>/img)//(/<style[^>]*>(.*?)<\/style>/g)
+                        // console.log(matchRes)
+                        let style = document.createElement("style");
+                        style.type = "text/css";
+                        if(matchRes && matchRes.length>0){
+                            for(let i=0;i<matchRes.length;i++){
+                                try{
+                                　　style.appendChild(document.createTextNode(matchRes[i].replace(/<style[^>]*>/g,"").replace(/<\/style>/g,"")));
+            
+                                }catch(ex){
+                                　　style.styleSheet.cssText = matchRes[i].replace(/<style[^>]*>/g,"").replace(/<\/style>/g,"");//针对IE
+            
+                                }
+                            }
+                        }
+                        
                         let r = G.$(data, undefined, true);
                         children = r instanceof Array? r:[r];
                         this.setState({children},()=>{
@@ -491,6 +511,8 @@ export default class Dialog<P extends typeof props, S extends state> extends Tag
                             // G.G$(".async-body-"+this.state.id).load(url)
                             // console.log(scriptCode)
                             eval(scriptCode);
+                            var head = document.getElementsByTagName("head")[0];
+                            head.appendChild(style);
                         })
                     }
                 };

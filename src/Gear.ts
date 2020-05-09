@@ -37,6 +37,7 @@ export default class G {
     static render(renderOptions: RenderOptions) {
         //渲染指定节点下的控件
         //el: 指定节点
+        // console.log(renderOptions)
         let el = renderOptions.el;
         let parser = new Parser();
         let astMsg  = parser.parse(el);
@@ -83,6 +84,7 @@ export default class G {
         }else{
             this.cacheAst = astMsg.ast;
         }
+        // console.log(astMsg.ast)
         render.render(astMsg.ast, astMsg.parent, renderOptions.mounted);
     }
 

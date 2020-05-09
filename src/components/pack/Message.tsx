@@ -3,6 +3,7 @@ import { ObjectUtil} from '../../utils';
 import * as Spin from './Spin';
 import * as Label from '../data/Label';
 import * as React from 'react';
+// import ObjectUtil from '../../utils/ObjectUtil';
 export default class Messager {
 
     static spin: Spin.default<any, any>;
@@ -32,10 +33,14 @@ export default class Messager {
         let fun: Function;
         let delay;
         let nTop;
+        let otherParam;
+        // console.log(ObjectUtil.isPlainObject(topOrFunOrType))
         if (ObjectUtil.isFunction(topOrFunOrType)){//为了支持老的写法，有些第三个参数为top 有些为callback
             fun = topOrFunOrType;
         }else if(ObjectUtil.isString(topOrFunOrType)){//也可能为type
             type = topOrFunOrType
+        }else if(ObjectUtil.isPlainObject(topOrFunOrType)){
+            otherParam = topOrFunOrType
         }else{
             nTop = topOrFunOrType
         }
@@ -47,13 +52,25 @@ export default class Messager {
                     fun = args[i];
                 else if(ObjectUtil.isString(args[i]))
                     type = args[i];
+                else if(ObjectUtil.isPlainObject(args[i]))
+                    otherParam = args[i]
+
             }
         }    
         let labelProps:any = {
             value:message
         }
+        let width;
+        if(otherParam && otherParam.width){
+            width = otherParam.width;
+        }
+        // if(otherParam && otherParam.height){
+        //     height = otherParam.height;
+        // }
         let param = {
             title: title || "操作提示",
+            width: width,
+            // height:height,
             content: <Label.default {...labelProps}></Label.default>,
             okText: "确定",
             style: G.G$.extend({},{top:nTop}),
@@ -77,19 +94,19 @@ export default class Messager {
             setTimeout(() => modal.destroy(), delay);
     }
 
-    static info(title:string,message:string,top:number,...args: any[]){
+    static info(title:string,message:string,top:any=null,...args: any[]){
         this.alert(title,message,top,"info",...args);
     }
 
-    static warning(title:string,message:string,top:number,...args: any[]){
+    static warning(title:string,message:string,top:any=null,...args: any[]){
         this.alert(title,message,top,"warning",...args);
     }
 
-    static success(title:string,message:string,top:number,...args: any[]){
+    static success(title:string,message:string,top:any=null,...args: any[]){
         this.alert(title,message,top,"success",...args);
     }
 
-    static error(title:string,message:string,top:number,...args: any[]){
+    static error(title:string,message:string,top:any=null,...args: any[]){
         this.alert(title,message,top,"error",...args);
     }    
     

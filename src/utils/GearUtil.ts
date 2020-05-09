@@ -143,7 +143,6 @@ export default class GearUtil {
             
             let clazz = (typeof ast.tagClass == "string") ? G.components["htmltag"] : ast.tagClass;
             let ele = React.createElement(clazz, props, reactChildren);
-            
             return ele;
         }else if(type == 2){
             //表达式 -- 暂未处理

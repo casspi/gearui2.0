@@ -11,6 +11,7 @@ export interface state extends Tag.state {
 export default class HtmlTag<P extends typeof props, S extends (state)> extends Tag.default<P, S> {
 
     getInitialState():state {
+        // console.log(this.props)
         return {
             props: this.props.__ast__.attrsMap
         };
@@ -36,6 +37,8 @@ export default class HtmlTag<P extends typeof props, S extends (state)> extends 
         //         }
         //     }
         // }
+        // console.log(this.state)
+        // console.log(props)
         return React.createElement(this.props.__ast__.tag, props, this.state.children);
         // return null;
     }

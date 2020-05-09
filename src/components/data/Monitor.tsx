@@ -13,7 +13,8 @@ export var props = {
     interval: GearType.Number,
     delay: GearType.Number,
     notification: GearType.Any,
-    mode: GearType.Enum<'pull' | 'push' | 'mixed'>()
+    mode: GearType.Enum<'pull' | 'push' | 'mixed'>(),
+    onNotificationClose:GearType.Function
 };
 
 export interface state extends Tag.state {
@@ -211,7 +212,8 @@ export default class Monitor<P extends typeof props, S extends state> extends Ta
                             duration:duration,
                             title:title,
                             description:description,
-                            onClose:()=>{
+                            onClose:(e:any)=>{
+                                this.doEvent('notificationClose',e,n)
                                 delete this._notifications[n.id];
                                 if(G.G$.isEmptyObject(this._notifications)){
                                     this.__pauseNotificationSound();
@@ -351,6 +353,13 @@ export default class Monitor<P extends typeof props, S extends state> extends Ta
         if(this._playNotificationSound==false){
             // 如果设为不播放，立即停止当前的播放
             this.__pauseNotificationSound()
+        }
+    }
+
+    //关闭全局消息回调
+    onNotificationClose(fun:Function){
+        if(fun&&G.G$.isFunction(fun)){
+            this.bind('notificationClose')
         }
     }
 

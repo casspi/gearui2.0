@@ -35,7 +35,11 @@ export default class AjaxAction<P extends typeof props, S extends state> extends
         let r = false;
         if(this.haveEvent("beforeProcess")) {
             let re = this.doEvent("beforeProcess");
-            r = re ? re[0] : true;
+            if(re instanceof Array && re[0]===false){
+                r = false
+            }else{
+                r = re===false? false : true;
+            }
         }else {
             r = AjaxAction.beforeProcess();
         }

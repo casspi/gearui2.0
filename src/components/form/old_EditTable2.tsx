@@ -458,6 +458,10 @@ import * as Form from './Form';
 import ParseHtml from '../../utils/ParseHtml';
 import { GearUtil, UUID } from '../../utils';
 
+function InputEle(props:Object){
+
+}
+
 export var props = {
 	...Tag.props,
     url:GearType.String,
@@ -567,7 +571,7 @@ export default class EditTable2<P extends typeof props, S extends state> extends
 	parseTbody(data:any[]){
 		// console.log(data)
 		let tbody:any[]=[];
-		let thData:any = this.state.theadData;		
+		let thData:any = this.state.theadData.slice();		
         data.map((item:any,index:number)=>{
             tbody.push(
                 <tr key={'tobody-tr'+index} className={`edittable-tr ${item.editAble?"selected-tr":" "}`} onClick={this.selectRow.bind(this,item)}>{

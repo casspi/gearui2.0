@@ -33,7 +33,7 @@
       Learn how to configure a non-root public URL by running `npm run build`.
     -->
     <script>
-      var LEVEI=[{label:'严重',value:"l1",children:[{label:"我是离开了了了",value:"l11"}]},{label:"错误",value:"l2"},{label:'哈哈哈哈',value:"0101"}];
+      var LEVEI=[{label:'入门级',value:"l1",disableCheckbox:true,children:[{label:"入门级副本",value:"l11",children:[{label:"入门级副本2222",value:"l112"}]}]},{label:'困难级',value:"l2"},{label:'史诗级',value:"0101"}];
       var checkboxJson1 = [
 					{
 						label:"张三",
@@ -67,7 +67,8 @@
         alert('check')
       }
       function test(e){
-        console.log(e);
+        console.log(arguments)
+       console.log(e)
       }
       function setUrl(){
         return "hhttp://www.baidu.com"
@@ -102,31 +103,144 @@
         '<g-select  prompt="请选择" width="135" dictype="DIC_REL_RULE" id="SELECT3" name="dataItemRelTable['+ count+'].relRule" style="float:left;margin-left:0px;margin-right:3px;" class="relRule" ></g-select>'+
         '</div><div class="col-xs-2"><span ctype="button" buttonStyle="primary" class="ant-btn-fill btn-del-item m-l">-</span><span ctype="button"  buttonStyle="primary" class="ant-btn-fill btn-add-item m-l">+</span></div></div>');
       }
-     
+      function getForm(){
+        console.log(G('[dictype="radio_item"]').getValue())
+        console.log(G("#form1"))      
+      }
+      var radio_item = [{
+						label:"张三",
+						value: true,
+					},{
+						label:"王四",
+						value: false
+					}]
     </script>
     
     <title>React App</title>
   </head>
   <body>
-      <h1 id="test">test</h1>
-      <g-dialogaction dialogWidth="60%" id="d11" dialogHeight="50%" url="./index.html">弹框</g-dialogaction>
-      <!-- <g-dialogaction dialogWidth="600"  dialogHeight="1200" url="./index.html">弹框</g-dialogaction> -->
-      <g-form id="testF">
-        <g-edittable2 id='edittable2' url="./datalist.json">
-          <div label="姓名" dataIndex="name" editctype="text" width="100">
-            <span class="" ctype="time"></span>
-          </div>
-          <div label="ID" dataIndex="preId" editctype="text" width="100"></div>
-          <div label="标题" dataIndex="mobile" editctype="telephone" dictype="LEVEI" width="200"></div>
-          <div label="单位" dataIndex="unitId" editctype="select" dictype="LEVEI" width="150"></div>
-          <!-- <div label="单位" style="display: none" dataIndex="unitId" editctype="hidden" dictype="LEVEI" width="150"></div> -->
-        </g-edittable2>
-        <div>
-          <g-button onClick="G('#edittable2').addRow()">添加行</g-button>
-          <g-button onClick="G('#edittable2').delRow()">删除行</g-button>
-          <g-button onClick="G('#edittable2').save()">保存</g-button>
-        </div>
+    
+    <g-combotree id="tcom1" width="200" value="lixktest,liujuntest" dropdownStyle="max-height:500px;overflow-y:auto" multiple="true" onlyLeafCheck="true" url="http://10.10.10.134//auth/unit/getUnitUser?userId=admin"></g-combotree>
+    <g-form>
+      <g-combotree id="tcom" width="200" value="lixktest,liujuntest" dropdownStyle="max-height:500px;overflow-y:auto" multiple="true" onlyLeafCheck="true" url="http://10.10.10.134//auth/unit/getUnitUser?userId=admin"></g-combotree>
+    </g-form>
+      <!-- <video src="./webwxgetvideo.mp4" height="300" width="500" autoplay="autoplay" loop="loop" controls="controls" style></video> -->
+      <!-- <g-autocomplete id="autocomplete111" toolTipText="这是提示语哦啊啊啊啊啊" width="300" name="autocomplete1112"></g-autocomplete> -->
+      <g-form>
+          <!-- <g-autocomplete id="autocomplete111" width="300" name="autocomplete111" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" value="210000"  async="true" dictype="DIC_AREA"></g-autocomplete> -->
+          <div id="mytable" ctype="edittable2" url="editable2.json" class="editTable" style="width:1000px;">
+              <div class="tableControl">
+                <g-button value="添加行" icon="plus" onClick="addEditListRow(G('#mytable'));"></g-button>
+                <g-button value="删除行" icon="delete" onClick="deleteEditListRow(G('#mytable'));"></g-button>
+                <g-button value="清空" icon="delete"  onClick="deleteAll(G('#mytable'));"></g-button>
+                <g-button value="上移" icon="arrow-up"  onClick="moveUp(G('#mytable'));"></g-button>
+                <g-button value="插入一行" icon="put"  onClick="insertRow(G('#mytable'));"></g-button>
+                <g-button value="下移" icon="arrow-down"  onClick="moveDown(G('#mytable'));"></g-button>
+                <g-button value="置顶" icon="vertical-align-top"  onClick="moveTop(G('#mytable'));"></g-button>
+                <g-button value="置底" icon="vertical-align-bottom"  onClick="moveBottom(G('#mytable'));"></g-button>
+              </div>
+              <div class="tableHeader">
+                <table>
+                  <tr class="headtr">
+                    <!-- <td class="headtd batchtd" width="40"><input name="checkall" type="checkbox" value="checkall"/></td> -->
+                    <td class="headtd sequencetd" width="40">序号</td>
+                    <td class="headtd" width="200">数据项</td>
+                    <td class="headtd" width="180">数据名称</td>
+                    <td class="headtd" width="70">类型</td>
+                    <td class="headtd" width="40">长度</td>
+                    <td class="headtd" width="310" style="text-align:center;">默认值</td>
+                    <td class="headtd" width="40">必填</td>
+                    <td class="headtd" width="40">查询</td>
+                    <td class="headtd" width="40">布控</td>
+                    <td class="headtd" width="0"></td>
+                    <td class="headtd" width="0"></td>
+                  </tr>
+                </table>
+              </div>
+              <div class="tableBody" style="height:350px;">
+                <table>
+                  <thead>
+                    <tr><td><g-icon icon="loading" spin="true"></g-icon><span>加载中...</span></td></tr>
+                  </thead>
+                  <tbody>
+                  
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
       </g-form>
+      <script>
+            G(function(){
+              let edittable2 = G('#mytable');
+              console.log(edittable2)
+              
+              edittable2.onLoadSuccess(function(){
+                console.log(arguments)
+              })
+            })
+            // 添加一新行
+            function addEditListRow(edittable2){
+              console.log(...arguments)
+              console.log(edittable2)
+              edittable2.addRow();	
+            }
+            
+            // 当删除行时
+            function deleteEditListRow(edittable2){
+              edittable2.deleteRow();			
+            }
+    
+            function deleteAll(edittable2){
+              edittable2.clear();
+            }
+            function insertRow(edittable2){
+              edittable2.insertRow()
+            }
+            function moveUp(edittable2){
+              edittable2.moveUp()
+            }
+            function moveDown(edittable2){
+              edittable2.moveDown()
+            }
+            function moveTop(edittable2){
+              edittable2.moveTop()
+            }
+            function moveBottom(edittable2){
+              edittable2.moveBottom()
+            }
+      </script>
+ 
+      <!-- <h1 id="test">
+        <input type="checkbox" onclick="test(this)">
+      </h1>
+      <g-button id="appendid">append</g-button>
+      <script>
+        G(function(){
+          G('#appendid').onClick(function(){
+            G('#test').append('<input type="checkbox" class="checkbox" onClick="test(this)"/>');
+          })
+        })
+      </script> -->
+      <!-- <g-dialogaction dialogWidth="60%" id="d11" dialogHeight="50%" url="./index.html">弹框</g-dialogaction> -->
+      <!-- <g-dialogaction dialogWidth="600"  dialogHeight="1200" url="./index.html">弹框</g-dialogaction> -->
+      
+      <!-- <g-form id="testF">
+          <g-edittable2 id='edittable2' url="./datalist.json">
+            <div label="姓名" dataIndex="name" editctype="text" width="100">
+              <span class="" ctype="time"></span>
+            </div>
+            <div label="ID" dataIndex="preId" editctype="text" width="100"></div>
+            <div label="标题" dataIndex="mobile" editctype="telephone" dictype="LEVEI" width="200"></div>
+            <div label="单位" dataIndex="unitId" editctype="select" dictype="LEVEI" width="150"></div>
+          </g-edittable2>
+          <div>
+            <g-button onClick="G('#edittable2').addRow()">添加行</g-button>
+            <g-button onClick="G('#edittable2').delRow()">删除行</g-button>
+            <g-button onClick="G('#edittable2').save()">保存</g-button>
+          </div>
+        </g-form> -->
+
     <!-- <div id="warpbox" >
       <div id="box1" draggable="true" style="width: 150px;height: 150px;background: #f77">"上网位置标签","value":"1"},{"label":"应用类型标签","value":"2"},{"</div>
       <div id="box2" style="width:150px;height: 150px;background: #f11"></div>
@@ -162,18 +276,17 @@
     <input id="r1" type="range" min="0" max="100" value="10"/> -->
     <!-- <g-link value="弹出消息框" url="javascript:alert(1)"></g-link>
     <g-label showHtmlStr="true">获取值<br/>999</g-label>
-    <g-combotree id="co1"  dictype="LEVEI" ></g-combotree>
     <g-label>8888</g-label>
     <g-label style="width:1230px;height: 100px"  showHtmlStr="true"
     value='<g-hidden name="hidden" value="999"></g-hidden>
-      <g-text required="true" width="150" name="text"></g-text>
-      <g-check id="c1"  label="99"  name="text"></g-check>
-      <g-radio  required="true" name="text"></g-radio>
-      <g-text id="source" value="101" width="400"></g-text>
-      <g-text name="e22" equals="#source" prompt="与指定控件值相同" invalidMessage="输入值必须与前一个控件相同" width="400"></g-text>'>
-    </g-label>
-    <g-label  dictype="LEVEI" value="l11,l2"></g-label>
-    <g-label  dictype="LEVEI">l11</g-label> -->
+    <g-text required="true" width="150" name="text"></g-text>
+    <g-check id="c1"  label="99"  name="text"></g-check>
+    <g-radio  required="true" name="text"></g-radio>
+    <g-text id="source" value="101" width="400"></g-text>
+    <g-text name="e22" equals="#source" prompt="与指定控件值相同" invalidMessage="输入值必须与前一个控件相同" width="400"></g-text>'>
+  </g-label>-->
+    <!-- <g-label  dictype="LEVEI" value="l11,l2"></g-label>
+    <g-label  dictype="LEVEI">l11</g-label>  -->
       <!-- <span ctype="listaction" actionType="batchAction" url="setUrl()">listaction</span> -->
       <!-- <div><g-link value="弹出消息框" url="javascript:alert(1)"></g-link></div>
       <div><g-link url="javascript:alert(1)">弹出消息框</g-link></div> -->
@@ -186,36 +299,33 @@
             <span ctype="select" name="test" width="150"></span>
         </div>
       </form> -->
-      <div class="ant-spin ant-spin-lg ant-spinning">
-        <span class="ant-spin-dot">
-          <i></i>
-          <i></i>
-          <i></i>
-          <i></i>
-        </span>
-      </div>
-      <button ctype="cancel" url="http://www.baidu.com" value="quxiao1"></button>
+      <!-- <button ctype="cancel" url="http://www.baidu.com" value="quxiao1"></button> -->
       <form ctype="form" id="form1"  style="">
-        <input type="password" name="ps">
+       
+        <!-- 
+        <g-file name="taskFiles"></g-file>
+        <g-combotree  dictype="LEVEI" multiple="true" onlyleafcheck="false" cascadeCheck="true"  id="comb" required="true" width="280"></g-combotree>
+        <g-file name="taskFile"></g-file>
         <g-autocomplete id="autocomplete111" width="300" name="autocomplete111" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA" value="210000"  async="true" dictype="DIC_AREA"></g-autocomplete>
-        <!-- <g-inputtag width="440" mustmacth="true" async="true" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA"></g-inputtag> -->
-        <!-- <g-check target="ec3" label="全选" checked="false" ></g-check>
+        <g-inputtag width="440" mustmacth="true" async="true" url="http://10.10.10.6:81/dictionary/tree?type=DIC_AREA"></g-inputtag>
+        <g-check target="ec3" label="全选" checked="false" ></g-check>
           <g-check id="ec3" dictype="checkboxJson1"></g-check>
-          <span id="ec3_panel"></span> -->
-          <!-- <input type="hidden" value='999' name="uyuiuyu"> -->
+          <span id="ec3_panel"></span>
+          <input type="hidden" value='999' name="uyuiuyu">
           <script>
             function checkValue(text){
               console.log(text)
               text.setValue(text.getValue().replace(/(^\s*)|(\s*$)/g,""))
             }
           </script>
-          <!-- <g-text id="code" onKeyUp="checkValue(this)" required="true"  width="400"></g-text> -->
+          <g-datetime defaultTime="00:00:00"></g-datetime>
+          <g-datetime name="d7" type="range"  defaultTime="00:00:00,23:59:59" format="YYYY-MM-DD HH:mm:ss" ></g-datetime>
+          <g-text id="code" onKeyUp="checkValue(this)" required="true"  width="400"></g-text>
           <g-text id="code1"  required="true"  width="400"></g-text>
           <g-text id="code2"  required="true"  width="400"></g-text>
-          <!-- 
-            <g-text name="e22" equals="#source" prompt="与指定控件值相同" invalidMessage="输入值必须与前一个控件相同" width="400"></g-text> -->
-          <!-- <g-date name="d7" type="range" start="2017/09/09"  format="YYYY/MM/DD" abledate="2017/09/03,2017/09/25"></g-date>
-          <g-datetime name="d7" type="range" value="2017-10-08 11:10:9"  format="YYYY-MM-DD HH:mm:ss" ></g-datetime>
+          
+            <g-text name="e22" equals="#source" prompt="与指定控件值相同" invalidMessage="输入值必须与前一个控件相同" width="400"></g-text>
+          <g-date name="d7" type="range" start="2017/09/09"  format="YYYY/MM/DD" abledate="2017/09/03,2017/09/25"></g-date>
           <g-hidden name="hidden" id="hidden"></g-hidden>
           <g-int required="true"></g-int>
           <div id="box">
@@ -224,9 +334,8 @@
           <g-checktag id="c1"  dictype="LEVEI" required="true"  name="checktag"></g-checktag> 
           <g-check required="true" dictype="LEVEI" id="check"></g-check>
           <g-file ></g-file>
-           <g-radio  required="true" name="text"></g-radio>
-          <g-upload  name="upload" fileListMax="10"></g-upload> -->
-          <!-- <g-time id="time"   required="true"></g-time>
+          <g-upload  name="upload" fileListMax="10"></g-upload>
+          <g-time id="time"   required="true"></g-time>
             <g-inputtag id='inputtag'  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" async="true"></g-inputtag>
           <g-text disabled="true" required="true"></g-text>
           <span ctype="datetime" id="createTime" name="createTime" type="range" width="400"></span>
@@ -234,51 +343,45 @@
           <div id="date-w">
           </div>
           
-          <div id="www"></div>  -->
-          <g-upload id="upload" name="picture"></g-upload>  
-            <!-- <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag> -->
+          <div id="www"></div> 
+          <g-upload id="upload" name="upload"></g-upload>  
+            <g-inputtag id="in1" value="110106"  url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA" multiple="true"  async="true"></g-inputtag>
             
-            <!-- <g-combotree id="cc1" childDisable="true"  required="true" multiple="true" label="URL"  url="http://10.10.10.6:81/example/Combotree/data" width="300"></g-combotree>
-            <g-text name="c5" required="true"></g-text> -->
-            <!-- <div id="d2-w" style="display:none">
+            <g-combotree id="cc1" childDisable="true"  required="true" multiple="true" label="URL"  url="http://10.10.10.6:81/example/Combotree/data" width="300"></g-combotree>
+            <g-text name="c5" required="true"></g-text>
+            <div id="d2-w" style="display:none">
               <div>
                 <div>
                   <g-date name="date" required="true" id="d0" ></g-date>
                 </div>
               </div> 
               <g-datetime   type="date" name="d1n" id="d2"></g-datetime>
-            </div> -->
-            <!-- <g-combotree editable="true" width="200" url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA"></g-combotree> -->
-            <!-- <div id="warp">
+            </div>
+            <g-combotree editable="true" width="200" url="http://10.10.10.6:81/dictionary/query?type=DIC_AREA"></g-combotree>
+            <div id="warp">
               <g-check id="check" required="true"></g-check>
-            </div>  -->
+            </div> 
             
-            <!-- <div class="fbox">
+            <div class="fbox">
               <g-text name="cronSecond"  invalidMessage="输入值不符合规则，可参考提示信息编写！" 
               regexp="((^([0-9]|[0-5][0-9])(\\,|\\-|\\/){1}([0-9]|[0-5][0-9]))|^([0-9]|[0-5][0-9])|^(\\*))"></g-text>
             </div>
-            <g-text required="true" id="t2" name="t2" regexp="^[0-9]+$"></g-text> -->
+            <g-text required="true" id="t2" name="t2" regexp="^[0-9]+$"></g-text>
             <div>
-                <g-select readonly="true" value="l1"  required="true" name="s1" width="200"  dictype="LEVEI"></g-select>
-                <!-- <g-select   id="s2" required="true"  width="200"  ></g-select> -->
-              <!-- <g-combotree childDisable="true"  mustMatch="true" multiple="true" required="true" id="autocompleteid"  name="autocomplete"   dictype="LEVEI" width="200" prompt="输入内容必须在选项内"></g-combotree> -->
+                <g-select    required="true" name="s1" width="200"  multiple="true" value="l1,l2" dictype="LEVEI"></g-select>
+                <g-select   id="s2" required="true"  width="200"  ></g-select>
+              <g-combotree childDisable="true"  mustMatch="true" multiple="true" required="true" id="autocompleteid"  name="autocomplete"   dictype="LEVEI" width="200" prompt="输入内容必须在选项内"></g-combotree>
             </div>
             <div id="testBox" class="rule-lists">
             </div>
             <g-button onClick="addItem()">ADD</g-button>
-            <g-component id="compo"></g-component>
-            <!-- <script>
-              G(function(){
-                G("#testBox").append("<g-text class='text-bg'></g-text><style>.text-bg{background:red}</style>")
-              })
-            </script> -->
-            <!-- <g-textarea  required="true" name="textarea"></g-textarea>
-              <g-checktag required="true" name="c1" dictype="checkboxJson1"  value="ws,zs"></g-checktag> -->
-              <!-- <g-datetime  value="2019-05-09" type="range" name="d1" id="d1"></g-datetime>
-                <g-component value="{ctype:'text',value:'文本框',id:'text',required:true,width:'300px'}"></g-component> -->
+            <g-component id="compo"></g-component> -->
+            <span readOnly='true' name="type" ctype="select" value="888" width="190" id="sampleType" name="sampleType"></span>
+          
                 <g-submit>提交</g-submit>
                 <g-button onClick="G('#form1').reset()">重置</g-button>  
               </form>
+              <a href="./area.json" download="w3logo">百度</a>
     <!-- </div> -->
     <!-- <textarea name="ahellMsg" style="width:900px;height: 400px;" ></textarea> -->
     <!-- <g-spin spinning="true" delay="3"></g-spin> -->
@@ -288,55 +391,66 @@
       function testClick(e){
         console.log(e.props['data-taskid'])
       }
-    </script>
-    <div ctype="ajaxlist" g-cloak id="result" sequence="false" url="./datalist.json" onLoadSuccess="test(arguments[0])">
-      <div label="任务ID" name="taskId" ctype="column" width="50">
-          <g-button data-taskid="{taskId}"  onClick="{testClick(this)}">testButton</g-button>
-          <g-label title="{status}">{(dataTest(status))}</g-label>  
-      </div>    
 
-      <g-column label="任务ID" name="taskId" width="150" ellipsis="true">
-        <g-select disabled="{(status=='03'?'true':'false')}" value={status} width="100"></g-select>
-        <g-label title="{status}">{status}</g-label> 
-      </g-column>
+
+      function testClick1(){
+        let newWin = window.open('http://localhost:3000');
+        let params = "window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如...window.open()实现post传递参数_javascript技巧_脚本之家2015年3月12日 - 本文主要向大家介绍了如何使用window.open()实现post传递参数的方法,思路是参考的一位网友的,然后根据自己的项目需求做了些调整,这里同样分享给大家,..脚本之家 - 百度快照window.open()用post传递参数 - lizhengyu891231的博客 - CSDN博客2018年11月7日 - window.open url 参数post方式传递 04-09 阅读数 1万+    最近在做web项目,碰到需要跨页面传递参数的功能,就是那种需要把当前页面的内容带到新开...CSDN技术社区 - 百度快照利用window.open实现post方式的传递参数 - 总有一天,你的日积月累...2017年3月10日 - window.open()默认带参数的方法是在url中直接添加参数,这样子参数信息就会暴漏出来。 基于以上两个问题,考虑使用POST的方式进行提交。   基本思路如..."
+        let formStr = '<input type="hidden" name="params" value="' + params + '" />';
+        newWin.document.body.innerHTML = formStr;
+      }
+
+         
       
+    </script>
+    <div style="width:800px;">
+      <g-form>
+
+          <div ctype="ajaxlist"  checkType="checkbox" url="./datalist.json" rowIdName="taskId" g-cloak id="result" width="1000" sequence="false"  onLoadSuccess="test(arguments[0])">
+            <div label="任务ID" name="taskId" ctype="column" width="50" >
+                <a ctype="link" data-id='{taskId}' onClick="testClick1(this)">test_link</a>
+            </div>    
       
-      <g-column label="任务名称" width="250">
-          <g-label title="{taskName}">{taskName}</g-label> 
-      </g-column>
-      <g-column label="任务类型" name="readType" width="100"></g-column>
-      <g-column label="任务状态" name="statusCn" width="100"></g-column>
-      <g-column label="分组ID" name="groupIds" width="100"  className="className11"></g-column>
-    
-      <div ctype="column" label="hehe" class="actiontd" name="hehe_o" ordercolumn="hehe_o">
-          
-        <g-check name="text" disabled="{(status=='03'?'true':'false')}"></g-check>
-      </div>
-      <div ctype="column" label="操作" class="actiontd">
-          <g-label>{#(dataConvert(status))}</g-label>
-          <g-link url="http://www.baidu.com"><i class="iconfont icon-quanbu "></i></g-link>
-          <g-link  id="id{(status)}" name="gg" type="link" target="_blank"
-            visible="{(status != '03')}"
-            url="/read/task/getInstructions?taskId={taskId}">查看指令状态
-          </g-link>
-          <g-link type="link" target="_blank"
-            url="/read/task/getTask?taskId={taskId}">查看任务信息
-          </g-link>
-          <g-text name="text"  width="100"></g-text>
-          <g-dialogaction type="button"  visible="{(status != '03' || status!='21')}">dialog</g-dialogaction>
-          <span ctype="button" buttonStyle="primary" icon="arrow-right">
-            查看
-          </span>
-          <span ctype="label"  class="{status}">9999</span>
-          <g-ajaxaction type="link" visible="{(status != '21')}"
-          data-taskid="{taskId}"
-          onBeforeProcess="{testClick(this)}"
-            url="/read/task/revoke?taskId={taskId}" confirm="你确定要撤销这条读取任务吗？">撤销
-          </g-ajaxaction>
-          <span ctype="label" visible="{(status!='03'?true:false)}">test</span>
-      </div>
-      
-  </div> -->
+            <g-column label="任务ID" name="taskId" width="150" ellipsis="true">
+              <g-select disabled="{(status=='03'?'true':'false')}" value={status} width="100"></g-select>
+              <g-label title="{status}">{status}</g-label> 
+            </g-column>
+            
+            
+            <g-column label="任务名称" width="250">
+                <g-label title="{taskName}">{taskName}</g-label> 
+            </g-column>
+            <g-column label="任务类型" name="readType" width="100"></g-column>
+            <g-column label="任务状态" name="statusCn" width="100"></g-column>
+            <g-column label="分组ID" name="groupIds" width="100"  className="className11"></g-column>
+            <div ctype="column" label="操作" class="actiontd" width="300">
+                <g-label>{#(dataConvert(status))}</g-label>
+                <g-link url="http://www.baidu.com"><i class="iconfont icon-quanbu "></i></g-link>
+                <g-link  id="id{(status)}" name="gg" type="link" target="_blank"
+                  visible="{(status != '03')}"
+                  url="/read/task/getInstructions?taskId={taskId}">查看指令状态
+                </g-link>
+                <g-link type="link" target="_blank"
+                  url="/read/task/getTask?taskId={taskId}">查看任务信息
+                </g-link>
+                <g-text name="text"  width="100"></g-text>
+                <g-dialogaction type="button"  visible="{(status != '03' || status!='21')}">dialog</g-dialogaction>
+                <span ctype="button" buttonStyle="primary" icon="arrow-right">
+                  查看
+                </span>
+                <span ctype="label"  class="{status}">9999</span>
+                <g-ajaxaction type="link" visible="{(status != '21')}"
+                data-taskid="{taskId}"
+                onBeforeProcess="{testClick(this)}"
+                  url="/read/task/revoke?taskId={taskId}" confirm="你确定要撤销这条读取任务吗？">撤销
+                </g-ajaxaction>
+                <span ctype="label" visible="{(status!='03'?true:false)}">test</span>
+            </div>
+            
+        </div>
+        <g-datetime name="date" onOk="alert(22)" type="range"></g-datetime>
+      </g-form>
+    </div> -->
   
   <!-- <g-form id="editlist-form1">
     <g-editlist id="editlist1" footerControl="true" editable="false" editcell="false" control="save,reset,add,delete,up,down,clear" url="http://10.10.10.6:81/example/webview/definition/Editlist/data?pageSize=10&currentPage=1" rowControl="true">
@@ -357,7 +471,7 @@
   <!-- <span ctype="label"  value="<a>999</a>"></span> -->
   
     <!-- <g-processingrules lineColor="#f60"  url="./flowChart.json"></g-processingrules> -->
-  <g-dialogaction id="addBtn" value="添加" type="button" buttonStyle="primary" title="部门信息录入" url="./test1.html" dialogWidth="800" loadType="async" controlBar="true" ></g-dialogaction>
+  <!-- <g-dialogaction id="addBtn" value="添加" type="button" buttonStyle="primary" title="部门信息录入" url="./test1.html" dialogWidth="800" loadType="async" controlBar="true" ></g-dialogaction> -->
   <!-- <g-dialogaction id="d1" loadType="async" dialogWidth="600" centered="true" dialogHeight="300" title="弹框一"  url="http://10.10.10.6">弹框一</g-dialogaction> -->
   <!-- <g-dialog centered="false" style="top:300px" dragable="true"></g-dialog> -->
   
@@ -375,7 +489,7 @@
   <!-- <g-dialog visible="false" id="d2" title="弹框二">
       test
   </g-dialog> -->
-  <!-- <g-dialogaction loadType="iframe" controlbar='false' dialogWidth="600"  title="查看详情" url="./test.html"></g-dialogaction> -->
+  <!-- <g-dialogaction loadType="iframe" controlbar='false' dialogWidth="600"  title="查看详情" url="./test.html">222</g-dialogaction> -->
   
   <!-- <a ctype="text" id="span" width="50%">22222</a>
   <g-text id="span" width="50%">22222</g-text> -->
@@ -440,10 +554,10 @@
     // G("#source").setValue("test",function(){
     //   console.log(G("#source").getValue())
     // });
-    G("#upload").onBeforeUpload(function(a1,a2){
-        console.log(a1);
-        console.log(a2);
-    })
+    // G("#upload").onBeforeUpload(function(a1,a2){
+    //     console.log(a1);
+    //     console.log(a2);
+    // })
     // G(".s11").each(function(){
     //   console.log(G(this))
     //   G(this).onSelect(function(node){

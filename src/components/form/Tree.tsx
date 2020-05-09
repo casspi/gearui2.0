@@ -396,7 +396,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 ele.isLeaf = false;
             }
 
-            //特殊需求，多选时父节点选中时不可选中子节点
+            //特殊需求，多选时父节点选中时不可选中子节点(欧阳提出的)
             if(this.props['childDisable']===true){
                 if(ele && ele.checked){
                     if(ele.children && ele.children.length>0){
@@ -415,7 +415,8 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 }
             }
             let disabled = ele.disabled;
-            let disableCheckbox = ele.disableCheckbox;
+            
+            let disableCheckbox = ele.disableCheckbox || ele.attributes.disableCheckbox;//该节点是否可以被选中，推荐带checkbox时使用(使用场景：梁盼提的多重节点时，最外层根节点不能被选中)
             let children = ele.children;
             let childrenMap;
             if(children && children instanceof Array) {
@@ -482,7 +483,10 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
                 if(re == false) {
                     return;
                 }
-
+                let cEventRe = this.doEvent("beforeCheck",node);
+                if(cEventRe instanceof Array && cEventRe[0] == false) {
+                    return;
+                }
                 let oldValue = this.getValue();
                 var callback = ()=>{
                     this._change(this.getValue(),oldValue);
@@ -1188,6 +1192,7 @@ export default class Tree<P extends (typeof props) & AntdTreeProps, S extends st
         let keyValue: any[] = [];      
         // 设置的是值，先根据值找到对应节点的key 
         this._findKeyByValue(value,this.state.options,keyValue);
+        console.log(keyValue)
         // 在级连情况下，如果设置值为父级的值，子级也须全选
         // modify by hechao
         let newKeyValue: any;     

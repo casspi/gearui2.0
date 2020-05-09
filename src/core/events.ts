@@ -129,6 +129,7 @@ let events = {
     onMsPointerOver: GearType.Function,
     onMsPointerUp: GearType.Function,
     onNotification: GearType.Function,
+    onNotificationClose:GearType.Function,
     onOffLine: GearType.Function,
     onOk: GearType.Function,
     onOnline: GearType.Function,

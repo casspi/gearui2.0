@@ -60,6 +60,9 @@ export default class Notification {
         if(!options.duration){
             options.duration = null;
         }
+        if(!G.G$.isFunction(options.onClose)){
+            options.onClose = function(){};
+        }
         if(options.width){
             if(/^\d+$/.test(options.width)){
                 let style = options.style || {};
@@ -80,6 +83,7 @@ export default class Notification {
             options:options,
             close:()=>{
                 notification.close(key);
+                
             }
         };
     }

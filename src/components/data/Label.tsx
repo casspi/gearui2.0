@@ -94,8 +94,10 @@ export default class Label<P extends typeof props, S extends state> extends Tag.
         if(this.state.dictype){
             if(!this.state.async){
                 let dictype = this.state.dictype;
+                console.log(dictype)
                 let fn = async () => {
                     let result = await DicUtil.getDic({dictype});
+                    console.log(result)
                     if(result.success) {
                         let dic = result.data;
                         if(dic) {

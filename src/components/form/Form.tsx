@@ -69,7 +69,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
     }
     
     getInitialState(): state {
-        
+        console.log(this.props.action)
         return {
             invalidType: this.props.invalidType,
             validateHidden: this.props.validateHidden,
@@ -729,7 +729,7 @@ export class Form<P extends (typeof props & FormComponentProps), S extends state
         let data = this.getParamsAsFormData();
         let action: any = this.state.action||""
         let method = this.state.method||"post";
-        if(this.state.method == "put" || this.state.method == "PUT"){
+        if(method == "put" || method == "PUT"){
             method = 'post'
         }
         G.G$.ajax({

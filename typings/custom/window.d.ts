@@ -66,7 +66,7 @@ interface Message {
         success(content:string,duration?:number,onClose?:Function): void;
         loading(content:string,duration?:number,onClose?:Function): void;
     };
-    confirm(args: any): void;
+    confirm(args: any,message?:string,...otherArgs:any): void;
 }
 interface JqueryTag {
     ast: ASTElement;

@@ -1,6 +1,6 @@
 import * as Tag from "../Tag";
 import * as Validate from './Validate';
-import { Form } from "./index";
+import { Form,Combotree } from "./index";
 import { Validator } from "../../validator";
 import { ObjectUtil, UUID } from '../../utils';
 import * as React from 'react';
@@ -147,10 +147,15 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
     }
 
     setValue(value: any, callback?: Function) {
+        if(this.state.treeCheckStrictly){
+            value =  this.formartValue(value)
+        }
+        console.log(value)
         if(this.form) {
             this.setState({
                 value
             }, () => {
+                console.log(this.state.value)
                 this.triggerChange(value, callback);
                 // if(callback){
                 //     callback.call(this)
@@ -160,6 +165,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
             this.setState({
                 value
             }, () => {
+                console.log(this.state.value)
                 if(callback) {
                     callback();
                 }
@@ -299,7 +305,7 @@ export default abstract class FormTag<P extends typeof props, S extends state> e
 
     makeJsx(): React.ReactNode {return null;}
     render() {
-        console.log(this.state)
+        // console.log(this.state)
         // if(this.form){
         //     if(this.state.disabled===true){//disabled 就不验证
         //         let arr:any = this.form.noSubmitArr

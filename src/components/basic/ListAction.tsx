@@ -108,7 +108,7 @@ export default class ListAction<P extends typeof props, S extends state> extends
                                             if(refreshList){
                                                 list.refresh();
                                             }
-                                            this.doEvent("success");
+                                            this.doEvent("success",data);
                                         }else{
                                             let message = data.message || "操作失功，消息代码“"+data.status+"”！"
                                             G.messager.error("错误",message);
@@ -167,7 +167,7 @@ export default class ListAction<P extends typeof props, S extends state> extends
                                             path = rd.url;
                                         }
                                         Http.triggerHyperlink(path);
-                                        this.doEvent("success");
+                                        this.doEvent("success",result.data);
                                     }else{
                                         G.messager.error("错误","返回消息格式不正确！");
                                     }

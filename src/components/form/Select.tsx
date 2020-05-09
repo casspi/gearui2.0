@@ -92,7 +92,7 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             showSearch: this.props.editable,
             onHidepanel: this.props.onHidepanel,
             allowClear: this.props.allowClear||true,
-            disabled: this.state.disabled || this.state.readOnly,
+            disabled: this.state.disabled,
             placeholder: this.props.prompt,
             dropdownClassName: this.props.dropdownClassName,
             dropdownStyle: this.props.dropdownStyle,
@@ -225,7 +225,12 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
             delete props.defaultValue;
         }
         delete props.validateTempId;
-        return <AntdSelect {...props}>{optionsMap}</AntdSelect>
+        if(this.state.readOnly){
+            props.style = G.G$.extend({
+                pointerEvents:"none"
+            },props.style)
+        }
+        return  <AntdSelect {...props} >{optionsMap}</AntdSelect>;
         // <div>
         //         <input key="hidden-input" value={this.state.value}  name={this.state.name} disabled={true} style={{display: "none"}}></input>
         //     </div>
@@ -891,4 +896,9 @@ export default class Select<P extends typeof props & SelectProps, S extends stat
         this.find("div.ant-select-selection").blur(...args);
     }
 
+    readonly(read:boolean){
+        this.setState({
+            readOnly:read
+        })
+    }
 }

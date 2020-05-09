@@ -21088,11 +21088,78 @@ tr.ant-table-expanded-row:hover {
 /* 渲染前显示原生dom 影响观感 */
 [g-cloak]{display: none;}
 
-/* editable2样式 */
+/* editable2样式
 .edittable-tr{height: 40px}
 .edittable-tr.selected-tr,.edittable-tr.selected-tr .ant-input-affix-wrapper{background: #ddd}
 .edittable {border: 1px solid rgba(34, 36, 38, 0.15);border-collapse: collapse}
-.edittable th,.edittable td{border-top: 1px solid rgba(34, 36, 38, 0.15);border-left: 1px solid rgba(34, 36, 38, 0.15)}
+.edittable th,.edittable td{border-top: 1px solid rgba(34, 36, 38, 0.15);border-left: 1px solid rgba(34, 36, 38, 0.15)} */
 
 
+.editTable .tableHeader{
+	height:40px;
+	border:1px solid #ccc;
+	line-height:40px;
+	padding:0 2px 0 2px;
+	background-color:#eee;	
+	font-weight:bold;
+}
 
+.editTable .tableBody{
+	overflow-y:scroll;
+	border:1px solid #ccc;
+	padding:2px;
+	margin-top:-1px;
+}
+
+.editTable .tableBody .bodytr:hover{
+	background-color:#F0FFF0;
+}
+
+.editTable .tableControl{
+	padding:5px 0;
+	text-align:right;
+}
+
+.editTable .tableControl .ant-btn{
+	height:26px;
+	padding:0 10px;
+	line-height:24px;
+}
+									
+.sequencetd{
+	text-align:center;
+}
+.selectedRow{
+	background-color:#F0FFF0;
+}
+.disabledRow{
+	background-color:#eee;
+	color:#222;
+}
+.readonlyInput{
+	background-color:#eee;
+}
+
+.editTable .bodytd{
+	line-height:34px;
+	height:34px;
+}
+
+.editTable .bodytd .c_input{
+	
+}
+
+.editTable .bodytd .c_view{
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.editTable .bodytd .c_text{
+    display: block;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.hidden{display: none!important;}

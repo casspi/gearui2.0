@@ -43,6 +43,7 @@ declare var GearArray: {
 };
 interface RenderOptions {
     el: string|Element;
+    parentAst?: any|Element;
     mounted?(...tags: any[]): void;
 }
 interface Message {

@@ -15,6 +15,7 @@ export var props = {
     prompt: GearType.Or(GearType.Array, GearType.Function, GearType.String),
     type: GearType.Enum<"date"|"month"|"range">(),//日期选择控件，date，month，range
     showTime: GearType.Boolean,//显示时间，month控件不可用此属性
+    defaultTime:GearType.Any,//默认带出的时间
     format: GearType.String,//指定日期格式
     start: GearType.String,//当选择为日历范围时，开始时间
     end: GearType.String,//当选择为日历范围时，结束时间
@@ -23,9 +24,10 @@ export var props = {
     ableTime: GearType.String, //时间可选区间
     ableDatetime: GearType.String, //日期时间可选范围
     hideTime: GearType.Boolean, //是否隐藏不可选择时间区间
-    ok: GearType.Function,
+    onOk: GearType.Function,
     getCalendarContainer: GearType.Function,
     locale: GearType.Object,
+
 }
 
 export interface state extends FormTag.state {
@@ -184,11 +186,17 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
             }
         }
         if (type == "range") {
+            //默认带出的时间
+            let defaultValue = null;
+            let defaultTimeArr = this.getPropStringArrayValue(this.props.defaultTime);
+            if(this.props.defaultTime && defaultTimeArr.length>0){
+                defaultValue = [moment(defaultTimeArr[0], 'HH:mm:ss'), moment(defaultTimeArr[1], 'HH:mm:ss')]
+            }
             return {
                 value: value,
                 start: this.props.start,
                 end: this.props.end,
-                showTime: { hideDisabledOptions: this.props.hideTime },
+                showTime: { hideDisabledOptions: this.props.hideTime, defaultValue:defaultValue},
                 format: format,
                 size: this.props.size,
                 ableDate:this.props.ableDate,
@@ -283,9 +291,12 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
                 disabledHours: () => this.disH(parseInt(ableTimeNumArray[0]), parseInt(ableTimeNumArray[3])),
                 disabledMinutes: () => this.disMS(parseInt(ableTimeNumArray[1]), parseInt(ableTimeNumArray[4])),
                 disabledSeconds: () => this.disMS(parseInt(ableTimeNumArray[2]), parseInt(ableTimeNumArray[5])),
+                defaultValue: this.props.defaultTime ? moment(this.props.defaultTime, 'HH:mm:ss') : null
             }
         } else {
-            return true;
+            return {
+                defaultValue: this.props.defaultTime ? moment(this.props.defaultTime, 'HH:mm:ss') : null
+            };
         }
     }
 
@@ -466,5 +477,12 @@ export default class GDatetime<P extends typeof props, S extends state> extends 
 
     reset(){
         this.setValue(this.props.value);
+    }
+
+    //点击确定按钮回调
+    onOk(fun:Function){
+        if(fun && G.G$.isFunction(fun)) {
+            this.bind("ok",fun);
+        }
     }
 }

@@ -28,6 +28,7 @@ export var props = {
     sequenceWidth:GearType.Any,//排序列宽度,
     showHeader:GearType.Boolean,//是否显示表头
     checkAllTitle:GearType.String,//全选框提示语
+    rowIdName:GearType.String
 };
 
 export interface state extends Tag.state, TableProps<any> {
@@ -83,7 +84,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     public isFixed = false;
     //已经展开行
     private expandedRowCached = {};
-    private filterContainerId = UUID.get();
+    // private filterContainerId = UUID.get();
     //当前展开的记录行
     private _expandRecord = null;
     protected defaultRecord = {};
@@ -210,11 +211,15 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 		}else{
             // 获得选中行
             param[checkAllKey] = "NO";
-			var checkedRows = this.getCheckedRows();
+            var checkedRows = this.getCheckedRows();
 			if(checkedRows){
 				var checkedIds = [];
 				for(var i=0;i<checkedRows.length;i++){
-					checkedIds.push(checkedRows[i].id);
+                    if(this.props.rowIdName){//指定了行id字段名，取数据里的该字段
+                        checkedIds.push(checkedRows[i][this.props.rowIdName]);
+                    }else{
+                        checkedIds.push(checkedRows[i].id);
+                    }
 				}
 				param[checkedIdsKey] = checkedIds;
 			}	
@@ -455,10 +460,16 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
             rowSelection: this.state.checkType != null? {
                 type: this.state.checkType,
                 onChange: (checkedRowKeys: any, checkedRows: any) => {
+                    // console.log(checkedRows)
                     let isCheckAll = false;
                     let data = this.getData()||[];
                     if(data.length == checkedRowKeys.length) {
                         isCheckAll = true;
+                    }else{//非全选时将默认行删掉
+                        checkedRowKeys = checkedRowKeys.filter((key:any)=>key!="default_checkbox_row")
+                        checkedRows = checkedRows.filter((row:any)=>row.key!='default_checkbox_row')
+                        // console.log(checkedRowKeys)
+                        // console.log(checkedRows)
                     }
                     this.setState({
                         checkedRowKeys,
@@ -472,7 +483,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                     this.doEvent("select",record,selected,selectedRows);
                 },
                 onSelectAll: (selected: any, selectedRows: any, changeRows: any)=> {
-                    this.doEvent("selectAll",selected, selectedRows, changeRows);
+                    this.doEvent("selectAll",selected, selectedRows, changeRows);                    
                 },
                 selectedRowKeys: this.state.checkedRowKeys,
                 getCheckboxProps: (record: any) => ({
@@ -694,6 +705,16 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
                 item["sequence"] = (indexStart + i + 1);
             }
         }
+
+        //当多选框选中行时，添加一个默认行:防止选中本页row触发全选(antd全选为选中本页数据)，与Table选中所有数据冲突,故做此处理；
+        if(this.state.checkType==='checkbox' && this.paginations.length>0 && this.paginations[0].getTotal()>this.paginations[0].getPageSize()){
+            dataInner.push({
+                key:'default_checkbox_row',
+                sequence: null,
+                resourceAreaLocation:null,
+            })
+        }
+
         return data;
     }
 
@@ -740,6 +761,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         if(this.haveEvent("expandedRow")) {
             index = index+1;
         }
+        // console.log(child)
         return new Column(this, child, index);
     }
 
@@ -820,7 +842,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
 
     componentWillMount(){
         super.componentWillMount()
-        let columns: any = this._parseColumns();    
+        let columns: any = this._parseColumns(); 
         this.setState({
             columns:columns
         })
@@ -888,6 +910,8 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         this.hideCheckAllBtn();
         // this.setCheckAllBtn();
         this.setEllipsisSpanWidth();
+
+        this.hideDefaultRow()
     }
 
     protected setEllipsisSpanWidth() {
@@ -915,6 +939,22 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     protected hideCheckAllBtn() {
         if(this.state.checkAll == false) {
             this.find(".ant-table-thead").find(".ant-table-selection-column").children().hide();
+        }
+    }
+
+    //当多选框选中行时，会添加一个默认行：防止选中本页触发全选(antd全选为选中本页数据)，与Table选中所有数据冲突；所以做此处理
+    //此方法隐藏改行
+    protected hideDefaultRow(){
+        if(this.state.checkType==='checkbox'){
+            // this.find("[data-row-key='default_checkbox_row']").hide();
+            let defaultRow = this.find("[data-row-key='default_checkbox_row']");
+            if(defaultRow.length==1){
+                defaultRow.hide()
+            }else if(defaultRow.length>1){
+                defaultRow.each(function(i:number,item:any){
+                    item.hide()
+                })
+            }
         }
     }
 
@@ -1217,6 +1257,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
         }else{
             datainner = {dataList: []};
         }
+        
         // 设置分页对象
         this.setPagination(datainner);
         datainner = this._loadFilter(datainner);

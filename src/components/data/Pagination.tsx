@@ -88,9 +88,14 @@ export default class Pagination<P extends typeof props & PaginationProps, S exte
         let placement:any = this.props.toolTooltipPlacement || "topRight";
         return this.props.showTooltipAble!==false
         ?<AntdTooltip placement={placement}  visible={this.state.showTooltip}  title="跳转页大于总页数，为您跳转到最后一页">
-           <div><AntdPagination {...props}></AntdPagination></div> 
+           <div id={props.id}><AntdPagination {...props}></AntdPagination></div> 
         </AntdTooltip>
-        :<AntdPagination {...props}></AntdPagination>;
+        :<div id={props.id}><AntdPagination {...props}></AntdPagination></div>;
+    }
+
+    afterRender() {
+          //由于该id不会被antd渲染出来，手动将id写道外部div上；当使用异步弹框打开(没有在asthtml中)时，id查找不到该组件，所以此处将组件赋给div的jq vmdom 上，供G查找用；
+          G.G$("#"+this.state.id).data("vmdom", this);
     }
 
     getPageSize() {

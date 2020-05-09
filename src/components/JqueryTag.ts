@@ -196,8 +196,8 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 let parser = new Parser();
                 let astMsg: ParseResult  = parser.parse.call(parser, ...args, true);
                 let html = G.G$(astMsg.cacheHtml).html();
-                if(html && html.match(/<style[^>]*>(.*?)<\/style>/g)){
-                    let matchRes = html.match(/<style[^>]*>(.*?)<\/style>/g);
+                if(html && html.match(/<style.*?>([\s\S]+?)<\/style>/img)){
+                    let matchRes = html.match(/<style.*?>([\s\S]+?)<\/style>/img);
                     if(matchRes && matchRes.length>0){
                         for(let i=0;i<matchRes.length;i++){
                             var style = document.createElement("style");
@@ -216,6 +216,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 }
                 let cacheHtmlElement = G.G$(G.cacheHtml);
                 let cacheElement = cacheHtmlElement.find("["+Constants.HTML_PARSER_DOM_INDEX+"='"+this.data('vmdom').ast.id+"']");
+                // console.log(html)
                 cacheElement.append(html);
                 
                 //插入脚本
@@ -237,6 +238,7 @@ export default class JqueryTag<P extends typeof props, S extends state> extends 
                 asts.forEach((ast: ASTElement)=>{
                     ast.parent = this.data('vmdom').ast;
                     let reactEle = GearUtil.newReactInstance(ast);
+                    console.log(reactEle)
                     children.push(reactEle);
                 });
                 this.data('vmdom').tempChildren = children;

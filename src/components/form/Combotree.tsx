@@ -28,7 +28,8 @@ export var props = {
     childDisable:GearType.Boolean
 };
 export interface state extends Tree.state {
-
+    treeCheckable?:boolean,
+    treeCheckStrictly?:boolean
 }
 type TreeNode = Tree.TreeNode;
 export default class Combotree<P extends typeof props & AntdTreeProps, S extends state & Partial<AntdTreeProps>> extends Tree.default<P, S> {
@@ -38,6 +39,9 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
         return {
            options: [],
            method: this.props.method,
+           treeCheckable: this.props.multiple?(this.props.onlyLeafCheck ?true:(this.props.cascadeCheck?true:this.props.treeCheckable)):false,
+           treeCheckStrictly: this.props.multiple?(this.props.onlyLeafCheck?true:(this.props.cascadeCheck!=undefined?!this.props.cascadeCheck:false)):false,
+
         };
     }
     static newJsxInstance(props: any) {
@@ -54,8 +58,9 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             multiple: this.props.multiple,
             placeholder: this.props.prompt,
             allowClear: this.props.allowClear != false,
-            onSelect: (value: any) => {
-                let node = this.getNode(value);
+            onSelect: (value: any,node1:any,extra:any) => {
+                let node = this.getNode(value) || this.getNode(value.value);
+                // console.log(node)
                 if(!node)
                     return;
                 if((this.props.onlyLeafCheck && !node.isLeaf)) {
@@ -80,14 +85,15 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                             }
                         })
                     }
+                    this._onSelect(node);
+                    Tree.default.onSelect.call(this,node);
+                    this.doEvent("select",node);
                 });
-                this._onSelect(node);
-                Tree.default.onSelect.call(this,node);
-                this.doEvent("select",node);
-
                
             },
-            onChange: (value: any, label: any) => {
+            onChange: (value: any, label: any, extra:any) => {
+                console.log(value);
+                console.log(extra)
                 if(this.props.multiple != true && value != null && value != "") {
                     if(value instanceof Array) {
                         value = value[0];
@@ -103,6 +109,32 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                 // 当前值
                 let oldValue = this.getValue();
                 if(value != null) {
+                    if(this.state.treeCheckStrictly==true){
+                        if(extra.allCheckedNodes && extra.allCheckedNodes.length>0){
+                            value = extra.allCheckedNodes.map((item:any)=>{
+                                return {value:item.key,label:this.getTextByValue(item.key)}
+                            })
+                        }
+                        if(extra.checked === true){
+                            value = [].concat(value,extra.preValue);
+                            value = value.filter((item:any,index:number)=>{
+                                let arrValue:any[] = [];
+                                value.forEach((e:any) => {
+                                    arrValue.push(e.value)
+                                });
+                                return arrValue.indexOf(item.value) === index
+                            })
+                        }else if(extra.checked === false && extra.allCheckedNodes && extra.allCheckedNodes.length <= 0){//搜索后取消选中
+                            value = extra.preValue.filter((o:any)=>{
+                                return o.value !== extra.triggerValue
+                            })
+                            let values = value.map(function(item:any){
+                                return item.value;
+                            })
+                            this.setValue(values)
+                            // console.log(value);
+                        }
+                    }
                     this._onChange(value,oldValue);
                     Combotree.onChange.call(this,value,oldValue);
                 }else {
@@ -131,14 +163,12 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             dropdownStyle: this.props.dropdownStyle,
             dropdownMatchSelectWidth: this.props.dropdownMatchSelectWidth,
             treeDefaultExpandAll: this.props.treeDefaultExpandAll,
-            treeCheckable: this.props.multiple?(this.props.onlyLeafCheck ?true:(this.props.cascadeCheck?true:this.props.treeCheckable)):false,
             treeDefaultExpandedKeys: this.props.treeDefaultExpandedKeys,
             treeNodeFilterProp: this.props.treeNodeFilterProp,
             treeNodeLabelProp: this.props.treeNodeLabelProp || "text",
             treeDataSimpleMode: this.props.treeDataSimpleMode,
             showCheckedStrategy: this.props.showCheckedStrategy||"SHOW_ALL",
             labelInValue: false,
-            treeCheckStrictly: this.props.multiple?(this.props.onlyLeafCheck?true:(this.props.cascadeCheck!=undefined?!this.props.cascadeCheck:false)):false,
             disabled: this.state.disabled || this.state.readOnly,
             filterTreeNode: (input: string, node: any) =>{
                 if(node.props.title.toLowerCase().indexOf(input.trim().toLowerCase()) != -1) {
@@ -187,7 +217,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                         valueNew.push(valInner);
                     }
                 }
-                propsNew.value = valueNew;
+                propsNew.value =  [].concat([],valueNew);
                 propsNew.defaultValue = [].concat([],valueNew);
             }else {
                 if(propsNew.value instanceof String || propsNew.value==null || propsNew.value.label == null) {
@@ -199,6 +229,7 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                 }
             }
         }
+        this.initValue = propsNew.value;//修改FormTag
         return propsNew;
     }
 
@@ -243,15 +274,41 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
 
     setValue(values: any, callback?: Function) {
         if(typeof values =="string")
-            values = [values]; 
+            values = [values];    
         super.setValue(values, callback);
+    }
+
+    formartValue(values:any){
+        if(values instanceof Array) {
+            let valueNew: any = [];
+            for(let i=0; i < values.length; i++) {
+                let valInner = values[i];
+                if(valInner instanceof String || valInner.label == null) {
+                    let label = this.getTextByValue(valInner);
+                    if(label != null) {
+                        valueNew.push({value: valInner, label});
+                    }
+                }else {
+                    valueNew.push(valInner);
+                }
+            }
+            values =  [].concat([],valueNew);
+        }else {
+            if(values instanceof String || values==null || values.label == null) {
+                let label = this.getTextByValue(values);values
+                if(label != null) {
+                    values = {value: values, label};
+                }
+            }
+        }
+        return values
     }
 
     getValue(): any {
         if(this.props.multiple==true){
             return this.state.value;
         }else{
-            let value = this.state.value;
+            let value:any = this.state.value;
             if(value && value instanceof Array && value.length>0){
                 return value[0];
             }else{
@@ -327,6 +384,15 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
                 valueOld.push(id);
             }
         }
+        if(this.state.treeCheckStrictly==true){
+            valueOld = valueOld.map((item:any)=>{
+                if(typeof item.value === 'string'){
+                    return item.value;
+                }else{
+                    return item
+                }
+            })
+        }
         this.setValue(valueOld,callBack);
     }
 
@@ -397,5 +463,12 @@ export default class Combotree<P extends typeof props & AntdTreeProps, S extends
             this.setValue(this.props.value)
         }
     }
-
+    //当加载完成的时候触发
+    protected _onLoadSuccess(data: any){
+        //multiple="true" onlyLeafCheck="true"两者为true时，treeCheckStrictly即为true
+        //此时antd treeselect value强制为{label:'',value:''},此处在数据加载完成后用setValue格式化 modified by zhibing
+        if(this.state.treeCheckStrictly == true) {
+            this.setValue(this.state.value)
+        }
+    }
 }
