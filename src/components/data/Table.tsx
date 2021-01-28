@@ -1206,7 +1206,7 @@ export default class Table<P extends typeof props & TableProps<any>, S extends s
     }
 
     //执行ajax提交
-	 submitXhr(tableSubmit?:boolean){
+	submitXhr(tableSubmit?:boolean){
         let method: any = this.state.method || "get";
         let url = this.state.url;
         if(url) {
